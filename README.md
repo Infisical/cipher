@@ -41,6 +41,15 @@ export function App() {
 
 The stylesheet is compiled: it holds the tokens, the three themes, the fonts and every utility the components use, scoped under `.v4`. Your app doesn't need Tailwind, and if it has Tailwind, Cipher's styles don't leak into it.
 
+If your app uses Tailwind CSS v4 and you want Cipher's theme utilities (`bg-background`, `text-muted-foreground` and the rest) in your own markup inside `V4Scope`, import the Tailwind entry instead of `styles.css`. Your Tailwind build then compiles Cipher's stylesheet with your sources:
+
+```css
+@import "tailwindcss";
+@import "@infisical/cipher/tailwind.css";
+@import "@infisical/cipher/modules.css";
+@source "./pages";
+```
+
 Every module has its own entry point: `@infisical/cipher/ui/<name>`, `@infisical/cipher/patterns/<name>`, `@infisical/cipher/lib/<name>`, `@infisical/cipher/hooks/<name>` and `@infisical/cipher/scope`. The names match the registry items. The raw tokens are at `@infisical/cipher/tokens.json` and `@infisical/cipher/tokens.css`.
 
 ## Install from the registry

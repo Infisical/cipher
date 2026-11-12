@@ -19,6 +19,13 @@ filesIn(dist)
 cpSync(path.join(root, "src/tokens.json"), path.join(dist, "tokens.json"));
 cpSync(path.join(root, "src/tokens.generated.css"), path.join(dist, "tokens.css"));
 mkdirSync(path.join(dist, "fonts"), { recursive: true });
-readdirSync(path.join(root, "src/fonts"))
-  .filter((file) => file.endsWith(".txt"))
-  .forEach((file) => cpSync(path.join(root, "src/fonts", file), path.join(dist, "fonts", file)));
+readdirSync(path.join(root, "src/fonts")).forEach((file) =>
+  cpSync(path.join(root, "src/fonts", file), path.join(dist, "fonts", file))
+);
+const source = readFileSync(path.join(root, "src/v4.css"), "utf8");
+const imported = '@import "./tokens.generated.css";\n';
+if (!source.startsWith(imported)) throw new Error("src/v4.css must open with " + imported.trim());
+writeFileSync(
+  path.join(dist, "tailwind.css"),
+  '@import "./tokens.css";\n' + source.slice(imported.length)
+);

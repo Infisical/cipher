@@ -13,7 +13,7 @@ const modules = ["ui", "patterns", "lib", "hooks"].flatMap((folder) =>
     .map((file) => `${folder}/${file.replace(/\.tsx?$/, "")}`)
 );
 
-const singleStylesheet = (fileName: string): Plugin => ({
+const stylesheets = (): Plugin => ({
   name: "cipher-single-stylesheet",
   apply: "build",
   enforce: "post",
@@ -35,21 +35,21 @@ const singleStylesheet = (fileName: string): Plugin => ({
     ["styles.js", ...entries.sort()].forEach(visit);
     const stray = Object.keys(bundle).filter((name) => name.endsWith(".css") && !order.includes(name));
     if (stray.length) this.error(`Stylesheets outside the import graph: ${stray.join(", ")}`);
-    const source = order
-      .map((name) => {
-        const asset = bundle[name];
-        return asset.type === "asset" ? String(asset.source) : "";
-      })
-      .join("\n");
+    const text = (name: string) => {
+      const asset = bundle[name];
+      return asset.type === "asset" ? String(asset.source) : "";
+    };
+    const modules = order.filter((name) => name !== "v4.css");
+    this.emitFile({ type: "asset", fileName: "cipher.css", source: order.map(text).join("\n") });
+    this.emitFile({ type: "asset", fileName: "modules.css", source: modules.map(text).join("\n") });
     order.forEach((name) => delete bundle[name]);
     delete bundle["styles.js"];
     delete bundle["styles.js.map"];
-    this.emitFile({ type: "asset", fileName, source });
   }
 });
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), singleStylesheet("cipher.css")],
+  plugins: [react(), tailwindcss(), stylesheets()],
   define: {
     "import.meta.env.DEV": 'process.env.NODE_ENV !== "production"'
   },
