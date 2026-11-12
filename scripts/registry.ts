@@ -15,9 +15,9 @@ const failures: string[] = [];
 
 const manifest = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
 const versions: Record<string, string> = {
-  ...manifest.devDependencies,
   ...manifest.peerDependencies,
-  ...manifest.dependencies
+  ...manifest.dependencies,
+  ...manifest.devDependencies
 };
 const declaredPackage = (name: string) => {
   const version = versions[name];

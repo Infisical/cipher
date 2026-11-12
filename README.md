@@ -18,7 +18,7 @@ Both come from the same source in [src/](src/).
 $ npm install @infisical/cipher motion sonner
 ```
 
-`motion` and `sonner` are peer dependencies, so your app and Cipher share one copy. Install `recharts` if you use the chart and `react-day-picker` if you use the calendar.
+`motion` and `sonner` are peer dependencies, so your app and Cipher share one copy. Install `recharts` too if you use the chart.
 
 Import the stylesheet once and wrap Cipher UI in `V4Scope`:
 
