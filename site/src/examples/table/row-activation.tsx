@@ -1,0 +1,128 @@
+import * as React from "react";
+
+import { Button } from "@infisical/cipher/ui/button";
+import { DataTable, type DataTableColumn } from "@infisical/cipher/ui/data-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@infisical/cipher/ui/dropdown-menu";
+import { toast } from "@infisical/cipher/ui/sonner";
+import {
+  RowActions,
+  RowContextMenu,
+  Table,
+  TableActionsCell,
+  TableActionsHead,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@infisical/cipher/ui/table";
+
+type Cert = { id: string; cn: string; serial: string; expires: string };
+const certs: Cert[] = [
+  { id: "api", cn: "api.example.com", serial: "4f:1c:9a:02", expires: "2026-12-04" },
+  { id: "auth", cn: "auth.example.com", serial: "7b:20:e1:5d", expires: "2027-02-18" },
+  { id: "billing", cn: "billing.example.com", serial: "0e:93:44:c8", expires: "2027-05-30" }
+];
+
+export default function RowActivation() {
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const open = (cert: Cert) => toast(`Opened ${cert.cn}.`);
+  const columns: DataTableColumn<Cert>[] = [
+    {
+      id: "cn",
+      header: "Common name",
+      primary: true,
+      grow: true,
+      text: (row) => row.cn,
+      render: (row) => (
+        <Button variant="link" underline="hover" onClick={() => open(row)}>
+          {row.cn}
+        </Button>
+      )
+    },
+    { id: "serial", header: "Serial", width: 136, render: (row) => row.serial },
+    { id: "expires", header: "Expires", width: 120, render: (row) => row.expires },
+    {
+      id: "actions",
+      header: "Actions",
+      actions: true,
+      render: (row) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon-row" icon="more" iconOnly>
+              {`Actions for ${row.cn}`}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => toast(`Renewal requested for ${row.cn}.`)}>
+              Renew
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+  ];
+  return (
+    <div className="grid w-full min-w-0 grid-cols-1 items-start gap-x-6 gap-y-8">
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <DataTable
+            label="Certificates"
+            rows={certs}
+            columns={columns}
+            getRowId={(row) => row.id}
+            rowLabel={(row) => row.cn}
+            selectable
+            selectedIds={selected}
+            onSelectionChange={setSelected}
+            onRowActivate={open}
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"Whole row opens the certificate"}
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <Table aria-label="Certificates, native table">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Common name</TableHead>
+                <TableHead>Expires</TableHead>
+                <TableActionsHead>Actions</TableActionsHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {certs.map((cert) => {
+                const menu = (
+                  <DropdownMenuItem onSelect={() => toast(`Renewal requested for ${cert.cn}.`)}>
+                    Renew
+                  </DropdownMenuItem>
+                );
+                return (
+                  <RowContextMenu key={cert.id} label={cert.cn} menu={menu}>
+                    <TableRow onClick={() => open(cert)}>
+                      <TableCell>{cert.cn}</TableCell>
+                      <TableCell>{cert.expires}</TableCell>
+                      <TableActionsCell>
+                        <RowActions label={cert.cn} menu={menu} />
+                      </TableActionsCell>
+                    </TableRow>
+                  </RowContextMenu>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"Native TableRow onClick ignores its portaled menu"}
+        </figcaption>
+      </figure>
+    </div>
+  );
+}

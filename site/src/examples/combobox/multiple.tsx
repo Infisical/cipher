@@ -1,0 +1,39 @@
+import { useState } from "react";
+
+import { Combobox } from "@infisical/cipher/ui/combobox";
+import { Field } from "@infisical/cipher/ui/field";
+
+export default function Example() {
+  const [values, setValues] = useState(["dev", "staging", "audit", "prod", "preview"]);
+  return (
+    <div className="flex w-full min-w-0 flex-col items-start gap-6">
+      <Field
+        label="Visible environments"
+        description="Audit is required by policy, so Clear all keeps it."
+      >
+        <Combobox
+          label="Visible environments"
+          multiple
+          clearable
+          options={[
+            { value: "dev", label: "Dev", meta: "3 projects" },
+            { value: "staging", label: "Staging", meta: "2 projects" },
+            { value: "prod", label: "Prod", meta: "12 projects" },
+            { value: "audit", label: "Audit", disabled: true },
+            {
+              value: "preview",
+              label: "Preview deployments for payments-reconciliation-backend-worker-eu-west",
+              meta: "1 project"
+            }
+          ]}
+          value={values}
+          onChange={setValues}
+          placeholder="Choose"
+        />
+      </Field>
+      <p role="status" className="sr-only text-sm">
+        Selected environments: {values.join(", ") || "none"}
+      </p>
+    </div>
+  );
+}
