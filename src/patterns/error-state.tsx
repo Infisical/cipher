@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { isDev } from "../lib/dev";
 import { Button } from "../ui/button";
 import { CodeBlock } from "../ui/code-block";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -60,7 +61,7 @@ export function ErrorState({
   description,
   error,
   details = [],
-  showStack = import.meta.env.DEV,
+  showStack = isDev,
   homeHref = "/",
   onHome,
   onBack = () => window.history.back(),

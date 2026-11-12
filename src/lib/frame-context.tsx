@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { isDev } from "./dev";
+
 const FrameContext = React.createContext(false);
 
 /** Marks a subtree as inside a framed container, or, with framed false, starts a fresh surface such as an overlay. */
@@ -15,7 +17,7 @@ export function useInFrame(component: string, requested?: string): boolean {
   const inFrame = React.useContext(FrameContext);
   const forced = inFrame && requested === "framed";
   React.useEffect(() => {
-    if (import.meta.env.DEV && forced)
+    if (isDev && forced)
       console.warn(
         `${component} variant="framed" renders inside another framed container, so it drops to its frameless treatment. Remove the variant.`
       );

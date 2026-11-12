@@ -25,7 +25,9 @@ readdirSync(path.join(root, "src/fonts")).forEach((file) =>
 const source = readFileSync(path.join(root, "src/v4.css"), "utf8");
 const imported = '@import "./tokens.generated.css";\n';
 if (!source.startsWith(imported)) throw new Error("src/v4.css must open with " + imported.trim());
+const fontFace = /@font-face\s*\{[^}]*\}\n*/g;
+writeFileSync(path.join(dist, "fonts.css"), (source.match(fontFace) ?? []).join(""));
 writeFileSync(
   path.join(dist, "tailwind.css"),
-  '@import "./tokens.css";\n' + source.slice(imported.length)
+  '@import "./tokens.css";\n' + source.slice(imported.length).replace(fontFace, "")
 );

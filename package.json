@@ -21,6 +21,7 @@
     "./styles.css": "./dist/cipher.css",
     "./tailwind.css": "./dist/tailwind.css",
     "./modules.css": "./dist/modules.css",
+    "./fonts.css": "./dist/fonts.css",
     "./tokens.css": "./dist/tokens.css",
     "./tokens.json": "./dist/tokens.json",
     "./scope": {
@@ -55,8 +56,8 @@
     "site:build": "vite build --config site/vite.config.ts"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "motion": "^13.2.0 || ^14.0.0",
     "sonner": "^2.0.7",
     "recharts": "^3.8.1",

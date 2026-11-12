@@ -52,6 +52,11 @@
           "target": "src/components/v4/lib/descendant-flags.ts"
         },
         {
+          "path": "src/components/v4/lib/dev.ts",
+          "type": "registry:file",
+          "target": "src/components/v4/lib/dev.ts"
+        },
+        {
           "path": "src/components/v4/lib/field-context.ts",
           "type": "registry:file",
           "target": "src/components/v4/lib/field-context.ts"

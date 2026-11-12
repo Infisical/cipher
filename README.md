@@ -9,7 +9,7 @@ Both come from the same source in [src/](src/).
 
 ## Requirements
 
-- React 19
+- React 19.2 or later
 - For the registry: TypeScript, Tailwind CSS v4, and a project set up with `npx shadcn@latest init`
 
 ## Install the package
@@ -52,6 +52,12 @@ If your app uses Tailwind CSS v4 and you want Cipher's theme utilities (`bg-back
 @import "@infisical/cipher/tailwind.css";
 @import "@infisical/cipher/modules.css";
 @source "./pages";
+```
+
+Then import the fonts once from your JavaScript entry, so your bundler resolves the font files from the package:
+
+```tsx
+import "@infisical/cipher/fonts.css";
 ```
 
 Every module has its own entry point: `@infisical/cipher/ui/<name>`, `@infisical/cipher/patterns/<name>`, `@infisical/cipher/lib/<name>`, `@infisical/cipher/hooks/<name>` and `@infisical/cipher/scope`. The names match the registry items. The raw tokens are at `@infisical/cipher/tokens.json` and `@infisical/cipher/tokens.css`.

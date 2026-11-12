@@ -13,6 +13,25 @@ const modules = ["ui", "patterns", "lib", "hooks"].flatMap((folder) =>
     .map((file) => `${folder}/${file.replace(/\.tsx?$/, "")}`)
 );
 
+const tailwindTheme = new Map(
+  [...readFileSync(path.join(root, "node_modules/tailwindcss/theme.css"), "utf8").matchAll(/^\s*(--[\w.-]+):\s*([^;]+);/gm)].map(
+    (match) => [match[1], match[2].replace(/\s+/g, " ").trim()]
+  )
+);
+const withThemeDefaults = (css: string) => {
+  const defined = new Set([...css.matchAll(/(--[\w-]+)\s*:/g)].map((match) => match[1]));
+  const needed = new Set<string>();
+  const collect = (text: string) =>
+    [...text.matchAll(/var\((--[\w-]+)/g)].forEach(([, name]) => {
+      if (defined.has(name) || needed.has(name) || !tailwindTheme.has(name)) return;
+      needed.add(name);
+      collect(tailwindTheme.get(name)!);
+    });
+  collect(css);
+  if (!needed.size) return css;
+  return `.v4 {\n${[...needed].sort().map((name) => `  ${name}: ${tailwindTheme.get(name)};`).join("\n")}\n}\n${css}`;
+};
+
 const stylesheets = (): Plugin => ({
   name: "cipher-single-stylesheet",
   apply: "build",
@@ -40,7 +59,7 @@ const stylesheets = (): Plugin => ({
       return asset.type === "asset" ? String(asset.source) : "";
     };
     const modules = order.filter((name) => name !== "v4.css");
-    this.emitFile({ type: "asset", fileName: "cipher.css", source: order.map(text).join("\n") });
+    this.emitFile({ type: "asset", fileName: "cipher.css", source: withThemeDefaults(order.map(text).join("\n")) });
     this.emitFile({ type: "asset", fileName: "modules.css", source: modules.map(text).join("\n") });
     order.forEach((name) => delete bundle[name]);
     delete bundle["styles.js"];
@@ -50,9 +69,6 @@ const stylesheets = (): Plugin => ({
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), stylesheets()],
-  define: {
-    "import.meta.env.DEV": 'process.env.NODE_ENV !== "production"'
-  },
   build: {
     outDir: "dist",
     emptyOutDir: true,
