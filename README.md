@@ -2,7 +2,7 @@
 
 Cipher is Infisical's design system: React components, design tokens and themes. Use it two ways:
 
-- **npm package** (`@infisical/cipher`): import compiled components and one prebuilt stylesheet. Updates arrive through your package manager.
+- **Package** (`@infisical/cipher`): import compiled components and one prebuilt stylesheet. Updates arrive through your package manager.
 - **shadcn registry**: copy the component source into your project with the shadcn CLI and own the code.
 
 Both come from the same source in [src/](src/).
@@ -12,11 +12,15 @@ Both come from the same source in [src/](src/).
 - React 19
 - For the registry: TypeScript, Tailwind CSS v4, and a project set up with `npx shadcn@latest init`
 
-## Install the npm package
+## Install the package
+
+Cipher isn't on npm yet. Install a release tag from GitHub:
 
 ```bash
-$ npm install @infisical/cipher motion sonner
+$ npm install github:Infisical/cipher#v0.1.0 motion sonner
 ```
+
+Each release tag points at a commit that holds the built package, so the install downloads it as is and runs no build.
 
 `motion` and `sonner` are peer dependencies, so your app and Cipher share one copy. Install `recharts` too if you use the chart.
 
@@ -100,20 +104,20 @@ $ npm pack        # a tarball to install in another project
 $ npm run site    # the showcase: every component and its examples, in each theme
 ```
 
-The showcase in `site/` imports Cipher from `src/` and ships in neither the npm package nor the registry.
+The showcase in `site/` imports Cipher from `src/` and ships in neither the package nor the registry.
 
 After changing `src/tokens.json`, run `npm run tokens`. After changing anything in `src/`, run `npm run registry` and commit `r/` with it. CI fails if either is stale.
 
-Until the Infisical app consumes this package, the source of truth is `frontend/src/components/v4` in [Infisical/infisical](https://github.com/Infisical/infisical). `npm run sync -- <path to infisical/frontend>` copies it into `src/`, drops the app-only modules listed in `scripts/cipher.config.ts` and the tests, rewrites app imports to relative paths, and regenerates the showcase examples. Run `npm run tokens` and `npm run registry` after it.
+To try local changes in an app, run `npm run build && npm pack` here and `npm install <path to the .tgz>` in the app. A tarball keeps one copy of React; a linked checkout resolves React from its own `node_modules` and renders a second copy.
 
 ## Release
 
-1. Bump `version` in `package.json`.
-2. Tag the commit on main (for example `v0.1.0`). The tag pins both the registry URL and the npm version.
-3. Publish with `npm publish --access public`.
+1. Bump `version` in `package.json` in a pull request and merge it.
+2. Run the Release workflow. It builds main and pushes a `vX.Y.Z` tag on a commit that adds `dist/` to it, so the tag pins both the registry URL and the package.
+3. Bump the tag in the app's `package.json`.
 
 ## License
 
 Cipher is MIT licensed. See [LICENSE](LICENSE).
 
-The Archivo and Geist Mono fonts are licensed under the SIL Open Font License 1.1. Their license texts ship in `src/fonts/`, in the npm package under `dist/fonts/`, and with `@cipher/cipher-base`. The Infisical name and logo are trademarks of Infisical Inc. and are not part of the license.
+The Archivo and Geist Mono fonts are licensed under the SIL Open Font License 1.1. Their license texts ship in `src/fonts/`, in the package under `dist/fonts/`, and with `@cipher/cipher-base`. The Infisical name and logo are trademarks of Infisical Inc. and are not part of the license.

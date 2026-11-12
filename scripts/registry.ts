@@ -2,8 +2,6 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import path from "node:path";
 import { parseSync } from "oxc-parser";
 
-import { excludedModules } from "./cipher.config";
-
 const root = path.resolve(import.meta.dirname, "..");
 const check = process.argv.includes("--check");
 const out = path.join(root, "r");
@@ -117,7 +115,6 @@ const items: Item[] = [
 ];
 [...knownModules].sort().forEach((file) => {
   const name = path.basename(file, ".tsx");
-  if (name in excludedModules) failures.push("Excluded module is in the source tree: " + file);
   const dependencies = new Set<string>();
   const registryDependencies = new Set([registryItem(baseItemName)]);
   const extras = new Set<string>();
