@@ -12,15 +12,15 @@ import controlStyles from "./controls.module.css";
 export type ColorPreset = { name: string; value: string };
 
 export const tagColorPresets: readonly ColorPreset[] = [
-  { name: "Gray", value: "#bec2c8" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Blue", value: "#95a2b3" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Purple", value: "#5e6ad2" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Teal", value: "#26b5ce" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Green", value: "#4cb782" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Yellow", value: "#f2c94c" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Orange", value: "#f2994a" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Pink", value: "#f7c8c1" }, // v4-check-ignore raw-color -- stored tag color
-  { name: "Red", value: "#eb5757" } // v4-check-ignore raw-color -- stored tag color
+  { name: "Gray", value: "#bec2c8" },
+  { name: "Blue", value: "#95a2b3" },
+  { name: "Purple", value: "#5e6ad2" },
+  { name: "Teal", value: "#26b5ce" },
+  { name: "Green", value: "#4cb782" },
+  { name: "Yellow", value: "#f2c94c" },
+  { name: "Orange", value: "#f2994a" },
+  { name: "Pink", value: "#f7c8c1" },
+  { name: "Red", value: "#eb5757" }
 ];
 
 const hexColor = /^#[0-9a-f]{6}$/i;
@@ -44,7 +44,7 @@ export function ColorPicker({
   presets,
   disabled,
   readOnly,
-  placeholder = "#000000", // v4-check-ignore raw-color -- shows the hex format the field takes
+  placeholder = "#000000",
   ...props
 }: ColorPickerProps) {
   const [open, setOpen] = React.useState(false);

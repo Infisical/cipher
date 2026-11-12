@@ -13,24 +13,20 @@
 .inline rect {
   transform-box: fill-box;
   transform-origin: center;
-  /* v4-check-ignore motion-literal -- spinner choreography, one owner */
   animation: pixelPair 1.2s steps(1, end) infinite;
 }
 .inline rect + rect {
-  /* v4-check-ignore motion-literal -- half the pair period */
   animation-delay: -0.6s;
 }
 .base rect {
-  /* v4-check-ignore motion-literal -- spinner choreography, one owner */
   animation: pixelTrail 1.6s linear infinite;
 }
 .page rect {
   transform-box: fill-box;
   transform-origin: center;
   animation:
-    /* v4-check-ignore motion-literal -- spinner choreography, one owner */
     pixelAssemble 0.95s ease-out backwards,
-    /* v4-check-ignore motion-literal -- same spinner */ pixelTrail 2.4s linear infinite;
+    pixelTrail 2.4s linear infinite;
 }
 .base rect[data-cross] {
   animation-name: pixelCross;
@@ -103,7 +99,6 @@
   pointer-events: none;
   background: repeating-radial-gradient(circle at 1px 1px, currentColor 0 1px, transparent 1px 3px);
   opacity: 0.16;
-  /* v4-check-ignore motion-literal -- spinner choreography, one owner */
   animation: busyBand 1.2s steps(28) infinite;
 }
 @keyframes pixelPair {

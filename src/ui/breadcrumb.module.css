@@ -100,7 +100,6 @@ button.segment {
   font: inherit;
   text-align: start;
 }
-/* v4-check-ignore cursor-pointer -- a crumb name always navigates, so it reads as a link even when onNavigate renders it as a button */
 .name {
   position: relative;
   display: inline-flex;

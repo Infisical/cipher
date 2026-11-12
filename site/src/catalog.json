@@ -1,0 +1,1562 @@
+[
+  {
+    "id": "access-list",
+    "title": "Access list",
+    "summary": "Who can reach a project: a member per row that opens them, multiple selection with the bulk bar and a locked owner.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Members of a project",
+        "module": "access-list/default"
+      }
+    ]
+  },
+  {
+    "id": "accordion",
+    "title": "Accordion",
+    "summary": "Reveal related sections without leaving the current context.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Connection settings",
+        "module": "accordion/default"
+      },
+      {
+        "title": "Variants",
+        "module": "accordion/variants"
+      },
+      {
+        "title": "Controlled open section",
+        "module": "accordion/controlled"
+      },
+      {
+        "title": "Content that grows",
+        "module": "accordion/growing"
+      },
+      {
+        "title": "Trigger with a badge",
+        "module": "accordion/badges"
+      }
+    ]
+  },
+  {
+    "id": "activity-log",
+    "title": "Activity log",
+    "summary": "Who did what, one line per event, grouped by day with load more.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Recent project activity",
+        "module": "activity-log/default"
+      }
+    ]
+  },
+  {
+    "id": "alert-dialog",
+    "title": "Alert Dialog",
+    "summary": "Confirm an irreversible consequence before performing it.",
+    "group": "Overlays",
+    "examples": [
+      {
+        "title": "Confirmation states",
+        "module": "alert-dialog/default"
+      },
+      {
+        "title": "Action loading",
+        "module": "alert-dialog/loading"
+      },
+      {
+        "title": "Sizes",
+        "module": "alert-dialog/sizes"
+      },
+      {
+        "title": "Constrained content",
+        "module": "alert-dialog/content"
+      },
+      {
+        "title": "Type to confirm and tone",
+        "module": "alert-dialog/confirm"
+      },
+      {
+        "title": "Discard changes",
+        "module": "alert-dialog/discard"
+      }
+    ]
+  },
+  {
+    "id": "alert",
+    "title": "Alert",
+    "summary": "Explain a persistent result or problem next to the affected content.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "Status and recovery",
+        "module": "alert/default"
+      },
+      {
+        "title": "Variants and actions",
+        "module": "alert/variants"
+      },
+      {
+        "title": "Dismissible banner",
+        "module": "alert/banner"
+      }
+    ]
+  },
+  {
+    "id": "animated-collapse",
+    "title": "Animated collapse",
+    "summary": "Reveal a region without leaving hidden descendants in the tab order.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Optional retention details",
+        "module": "animated-collapse/default"
+      }
+    ]
+  },
+  {
+    "id": "announcements",
+    "title": "Announcements",
+    "summary": "What's new, as cards that cycle in a 480px dialog with dots, Back and Next.",
+    "group": "Composites",
+    "examples": [
+      {
+        "title": "What's new",
+        "module": "announcements/default"
+      }
+    ]
+  },
+  {
+    "id": "approval-queue",
+    "title": "Approval queue",
+    "summary": "Requests waiting on you, each moving through new, pending, then resolved or failed in place.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Requests in every state",
+        "module": "approval-queue/default"
+      },
+      {
+        "title": "Without undo",
+        "module": "approval-queue/without-undo"
+      },
+      {
+        "title": "Framed, segmented and divided",
+        "module": "approval-queue/variants"
+      },
+      {
+        "title": "Loading in each variant",
+        "module": "approval-queue/loading"
+      },
+      {
+        "title": "Segmented with group labels",
+        "module": "approval-queue/grouped"
+      }
+    ]
+  },
+  {
+    "id": "avatar",
+    "title": "Avatar",
+    "summary": "Identify people and show grouped participants.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Group",
+        "module": "avatar/default"
+      },
+      {
+        "title": "Kinds",
+        "module": "avatar/variants"
+      },
+      {
+        "title": "Sizes",
+        "module": "avatar/sizes"
+      },
+      {
+        "title": "Status",
+        "module": "avatar/states"
+      },
+      {
+        "title": "Identity",
+        "module": "avatar/identity"
+      }
+    ]
+  },
+  {
+    "id": "badge",
+    "title": "Badge",
+    "summary": "Show a short status, version or environment beside its object.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Tones",
+        "module": "badge/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "badge/sizes"
+      },
+      {
+        "title": "Control height",
+        "module": "badge/control-height"
+      },
+      {
+        "title": "Count",
+        "module": "badge/count"
+      }
+    ]
+  },
+  {
+    "id": "breadcrumb",
+    "title": "Breadcrumb",
+    "summary": "Show the current location and links to its ancestors.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Collapsed ancestry and project switching",
+        "module": "breadcrumb/default"
+      }
+    ]
+  },
+  {
+    "id": "button-group",
+    "title": "Button Group",
+    "summary": "Join related actions without giving each its own container.",
+    "group": "Actions",
+    "examples": [
+      {
+        "title": "Attached and toolbar",
+        "module": "button-group/default"
+      }
+    ]
+  },
+  {
+    "id": "button",
+    "title": "Button",
+    "summary": "Trigger a named action with a clear emphasis and pending state.",
+    "group": "Actions",
+    "examples": [
+      {
+        "title": "Variants",
+        "module": "button/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "button/sizes"
+      },
+      {
+        "title": "Loading and disabled",
+        "module": "button/states"
+      },
+      {
+        "title": "Icons and links",
+        "module": "button/composition"
+      },
+      {
+        "title": "Inside a form",
+        "module": "button/form-type"
+      },
+      {
+        "title": "Trigger layout",
+        "module": "button/trigger-layout"
+      },
+      {
+        "title": "Corner badge",
+        "module": "button/corner-badge"
+      }
+    ]
+  },
+  {
+    "id": "calendar",
+    "title": "Calendar",
+    "summary": "Choose a date with keyboard-accessible month navigation.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Single date and date range",
+        "module": "calendar/default"
+      }
+    ]
+  },
+  {
+    "id": "card",
+    "title": "Card",
+    "summary": "Group one resource or task with its own header, content and actions.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Framed and plain",
+        "module": "card/default"
+      },
+      {
+        "title": "Whole-card link",
+        "module": "card/link"
+      },
+      {
+        "title": "Band actions",
+        "module": "card/band-actions"
+      }
+    ]
+  },
+  {
+    "id": "chart",
+    "title": "Chart",
+    "summary": "Present numeric data with a shared legend and tooltip contract.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Daily request counts with exact values",
+        "module": "chart/default"
+      },
+      {
+        "title": "Series and tooltip",
+        "module": "chart/variants"
+      },
+      {
+        "title": "States",
+        "module": "chart/states"
+      },
+      {
+        "title": "Six-series palette",
+        "module": "chart/palette"
+      }
+    ]
+  },
+  {
+    "id": "checkbox",
+    "title": "Checkbox",
+    "summary": "Stage an independent choice, including a mixed selection state.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Controlled environment selection",
+        "module": "checkbox/default"
+      },
+      {
+        "title": "States",
+        "module": "checkbox/states"
+      }
+    ]
+  },
+  {
+    "id": "code-block",
+    "title": "Code block",
+    "summary": "Frame code or redacted JSON with a label, actions and truthful copy feedback.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "Filename, terminal, line numbers and copy",
+        "module": "code-block/default"
+      }
+    ]
+  },
+  {
+    "id": "code",
+    "title": "Code",
+    "summary": "Display literal machine text inline or in a scrollable block.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "Literal keys and numbered shell commands",
+        "module": "code/default"
+      },
+      {
+        "title": "Formats and lexical families",
+        "module": "code/variants"
+      },
+      {
+        "title": "Search matches inside inline Code",
+        "module": "code/search-matches"
+      }
+    ]
+  },
+  {
+    "id": "collapsible",
+    "title": "Collapsible",
+    "summary": "Show optional details from a single trigger.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Connection details",
+        "module": "collapsible/default"
+      },
+      {
+        "title": "Controlled and disabled states",
+        "module": "collapsible/states"
+      }
+    ]
+  },
+  {
+    "id": "color-picker",
+    "title": "Color picker",
+    "summary": "A hex color field with a swatch that opens a palette of preset colors.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Tag colors, custom value and states",
+        "module": "color-picker/default"
+      }
+    ]
+  },
+  {
+    "id": "combobox",
+    "title": "Combobox",
+    "summary": "Search and choose one option from a provided list.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Single selection",
+        "module": "combobox/default"
+      },
+      {
+        "title": "Multiple environment draft",
+        "module": "combobox/multiple"
+      },
+      {
+        "title": "Creation",
+        "module": "combobox/creation"
+      },
+      {
+        "title": "Async search",
+        "module": "combobox/async"
+      },
+      {
+        "title": "Free-text tags",
+        "module": "combobox/tags"
+      },
+      {
+        "title": "Secret path",
+        "module": "combobox/secret-path"
+      }
+    ]
+  },
+  {
+    "id": "command-menu",
+    "title": "Command",
+    "summary": "Find and execute an action using a searchable command list.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Command menu",
+        "module": "command-menu/default"
+      },
+      {
+        "title": "Loading and no results",
+        "module": "command-menu/states"
+      }
+    ]
+  },
+  {
+    "id": "context-menu",
+    "title": "Context Menu",
+    "summary": "Expose secondary actions from a context menu.",
+    "group": "Actions",
+    "examples": [
+      {
+        "title": "Right-click region",
+        "module": "context-menu/default"
+      }
+    ]
+  },
+  {
+    "id": "cover",
+    "title": "Cover",
+    "summary": "The brand cover: a display title and tagline beside a block composition drawn from the system's tokens.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Brand cover",
+        "module": "cover/default"
+      }
+    ]
+  },
+  {
+    "id": "data-grid",
+    "title": "Data grid",
+    "summary": "Spreadsheet selection and exact typed edits over stable row identities.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Editing and sorting",
+        "module": "data-grid/workspace"
+      }
+    ]
+  },
+  {
+    "id": "detail-layout",
+    "title": "Detail layout",
+    "summary": "Lay out a detail page as stacked content cards with a details sidecar on the right that stacks above them in narrow containers.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Wide and narrow containers",
+        "module": "detail-layout/default"
+      }
+    ]
+  },
+  {
+    "id": "detail",
+    "title": "Detail",
+    "summary": "Stacked label and value pairs for a resource's details, optionally grouped under headers.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Groups, headers and loose details",
+        "module": "detail/default"
+      }
+    ]
+  },
+  {
+    "id": "dialog",
+    "title": "Dialog",
+    "summary": "Edit or inspect a task in a modal with a title and, only when it adds information, a short description.",
+    "group": "Overlays",
+    "examples": [
+      {
+        "title": "Editable form",
+        "module": "dialog/default"
+      },
+      {
+        "title": "Close controls",
+        "module": "dialog/variants"
+      },
+      {
+        "title": "Constrained history",
+        "module": "dialog/content"
+      },
+      {
+        "title": "Pending save and unsaved changes",
+        "module": "dialog/pending"
+      }
+    ]
+  },
+  {
+    "id": "documentation-link-badge",
+    "title": "Documentation link badge",
+    "summary": "An info Badge that opens a documentation page in a new tab, with a fixed label and tooltip.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Variants and placement",
+        "module": "documentation-link-badge/default"
+      }
+    ]
+  },
+  {
+    "id": "dropdown-menu",
+    "title": "Dropdown Menu",
+    "summary": "Choose an action or setting from a trigger menu.",
+    "group": "Actions",
+    "examples": [
+      {
+        "title": "Environment actions",
+        "module": "dropdown-menu/default"
+      },
+      {
+        "title": "Checked states",
+        "module": "dropdown-menu/states"
+      },
+      {
+        "title": "Placements",
+        "module": "dropdown-menu/placements"
+      },
+      {
+        "title": "Disabled with a reason",
+        "module": "dropdown-menu/disabled-reason"
+      }
+    ]
+  },
+  {
+    "id": "duration-input",
+    "title": "Duration input",
+    "summary": "Enter a length of time as an amount and a unit, in the ms() string main sends.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "States",
+        "module": "duration-input/default"
+      }
+    ]
+  },
+  {
+    "id": "empty-state",
+    "title": "Empty",
+    "summary": "Explain why a collection has no items and how to create one.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "Default: a tile, a title, a description and the primary action",
+        "module": "empty-state/default"
+      },
+      {
+        "title": "With a secondary action: the faster alternative follows the primary action",
+        "module": "empty-state/secondary-action"
+      },
+      {
+        "title": "Bare media: a muted icon without a tile for inline and compact regions",
+        "module": "empty-state/bare"
+      },
+      {
+        "title": "Small: the empty body of a list, table or menu",
+        "module": "empty-state/small"
+      },
+      {
+        "title": "Composed from parts: the same result as Default",
+        "module": "empty-state/parts"
+      }
+    ]
+  },
+  {
+    "id": "error-state",
+    "title": "Error state",
+    "summary": "The 404 and crash fallback, inside the shell or as a full page.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Not found and crash",
+        "module": "error-state/default"
+      },
+      {
+        "title": "Tall content in a short space",
+        "module": "error-state/long-stack"
+      },
+      {
+        "title": "Forbidden with a page action",
+        "module": "error-state/forbidden"
+      }
+    ]
+  },
+  {
+    "id": "field-mapping",
+    "title": "Field mapping",
+    "summary": "Map each source field to the value or name it becomes, one aligned row per field.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Mapping rows with a trailing badge",
+        "module": "field-mapping/default"
+      }
+    ]
+  },
+  {
+    "id": "field",
+    "title": "Field",
+    "summary": "Connect a control to its label, description and validation error.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Labels and errors",
+        "module": "field/default"
+      },
+      {
+        "title": "Layouts",
+        "module": "field/layouts"
+      },
+      {
+        "title": "Grouped fields",
+        "module": "field/grouping"
+      },
+      {
+        "title": "Search matches in label and description",
+        "module": "field/search-matches"
+      },
+      {
+        "title": "Label help",
+        "module": "field/help"
+      }
+    ]
+  },
+  {
+    "id": "file-tree",
+    "title": "File tree",
+    "summary": "A named hierarchical file and folder picker with one keyboard tab stop.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Sizes",
+        "module": "file-tree/variants"
+      },
+      {
+        "title": "Selection, empty and controlled expansion",
+        "module": "file-tree/states"
+      },
+      {
+        "title": "Folder picker and selected path",
+        "module": "file-tree/picker"
+      }
+    ]
+  },
+  {
+    "id": "filter-bar",
+    "title": "Filter bar",
+    "summary": "Search plus an Add filter menu; each applied filter becomes a removable chip that opens its own value picker.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Empty and with filters applied",
+        "module": "filter-bar/default"
+      }
+    ]
+  },
+  {
+    "id": "floating-action-bar",
+    "title": "Floating action bar",
+    "summary": "Bulk actions for the current selection, floating over the bottom of the view while anything is selected.",
+    "group": "Composites",
+    "examples": [
+      {
+        "title": "Bulk actions over a list",
+        "module": "floating-action-bar/default"
+      },
+      {
+        "title": "Action blocked with a reason",
+        "module": "floating-action-bar/disabled-reason"
+      }
+    ]
+  },
+  {
+    "id": "hover-card",
+    "title": "Hover Card",
+    "summary": "Show supplementary information on hover or keyboard focus.",
+    "group": "Overlays",
+    "examples": [
+      {
+        "title": "Linked connection",
+        "module": "hover-card/default"
+      },
+      {
+        "title": "Placements",
+        "module": "hover-card/placements"
+      },
+      {
+        "title": "Widths",
+        "module": "hover-card/widths"
+      }
+    ]
+  },
+  {
+    "id": "icon",
+    "title": "Icon",
+    "summary": "Render a Lucide icon by product name or directly, on the shared size and stroke tokens.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "v4 set (custom), with visible names",
+        "module": "icon/default"
+      },
+      {
+        "title": "Lucide fallbacks for glyphs the set lacks",
+        "module": "icon/fallbacks"
+      },
+      {
+        "title": "Sizes and naming",
+        "module": "icon/sizes"
+      }
+    ]
+  },
+  {
+    "id": "input-group",
+    "title": "Input Group",
+    "summary": "Compose a text input with leading and trailing controls.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "States and clearing",
+        "module": "input-group/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "input-group/sizes"
+      },
+      {
+        "title": "Addon placement",
+        "module": "input-group/addons"
+      },
+      {
+        "title": "Action recipes",
+        "module": "input-group/buttons"
+      }
+    ]
+  },
+  {
+    "id": "input-otp",
+    "title": "Input OTP",
+    "summary": "Enter a fixed-length verification code in connected slots.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Numeric code states",
+        "module": "input-otp/default"
+      },
+      {
+        "title": "Controlled recovery code",
+        "module": "input-otp/controlled"
+      }
+    ]
+  },
+  {
+    "id": "input",
+    "title": "Input",
+    "summary": "Enter a single-line value with native input behavior.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "States",
+        "module": "input/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "input/sizes"
+      },
+      {
+        "title": "Controlled editing",
+        "module": "input/editing"
+      }
+    ]
+  },
+  {
+    "id": "item",
+    "title": "Item",
+    "summary": "Arrange one object with its title, description, media and actions.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Unread rows, errors and a selectable provider",
+        "module": "item/default"
+      },
+      {
+        "title": "Variants, sizes and states",
+        "module": "item/variants"
+      },
+      {
+        "title": "Parts and media",
+        "module": "item/composition"
+      },
+      {
+        "title": "Selectable tile and media",
+        "module": "item/tiles"
+      }
+    ]
+  },
+  {
+    "id": "json",
+    "title": "JSON",
+    "summary": "Inspect a JSON tree with recursive redaction before rendering.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "Nested audit data with recursive redaction",
+        "module": "json/default"
+      }
+    ]
+  },
+  {
+    "id": "kbd",
+    "title": "Keyboard shortcut",
+    "summary": "Keyboard key caps with platform-aware modifiers and readable sequences.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Shortcuts in context",
+        "module": "kbd/default"
+      },
+      {
+        "title": "Platforms",
+        "module": "kbd/sizes"
+      }
+    ]
+  },
+  {
+    "id": "label",
+    "title": "Label",
+    "summary": "Give a form control a persistent accessible label.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Label association",
+        "module": "label/default"
+      },
+      {
+        "title": "Required and unavailable fields",
+        "module": "label/states"
+      }
+    ]
+  },
+  {
+    "id": "layout",
+    "title": "Layout measures",
+    "summary": "Compose responsive layouts with source spacing tokens and shared width measures.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Stack, Inline, Grid and measures",
+        "module": "layout/default"
+      }
+    ]
+  },
+  {
+    "id": "list",
+    "title": "List",
+    "summary": "Object rows with independent current state, selection and actions.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Rows and empty list",
+        "module": "list/default"
+      },
+      {
+        "title": "Link and button rows",
+        "module": "list/interactive"
+      },
+      {
+        "title": "Framed, sections, plain and sm",
+        "module": "list/variants"
+      },
+      {
+        "title": "Segmented and divided, with header, sections and footer",
+        "module": "list/segmented-divided"
+      },
+      {
+        "title": "DataList default and compact density",
+        "module": "list/density"
+      }
+    ]
+  },
+  {
+    "id": "loader",
+    "title": "Loader",
+    "summary": "Loaders by level: BootLoader while the app or session boots, RouteProgress while a navigation resolves, and Loader for a page or a region of unknown shape.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "Base, page and a skeleton reload",
+        "module": "loader/default"
+      },
+      {
+        "title": "Boot loader in peach and dark",
+        "module": "loader/boot"
+      },
+      {
+        "title": "Route progress",
+        "module": "loader/route-progress"
+      }
+    ]
+  },
+  {
+    "id": "middle-truncate",
+    "title": "Middle truncate",
+    "summary": "Keep both ends of a long identifier within its available width.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Keep both ends of a public resource path",
+        "module": "middle-truncate/default"
+      },
+      {
+        "title": "Width and copy states",
+        "module": "middle-truncate/states"
+      }
+    ]
+  },
+  {
+    "id": "multi-select",
+    "title": "Multi-select",
+    "summary": "Choose several known options without closing after each selection.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Permission draft",
+        "module": "multi-select/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "multi-select/sizes"
+      },
+      {
+        "title": "Quick actions",
+        "module": "multi-select/environments"
+      }
+    ]
+  },
+  {
+    "id": "multi-step",
+    "title": "Multi step",
+    "summary": "A task in steps where each step checks its fields before the next, in a dialog, a sheet or the page.",
+    "group": "Composites",
+    "examples": [
+      {
+        "title": "Connect an integration in three containers",
+        "module": "multi-step/default"
+      }
+    ]
+  },
+  {
+    "id": "page-header",
+    "title": "Page header",
+    "summary": "The top of a page: the page-level trail, the title with its badges, a lede, actions and tabs.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Top-level page and object page",
+        "module": "page-header/default"
+      }
+    ]
+  },
+  {
+    "id": "pagination",
+    "title": "Pagination",
+    "summary": "Page ranges, numbered or compact navigation, and manual load more.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Variants",
+        "module": "pagination/default"
+      }
+    ]
+  },
+  {
+    "id": "popover",
+    "title": "Popover",
+    "summary": "Show a small interactive panel anchored to its trigger.",
+    "group": "Overlays",
+    "examples": [
+      {
+        "title": "Connection hostname",
+        "module": "popover/default"
+      },
+      {
+        "title": "Placements",
+        "module": "popover/placements"
+      },
+      {
+        "title": "Anchored form and nested dialog",
+        "module": "popover/behavior"
+      },
+      {
+        "title": "Draggable annotation",
+        "module": "popover/draggable"
+      }
+    ]
+  },
+  {
+    "id": "progress",
+    "title": "Progress",
+    "summary": "Expose determinate or indeterminate progress with numeric semantics.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "Bar and stages",
+        "module": "progress/default"
+      }
+    ]
+  },
+  {
+    "id": "radio-group",
+    "title": "Radio Group",
+    "summary": "Choose one option from a visible group.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Controlled access choice",
+        "module": "radio-group/default"
+      },
+      {
+        "title": "States",
+        "module": "radio-group/states"
+      },
+      {
+        "title": "Orientation",
+        "module": "radio-group/orientations"
+      },
+      {
+        "title": "Choice cards",
+        "module": "radio-group/cards"
+      }
+    ]
+  },
+  {
+    "id": "row-link",
+    "title": "Row link",
+    "summary": "A typed route link whose target stretches over its table row or Card, with a disabled fallback.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "DataTable rows and a Card",
+        "module": "row-link/default"
+      }
+    ]
+  },
+  {
+    "id": "scroll-area",
+    "title": "Scroll Area",
+    "summary": "Scroll constrained content with a styled scrollbar.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Scroll a bounded version history",
+        "module": "scroll-area/default"
+      },
+      {
+        "title": "Visibility and axes",
+        "module": "scroll-area/variants"
+      }
+    ]
+  },
+  {
+    "id": "secret-input",
+    "title": "Secret input",
+    "summary": "Type or paste a secret value that stays masked until the field is focused.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Masked editing",
+        "module": "secret-input/default"
+      }
+    ]
+  },
+  {
+    "id": "select",
+    "title": "Select",
+    "summary": "Choose one value from a Radix listbox.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Environment field",
+        "module": "select/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "select/sizes"
+      },
+      {
+        "title": "Long metadata and menu width",
+        "module": "select/metadata"
+      },
+      {
+        "title": "Placeholder, disabled and invalid",
+        "module": "select/states"
+      },
+      {
+        "title": "Named without a Field",
+        "module": "select/accessible-name"
+      }
+    ]
+  },
+  {
+    "id": "sensitive-editor",
+    "title": "Sensitive editor",
+    "summary": "Explicit reveal and replacement editing with host-owned access and persistence.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Reveal and replace",
+        "module": "sensitive-editor/lifecycle"
+      }
+    ]
+  },
+  {
+    "id": "separator",
+    "title": "Separator",
+    "summary": "Separate adjacent groups visually or semantically.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Plain, labeled and vertical content boundaries",
+        "module": "separator/default"
+      }
+    ]
+  },
+  {
+    "id": "settings-card",
+    "title": "Settings card",
+    "summary": "One setting, or a few that save together, with a footer that shows status and Save.",
+    "group": "Composites",
+    "examples": [
+      {
+        "title": "Save, locked and danger",
+        "module": "settings-card/default"
+      },
+      {
+        "title": "Embedded table",
+        "module": "settings-card/embedded-table"
+      }
+    ]
+  },
+  {
+    "id": "sheet",
+    "title": "Sheet",
+    "summary": "Inspect or edit a task in a side panel.",
+    "group": "Overlays",
+    "examples": [
+      {
+        "title": "Connection details",
+        "module": "sheet/default"
+      },
+      {
+        "title": "Sides",
+        "module": "sheet/placements"
+      },
+      {
+        "title": "Sizes",
+        "module": "sheet/sizes"
+      },
+      {
+        "title": "Controlled long review",
+        "module": "sheet/behavior"
+      },
+      {
+        "title": "Path preview subheader",
+        "module": "sheet/subheader"
+      },
+      {
+        "title": "Pending save and unsaved changes",
+        "module": "sheet/pending"
+      },
+      {
+        "title": "Form around the sections",
+        "module": "sheet/form"
+      },
+      {
+        "title": "Header and footer inside a view component",
+        "module": "sheet/wrapped-sections"
+      }
+    ]
+  },
+  {
+    "id": "sidebar",
+    "title": "Sidebar",
+    "summary": "The app's navigation below the TopBar band and beside the content card: sections of rows (a back row first inside a scope), footer rows, and a bottom-left corner with the collapse toggle, help and announcements.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Expanded and rail",
+        "module": "sidebar/default"
+      },
+      {
+        "title": "Scoped navigation",
+        "module": "sidebar/scopes"
+      },
+      {
+        "title": "Routed levels",
+        "module": "sidebar/routes"
+      }
+    ]
+  },
+  {
+    "id": "skeleton",
+    "title": "Skeleton",
+    "summary": "Reserve content space while a resource is loading.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "Pending text and a resource row",
+        "module": "skeleton/default"
+      },
+      {
+        "title": "Line counts",
+        "module": "skeleton/behavior"
+      }
+    ]
+  },
+  {
+    "id": "slider",
+    "title": "Slider",
+    "summary": "Choose a numeric value or range from a bounded scale.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Single, range and disabled",
+        "module": "slider/default"
+      }
+    ]
+  },
+  {
+    "id": "snippet",
+    "title": "Snippet",
+    "summary": "Present a selectable command or machine value and copy its literal value.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "Copy a literal run command",
+        "module": "snippet/default"
+      },
+      {
+        "title": "Sizes and field states",
+        "module": "snippet/states"
+      },
+      {
+        "title": "Exact command copy",
+        "module": "snippet/behavior"
+      },
+      {
+        "title": "Multi-line values",
+        "module": "snippet/multiline"
+      }
+    ]
+  },
+  {
+    "id": "spinner",
+    "title": "Spinner",
+    "summary": "Show the Infisical pixel mark while real work remains pending.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "Spinner",
+        "module": "spinner/default"
+      }
+    ]
+  },
+  {
+    "id": "switch",
+    "title": "Switch",
+    "summary": "Apply an immediate boolean setting with its own pending and recovery state.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Layouts",
+        "module": "switch/default"
+      },
+      {
+        "title": "Sizes",
+        "module": "switch/sizes"
+      },
+      {
+        "title": "States and layout",
+        "module": "switch/states"
+      },
+      {
+        "title": "Rows in a card",
+        "module": "switch/rows"
+      }
+    ]
+  },
+  {
+    "id": "table",
+    "title": "Table",
+    "summary": "Semantic object tables with a typed data companion for selection and large datasets.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Variants",
+        "module": "table/variants"
+      },
+      {
+        "title": "Empty and protected selection",
+        "module": "table/states"
+      },
+      {
+        "title": "Native Table loading rows",
+        "module": "table/native-loading"
+      },
+      {
+        "title": "Native semantic table",
+        "module": "table/semantic"
+      },
+      {
+        "title": "Sort direction",
+        "module": "table/sorting"
+      },
+      {
+        "title": "Virtual rows and sorting",
+        "module": "table/data-table"
+      },
+      {
+        "title": "Virtual rows, load more",
+        "module": "table/load-more"
+      },
+      {
+        "title": "Scroll container ref",
+        "module": "table/scroll-container"
+      },
+      {
+        "title": "Row actions",
+        "module": "table/row-actions"
+      },
+      {
+        "title": "Shared tooltips",
+        "module": "table/shared-tooltips"
+      },
+      {
+        "title": "Lazy row actions",
+        "module": "table/lazy-row-actions"
+      },
+      {
+        "title": "Row activation",
+        "module": "table/row-activation"
+      },
+      {
+        "title": "Pagination",
+        "module": "table/pagination"
+      },
+      {
+        "title": "Loading rows",
+        "module": "table/loading"
+      },
+      {
+        "title": "Grouped rows",
+        "module": "table/grouped-rows"
+      },
+      {
+        "title": "Column toggle, permission matrix",
+        "module": "table/column-toggle"
+      },
+      {
+        "title": "Leading pins and a full-width cell",
+        "module": "table/leading-pin"
+      },
+      {
+        "title": "Row focus while editing",
+        "module": "table/row-focus"
+      }
+    ]
+  },
+  {
+    "id": "tabs",
+    "title": "Tabs",
+    "summary": "Switch between peer views in the same context.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Variants",
+        "module": "tabs/default"
+      }
+    ]
+  },
+  {
+    "id": "text",
+    "title": "Text",
+    "summary": "Use shared body and supporting-text measures.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Heading roles and body text",
+        "module": "text/default"
+      },
+      {
+        "title": "StatusText tones and loading",
+        "module": "text/status"
+      },
+      {
+        "title": "Search highlight",
+        "module": "text/highlight"
+      }
+    ]
+  },
+  {
+    "id": "textarea",
+    "title": "Textarea",
+    "summary": "Enter multiline prose with native text editing.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "States",
+        "module": "textarea/default"
+      },
+      {
+        "title": "Controlled notes",
+        "module": "textarea/editing"
+      },
+      {
+        "title": "Starting height from rows",
+        "module": "textarea/rows"
+      }
+    ]
+  },
+  {
+    "id": "toast",
+    "title": "Sonner",
+    "summary": "Announce a short-lived result through themed toast notifications.",
+    "group": "Feedback",
+    "examples": [
+      {
+        "title": "One notice per tone",
+        "module": "toast/default"
+      },
+      {
+        "title": "Content variants",
+        "module": "toast/anatomy"
+      },
+      {
+        "title": "Trigger success and error notifications",
+        "module": "toast/parts"
+      },
+      {
+        "title": "Toast above an open sheet",
+        "module": "toast/over-sheet"
+      }
+    ]
+  },
+  {
+    "id": "toggle-group",
+    "title": "Toggle Group",
+    "summary": "Select one or several pressed options in a compact group.",
+    "group": "Actions",
+    "examples": [
+      {
+        "title": "Single choice",
+        "module": "toggle-group/default"
+      },
+      {
+        "title": "Multiple choices",
+        "module": "toggle-group/permissions"
+      }
+    ]
+  },
+  {
+    "id": "toggle",
+    "title": "Toggle",
+    "summary": "Turn a single pressed state on or off.",
+    "group": "Actions",
+    "examples": [
+      {
+        "title": "Off and on",
+        "module": "toggle/default"
+      },
+      {
+        "title": "Variants",
+        "module": "toggle/variants"
+      }
+    ]
+  },
+  {
+    "id": "tooltip",
+    "title": "Tooltip",
+    "summary": "Explain a control on hover and keyboard focus.",
+    "group": "Overlays",
+    "examples": [
+      {
+        "title": "Wrapped help and refresh",
+        "module": "tooltip/default"
+      },
+      {
+        "title": "Placements",
+        "module": "tooltip/placements"
+      },
+      {
+        "title": "Shortcut and controlled parts",
+        "module": "tooltip/parts"
+      },
+      {
+        "title": "Focusable text",
+        "module": "tooltip/text"
+      },
+      {
+        "title": "Blocked actions",
+        "module": "tooltip/disabled"
+      }
+    ]
+  },
+  {
+    "id": "top-bar",
+    "title": "Top bar",
+    "summary": "The 48px band across the top of the AppShell, outside the content card: the organization switcher, the product and project switchers and the page crumbs on the left, notifications, search and the account menu on the right.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "App shell with the band",
+        "module": "top-bar/default"
+      }
+    ]
+  }
+]

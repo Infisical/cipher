@@ -50,8 +50,10 @@
     "tokens": "tsx scripts/tokens.ts",
     "registry": "tsx scripts/registry.ts",
     "typecheck": "tsc -p tsconfig.json",
+    "check": "tsx scripts/tokens.ts --check && tsx scripts/registry.ts --check",
     "build": "npm run tokens && vite build && tsc -p tsconfig.build.json && tsx scripts/finish-build.ts",
-    "check": "tsx scripts/tokens.ts --check && tsx scripts/registry.ts --check"
+    "site": "vite --config site/vite.config.ts",
+    "site:build": "vite build --config site/vite.config.ts"
   },
   "peerDependencies": {
     "react": "^19.0.0",

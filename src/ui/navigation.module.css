@@ -18,7 +18,6 @@
 .tabsTrack[data-rule-spans] {
   width: 100%;
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .tabsList {
   position: relative;
   display: flex;

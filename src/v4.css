@@ -384,7 +384,6 @@
   padding: 0;
   gap: 0;
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .v4 :is([data-slot="dialog-scroll"], [data-slot="alert-dialog-scroll"]) {
   display: flex;
   flex: 0 1 auto;
@@ -462,7 +461,6 @@
   background: var(--v4-bad-bg);
   color: var(--v4-bad);
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .v4 :is([data-slot="sheet-content"]) {
   font-family: var(--v4-type-body-font-family);
   font-size: var(--v4-type-body-font-size);
@@ -517,13 +515,11 @@
   border-radius: 0;
 }
 
-/* v4-check-ignore overlay-section-padding -- the body's block space comes from the padded header and footer around it */
 .v4 :is([data-slot="sheet-body"]) {
   min-width: 0;
   flex: 1 0 auto;
   padding: 0 var(--v4-space-overlay-inset);
 }
-/* v4-check-ignore overlay-section-padding -- its block-start space comes from the padded header above it */
 .v4 :is([data-slot="sheet-subheader"]) {
   padding: 0 var(--v4-space-overlay-inset) var(--v4-space-overlay-inset);
 }
@@ -566,7 +562,6 @@
   flex-direction: column;
   border-top: var(--v4-size-control-border) solid var(--v4-line-soft);
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .v4 :is([data-slot="sheet-scroll"]) {
   display: flex;
   flex: 1 1 auto;

@@ -78,10 +78,7 @@ const support = filesIn("src").filter(
     !file.endsWith(".woff2") &&
     !packageOnly.includes(file)
 );
-const docsOnly = (file: string) =>
-  file === "src/AGENTS.md" || file.startsWith("src/skills/") || file.startsWith("src/docs/");
-const docsFiles = support.filter(docsOnly);
-const baseFiles = support.filter((file) => !docsOnly(file));
+const baseFiles = support;
 const fileEntry = (file: string) => {
   const target = installRoot + "/" + file.slice("src/".length);
   return { path: target, type: "registry:file", target };
@@ -116,12 +113,6 @@ const items: Item[] = [
       "Cipher tokens, the Lightly Peach, Light and Dark themes, fonts, cn and scoped portal support.",
     dependencies: [...baseDependencies].sort().map(declaredPackage),
     files: baseFiles
-  },
-  {
-    name: registryName + "-docs",
-    type: "registry:file",
-    description: "Cipher usage rules, component guides and the agent skill, for people and coding agents.",
-    files: docsFiles
   }
 ];
 [...knownModules].sort().forEach((file) => {

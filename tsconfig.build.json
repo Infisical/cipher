@@ -6,13 +6,10 @@
     "emitDeclarationOnly": true,
     "outDir": "dist",
     "rootDir": "src",
-    "types": []
+    "types": [],
+    "paths": {}
   },
   "include": [
     "src"
-  ],
-  "exclude": [
-    "src/docs",
-    "src/skills"
   ]
 }

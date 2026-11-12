@@ -13,7 +13,6 @@
   background: var(--v4-tint, var(--muted));
   overflow-wrap: anywhere;
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .block {
   margin: 0;
   overflow: auto;
@@ -104,7 +103,6 @@
   letter-spacing: var(--v4-type-body-letter-spacing);
   padding: var(--v4-space-surface-inset);
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .tree {
   font-family: var(--v4-type-mono-font-family);
   font-size: var(--v4-type-mono-font-size);
@@ -184,7 +182,6 @@
 .snippet[data-multiline] > .prompt {
   padding-block: calc((var(--v4-nested-action-height) - 1lh) / 2);
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 /* field-sizing: content ignores rows and is missing in older targets, so the line count also sets a minimum height; content past it scrolls. */
 .snippetLines {
   box-sizing: content-box;

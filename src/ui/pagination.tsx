@@ -174,7 +174,6 @@ function Pagination({
             <div className={styles.controls}>
               {pageSizeOptions && onPageSizeChange && (
                 <div className={styles.pageSize}>
-                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control -- htmlFor names the Select trigger button by its id. */}
                   <label htmlFor={sizeId}>Rows per page</label>
                   <Select
                     id={sizeId}

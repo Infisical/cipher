@@ -10,7 +10,6 @@
 .root[data-layout="in-shell"] {
   min-height: 100%;
 }
-/* v4-check-ignore scroll-fade -- full-page is a page scroller, and page scrollers never fade */
 .root[data-layout="full-page"] {
   position: fixed;
   inset: 0;

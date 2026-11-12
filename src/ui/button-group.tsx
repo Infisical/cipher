@@ -65,7 +65,6 @@ function ButtonGroup({
     });
   });
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- This toolbar manages roving focus among its native controls.
     <div
       ref={(node) => {
         group.current = node;

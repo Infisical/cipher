@@ -5,7 +5,6 @@ import * as React from "react";
  * `interface CipherRegister { link: LinkOptions }` for a TanStack Router app. A target with
  * `disabled: true` renders RowLink and CardLink as unavailable.
  */
-// oxlint-disable-next-line typescript/no-empty-object-type
 export interface CipherRegister {}
 
 export type CipherLinkTarget = CipherRegister extends { link: infer Target }

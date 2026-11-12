@@ -4,7 +4,6 @@
   color: var(--v4-ink);
 }
 .gridScroll,
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .tableScroll {
   border-radius: 0;
   overflow: auto;
@@ -419,7 +418,6 @@
   color: var(--v4-bad);
   overflow-wrap: anywhere;
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .tree {
   list-style: none;
   margin: 0;
@@ -708,7 +706,6 @@
   min-width: 0;
   cursor: inherit;
 }
-/* v4-check-ignore cursor-pointer -- a List title button opens its item like the anchor title beside it, so it reads as a link */
 a.rowTitle,
 button.rowTitle {
   cursor: pointer;
@@ -936,7 +933,6 @@ button.rowTitle::after {
   inset-inline-end: 0;
   border-inline-end-width: var(--v4-size-focus-ring);
 }
-/* v4-check-ignore cursor-pointer -- an activatable row opens its record like a RowLink row, so the two read the same */
 .tableScroll tbody tr[data-activatable] {
   cursor: pointer;
 }
@@ -1552,7 +1548,6 @@ td.tableSelectionCell {
   height: var(--v4-size-glyph);
 }
 
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .nativeTableContainer {
   overflow-x: auto;
 }

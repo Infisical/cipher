@@ -14,7 +14,6 @@
   font-weight: var(--v4-type-body-font-weight);
   letter-spacing: var(--v4-type-body-letter-spacing);
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .panel {
   min-width: min(
     max(var(--v4-size-menu-min), var(--radix-popper-anchor-width, 0px)),
@@ -31,7 +30,6 @@
 .sub {
   min-width: var(--v4-size-menu-min);
 }
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .card {
   display: flex;
   flex-direction: column;
@@ -180,7 +178,6 @@
 
 /* Nine whole rows plus one inset pad: at rest the top pad and nine rows show, and scrolled to the
    end the nine last rows and the bottom pad do, so neither edge ever cuts a row. */
-/* v4-check-ignore scroll-fade -- the edge fade comes from data-scroll-fade on this element */
 .list {
   max-height: calc(9 * var(--v4-size-control-sm) + var(--v4-menu-pad));
   overflow-x: hidden;

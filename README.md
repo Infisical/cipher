@@ -81,8 +81,6 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button --overwrite
 
 `--overwrite` replaces your local copies, so commit or stash local edits first.
 
-`@cipher/cipher-docs` installs the usage rules, a guide per component and the agent skill under `src/components/v4/`. Add it if you build with a coding agent.
-
 ## Themes
 
 `V4Scope` takes a theme id: Lightly Peach (`peach`, the default light theme), Light (`pale`) or Dark (`dark`). Overlays and toasts portal into the scope, so they follow its theme.
@@ -90,13 +88,6 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button --overwrite
 ## Links and routing
 
 Link components (RowLink, CardLink, Breadcrumb, Sidebar and others) take a `link` prop. By default it's `{ href: string }` and renders a plain anchor, so Cipher needs no router. To route through your router, wrap the app in `CipherRouterProvider` from `lib/link` with your router's `Link` and a match hook, and augment `CipherRegister` to type `link` as your router's link options.
-
-## Not included
-
-These depend on the Infisical app and stay out of Cipher (`scripts/cipher.config.ts`):
-
-- `app-connection-form`: builds Infisical App Connection forms from presets, schemas and a redirect flow that live in the app.
-- `provider-icon`: loads integration logos from the Infisical app's static assets.
 
 ## Development
 
@@ -106,11 +97,14 @@ $ npm run typecheck
 $ npm run check   # tokens.generated.css and r/ match the source
 $ npm run build   # dist/: ESM, types, cipher.css, tokens
 $ npm pack        # a tarball to install in another project
+$ npm run site    # the showcase: every component and its examples, in each theme
 ```
+
+The showcase in `site/` imports Cipher from `src/` and ships in neither the npm package nor the registry.
 
 After changing `src/tokens.json`, run `npm run tokens`. After changing anything in `src/`, run `npm run registry` and commit `r/` with it. CI fails if either is stale.
 
-Until the Infisical app consumes this package, the source of truth is `frontend/src/components/v4` in [Infisical/infisical](https://github.com/Infisical/infisical). `npm run sync -- <path to infisical/frontend>` copies it into `src/`, drops the excluded modules and tests, and rewrites app imports to relative paths. Run `npm run tokens` and `npm run registry` after it.
+Until the Infisical app consumes this package, the source of truth is `frontend/src/components/v4` in [Infisical/infisical](https://github.com/Infisical/infisical). `npm run sync -- <path to infisical/frontend>` copies it into `src/`, drops the app-only modules listed in `scripts/cipher.config.ts` and the tests, rewrites app imports to relative paths, and regenerates the showcase examples. Run `npm run tokens` and `npm run registry` after it.
 
 ## Release
 

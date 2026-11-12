@@ -19,16 +19,19 @@
     "skipLibCheck": true,
     "noEmit": true,
     "types": [
-      "node"
-    ]
+      "node",
+      "vite/client"
+    ],
+    "paths": {
+      "@infisical/cipher/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "src",
     "scripts",
+    "site",
     "vite.config.ts"
-  ],
-  "exclude": [
-    "src/docs",
-    "src/skills"
   ]
 }

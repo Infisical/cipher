@@ -581,7 +581,6 @@ function IdleRowButton({
       data-v4-button=""
       data-disabled-reason={disabledReason ? "" : undefined}
       aria-disabled={disabledReason || props.disabled ? true : undefined}
-      // oxlint-disable-next-line jsx-a11y/role-supports-aria-props -- aria-description is a global ARIA 1.3 attribute; Button sets it the same way.
       aria-description={disabledReason}
       className={cn(buttonVariants({ variant: "ghost", size: "icon-row" }), geometry.iconOnly)}
       {...props}

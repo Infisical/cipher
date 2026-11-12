@@ -664,7 +664,6 @@
 }
 .progress[data-state="indeterminate"] .progressIndicator {
   flex: 0 0 30%;
-  /* v4-check-ignore motion-literal -- loader choreography, one owner: the reference slider loop */
   animation: progressTravel 1.5s ease-in-out infinite;
 }
 @keyframes progressTravel {
@@ -895,7 +894,6 @@
   width: 1px;
   height: var(--v4-size-icon);
   background: var(--v4-ink);
-  /* v4-check-ignore motion-literal -- caret blink period, one owner */
   animation: otpCaret 1s steps(1, end) infinite;
 }
 @keyframes otpCaret {
@@ -1075,7 +1073,6 @@
   .toggleGroup[data-spacing="0"]:not([data-indicator])
   > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]):hover {
   background-color: var(--v4-surface);
-  /* v4-check-ignore line-on-edge -- line-soft vanishes against the dark tint track, so the cut-in thumb takes line */
   border-color: var(--v4-line);
   box-shadow: none;
 }
@@ -1120,7 +1117,6 @@
 }
 :global(.v4[data-scheme="dark"]) .indicator {
   background: var(--v4-surface);
-  /* v4-check-ignore line-on-edge -- line-soft vanishes against the dark tint track, so the cut-in thumb takes line */
   border-color: var(--v4-line);
   box-shadow: none;
 }
