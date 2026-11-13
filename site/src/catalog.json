@@ -540,14 +540,14 @@
     ]
   },
   {
-    "id": "documentation-link-badge",
-    "title": "Documentation link badge",
-    "summary": "An info Badge that opens a documentation page in a new tab, with a fixed label and tooltip.",
+    "id": "documentation-link",
+    "title": "Documentation link",
+    "summary": "An icon link right after a title or label that opens its documentation in a new tab.",
     "group": "Navigation",
     "examples": [
       {
-        "title": "Variants and placement",
-        "module": "documentation-link-badge/default"
+        "title": "Placement",
+        "module": "documentation-link/default"
       }
     ]
   },
