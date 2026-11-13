@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { AnimatedCollapse } from "./animated-collapse";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { MiddleTruncate } from "./middle-truncate";
 
 import styles from "./data.module.css";
@@ -12,7 +12,7 @@ export interface FileTreeNode {
   type?: "file" | "folder";
   children?: readonly FileTreeNode[];
   meta?: React.ReactNode;
-  icon?: IconName;
+  icon?: IconSource;
   disabled?: boolean;
   label?: string;
 }
@@ -262,7 +262,7 @@ export function FileTree({
               </button>
             )}
             <Icon
-              name={
+              icon={
                 node.icon ??
                 (folder(node) ? (open.includes(node.id) ? "folder-open" : "folder") : "file")
               }

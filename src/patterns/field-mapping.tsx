@@ -3,7 +3,7 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { Badge } from "../ui/badge";
 import { FieldError } from "../ui/field";
-import { Icon, type IconName } from "../ui/icon";
+import { Icon, type IconSource } from "../ui/icon";
 import { Input, type InputProps } from "../ui/input";
 
 import styles from "./field-mapping.module.css";
@@ -51,7 +51,7 @@ export const FieldMapping = ({
 
 export type FieldMappingRowProps = Omit<InputProps, "size" | "invalid"> & {
   source: string;
-  icon?: IconName;
+  icon?: IconSource;
   error?: React.ReactNode;
 } & { ref?: React.Ref<HTMLInputElement> };
 
@@ -61,7 +61,7 @@ export const FieldMappingRow = ({ source, icon, error, ...props }: FieldMappingR
     <div className={styles.row}>
       <span className={styles.source}>
         <Badge tone="soft" size={`control-${size}`}>
-          {icon && <Icon name={icon} />}
+          {icon && <Icon icon={icon} />}
           {source}
         </Badge>
       </span>

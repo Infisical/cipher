@@ -5,7 +5,7 @@ import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 
 import { usePortalContainer } from "../scope";
 import { Button } from "./button";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Input } from "./input";
 
 import { FrameScope } from "../lib/frame-context";
@@ -81,7 +81,7 @@ function AlertDialogContent({
   size?: "default" | "sm";
   /** danger shows a bad-tone lead tile (trash unless icon or AlertDialogMedia is given); neutral and unset show no automatic tile. */
   tone?: "danger" | "neutral";
-  icon?: IconName;
+  icon?: IconSource;
   /** The exact text the person types before the action enables. */
   confirmText?: string;
   /** While true, Escape and Cancel are blocked, so an in-flight action cannot be abandoned. An AlertDialogAction with loading sets this for you. */
@@ -134,7 +134,7 @@ function AlertDialogContent({
     [
       !hasMedia && (icon || tone === "danger") && (
         <AlertDialogMedia key="auto-media" data-auto="">
-          <Icon name={icon ?? "trash"} size={20} />
+          <Icon icon={icon ?? "trash"} size={20} />
         </AlertDialogMedia>
       ),
       ...parts
@@ -189,7 +189,7 @@ function AlertDialogContent({
                   <>
                     {!hasMedia && (icon || tone === "danger") && (
                       <AlertDialogMedia data-auto="">
-                        <Icon name={icon ?? "trash"} size={20} />
+                        <Icon icon={icon ?? "trash"} size={20} />
                       </AlertDialogMedia>
                     )}
                     {parts}

@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./dropdown-menu";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Sheet, SheetContent, SheetTitle } from "./sheet";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 import { Tooltip, TooltipProvider } from "./tooltip";
@@ -34,7 +34,7 @@ import styles from "./sidebar.module.css";
 export interface SidebarLink {
   id: string;
   label: string;
-  icon?: IconName;
+  icon?: IconSource;
   href?: string;
   onClick?: () => void;
   count?: number;
@@ -50,13 +50,13 @@ export interface SidebarItem extends SidebarLink {
 }
 export interface SidebarSection {
   label?: string;
-  icon?: IconName;
+  icon?: IconSource;
   items: readonly SidebarItem[];
 }
 export interface SidebarSpace {
   id: string;
   label: string;
-  icon: IconName;
+  icon: IconSource;
   sections: readonly SidebarSection[];
 }
 export interface SidebarScope {
@@ -138,7 +138,7 @@ const RowContent = ({
   trailing?: React.ReactNode;
 }) => (
   <>
-    {item.icon && !child && <Icon name={item.icon} size={18} className={styles.icon} />}
+    {item.icon && !child && <Icon icon={item.icon} size={18} className={styles.icon} />}
     <span className={styles.label}>{item.label}</span>
     {count ? (
       <>
@@ -813,7 +813,7 @@ const SidebarView = ({
                         spaceRefs.current[next]?.focus();
                       }}
                     >
-                      <Icon name={entry.icon} size={18} />
+                      <Icon icon={entry.icon} size={18} />
                       {hasUpdates(entry) && <span className={styles.railDot} aria-hidden="true" />}
                     </button>
                   </Tooltip>

@@ -3,7 +3,7 @@ import * as React from "react";
 import { FrameScope, useInFrame } from "../lib/frame-context";
 import { cn } from "../lib/utils";
 import { Code, type CodeProps } from "./code";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Json, type JsonProps, prepareJson } from "./json";
 import { MiddleTruncate } from "./middle-truncate";
 import { CopyButton } from "./sensitive-editor";
@@ -14,7 +14,7 @@ import frame from "./frame.module.css";
 export type CodeBlockProps = Omit<CodeProps, "children" | "block" | "onCopy" | "label"> & {
   children?: React.ReactNode;
   label?: React.ReactNode;
-  icon?: IconName;
+  icon?: IconSource;
   actions?: React.ReactNode;
   copyable?: boolean;
   copyValue?: string;
@@ -58,7 +58,7 @@ export const CodeBlock = ({
         {(label || actions || copyable) && (
           <div className={styles.header} data-has-actions={Boolean(actions) || undefined}>
             <div id={identityId} className={styles.identity}>
-              {icon && <Icon name={icon} />}
+              {icon && <Icon icon={icon} />}
               {labelText ? (
                 <MiddleTruncate keepEnd={16} className={styles.blockLabel}>
                   {labelText}

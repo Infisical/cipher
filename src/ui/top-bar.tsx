@@ -1,6 +1,5 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import type { LucideIcon } from "lucide-react";
 
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
 import { themes } from "../lib/theme-registry";
@@ -19,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./dropdown-menu";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
 import { Toaster } from "./sonner";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
@@ -32,7 +31,7 @@ export type ShellMode = "wide" | "rail" | "narrow";
 export type ShellTheme = string;
 export interface ShellMenuItem {
   label: string;
-  icon?: IconName | LucideIcon;
+  icon?: IconSource;
   href?: string;
   external?: boolean;
   onSelect?: () => void;
@@ -275,12 +274,7 @@ export function PageGutter({
 }
 PageGutter.displayName = "PageGutter";
 
-const glyph = (icon: IconName | LucideIcon, size?: number) =>
-  typeof icon === "string" ? (
-    <Icon key="icon" name={icon} size={size} />
-  ) : (
-    <Icon key="icon" icon={icon} size={size} />
-  );
+const glyph = (icon: IconSource, size?: number) => <Icon key="icon" icon={icon} size={size} />;
 
 const itemContent = (item: ShellMenuItem) => [
   item.icon && glyph(item.icon),

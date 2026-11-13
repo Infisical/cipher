@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
 import { Tooltip } from "./tooltip";
 
@@ -97,8 +97,8 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
     loading?: boolean;
-    icon?: IconName;
-    iconRight?: IconName;
+    icon?: IconSource;
+    iconRight?: IconSource;
     iconOnly?: boolean;
     selected?: boolean;
     /** Disables the action and says why: it stays focusable, shows the reason in a tooltip and exposes it as the accessible description. */
@@ -146,21 +146,21 @@ function Button({
   const content = (label: React.ReactNode) => {
     const labelGroup = trigger ? (
       <>
-        {icon && <Icon name={icon} size={iconSize} data-button-icon="" />}
+        {icon && <Icon icon={icon} size={iconSize} data-button-icon="" />}
         <span data-slot="button-label" className={geometry.triggerLabel}>
           {label}
         </span>
         <Icon
-          name={iconRight ?? "chev-down"}
+          icon={iconRight ?? "chev-down"}
           data-slot="button-chevron"
           className={geometry.triggerChevron}
         />
       </>
     ) : (
       <>
-        {icon && <Icon name={icon} size={iconSize} data-button-icon="" />}
+        {icon && <Icon icon={icon} size={iconSize} data-button-icon="" />}
         {iconOnly && (icon || iconRight) ? <span className="sr-only">{label}</span> : label}
-        {iconRight && <Icon name={iconRight} size={iconSize} />}
+        {iconRight && <Icon icon={iconRight} size={iconSize} />}
       </>
     );
     if (loadingProp === undefined) return labelGroup;

@@ -5,10 +5,13 @@ import { iconShapes } from "./icon-data";
 
 export type IconName = keyof typeof iconShapes;
 export const iconNames = Object.keys(iconShapes) as IconName[];
+export type IconComponent = LucideIcon;
+/** A Cipher glyph by name, or an icon component such as a Lucide icon. Every Cipher prop that takes an icon accepts either. */
+export type IconSource = IconName | IconComponent;
 
 type IconProps = Omit<React.ComponentPropsWithoutRef<"svg">, "name"> & {
   name?: IconName;
-  icon?: LucideIcon;
+  icon?: IconSource;
   size?: number | string;
   label?: string;
   /** draw redraws the icon's strokes when the Card around it is hovered or focused. Ignored for Lucide fallbacks and under reduced motion. */
@@ -18,8 +21,8 @@ type IconProps = Omit<React.ComponentPropsWithoutRef<"svg">, "name"> & {
 };
 
 export function Icon({
-  name,
-  icon: Fallback,
+  name: nameProp,
+  icon,
   size,
   strokeWidth,
   label,
@@ -29,6 +32,8 @@ export function Icon({
   ref,
   ...props
 }: IconProps & { ref?: React.Ref<SVGSVGElement> }) {
+  const name = nameProp ?? (typeof icon === "string" ? icon : undefined);
+  const Component = typeof icon === "string" ? undefined : icon;
   const dimension = typeof size === "number" ? `${size}px` : size;
   const shared = {
     ref,
@@ -63,7 +68,7 @@ export function Icon({
         )}
       </svg>
     );
-  if (!Fallback) return null;
-  return <Fallback {...shared} data-icon-source="lucide" />;
+  if (!Component) return null;
+  return <Component {...shared} data-icon-source="lucide" />;
 }
 Icon.displayName = "Icon";

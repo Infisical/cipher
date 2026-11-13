@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cn } from "../lib/utils";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 
 import controlStyles from "./controls.module.css";
 import styles from "./empty.module.css";
@@ -99,13 +99,13 @@ export const EmptyState = ({
   title: string;
   description?: string;
   actions?: React.ReactNode;
-  icon?: IconName;
+  icon?: IconSource;
   media?: EmptyMediaVariant;
   size?: EmptySize;
 }) => (
   <Empty size={size}>
     <EmptyMedia variant={media}>
-      <Icon name={icon} />
+      <Icon icon={icon} />
     </EmptyMedia>
     <EmptyHeader>
       <EmptyTitle>{title}</EmptyTitle>

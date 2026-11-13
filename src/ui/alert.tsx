@@ -3,7 +3,7 @@ import * as React from "react";
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 
 import helperStyles from "./helpers.module.css";
 
@@ -135,14 +135,14 @@ export const Banner = ({
   onDismiss,
   className
 }: {
-  icon?: IconName;
+  icon?: IconSource;
   children: React.ReactNode;
   action?: React.ReactNode;
   onDismiss?: () => void;
   className?: string;
 }) => (
   <div data-slot="banner" role="status" className={cn(helperStyles.banner, className)}>
-    <Icon name={icon} />
+    <Icon icon={icon} />
     <span className={helperStyles.bannerText}>{children}</span>
     {action}
     {onDismiss && (
