@@ -120,9 +120,14 @@ const ownsShortcut = (shell: HTMLElement, event: KeyboardEvent) => {
 
 export function AppShell({
   className,
+  grain = false,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  /** Paints the grain texture into the band around the inset. Off by default. */
+  grain?: boolean;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   const own = React.useRef<HTMLDivElement>(null);
   const [mode, setMode] = React.useState<ShellMode>("wide");
   const [hasNavigation, setHasNavigation] = React.useState(false);
@@ -212,6 +217,7 @@ export function AppShell({
           data-has-top-bar={hasTopBar || undefined}
           data-has-sidebar={hasSidebar || undefined}
           data-sidebar-open={sidebarOpen || undefined}
+          data-grain={grain || undefined}
           className={cn(styles.shell, className)}
           {...props}
         />

@@ -1568,6 +1568,42 @@
       {
         "title": "App shell with the band",
         "module": "top-bar/default"
+      },
+      {
+        "title": "Grain on the band, opt-in",
+        "module": "top-bar/grain"
+      }
+    ]
+  },
+  {
+    "id": "halftone",
+    "title": "Halftone",
+    "summary": "An ordered-dither wash in a corner of a surface. Decorative only, in the hue of the nearest hue scope.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Corners",
+        "module": "halftone/default"
+      },
+      {
+        "title": "Tones",
+        "module": "halftone/tones"
+      },
+      {
+        "title": "Intensity, density, reach and seed (hover a card)",
+        "module": "halftone/strength"
+      }
+    ]
+  },
+  {
+    "id": "hue",
+    "title": "Hue scope",
+    "summary": "Set one hue on any element and its descendants get icon, tint and soft colors on a shared ramp, subtle where hues mix and pop inside a single-hue scope.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Subtle and pop",
+        "module": "hue/default"
       }
     ]
   }
