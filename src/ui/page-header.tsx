@@ -55,7 +55,11 @@ export function PageHeader({
         <div className={styles.copy}>
           <div className={styles.titleLine}>
             <h1 className={cn(styles.title, mono && styles.mono)}>{title}</h1>
-            {badges && <span className={styles.badges}>{badges}</span>}
+            {badges && (
+              <span data-slot="page-header-badges" className={styles.badges}>
+                {badges}
+              </span>
+            )}
           </div>
           {description && <p className={styles.description}>{description}</p>}
         </div>
