@@ -54,7 +54,10 @@ export default function Example() {
               </UI.SheetHeader>
               <UI.SheetBody>
                 <Stack gap={16}>
-                  <Field label="Name">
+                  <Field
+                    label="Name"
+                    help="Shown in audit logs. Opening the sheet focuses this input, not this button."
+                  >
                     <Input
                       required
                       value={draft}

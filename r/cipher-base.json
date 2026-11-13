@@ -85,6 +85,12 @@
       "content": "import type * as React from \"react\";\n\nexport type HueLevel = \"subtle\" | \"pop\";\n\n/** Props that make an element a hue scope: its descendants read --cipher-hue-icon, --cipher-hue-tint, --cipher-hue-soft and --cipher-hue-fill built from this hue. Use subtle where several hues share a page and pop inside a single-hue scope. */\nexport const hueScope = (hue: number, level: HueLevel = \"subtle\") => ({\n  \"data-hue\": level,\n  style: { \"--cipher-hue\": hue } as React.CSSProperties\n});\n"
     },
     {
+      "path": "src/components/cipher/lib/initial-focus.ts",
+      "type": "registry:file",
+      "target": "src/components/cipher/lib/initial-focus.ts",
+      "content": "export const formControlSelector =\n  \":is(input:not([type=hidden]), textarea, select, [role=combobox], button[role=radio], button[role=checkbox], button[role=switch]):not(:disabled, [aria-disabled=true])\";\n\nconst tabbableSelector =\n  \":is(a[href], button, input:not([type=hidden]), textarea, select, [tabindex], [contenteditable=true]):not(:disabled, [tabindex='-1'])\";\n\n/** Marks a control, such as a help button, that an opening overlay never picks as its first focus. */\nexport const skipAutoFocus = { \"data-skip-autofocus\": \"\" } as const;\n\nconst candidate = (element: HTMLElement) =>\n  element.tabIndex >= 0 &&\n  !element.closest(\"[data-skip-autofocus]\") &&\n  element.getClientRects().length > 0;\n\n/**\n * An onOpenAutoFocus handler for overlays: focus lands on the first form control, else the first\n * tabbable element that is not marked with skipAutoFocus, so a help button beside the first label\n * never takes focus and opens its tooltip.\n */\nexport function focusFirstControl(event: Event) {\n  if (event.defaultPrevented || !(event.target instanceof HTMLElement)) return;\n  const container = event.target;\n  const find = (selector: string) =>\n    Array.from(container.querySelectorAll<HTMLElement>(selector)).find(candidate);\n  const target = find(formControlSelector) ?? find(tabbableSelector);\n  if (!target) return;\n  event.preventDefault();\n  target.focus({ preventScroll: true });\n}\n"
+    },
+    {
       "path": "src/components/cipher/lib/input-modality.ts",
       "type": "registry:file",
       "target": "src/components/cipher/lib/input-modality.ts",

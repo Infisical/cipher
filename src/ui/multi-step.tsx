@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
+import { formControlSelector } from "../lib/initial-focus";
 import { exit, snap, spring } from "../lib/motion";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
@@ -129,9 +130,6 @@ export type MultiStepProps = {
   className?: string;
 };
 
-const fieldSelector =
-  ":is(input:not([type=hidden]), textarea, select, [role=combobox], button[role=radio], button[role=checkbox], button[role=switch]):not(:disabled, [aria-disabled=true])";
-
 export const MultiStep = ({
   steps,
   variant = "dialog",
@@ -176,7 +174,7 @@ export const MultiStep = ({
     moved.current = false;
     viewport.current
       ?.querySelector<HTMLElement>(`[data-step="${current}"]`)
-      ?.querySelector<HTMLElement>(fieldSelector)
+      ?.querySelector<HTMLElement>(formControlSelector)
       ?.focus();
   }, [current]);
   const move = (target: number) => {

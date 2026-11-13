@@ -6,6 +6,7 @@ import { Button } from "./button";
 import { Icon } from "./icon";
 
 import { FrameScope } from "../lib/frame-context";
+import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
 import { renderInForm, splitOverlaySections } from "../lib/overlay-sections";
 import { useOwnedEscape } from "../lib/use-owned-escape";
@@ -97,6 +98,7 @@ function SheetContent({
   onEscapeKeyDown,
   onPointerDownOutside,
   onInteractOutside,
+  onOpenAutoFocus,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> & {
@@ -140,6 +142,10 @@ function SheetContent({
           className
         )}
         aria-busy={pending || undefined}
+        onOpenAutoFocus={(event) => {
+          onOpenAutoFocus?.(event);
+          focusFirstControl(event);
+        }}
         {...props}
         {...guard}
       >

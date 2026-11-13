@@ -77,6 +77,11 @@
           "target": "src/components/cipher/lib/hue.ts"
         },
         {
+          "path": "src/components/cipher/lib/initial-focus.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/initial-focus.ts"
+        },
+        {
           "path": "src/components/cipher/lib/input-modality.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/input-modality.ts"

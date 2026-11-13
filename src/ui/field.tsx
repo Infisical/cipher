@@ -11,6 +11,7 @@ import { Tooltip } from "./tooltip";
 
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { FieldControlContext } from "../lib/field-context";
+import { skipAutoFocus } from "../lib/initial-focus";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
 
@@ -247,6 +248,7 @@ function FieldHelp({
         size="icon-xs"
         aria-label={label}
         data-slot="field-help"
+        {...skipAutoFocus}
         className={helperStyles.fieldHelp}
       >
         <Icon name="info" />
