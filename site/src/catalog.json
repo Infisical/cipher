@@ -834,8 +834,16 @@
         "module": "item/default"
       },
       {
-        "title": "Actions layout",
+        "title": "Approval rows: timestamp by the title",
         "module": "item/actions-layout"
+      },
+      {
+        "title": "Wrapping, descriptions and buttons",
+        "module": "item/actions-wrapping"
+      },
+      {
+        "title": "Clamping the title with titleLines",
+        "module": "item/title-lines"
       },
       {
         "title": "Variants, sizes and states",
