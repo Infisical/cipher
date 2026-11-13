@@ -62,6 +62,9 @@
   --cipher-size-nested-md: 28px;
   --cipher-size-nested-lg: 32px;
   --cipher-size-cell-min: 64px;
+  --cipher-size-field-xs: 96px;
+  --cipher-size-field-sm: 176px;
+  --cipher-size-field-md: 256px;
   --cipher-size-text-min: 160px;
   --cipher-size-tile-min: 208px;
   --cipher-size-search-max: 720px;

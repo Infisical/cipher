@@ -1951,7 +1951,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/input"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"

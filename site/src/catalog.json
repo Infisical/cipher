@@ -848,6 +848,10 @@
       {
         "title": "Controlled editing",
         "module": "input/editing"
+      },
+      {
+        "title": "Fixed widths",
+        "module": "input/widths"
       }
     ]
   },
@@ -1112,6 +1116,10 @@
       {
         "title": "Labels and descriptions",
         "module": "radio-group/descriptions"
+      },
+      {
+        "title": "Columns",
+        "module": "radio-group/columns"
       },
       {
         "title": "States",
