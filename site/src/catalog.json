@@ -1062,6 +1062,10 @@
         "module": "radio-group/default"
       },
       {
+        "title": "Labels and descriptions",
+        "module": "radio-group/descriptions"
+      },
+      {
         "title": "States",
         "module": "radio-group/states"
       },
