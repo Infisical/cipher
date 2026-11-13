@@ -700,6 +700,10 @@
       {
         "title": "Label help",
         "module": "field/help"
+      },
+      {
+        "title": "Help and actions on a group",
+        "module": "field/group-help"
       }
     ]
   },
