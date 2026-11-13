@@ -712,7 +712,7 @@
 
 .cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > * {
   stroke-dasharray: 1;
-  animation: v4-icon-draw 480ms var(--cipher-ease-standard) backwards;
+  animation: cipher-icon-draw 480ms var(--cipher-ease-standard) backwards;
 }
 .cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(2) {
   animation-delay: 70ms;
@@ -723,7 +723,7 @@
 .cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(n + 4) {
   animation-delay: 210ms;
 }
-@keyframes v4-icon-draw {
+@keyframes cipher-icon-draw {
   from {
     stroke-dashoffset: 1;
   }
