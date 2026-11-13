@@ -40,11 +40,18 @@ export type FilterBarFilter = {
 };
 export type FilterBarProps = {
   label: string;
-  fields: readonly FilterBarField[];
+  /** Leave out for a bar that is only a search box. */
+  fields?: readonly FilterBarField[];
   /** Applied filters. Only filters with values arrive here: one just added stays in the bar until its picker closes, and leaves without a change if none was picked. */
-  value: readonly FilterBarFilter[];
-  onChange: (value: FilterBarFilter[]) => void;
+  value?: readonly FilterBarFilter[];
+  onChange?: (value: FilterBarFilter[]) => void;
+  /** Your own search control. Leave out and pass searchValue and onSearchChange for the built-in one. */
   search?: React.ReactNode;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  /** The built-in search's accessible name, and its placeholder unless searchPlaceholder is set. */
+  searchLabel?: string;
+  searchPlaceholder?: string;
   /** The search stops at size-search-max; fill stretches it across the row up to the filters and actions. */
   width?: "fill";
   actions?: React.ReactNode;
@@ -134,13 +141,19 @@ const withDraft = (list: readonly FilterBarFilter[], draft: Draft | null) => {
 
 export const FilterBar = ({
   label,
-  fields,
-  value,
+  fields = [],
+  value: valueProp,
   onChange,
   search,
+  searchValue,
+  onSearchChange,
+  searchLabel = "Search",
+  searchPlaceholder,
   width,
   actions
 }: FilterBarProps) => {
+  const [uncontrolled, setUncontrolled] = React.useState<readonly FilterBarFilter[]>([]);
+  const value = valueProp ?? uncontrolled;
   const [draft, setDraftState] = React.useState<Draft | null>(null);
   const draftRef = React.useRef(draft);
   const setDraft = (next: Draft | null) => {
@@ -166,7 +179,8 @@ export const FilterBar = ({
   }, [value]);
   const commit = (next: FilterBarFilter[]) => {
     latest.current = next;
-    onChange(next);
+    if (valueProp === undefined) setUncontrolled(next);
+    onChange?.(next);
   };
   const update = (key: string, patch: Partial<FilterBarFilter>) => {
     const current = latest.current;
@@ -212,13 +226,30 @@ export const FilterBar = ({
     if (!applied) remove(key);
     else if (draftRef.current?.filter.field === key) setDraft(null);
   };
+  const searchControl =
+    search ??
+    (onSearchChange || searchValue !== undefined ? (
+      <Input
+        icon="search"
+        aria-label={searchLabel}
+        placeholder={searchPlaceholder ?? searchLabel}
+        value={searchValue ?? ""}
+        onChange={(event) => onSearchChange?.(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && searchValue) {
+            event.preventDefault();
+            onSearchChange?.("");
+          }
+        }}
+      />
+    ) : null);
 
   return (
     <div className={styles.bar} data-slot="filter-bar" role="search" aria-label={label}>
       <div className={styles.top}>
-        {search && (
+        {searchControl && (
           <div className={styles.search} data-width={width}>
-            {search}
+            {searchControl}
           </div>
         )}
         {fields.length > 0 && (

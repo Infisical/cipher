@@ -744,6 +744,10 @@
       {
         "title": "Filters kept in the URL",
         "module": "filter-bar/url-state"
+      },
+      {
+        "title": "Search only",
+        "module": "filter-bar/search-only"
       }
     ]
   },
