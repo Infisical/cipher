@@ -24,9 +24,9 @@ const pages: Page[] = [
     ready: true
   },
   {
-    id: "documentation-link-badge",
+    id: "documentation-link",
     group: "navigation",
-    title: "Documentation link badge",
+    title: "Documentation link",
     icon: "link",
     status: "Navigation",
     ready: true
