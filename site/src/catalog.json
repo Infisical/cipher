@@ -1510,7 +1510,7 @@
     "group": "Utilities",
     "examples": [
       {
-        "title": "Heading roles and body text",
+        "title": "Heading roles, body text and preWrap",
         "module": "text/default"
       },
       {

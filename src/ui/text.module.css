@@ -47,6 +47,10 @@
 .muted {
   color: var(--cipher-muted, var(--muted-foreground));
 }
+.preWrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .measurePage {
   width: 100%;
   max-width: var(--cipher-size-measure-page);
