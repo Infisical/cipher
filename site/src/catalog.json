@@ -46,7 +46,7 @@
     "group": "Patterns",
     "examples": [
       {
-        "title": "Recent project activity",
+        "title": "Recent project activity, keyset pages and empty",
         "module": "activity-log/default"
       }
     ]

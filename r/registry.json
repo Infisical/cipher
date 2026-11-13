@@ -238,6 +238,11 @@
           "path": "src/components/cipher/patterns/activity-log.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/patterns/activity-log.tsx"
+        },
+        {
+          "path": "src/components/cipher/patterns/patterns.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/patterns/patterns.module.css"
         }
       ]
     },
