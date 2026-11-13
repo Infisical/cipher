@@ -1388,6 +1388,22 @@
     ]
   },
   {
+    "id": "stat-card",
+    "title": "Stat card",
+    "summary": "One metric with its label, an optional change since the last period and a short note, optionally linking to the list behind it.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Metrics",
+        "module": "stat-card/default"
+      },
+      {
+        "title": "Loading, error and attention",
+        "module": "stat-card/states"
+      }
+    ]
+  },
+  {
     "id": "switch",
     "title": "Switch",
     "summary": "Apply an immediate boolean setting with its own pending and recovery state.",

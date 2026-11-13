@@ -2251,6 +2251,30 @@
       ]
     },
     {
+      "name": "stat-card",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/card",
+        "@cipher/cipher-base",
+        "@cipher/icon",
+        "@cipher/item",
+        "@cipher/skeleton",
+        "@cipher/text"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/stat-card.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/stat-card.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/stat-card.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/stat-card.module.css"
+        }
+      ]
+    },
+    {
       "name": "switch",
       "type": "registry:ui",
       "registryDependencies": [
