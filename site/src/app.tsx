@@ -78,7 +78,7 @@ const router: CipherRouter = {
 const initialTheme = () =>
   toV4Theme(new URLSearchParams(window.location.search).get("theme")) ??
   toV4Theme(window.localStorage.getItem("cipher-theme")) ??
-  "peach";
+  "light";
 
 export function App() {
   const route = useRoute();

@@ -284,7 +284,8 @@ export function DataTable<Row>({
   const slots = rowActions
     ? rowActionSlots(rowActions.inline?.length ?? 0, Boolean(rowActions.renderMenu))
     : 0;
-  const span = columns.length + (selectable ? 1 : 0) + (rowActions ? 1 : 0);
+  const actionsColumn = Boolean(rowActions) && (loading || rows.length > 0);
+  const span = columns.length + (selectable ? 1 : 0) + (actionsColumn ? 1 : 0);
   const hasGrowingColumn = columns.some((column) => column.grow && column.width === undefined);
   const fixedLayout = columns.every(
     (column) => column.width !== undefined || column.grow || column.actions
@@ -298,7 +299,7 @@ export function DataTable<Row>({
   const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
   const trailing =
-    Boolean(rowActions) || columns.some((column) => column.pin === true || column.actions);
+    actionsColumn || columns.some((column) => column.pin === true || column.actions);
   const pinOffsets = new Map<string, string>();
   columns
     .filter((column) => column.pin === "start")
@@ -472,7 +473,7 @@ export function DataTable<Row>({
                   `${fixedWidth}px`,
                   ...fixedFloor,
                   ...(selectable ? ["var(--v4-size-row)"] : []),
-                  ...(rowActions
+                  ...(actionsColumn
                     ? [`var(--v4-size-row) + ${slots - 1} * var(--v4-size-row-action-step)`]
                     : [])
                 ].join(" + ")})`
@@ -554,7 +555,7 @@ export function DataTable<Row>({
                 )}
               </TableHead>
             ))}
-            {rowActions && (
+            {rowActions && actionsColumn && (
               <TableActionsHead slots={slots} data-pin="true">
                 {rowActions.header ?? "Actions"}
               </TableActionsHead>
