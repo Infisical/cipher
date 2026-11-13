@@ -1,26 +1,30 @@
 :global([data-slot="field"]),
 :global([data-slot="card-header"][data-framed]) {
   --documentation-link-context: var(--cipher-size-icon-xs);
-  --documentation-link-context-pad: var(--cipher-size-focus-ring);
+  --documentation-link-context-pad-y: var(--cipher-size-focus-ring);
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
 }
 :global([data-slot="page-header-badges"]) {
   --documentation-link-context: var(--cipher-size-icon-2xl);
-  --documentation-link-context-pad: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
+  --documentation-link-context-pad-y: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
+  --documentation-link-context-pad-x: 0px;
 }
 :global([data-slot="page-header"][data-size="md"]) :global([data-slot="page-header-badges"]) {
   --documentation-link-context: var(--cipher-size-icon-lg);
-  --documentation-link-context-pad: calc((var(--cipher-type-title-lg-line-height) - var(--cipher-size-icon-lg)) / 2);
+  --documentation-link-context-pad-y: calc((var(--cipher-type-title-lg-line-height) - var(--cipher-size-icon-lg)) / 2);
+  --documentation-link-context-pad-x: 0px;
 }
 .link {
   --documentation-link-glyph: var(--documentation-link-size, var(--documentation-link-context, var(--cipher-size-icon)));
-  --documentation-link-hit: var(--documentation-link-pad, var(--documentation-link-context-pad, var(--cipher-size-focus-ring)));
+  --documentation-link-hit-y: var(--documentation-link-pad-y, var(--documentation-link-context-pad-y, var(--cipher-size-focus-ring)));
+  --documentation-link-hit-x: var(--documentation-link-pad-x, var(--documentation-link-context-pad-x, var(--cipher-size-focus-ring)));
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  padding: var(--documentation-link-hit);
-  margin: calc(-1 * var(--documentation-link-hit));
+  padding: var(--documentation-link-hit-y) var(--documentation-link-hit-x);
+  margin: calc(-1 * var(--documentation-link-hit-y)) calc(-1 * var(--documentation-link-hit-x));
   color: var(--cipher-muted);
   text-decoration: none;
   transition-property: color;
@@ -29,15 +33,18 @@
 }
 .link[data-size="sm"] {
   --documentation-link-size: var(--cipher-size-icon-xs);
-  --documentation-link-pad: var(--cipher-size-focus-ring);
+  --documentation-link-pad-y: var(--cipher-size-focus-ring);
+  --documentation-link-pad-x: var(--cipher-size-focus-ring);
 }
 .link[data-size="md"] {
   --documentation-link-size: var(--cipher-size-icon);
-  --documentation-link-pad: var(--cipher-size-focus-ring);
+  --documentation-link-pad-y: var(--cipher-size-focus-ring);
+  --documentation-link-pad-x: var(--cipher-size-focus-ring);
 }
 .link[data-size="lg"] {
   --documentation-link-size: var(--cipher-size-icon-2xl);
-  --documentation-link-pad: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
+  --documentation-link-pad-y: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
+  --documentation-link-pad-x: 0px;
 }
 .link:hover,
 .link:focus-visible {
