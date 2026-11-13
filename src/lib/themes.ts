@@ -10,8 +10,8 @@ export interface V4ThemeDefinition {
 }
 
 export const legacyV4Themes: Readonly<Record<string, string>> = {
-  light: "peach",
-  dark: "dark",
+  peach: "light",
+  pale: "light",
   "dark-alt": "dark"
 };
 

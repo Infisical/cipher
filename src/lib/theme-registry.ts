@@ -3,9 +3,9 @@ import { legacyV4Themes, type V4Scheme, type V4ThemeDefinition } from "./themes"
 
 export const v4Themes = tokens.themes.list as unknown as readonly V4ThemeDefinition[];
 
-export const defaultV4Theme: Readonly<Record<V4Scheme, string>> = { light: "peach", dark: "dark" };
+export const defaultV4Theme: Readonly<Record<V4Scheme, string>> = { light: "light", dark: "dark" };
 
-/** A theme id from a stored, URL or hard-coded value; legacy light maps to peach, and legacy dark-alt to dark. */
+/** A theme id from a stored, URL or hard-coded value; legacy peach and pale map to light, and legacy dark-alt to dark. */
 export const toV4Theme = (value: unknown): string | undefined => {
   if (typeof value !== "string") return undefined;
   const id = legacyV4Themes[value] ?? value;
