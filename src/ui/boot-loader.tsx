@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { readV4BootTheme } from "../lib/boot-theme";
-import { toV4Theme, v4ThemeScheme } from "../lib/theme-registry";
+import { readBootTheme } from "../lib/boot-theme";
+import { toTheme, themeScheme } from "../lib/theme-registry";
 import { cn } from "../lib/utils";
 import { Loader } from "./loader";
 
-import "../v4.css";
+import "../base.css";
 import styles from "./boot-loader.module.css";
 
 export type BootLoaderProps = Omit<React.ComponentPropsWithoutRef<"div">, "children"> & {
@@ -16,7 +16,7 @@ export type BootLoaderProps = Omit<React.ComponentPropsWithoutRef<"div">, "child
   delay?: number;
 };
 
-/** The page loader for app and session boot, themed from storage so it renders before V4Scope. */
+/** The page loader for app and session boot, themed from storage so it renders before CipherScope. */
 export function BootLoader({
   label,
   description,
@@ -27,15 +27,15 @@ export function BootLoader({
   ref,
   ...props
 }: BootLoaderProps & { ref?: React.Ref<HTMLDivElement> }) {
-  const resolved = toV4Theme(theme) ?? readV4BootTheme();
+  const resolved = toTheme(theme) ?? readBootTheme();
   return (
     <div
       ref={ref}
       data-slot="boot-loader"
       data-fill={fill}
       data-theme={resolved}
-      data-scheme={v4ThemeScheme(resolved)}
-      className={cn("v4", styles.boot, className)}
+      data-scheme={themeScheme(resolved)}
+      className={cn("cipher", styles.boot, className)}
       {...props}
     >
       <Loader size="page" label={label} description={description} delay={delay} />

@@ -18,7 +18,7 @@ export function useOwnedEscape<ElementType extends HTMLElement>(
   const handle = (event: KeyboardEvent) => {
     onEscapeKeyDown?.(event);
     if (event.defaultPrevented || !(event.target instanceof Element)) return;
-    const owner = event.target.closest("[data-v4-escape-owner]");
+    const owner = event.target.closest("[data-cipher-escape-owner]");
     if (owner && content.current?.contains(owner)) event.preventDefault();
   };
   return { ref: attach, onEscapeKeyDown: handle };

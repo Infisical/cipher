@@ -19,13 +19,13 @@ export default function Example() {
                   footerPlacement="frame"
                   title={
                     <span className="inline-flex items-center gap-2">
-                      <Icon name="key" size={18} className="text-(--v4-hue-icon)" />
+                      <Icon name="key" size={18} className="text-(--cipher-hue-icon)" />
                       {`Hue ${hue}`}
                     </span>
                   }
                   footer={
                     <span className="inline-flex items-center gap-2">
-                      <span className="inline-grid size-6 place-items-center bg-(--v4-hue-soft) text-(--v4-hue-icon)">
+                      <span className="inline-grid size-6 place-items-center bg-(--cipher-hue-soft) text-(--cipher-hue-icon)">
                         <Icon name="key" size={14} />
                       </span>
                       hue-soft tile

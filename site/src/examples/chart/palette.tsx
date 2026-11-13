@@ -22,12 +22,12 @@ export default function Example() {
             data={data}
             margin={{ top: 24, right: 12, bottom: 4, left: 0 }}
           >
-            <CartesianGrid vertical={false} stroke="var(--v4-line)" />
+            <CartesianGrid vertical={false} stroke="var(--cipher-line)" />
             <XAxis
               dataKey="series"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "var(--v4-ink)", style: { fill: "var(--v4-ink)" } }}
+              tick={{ fill: "var(--cipher-ink)", style: { fill: "var(--cipher-ink)" } }}
             />
             <YAxis
               width={36}
@@ -36,13 +36,13 @@ export default function Example() {
               tickCount={4}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "var(--v4-ink)", style: { fill: "var(--v4-ink)" } }}
+              tick={{ fill: "var(--cipher-ink)", style: { fill: "var(--cipher-ink)" } }}
             />
             <Bar isAnimationActive={false} dataKey="count" maxBarSize={40}>
               {data.map((entry) => (
                 <Cell key={entry.series} fill={entry.color} />
               ))}
-              <LabelList dataKey="count" position="top" fill="var(--v4-ink)" />
+              <LabelList dataKey="count" position="top" fill="var(--cipher-ink)" />
             </Bar>
           </BarChart>
         </UI.ChartContainer>

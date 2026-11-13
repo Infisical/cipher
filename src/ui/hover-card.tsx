@@ -3,7 +3,7 @@
 import * as React from "react";
 import { HoverCard as HoverCardPrimitive } from "radix-ui";
 
-import { useV4CollisionBoundary, useV4PortalContainer } from "../scope";
+import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { FrameScope } from "../lib/frame-context";
 import { cn } from "../lib/utils";
@@ -36,13 +36,13 @@ function HoverCardContent({
   width?: "default" | "sm" | "md" | "content";
 }) {
   return (
-    <HoverCardPrimitive.Portal container={useV4PortalContainer()} data-slot="hover-card-portal">
+    <HoverCardPrimitive.Portal container={usePortalContainer()} data-slot="hover-card-portal">
       <HoverCardPrimitive.Content
         ref={ref}
         data-slot="hover-card-content"
         data-width={width}
         collisionPadding={collisionPadding}
-        collisionBoundary={useV4CollisionBoundary()}
+        collisionBoundary={useCollisionBoundary()}
         align={align}
         sideOffset={sideOffset}
         className={cn("z-50", menu.surface, menu.card, menu.motion, className)}

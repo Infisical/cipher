@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 
-import { useV4CollisionBoundary, useV4PortalContainer } from "../scope";
+import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
@@ -183,12 +183,12 @@ function SelectContent({
 }) {
   const inset = useMenuInset<HTMLDivElement>();
   return (
-    <SelectPrimitive.Portal container={useV4PortalContainer()}>
+    <SelectPrimitive.Portal container={usePortalContainer()}>
       <SelectPrimitive.Content
         ref={ref}
         data-slot="select-content"
         collisionPadding={collisionPadding}
-        collisionBoundary={useV4CollisionBoundary()}
+        collisionBoundary={useCollisionBoundary()}
         className={cn("relative z-50", menu.surface, menu.panel, menu.motion, className)}
         position="popper"
         align={align}

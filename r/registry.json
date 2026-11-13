@@ -17,179 +17,179 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/fonts/Archivo-OFL.txt",
+          "path": "src/components/cipher/base.css",
           "type": "registry:file",
-          "target": "src/components/v4/fonts/Archivo-OFL.txt"
+          "target": "src/components/cipher/base.css"
         },
         {
-          "path": "src/components/v4/fonts/GeistMono-OFL.txt",
+          "path": "src/components/cipher/fonts/Archivo-OFL.txt",
           "type": "registry:file",
-          "target": "src/components/v4/fonts/GeistMono-OFL.txt"
+          "target": "src/components/cipher/fonts/Archivo-OFL.txt"
         },
         {
-          "path": "src/components/v4/hooks/use-discard-changes-guard.ts",
+          "path": "src/components/cipher/fonts/GeistMono-OFL.txt",
           "type": "registry:file",
-          "target": "src/components/v4/hooks/use-discard-changes-guard.ts"
+          "target": "src/components/cipher/fonts/GeistMono-OFL.txt"
         },
         {
-          "path": "src/components/v4/hooks/use-mobile.ts",
+          "path": "src/components/cipher/hooks/use-discard-changes-guard.ts",
           "type": "registry:file",
-          "target": "src/components/v4/hooks/use-mobile.ts"
+          "target": "src/components/cipher/hooks/use-discard-changes-guard.ts"
         },
         {
-          "path": "src/components/v4/lib/boot-theme-keys.ts",
+          "path": "src/components/cipher/hooks/use-mobile.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/boot-theme-keys.ts"
+          "target": "src/components/cipher/hooks/use-mobile.ts"
         },
         {
-          "path": "src/components/v4/lib/boot-theme.ts",
+          "path": "src/components/cipher/lib/boot-theme-keys.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/boot-theme.ts"
+          "target": "src/components/cipher/lib/boot-theme-keys.ts"
         },
         {
-          "path": "src/components/v4/lib/descendant-flags.ts",
+          "path": "src/components/cipher/lib/boot-theme.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/descendant-flags.ts"
+          "target": "src/components/cipher/lib/boot-theme.ts"
         },
         {
-          "path": "src/components/v4/lib/dev.ts",
+          "path": "src/components/cipher/lib/descendant-flags.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/dev.ts"
+          "target": "src/components/cipher/lib/descendant-flags.ts"
         },
         {
-          "path": "src/components/v4/lib/field-context.ts",
+          "path": "src/components/cipher/lib/dev.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/field-context.ts"
+          "target": "src/components/cipher/lib/dev.ts"
         },
         {
-          "path": "src/components/v4/lib/frame-context.tsx",
+          "path": "src/components/cipher/lib/field-context.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/frame-context.tsx"
+          "target": "src/components/cipher/lib/field-context.ts"
         },
         {
-          "path": "src/components/v4/lib/hue.ts",
+          "path": "src/components/cipher/lib/frame-context.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/lib/hue.ts"
+          "target": "src/components/cipher/lib/frame-context.tsx"
         },
         {
-          "path": "src/components/v4/lib/input-modality.ts",
+          "path": "src/components/cipher/lib/hue.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/input-modality.ts"
+          "target": "src/components/cipher/lib/hue.ts"
         },
         {
-          "path": "src/components/v4/lib/invisible-characters.ts",
+          "path": "src/components/cipher/lib/input-modality.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/invisible-characters.ts"
+          "target": "src/components/cipher/lib/input-modality.ts"
         },
         {
-          "path": "src/components/v4/lib/link.tsx",
+          "path": "src/components/cipher/lib/invisible-characters.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/link.tsx"
+          "target": "src/components/cipher/lib/invisible-characters.ts"
         },
         {
-          "path": "src/components/v4/lib/list-highlight.tsx",
+          "path": "src/components/cipher/lib/link.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/lib/list-highlight.tsx"
+          "target": "src/components/cipher/lib/link.tsx"
         },
         {
-          "path": "src/components/v4/lib/menu-kind.ts",
+          "path": "src/components/cipher/lib/list-highlight.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/lib/menu-kind.ts"
+          "target": "src/components/cipher/lib/list-highlight.tsx"
         },
         {
-          "path": "src/components/v4/lib/motion.ts",
+          "path": "src/components/cipher/lib/menu-kind.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/motion.ts"
+          "target": "src/components/cipher/lib/menu-kind.ts"
         },
         {
-          "path": "src/components/v4/lib/overlay-pending.ts",
+          "path": "src/components/cipher/lib/motion.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/overlay-pending.ts"
+          "target": "src/components/cipher/lib/motion.ts"
         },
         {
-          "path": "src/components/v4/lib/overlay-sections.tsx",
+          "path": "src/components/cipher/lib/overlay-pending.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/overlay-sections.tsx"
+          "target": "src/components/cipher/lib/overlay-pending.ts"
         },
         {
-          "path": "src/components/v4/lib/presence-count.ts",
+          "path": "src/components/cipher/lib/overlay-sections.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/lib/presence-count.ts"
+          "target": "src/components/cipher/lib/overlay-sections.tsx"
         },
         {
-          "path": "src/components/v4/lib/scroll-edges.ts",
+          "path": "src/components/cipher/lib/presence-count.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/scroll-edges.ts"
+          "target": "src/components/cipher/lib/presence-count.ts"
         },
         {
-          "path": "src/components/v4/lib/sliding-indicator.tsx",
+          "path": "src/components/cipher/lib/scroll-edges.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/sliding-indicator.tsx"
+          "target": "src/components/cipher/lib/scroll-edges.ts"
         },
         {
-          "path": "src/components/v4/lib/stretched-link.ts",
+          "path": "src/components/cipher/lib/sliding-indicator.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/lib/stretched-link.ts"
+          "target": "src/components/cipher/lib/sliding-indicator.tsx"
         },
         {
-          "path": "src/components/v4/lib/theme-registry.ts",
+          "path": "src/components/cipher/lib/stretched-link.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/theme-registry.ts"
+          "target": "src/components/cipher/lib/stretched-link.ts"
         },
         {
-          "path": "src/components/v4/lib/themes.ts",
+          "path": "src/components/cipher/lib/theme-registry.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/themes.ts"
+          "target": "src/components/cipher/lib/theme-registry.ts"
         },
         {
-          "path": "src/components/v4/lib/use-controllable-state.ts",
+          "path": "src/components/cipher/lib/themes.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/use-controllable-state.ts"
+          "target": "src/components/cipher/lib/themes.ts"
         },
         {
-          "path": "src/components/v4/lib/use-flow-transition.ts",
+          "path": "src/components/cipher/lib/use-controllable-state.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/use-flow-transition.ts"
+          "target": "src/components/cipher/lib/use-controllable-state.ts"
         },
         {
-          "path": "src/components/v4/lib/use-measured-indicator.ts",
+          "path": "src/components/cipher/lib/use-flow-transition.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/use-measured-indicator.ts"
+          "target": "src/components/cipher/lib/use-flow-transition.ts"
         },
         {
-          "path": "src/components/v4/lib/use-option-creation.ts",
+          "path": "src/components/cipher/lib/use-measured-indicator.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/use-option-creation.ts"
+          "target": "src/components/cipher/lib/use-measured-indicator.ts"
         },
         {
-          "path": "src/components/v4/lib/use-owned-escape.ts",
+          "path": "src/components/cipher/lib/use-option-creation.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/use-owned-escape.ts"
+          "target": "src/components/cipher/lib/use-option-creation.ts"
         },
         {
-          "path": "src/components/v4/lib/utils.ts",
+          "path": "src/components/cipher/lib/use-owned-escape.ts",
           "type": "registry:file",
-          "target": "src/components/v4/lib/utils.ts"
+          "target": "src/components/cipher/lib/use-owned-escape.ts"
         },
         {
-          "path": "src/components/v4/scope.tsx",
+          "path": "src/components/cipher/lib/utils.ts",
           "type": "registry:file",
-          "target": "src/components/v4/scope.tsx"
+          "target": "src/components/cipher/lib/utils.ts"
         },
         {
-          "path": "src/components/v4/tokens.generated.css",
+          "path": "src/components/cipher/scope.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/tokens.generated.css"
+          "target": "src/components/cipher/scope.tsx"
         },
         {
-          "path": "src/components/v4/tokens.json",
+          "path": "src/components/cipher/tokens.generated.css",
           "type": "registry:file",
-          "target": "src/components/v4/tokens.json"
+          "target": "src/components/cipher/tokens.generated.css"
         },
         {
-          "path": "src/components/v4/v4.css",
+          "path": "src/components/cipher/tokens.json",
           "type": "registry:file",
-          "target": "src/components/v4/v4.css"
+          "target": "src/components/cipher/tokens.json"
         }
       ]
     },
@@ -208,14 +208,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/patterns/access-list.tsx",
+          "path": "src/components/cipher/patterns/access-list.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/access-list.tsx"
+          "target": "src/components/cipher/patterns/access-list.tsx"
         },
         {
-          "path": "src/components/v4/patterns/patterns.module.css",
+          "path": "src/components/cipher/patterns/patterns.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/patterns.module.css"
+          "target": "src/components/cipher/patterns/patterns.module.css"
         }
       ]
     },
@@ -230,9 +230,9 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/patterns/activity-log.tsx",
+          "path": "src/components/cipher/patterns/activity-log.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/activity-log.tsx"
+          "target": "src/components/cipher/patterns/activity-log.tsx"
         }
       ]
     },
@@ -248,14 +248,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/patterns/approval-queue.tsx",
+          "path": "src/components/cipher/patterns/approval-queue.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/approval-queue.tsx"
+          "target": "src/components/cipher/patterns/approval-queue.tsx"
         },
         {
-          "path": "src/components/v4/patterns/patterns.module.css",
+          "path": "src/components/cipher/patterns/patterns.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/patterns.module.css"
+          "target": "src/components/cipher/patterns/patterns.module.css"
         }
       ]
     },
@@ -274,14 +274,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/patterns/error-state.tsx",
+          "path": "src/components/cipher/patterns/error-state.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/error-state.tsx"
+          "target": "src/components/cipher/patterns/error-state.tsx"
         },
         {
-          "path": "src/components/v4/patterns/error-state.module.css",
+          "path": "src/components/cipher/patterns/error-state.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/error-state.module.css"
+          "target": "src/components/cipher/patterns/error-state.module.css"
         }
       ]
     },
@@ -300,14 +300,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/patterns/field-mapping.tsx",
+          "path": "src/components/cipher/patterns/field-mapping.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/field-mapping.tsx"
+          "target": "src/components/cipher/patterns/field-mapping.tsx"
         },
         {
-          "path": "src/components/v4/patterns/field-mapping.module.css",
+          "path": "src/components/cipher/patterns/field-mapping.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/field-mapping.module.css"
+          "target": "src/components/cipher/patterns/field-mapping.module.css"
         }
       ]
     },
@@ -327,14 +327,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/patterns/filter-bar.tsx",
+          "path": "src/components/cipher/patterns/filter-bar.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/filter-bar.tsx"
+          "target": "src/components/cipher/patterns/filter-bar.tsx"
         },
         {
-          "path": "src/components/v4/patterns/filter-bar.module.css",
+          "path": "src/components/cipher/patterns/filter-bar.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/patterns/filter-bar.module.css"
+          "target": "src/components/cipher/patterns/filter-bar.module.css"
         }
       ]
     },
@@ -350,14 +350,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/accordion.tsx",
+          "path": "src/components/cipher/ui/accordion.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/accordion.tsx"
+          "target": "src/components/cipher/ui/accordion.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -375,14 +375,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/alert-dialog.tsx",
+          "path": "src/components/cipher/ui/alert-dialog.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/alert-dialog.tsx"
+          "target": "src/components/cipher/ui/alert-dialog.tsx"
         },
         {
-          "path": "src/components/v4/ui/overlay.module.css",
+          "path": "src/components/cipher/ui/overlay.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/overlay.module.css"
+          "target": "src/components/cipher/ui/overlay.module.css"
         }
       ]
     },
@@ -396,14 +396,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/alert.tsx",
+          "path": "src/components/cipher/ui/alert.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/alert.tsx"
+          "target": "src/components/cipher/ui/alert.tsx"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -418,14 +418,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/animated-collapse.tsx",
+          "path": "src/components/cipher/ui/animated-collapse.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/animated-collapse.tsx"
+          "target": "src/components/cipher/ui/animated-collapse.tsx"
         },
         {
-          "path": "src/components/v4/ui/text.module.css",
+          "path": "src/components/cipher/ui/text.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/text.module.css"
+          "target": "src/components/cipher/ui/text.module.css"
         }
       ]
     },
@@ -442,14 +442,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/announcements.tsx",
+          "path": "src/components/cipher/ui/announcements.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/announcements.tsx"
+          "target": "src/components/cipher/ui/announcements.tsx"
         },
         {
-          "path": "src/components/v4/ui/announcements.module.css",
+          "path": "src/components/cipher/ui/announcements.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/announcements.module.css"
+          "target": "src/components/cipher/ui/announcements.module.css"
         }
       ]
     },
@@ -465,14 +465,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/avatar.tsx",
+          "path": "src/components/cipher/ui/avatar.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/avatar.tsx"
+          "target": "src/components/cipher/ui/avatar.tsx"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -488,19 +488,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/badge.tsx",
+          "path": "src/components/cipher/ui/badge.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/badge.tsx"
+          "target": "src/components/cipher/ui/badge.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -513,14 +513,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/boot-loader.tsx",
+          "path": "src/components/cipher/ui/boot-loader.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/boot-loader.tsx"
+          "target": "src/components/cipher/ui/boot-loader.tsx"
         },
         {
-          "path": "src/components/v4/ui/boot-loader.module.css",
+          "path": "src/components/cipher/ui/boot-loader.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/boot-loader.module.css"
+          "target": "src/components/cipher/ui/boot-loader.module.css"
         }
       ]
     },
@@ -537,14 +537,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/breadcrumb.tsx",
+          "path": "src/components/cipher/ui/breadcrumb.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/breadcrumb.tsx"
+          "target": "src/components/cipher/ui/breadcrumb.tsx"
         },
         {
-          "path": "src/components/v4/ui/breadcrumb.module.css",
+          "path": "src/components/cipher/ui/breadcrumb.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/breadcrumb.module.css"
+          "target": "src/components/cipher/ui/breadcrumb.module.css"
         }
       ]
     },
@@ -561,14 +561,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/button-group.tsx",
+          "path": "src/components/cipher/ui/button-group.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-group.tsx"
+          "target": "src/components/cipher/ui/button-group.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -587,24 +587,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/button.tsx",
+          "path": "src/components/cipher/ui/button.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button.tsx"
+          "target": "src/components/cipher/ui/button.tsx"
         },
         {
-          "path": "src/components/v4/ui/button-geometry.module.css",
+          "path": "src/components/cipher/ui/button-geometry.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-geometry.module.css"
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
-          "path": "src/components/v4/ui/button-material.module.css",
+          "path": "src/components/cipher/ui/button-material.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-material.module.css"
+          "target": "src/components/cipher/ui/button-material.module.css"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -621,14 +621,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/calendar.tsx",
+          "path": "src/components/cipher/ui/calendar.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/calendar.tsx"
+          "target": "src/components/cipher/ui/calendar.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -640,24 +640,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/card.tsx",
+          "path": "src/components/cipher/ui/card.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/card.tsx"
+          "target": "src/components/cipher/ui/card.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/frame.module.css",
+          "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/frame.module.css"
+          "target": "src/components/cipher/ui/frame.module.css"
         },
         {
-          "path": "src/components/v4/ui/row-link.module.css",
+          "path": "src/components/cipher/ui/row-link.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/row-link.module.css"
+          "target": "src/components/cipher/ui/row-link.module.css"
         }
       ]
     },
@@ -672,9 +672,9 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/chart.tsx",
+          "path": "src/components/cipher/ui/chart.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/chart.tsx"
+          "target": "src/components/cipher/ui/chart.tsx"
         }
       ]
     },
@@ -691,14 +691,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/checkbox.tsx",
+          "path": "src/components/cipher/ui/checkbox.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/checkbox.tsx"
+          "target": "src/components/cipher/ui/checkbox.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -715,19 +715,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/code-block.tsx",
+          "path": "src/components/cipher/ui/code-block.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code-block.tsx"
+          "target": "src/components/cipher/ui/code-block.tsx"
         },
         {
-          "path": "src/components/v4/ui/code.module.css",
+          "path": "src/components/cipher/ui/code.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code.module.css"
+          "target": "src/components/cipher/ui/code.module.css"
         },
         {
-          "path": "src/components/v4/ui/frame.module.css",
+          "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/frame.module.css"
+          "target": "src/components/cipher/ui/frame.module.css"
         }
       ]
     },
@@ -739,19 +739,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/code.tsx",
+          "path": "src/components/cipher/ui/code.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code.tsx"
+          "target": "src/components/cipher/ui/code.tsx"
         },
         {
-          "path": "src/components/v4/ui/code-tokenizer.ts",
+          "path": "src/components/cipher/ui/code-tokenizer.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code-tokenizer.ts"
+          "target": "src/components/cipher/ui/code-tokenizer.ts"
         },
         {
-          "path": "src/components/v4/ui/code.module.css",
+          "path": "src/components/cipher/ui/code.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code.module.css"
+          "target": "src/components/cipher/ui/code.module.css"
         }
       ]
     },
@@ -766,9 +766,9 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/collapsible.tsx",
+          "path": "src/components/cipher/ui/collapsible.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/collapsible.tsx"
+          "target": "src/components/cipher/ui/collapsible.tsx"
         }
       ]
     },
@@ -786,19 +786,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/color-picker.tsx",
+          "path": "src/components/cipher/ui/color-picker.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/color-picker.tsx"
+          "target": "src/components/cipher/ui/color-picker.tsx"
         },
         {
-          "path": "src/components/v4/ui/color-picker.module.css",
+          "path": "src/components/cipher/ui/color-picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/color-picker.module.css"
+          "target": "src/components/cipher/ui/color-picker.module.css"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -820,24 +820,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/combobox.tsx",
+          "path": "src/components/cipher/ui/combobox.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/combobox.tsx"
+          "target": "src/components/cipher/ui/combobox.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/picker.module.css",
+          "path": "src/components/cipher/ui/picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/picker.module.css"
+          "target": "src/components/cipher/ui/picker.module.css"
         }
       ]
     },
@@ -858,19 +858,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/command-menu.tsx",
+          "path": "src/components/cipher/ui/command-menu.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/command-menu.tsx"
+          "target": "src/components/cipher/ui/command-menu.tsx"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/picker.module.css",
+          "path": "src/components/cipher/ui/picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/picker.module.css"
+          "target": "src/components/cipher/ui/picker.module.css"
         }
       ]
     },
@@ -890,29 +890,29 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/command.tsx",
+          "path": "src/components/cipher/ui/command.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/command.tsx"
+          "target": "src/components/cipher/ui/command.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu-inset.ts",
+          "path": "src/components/cipher/ui/menu-inset.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-inset.ts"
+          "target": "src/components/cipher/ui/menu-inset.ts"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/overlay.module.css",
+          "path": "src/components/cipher/ui/overlay.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/overlay.module.css"
+          "target": "src/components/cipher/ui/overlay.module.css"
         }
       ]
     },
@@ -929,19 +929,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/context-menu.tsx",
+          "path": "src/components/cipher/ui/context-menu.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/context-menu.tsx"
+          "target": "src/components/cipher/ui/context-menu.tsx"
         },
         {
-          "path": "src/components/v4/ui/menu-inset.ts",
+          "path": "src/components/cipher/ui/menu-inset.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-inset.ts"
+          "target": "src/components/cipher/ui/menu-inset.ts"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         }
       ]
     },
@@ -953,14 +953,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/cover.tsx",
+          "path": "src/components/cipher/ui/cover.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/cover.tsx"
+          "target": "src/components/cipher/ui/cover.tsx"
         },
         {
-          "path": "src/components/v4/ui/cover.module.css",
+          "path": "src/components/cipher/ui/cover.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/cover.module.css"
+          "target": "src/components/cipher/ui/cover.module.css"
         }
       ]
     },
@@ -978,19 +978,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/data-grid.tsx",
+          "path": "src/components/cipher/ui/data-grid.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data-grid.tsx"
+          "target": "src/components/cipher/ui/data-grid.tsx"
         },
         {
-          "path": "src/components/v4/ui/data-grid-model.ts",
+          "path": "src/components/cipher/ui/data-grid-model.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data-grid-model.ts"
+          "target": "src/components/cipher/ui/data-grid-model.ts"
         },
         {
-          "path": "src/components/v4/ui/data.module.css",
+          "path": "src/components/cipher/ui/data.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data.module.css"
+          "target": "src/components/cipher/ui/data.module.css"
         }
       ]
     },
@@ -1010,19 +1010,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/data-table.tsx",
+          "path": "src/components/cipher/ui/data-table.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data-table.tsx"
+          "target": "src/components/cipher/ui/data-table.tsx"
         },
         {
-          "path": "src/components/v4/ui/data.module.css",
+          "path": "src/components/cipher/ui/data.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data.module.css"
+          "target": "src/components/cipher/ui/data.module.css"
         },
         {
-          "path": "src/components/v4/ui/frame.module.css",
+          "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/frame.module.css"
+          "target": "src/components/cipher/ui/frame.module.css"
         }
       ]
     },
@@ -1034,14 +1034,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/detail.tsx",
+          "path": "src/components/cipher/ui/detail.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/detail.tsx"
+          "target": "src/components/cipher/ui/detail.tsx"
         },
         {
-          "path": "src/components/v4/ui/detail.module.css",
+          "path": "src/components/cipher/ui/detail.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/detail.module.css"
+          "target": "src/components/cipher/ui/detail.module.css"
         }
       ]
     },
@@ -1058,14 +1058,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/dialog.tsx",
+          "path": "src/components/cipher/ui/dialog.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/dialog.tsx"
+          "target": "src/components/cipher/ui/dialog.tsx"
         },
         {
-          "path": "src/components/v4/ui/overlay.module.css",
+          "path": "src/components/cipher/ui/overlay.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/overlay.module.css"
+          "target": "src/components/cipher/ui/overlay.module.css"
         }
       ]
     },
@@ -1080,19 +1080,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/documentation-link-badge.tsx",
+          "path": "src/components/cipher/ui/documentation-link-badge.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/documentation-link-badge.tsx"
+          "target": "src/components/cipher/ui/documentation-link-badge.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/documentation-link-badge.module.css",
+          "path": "src/components/cipher/ui/documentation-link-badge.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/documentation-link-badge.module.css"
+          "target": "src/components/cipher/ui/documentation-link-badge.module.css"
         }
       ]
     },
@@ -1110,19 +1110,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/dropdown-menu.tsx",
+          "path": "src/components/cipher/ui/dropdown-menu.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/dropdown-menu.tsx"
+          "target": "src/components/cipher/ui/dropdown-menu.tsx"
         },
         {
-          "path": "src/components/v4/ui/menu-inset.ts",
+          "path": "src/components/cipher/ui/menu-inset.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-inset.ts"
+          "target": "src/components/cipher/ui/menu-inset.ts"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         }
       ]
     },
@@ -1136,14 +1136,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/duration-input.tsx",
+          "path": "src/components/cipher/ui/duration-input.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/duration-input.tsx"
+          "target": "src/components/cipher/ui/duration-input.tsx"
         },
         {
-          "path": "src/components/v4/ui/duration-input.module.css",
+          "path": "src/components/cipher/ui/duration-input.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/duration-input.module.css"
+          "target": "src/components/cipher/ui/duration-input.module.css"
         }
       ]
     },
@@ -1156,19 +1156,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/empty.tsx",
+          "path": "src/components/cipher/ui/empty.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/empty.tsx"
+          "target": "src/components/cipher/ui/empty.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/empty.module.css",
+          "path": "src/components/cipher/ui/empty.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/empty.module.css"
+          "target": "src/components/cipher/ui/empty.module.css"
         }
       ]
     },
@@ -1188,14 +1188,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/field.tsx",
+          "path": "src/components/cipher/ui/field.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/field.tsx"
+          "target": "src/components/cipher/ui/field.tsx"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -1210,14 +1210,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/file-tree.tsx",
+          "path": "src/components/cipher/ui/file-tree.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/file-tree.tsx"
+          "target": "src/components/cipher/ui/file-tree.tsx"
         },
         {
-          "path": "src/components/v4/ui/data.module.css",
+          "path": "src/components/cipher/ui/data.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data.module.css"
+          "target": "src/components/cipher/ui/data.module.css"
         }
       ]
     },
@@ -1236,14 +1236,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/floating-action-bar.tsx",
+          "path": "src/components/cipher/ui/floating-action-bar.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/floating-action-bar.tsx"
+          "target": "src/components/cipher/ui/floating-action-bar.tsx"
         },
         {
-          "path": "src/components/v4/ui/floating-action-bar.module.css",
+          "path": "src/components/cipher/ui/floating-action-bar.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/floating-action-bar.module.css"
+          "target": "src/components/cipher/ui/floating-action-bar.module.css"
         }
       ]
     },
@@ -1255,14 +1255,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/halftone.tsx",
+          "path": "src/components/cipher/ui/halftone.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/halftone.tsx"
+          "target": "src/components/cipher/ui/halftone.tsx"
         },
         {
-          "path": "src/components/v4/ui/halftone.module.css",
+          "path": "src/components/cipher/ui/halftone.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/halftone.module.css"
+          "target": "src/components/cipher/ui/halftone.module.css"
         }
       ]
     },
@@ -1277,14 +1277,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/hover-card.tsx",
+          "path": "src/components/cipher/ui/hover-card.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/hover-card.tsx"
+          "target": "src/components/cipher/ui/hover-card.tsx"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         }
       ]
     },
@@ -1299,14 +1299,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/icon.tsx",
+          "path": "src/components/cipher/ui/icon.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/icon.tsx"
+          "target": "src/components/cipher/ui/icon.tsx"
         },
         {
-          "path": "src/components/v4/ui/icon-data.ts",
+          "path": "src/components/cipher/ui/icon-data.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/icon-data.ts"
+          "target": "src/components/cipher/ui/icon-data.ts"
         }
       ]
     },
@@ -1323,19 +1323,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/input-group.tsx",
+          "path": "src/components/cipher/ui/input-group.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/input-group.tsx"
+          "target": "src/components/cipher/ui/input-group.tsx"
         },
         {
-          "path": "src/components/v4/ui/button-geometry.module.css",
+          "path": "src/components/cipher/ui/button-geometry.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-geometry.module.css"
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -1351,14 +1351,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/input-otp.tsx",
+          "path": "src/components/cipher/ui/input-otp.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/input-otp.tsx"
+          "target": "src/components/cipher/ui/input-otp.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -1372,14 +1372,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/input.tsx",
+          "path": "src/components/cipher/ui/input.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/input.tsx"
+          "target": "src/components/cipher/ui/input.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -1397,24 +1397,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/item.tsx",
+          "path": "src/components/cipher/ui/item.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/item.tsx"
+          "target": "src/components/cipher/ui/item.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         },
         {
-          "path": "src/components/v4/ui/item.module.css",
+          "path": "src/components/cipher/ui/item.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/item.module.css"
+          "target": "src/components/cipher/ui/item.module.css"
         }
       ]
     },
@@ -1428,19 +1428,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/json.tsx",
+          "path": "src/components/cipher/ui/json.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/json.tsx"
+          "target": "src/components/cipher/ui/json.tsx"
         },
         {
-          "path": "src/components/v4/ui/code.module.css",
+          "path": "src/components/cipher/ui/code.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code.module.css"
+          "target": "src/components/cipher/ui/code.module.css"
         },
         {
-          "path": "src/components/v4/ui/json-model.ts",
+          "path": "src/components/cipher/ui/json-model.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/json-model.ts"
+          "target": "src/components/cipher/ui/json-model.ts"
         }
       ]
     },
@@ -1456,14 +1456,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/kbd.tsx",
+          "path": "src/components/cipher/ui/kbd.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/kbd.tsx"
+          "target": "src/components/cipher/ui/kbd.tsx"
         },
         {
-          "path": "src/components/v4/ui/kbd.module.css",
+          "path": "src/components/cipher/ui/kbd.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/kbd.module.css"
+          "target": "src/components/cipher/ui/kbd.module.css"
         }
       ]
     },
@@ -1478,14 +1478,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/label.tsx",
+          "path": "src/components/cipher/ui/label.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/label.tsx"
+          "target": "src/components/cipher/ui/label.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -1497,19 +1497,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/layout.tsx",
+          "path": "src/components/cipher/ui/layout.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/layout.tsx"
+          "target": "src/components/cipher/ui/layout.tsx"
         },
         {
-          "path": "src/components/v4/ui/detail-layout.module.css",
+          "path": "src/components/cipher/ui/detail-layout.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/detail-layout.module.css"
+          "target": "src/components/cipher/ui/detail-layout.module.css"
         },
         {
-          "path": "src/components/v4/ui/text.module.css",
+          "path": "src/components/cipher/ui/text.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/text.module.css"
+          "target": "src/components/cipher/ui/text.module.css"
         }
       ]
     },
@@ -1523,19 +1523,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/list.tsx",
+          "path": "src/components/cipher/ui/list.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/list.tsx"
+          "target": "src/components/cipher/ui/list.tsx"
         },
         {
-          "path": "src/components/v4/ui/data.module.css",
+          "path": "src/components/cipher/ui/data.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data.module.css"
+          "target": "src/components/cipher/ui/data.module.css"
         },
         {
-          "path": "src/components/v4/ui/frame.module.css",
+          "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/frame.module.css"
+          "target": "src/components/cipher/ui/frame.module.css"
         }
       ]
     },
@@ -1548,14 +1548,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/loader.tsx",
+          "path": "src/components/cipher/ui/loader.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/loader.tsx"
+          "target": "src/components/cipher/ui/loader.tsx"
         },
         {
-          "path": "src/components/v4/ui/loader.module.css",
+          "path": "src/components/cipher/ui/loader.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/loader.module.css"
+          "target": "src/components/cipher/ui/loader.module.css"
         }
       ]
     },
@@ -1568,14 +1568,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/menu-content.tsx",
+          "path": "src/components/cipher/ui/menu-content.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-content.tsx"
+          "target": "src/components/cipher/ui/menu-content.tsx"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         }
       ]
     },
@@ -1587,14 +1587,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/middle-truncate.tsx",
+          "path": "src/components/cipher/ui/middle-truncate.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/middle-truncate.tsx"
+          "target": "src/components/cipher/ui/middle-truncate.tsx"
         },
         {
-          "path": "src/components/v4/ui/text.module.css",
+          "path": "src/components/cipher/ui/text.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/text.module.css"
+          "target": "src/components/cipher/ui/text.module.css"
         }
       ]
     },
@@ -1609,29 +1609,29 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/multi-select.tsx",
+          "path": "src/components/cipher/ui/multi-select.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/multi-select.tsx"
+          "target": "src/components/cipher/ui/multi-select.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu-inset.ts",
+          "path": "src/components/cipher/ui/menu-inset.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-inset.ts"
+          "target": "src/components/cipher/ui/menu-inset.ts"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/picker.module.css",
+          "path": "src/components/cipher/ui/picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/picker.module.css"
+          "target": "src/components/cipher/ui/picker.module.css"
         }
       ]
     },
@@ -1651,14 +1651,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/multi-step.tsx",
+          "path": "src/components/cipher/ui/multi-step.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/multi-step.tsx"
+          "target": "src/components/cipher/ui/multi-step.tsx"
         },
         {
-          "path": "src/components/v4/ui/multi-step.module.css",
+          "path": "src/components/cipher/ui/multi-step.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/multi-step.module.css"
+          "target": "src/components/cipher/ui/multi-step.module.css"
         }
       ]
     },
@@ -1671,14 +1671,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/page-header.tsx",
+          "path": "src/components/cipher/ui/page-header.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/page-header.tsx"
+          "target": "src/components/cipher/ui/page-header.tsx"
         },
         {
-          "path": "src/components/v4/ui/page-header.module.css",
+          "path": "src/components/cipher/ui/page-header.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/page-header.module.css"
+          "target": "src/components/cipher/ui/page-header.module.css"
         }
       ]
     },
@@ -1694,14 +1694,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/pagination.tsx",
+          "path": "src/components/cipher/ui/pagination.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/pagination.tsx"
+          "target": "src/components/cipher/ui/pagination.tsx"
         },
         {
-          "path": "src/components/v4/ui/pagination.module.css",
+          "path": "src/components/cipher/ui/pagination.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/pagination.module.css"
+          "target": "src/components/cipher/ui/pagination.module.css"
         }
       ]
     },
@@ -1718,24 +1718,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/popover.tsx",
+          "path": "src/components/cipher/ui/popover.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/popover.tsx"
+          "target": "src/components/cipher/ui/popover.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/popover.module.css",
+          "path": "src/components/cipher/ui/popover.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/popover.module.css"
+          "target": "src/components/cipher/ui/popover.module.css"
         }
       ]
     },
@@ -1750,14 +1750,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/progress.tsx",
+          "path": "src/components/cipher/ui/progress.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/progress.tsx"
+          "target": "src/components/cipher/ui/progress.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -1773,14 +1773,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/radio-group.tsx",
+          "path": "src/components/cipher/ui/radio-group.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/radio-group.tsx"
+          "target": "src/components/cipher/ui/radio-group.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -1792,14 +1792,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/route-progress.tsx",
+          "path": "src/components/cipher/ui/route-progress.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/route-progress.tsx"
+          "target": "src/components/cipher/ui/route-progress.tsx"
         },
         {
-          "path": "src/components/v4/ui/route-progress.module.css",
+          "path": "src/components/cipher/ui/route-progress.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/route-progress.module.css"
+          "target": "src/components/cipher/ui/route-progress.module.css"
         }
       ]
     },
@@ -1812,14 +1812,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/row-link.tsx",
+          "path": "src/components/cipher/ui/row-link.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/row-link.tsx"
+          "target": "src/components/cipher/ui/row-link.tsx"
         },
         {
-          "path": "src/components/v4/ui/row-link.module.css",
+          "path": "src/components/cipher/ui/row-link.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/row-link.module.css"
+          "target": "src/components/cipher/ui/row-link.module.css"
         }
       ]
     },
@@ -1834,9 +1834,9 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/scroll-area.tsx",
+          "path": "src/components/cipher/ui/scroll-area.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/scroll-area.tsx"
+          "target": "src/components/cipher/ui/scroll-area.tsx"
         }
       ]
     },
@@ -1851,24 +1851,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/secret-input.tsx",
+          "path": "src/components/cipher/ui/secret-input.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/secret-input.tsx"
+          "target": "src/components/cipher/ui/secret-input.tsx"
         },
         {
-          "path": "src/components/v4/ui/button-geometry.module.css",
+          "path": "src/components/cipher/ui/button-geometry.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-geometry.module.css"
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/secret-input.module.css",
+          "path": "src/components/cipher/ui/secret-input.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/secret-input.module.css"
+          "target": "src/components/cipher/ui/secret-input.module.css"
         }
       ]
     },
@@ -1884,29 +1884,29 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/secret-path-input.tsx",
+          "path": "src/components/cipher/ui/secret-path-input.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/secret-path-input.tsx"
+          "target": "src/components/cipher/ui/secret-path-input.tsx"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu-inset.ts",
+          "path": "src/components/cipher/ui/menu-inset.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-inset.ts"
+          "target": "src/components/cipher/ui/menu-inset.ts"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/picker.module.css",
+          "path": "src/components/cipher/ui/picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/picker.module.css"
+          "target": "src/components/cipher/ui/picker.module.css"
         }
       ]
     },
@@ -1922,29 +1922,29 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/select.tsx",
+          "path": "src/components/cipher/ui/select.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/select.tsx"
+          "target": "src/components/cipher/ui/select.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu-inset.ts",
+          "path": "src/components/cipher/ui/menu-inset.ts",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu-inset.ts"
+          "target": "src/components/cipher/ui/menu-inset.ts"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         },
         {
-          "path": "src/components/v4/ui/picker.module.css",
+          "path": "src/components/cipher/ui/picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/picker.module.css"
+          "target": "src/components/cipher/ui/picker.module.css"
         }
       ]
     },
@@ -1957,19 +1957,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/sensitive-editor.tsx",
+          "path": "src/components/cipher/ui/sensitive-editor.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/sensitive-editor.tsx"
+          "target": "src/components/cipher/ui/sensitive-editor.tsx"
         },
         {
-          "path": "src/components/v4/ui/button-geometry.module.css",
+          "path": "src/components/cipher/ui/button-geometry.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-geometry.module.css"
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
-          "path": "src/components/v4/ui/data.module.css",
+          "path": "src/components/cipher/ui/data.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data.module.css"
+          "target": "src/components/cipher/ui/data.module.css"
         }
       ]
     },
@@ -1984,14 +1984,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/separator.tsx",
+          "path": "src/components/cipher/ui/separator.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/separator.tsx"
+          "target": "src/components/cipher/ui/separator.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2007,14 +2007,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/settings-card.tsx",
+          "path": "src/components/cipher/ui/settings-card.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/settings-card.tsx"
+          "target": "src/components/cipher/ui/settings-card.tsx"
         },
         {
-          "path": "src/components/v4/ui/settings-card.module.css",
+          "path": "src/components/cipher/ui/settings-card.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/settings-card.module.css"
+          "target": "src/components/cipher/ui/settings-card.module.css"
         }
       ]
     },
@@ -2031,14 +2031,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/sheet.tsx",
+          "path": "src/components/cipher/ui/sheet.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/sheet.tsx"
+          "target": "src/components/cipher/ui/sheet.tsx"
         },
         {
-          "path": "src/components/v4/ui/overlay.module.css",
+          "path": "src/components/cipher/ui/overlay.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/overlay.module.css"
+          "target": "src/components/cipher/ui/overlay.module.css"
         }
       ]
     },
@@ -2060,14 +2060,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/sidebar.tsx",
+          "path": "src/components/cipher/ui/sidebar.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/sidebar.tsx"
+          "target": "src/components/cipher/ui/sidebar.tsx"
         },
         {
-          "path": "src/components/v4/ui/sidebar.module.css",
+          "path": "src/components/cipher/ui/sidebar.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/sidebar.module.css"
+          "target": "src/components/cipher/ui/sidebar.module.css"
         }
       ]
     },
@@ -2079,14 +2079,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/skeleton.tsx",
+          "path": "src/components/cipher/ui/skeleton.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/skeleton.tsx"
+          "target": "src/components/cipher/ui/skeleton.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2101,14 +2101,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/slider.tsx",
+          "path": "src/components/cipher/ui/slider.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/slider.tsx"
+          "target": "src/components/cipher/ui/slider.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2121,14 +2121,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/snippet.tsx",
+          "path": "src/components/cipher/ui/snippet.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/snippet.tsx"
+          "target": "src/components/cipher/ui/snippet.tsx"
         },
         {
-          "path": "src/components/v4/ui/code.module.css",
+          "path": "src/components/cipher/ui/code.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/code.module.css"
+          "target": "src/components/cipher/ui/code.module.css"
         }
       ]
     },
@@ -2146,14 +2146,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/sonner.tsx",
+          "path": "src/components/cipher/ui/sonner.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/sonner.tsx"
+          "target": "src/components/cipher/ui/sonner.tsx"
         },
         {
-          "path": "src/components/v4/ui/sonner.module.css",
+          "path": "src/components/cipher/ui/sonner.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/sonner.module.css"
+          "target": "src/components/cipher/ui/sonner.module.css"
         }
       ]
     },
@@ -2165,14 +2165,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/spinner.tsx",
+          "path": "src/components/cipher/ui/spinner.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/spinner.tsx"
+          "target": "src/components/cipher/ui/spinner.tsx"
         },
         {
-          "path": "src/components/v4/ui/runtime.module.css",
+          "path": "src/components/cipher/ui/runtime.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/runtime.module.css"
+          "target": "src/components/cipher/ui/runtime.module.css"
         }
       ]
     },
@@ -2189,14 +2189,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/switch.tsx",
+          "path": "src/components/cipher/ui/switch.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/switch.tsx"
+          "target": "src/components/cipher/ui/switch.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2212,9 +2212,9 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/switcher.tsx",
+          "path": "src/components/cipher/ui/switcher.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/switcher.tsx"
+          "target": "src/components/cipher/ui/switcher.tsx"
         }
       ]
     },
@@ -2235,19 +2235,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/table.tsx",
+          "path": "src/components/cipher/ui/table.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/table.tsx"
+          "target": "src/components/cipher/ui/table.tsx"
         },
         {
-          "path": "src/components/v4/ui/button-geometry.module.css",
+          "path": "src/components/cipher/ui/button-geometry.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-geometry.module.css"
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
-          "path": "src/components/v4/ui/data.module.css",
+          "path": "src/components/cipher/ui/data.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/data.module.css"
+          "target": "src/components/cipher/ui/data.module.css"
         }
       ]
     },
@@ -2264,19 +2264,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/tabs.tsx",
+          "path": "src/components/cipher/ui/tabs.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/tabs.tsx"
+          "target": "src/components/cipher/ui/tabs.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/navigation.module.css",
+          "path": "src/components/cipher/ui/navigation.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/navigation.module.css"
+          "target": "src/components/cipher/ui/navigation.module.css"
         }
       ]
     },
@@ -2291,19 +2291,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/tags-input.tsx",
+          "path": "src/components/cipher/ui/tags-input.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/tags-input.tsx"
+          "target": "src/components/cipher/ui/tags-input.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/picker.module.css",
+          "path": "src/components/cipher/ui/picker.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/picker.module.css"
+          "target": "src/components/cipher/ui/picker.module.css"
         }
       ]
     },
@@ -2317,14 +2317,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/text.tsx",
+          "path": "src/components/cipher/ui/text.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/text.tsx"
+          "target": "src/components/cipher/ui/text.tsx"
         },
         {
-          "path": "src/components/v4/ui/text.module.css",
+          "path": "src/components/cipher/ui/text.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/text.module.css"
+          "target": "src/components/cipher/ui/text.module.css"
         }
       ]
     },
@@ -2336,14 +2336,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/textarea.tsx",
+          "path": "src/components/cipher/ui/textarea.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/textarea.tsx"
+          "target": "src/components/cipher/ui/textarea.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2358,14 +2358,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/toast-stack.tsx",
+          "path": "src/components/cipher/ui/toast-stack.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/toast-stack.tsx"
+          "target": "src/components/cipher/ui/toast-stack.tsx"
         },
         {
-          "path": "src/components/v4/ui/helpers.module.css",
+          "path": "src/components/cipher/ui/helpers.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/helpers.module.css"
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -2382,14 +2382,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/toggle-group.tsx",
+          "path": "src/components/cipher/ui/toggle-group.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/toggle-group.tsx"
+          "target": "src/components/cipher/ui/toggle-group.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2405,24 +2405,24 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/toggle.tsx",
+          "path": "src/components/cipher/ui/toggle.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/toggle.tsx"
+          "target": "src/components/cipher/ui/toggle.tsx"
         },
         {
-          "path": "src/components/v4/ui/button-geometry.module.css",
+          "path": "src/components/cipher/ui/button-geometry.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-geometry.module.css"
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
-          "path": "src/components/v4/ui/button-material.module.css",
+          "path": "src/components/cipher/ui/button-material.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/button-material.module.css"
+          "target": "src/components/cipher/ui/button-material.module.css"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         }
       ]
     },
@@ -2438,19 +2438,19 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/tooltip.tsx",
+          "path": "src/components/cipher/ui/tooltip.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/tooltip.tsx"
+          "target": "src/components/cipher/ui/tooltip.tsx"
         },
         {
-          "path": "src/components/v4/ui/controls.module.css",
+          "path": "src/components/cipher/ui/controls.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/controls.module.css"
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/v4/ui/menu.module.css",
+          "path": "src/components/cipher/ui/menu.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/menu.module.css"
+          "target": "src/components/cipher/ui/menu.module.css"
         }
       ]
     },
@@ -2474,14 +2474,14 @@
       ],
       "files": [
         {
-          "path": "src/components/v4/ui/top-bar.tsx",
+          "path": "src/components/cipher/ui/top-bar.tsx",
           "type": "registry:file",
-          "target": "src/components/v4/ui/top-bar.tsx"
+          "target": "src/components/cipher/ui/top-bar.tsx"
         },
         {
-          "path": "src/components/v4/ui/top-bar.module.css",
+          "path": "src/components/cipher/ui/top-bar.module.css",
           "type": "registry:file",
-          "target": "src/components/v4/ui/top-bar.module.css"
+          "target": "src/components/cipher/ui/top-bar.module.css"
         }
       ]
     }

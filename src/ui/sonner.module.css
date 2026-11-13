@@ -1,6 +1,6 @@
 .toaster[data-sonner-toaster][data-y-position="bottom"] {
-  bottom: var(--v4-toast-bottom);
-  transition: bottom var(--v4-duration-moderate) var(--v4-ease-standard);
+  bottom: var(--cipher-toast-bottom);
+  transition: bottom var(--cipher-duration-moderate) var(--cipher-ease-standard);
 }
 @media (prefers-reduced-motion: reduce) {
   .toaster[data-sonner-toaster][data-y-position="bottom"] {
@@ -9,21 +9,21 @@
 }
 .toaster[data-sonner-toaster] {
   z-index: 50;
-  font-family: var(--v4-type-row-title-font-family);
-  color: var(--v4-toast-text);
+  font-family: var(--cipher-type-row-title-font-family);
+  color: var(--cipher-toast-text);
 }
 .toast[data-sonner-toast] {
   width: var(--width);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
-  row-gap: var(--v4-space-8);
-  padding: var(--v4-space-12);
-  border: 1px solid var(--v4-toast-line);
+  row-gap: var(--cipher-space-8);
+  padding: var(--cipher-space-12);
+  border: 1px solid var(--cipher-toast-line);
   border-radius: 0;
-  background: var(--v4-toast-bg);
-  color: var(--v4-toast-text);
-  box-shadow: var(--v4-shadow-pop);
+  background: var(--cipher-toast-bg);
+  color: var(--cipher-toast-text);
+  box-shadow: var(--cipher-shadow-pop);
   /* A modal sheet or dialog sets pointer-events: none on body; its toasts stay clickable. */
   pointer-events: auto;
 }
@@ -35,20 +35,20 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: var(--v4-size-icon);
-  height: var(--v4-type-row-title-line-height);
-  margin-inline-end: var(--v4-space-8);
-  color: var(--v4-toast-muted);
+  width: var(--cipher-size-icon);
+  height: var(--cipher-type-row-title-line-height);
+  margin-inline-end: var(--cipher-space-8);
+  color: var(--cipher-toast-muted);
 }
 .icon[data-icon] svg {
-  width: var(--v4-size-icon);
-  height: var(--v4-size-icon);
+  width: var(--cipher-size-icon);
+  height: var(--cipher-size-icon);
 }
 [data-type="success"] > .icon[data-icon] {
-  color: var(--v4-toast-ok);
+  color: var(--cipher-toast-ok);
 }
 [data-type="error"] > .icon[data-icon] {
-  color: var(--v4-toast-bad);
+  color: var(--cipher-toast-bad);
 }
 .content[data-content] {
   grid-column: 2;
@@ -59,43 +59,43 @@
   min-width: 0;
 }
 .title[data-title] {
-  font-family: var(--v4-type-row-title-font-family);
-  font-size: var(--v4-type-row-title-font-size);
-  line-height: var(--v4-type-row-title-line-height);
-  font-weight: var(--v4-type-row-title-font-weight);
-  letter-spacing: var(--v4-type-row-title-letter-spacing);
+  font-family: var(--cipher-type-row-title-font-family);
+  font-size: var(--cipher-type-row-title-font-size);
+  line-height: var(--cipher-type-row-title-line-height);
+  font-weight: var(--cipher-type-row-title-font-weight);
+  letter-spacing: var(--cipher-type-row-title-letter-spacing);
 }
 .toaster[data-sonner-toaster] .description[data-description] {
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  color: var(--v4-toast-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-toast-muted);
 }
 .action[data-button] {
   grid-column: 2;
   grid-row: 2;
   justify-self: start;
-  min-height: var(--v4-size-control-default);
-  margin-inline-start: calc(-1 * var(--v4-space-control-inline-sm));
+  min-height: var(--cipher-size-control-default);
+  margin-inline-start: calc(-1 * var(--cipher-space-control-inline-sm));
   border: 0;
   padding-block: 0;
-  padding-inline: var(--v4-space-control-inline-sm);
+  padding-inline: var(--cipher-space-control-inline-sm);
   background: none;
-  color: var(--v4-toast-text);
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  color: var(--cipher-toast-text);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
 }
 .action[data-button]:hover {
-  background: var(--v4-action-ghost-hover);
+  background: var(--cipher-action-ghost-hover);
 }
 .action[data-button]:focus-visible {
-  outline: var(--v4-size-focus-ring) solid var(--v4-ink);
-  outline-offset: var(--v4-size-focus-ring);
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
 }
 .toaster[data-sonner-toaster] .close[data-close-button] {
   position: static;
@@ -104,28 +104,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--v4-size-nested-md);
-  height: var(--v4-size-nested-md);
-  margin-block: calc((var(--v4-type-row-title-line-height) - var(--v4-size-nested-md)) / 2);
-  margin-inline-start: var(--v4-space-8);
+  width: var(--cipher-size-nested-md);
+  height: var(--cipher-size-nested-md);
+  margin-block: calc((var(--cipher-type-row-title-line-height) - var(--cipher-size-nested-md)) / 2);
+  margin-inline-start: var(--cipher-space-8);
   padding: 0;
   border: 0;
   border-radius: 0;
   background: none;
-  color: var(--v4-toast-muted);
+  color: var(--cipher-toast-muted);
   transform: none;
   cursor: default;
 }
 .toaster[data-sonner-toaster] .close[data-close-button]:hover {
-  background: var(--v4-action-ghost-hover);
-  color: var(--v4-toast-text);
+  background: var(--cipher-action-ghost-hover);
+  color: var(--cipher-toast-text);
 }
 .toaster[data-sonner-toaster] .close[data-close-button]:focus-visible {
-  outline: var(--v4-size-focus-ring) solid var(--v4-ink);
-  outline-offset: var(--v4-size-focus-ring);
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
   box-shadow: none;
 }
 .toaster[data-sonner-toaster] .close[data-close-button] svg {
-  width: var(--v4-size-icon);
-  height: var(--v4-size-icon);
+  width: var(--cipher-size-icon);
+  height: var(--cipher-size-icon);
 }

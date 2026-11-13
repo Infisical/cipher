@@ -11,18 +11,18 @@ import {
   useSonner
 } from "sonner";
 
-import { useV4Scheme, useV4ToastLayer } from "../scope";
+import { useScheme, useToastLayer } from "../scope";
 import { Icon } from "./icon";
 import { Spinner } from "./spinner";
 
 import styles from "./sonner.module.css";
 
-export const V4_TOASTER_ID = "infisical-v4";
+export const TOASTER_ID = "cipher";
 
 type Message = Parameters<typeof sonnerToast>[0];
 const routed = (data?: ExternalToast): ExternalToast => ({
   ...data,
-  toasterId: data?.toasterId ?? V4_TOASTER_ID
+  toasterId: data?.toasterId ?? TOASTER_ID
 });
 
 export const toast = Object.assign(
@@ -38,14 +38,14 @@ export const toast = Object.assign(
     promise: <T,>(
       promise: Parameters<typeof sonnerToast.promise<T>>[0],
       data?: Parameters<typeof sonnerToast.promise<T>>[1]
-    ) => sonnerToast.promise<T>(promise, { ...data, toasterId: data?.toasterId ?? V4_TOASTER_ID }),
+    ) => sonnerToast.promise<T>(promise, { ...data, toasterId: data?.toasterId ?? TOASTER_ID }),
     custom: (jsx: Parameters<typeof sonnerToast.custom>[0], data?: ExternalToast) =>
       sonnerToast.custom(jsx, routed(data)),
     dismiss: (id?: number | string) => {
       if (id !== undefined) return sonnerToast.dismiss(id);
       sonnerToast
         .getToasts()
-        .filter((item) => "toasterId" in item && item.toasterId === V4_TOASTER_ID)
+        .filter((item) => "toasterId" in item && item.toasterId === TOASTER_ID)
         .forEach((item) => sonnerToast.dismiss(item.id));
       return undefined;
     }
@@ -127,12 +127,12 @@ const ToastAnnouncer = ({ toasterId }: { toasterId: string }) => {
 };
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const resolvedTheme = useV4Scheme();
-  const layer = useV4ToastLayer();
-  const owns = useOwnsToaster(props.id ?? V4_TOASTER_ID);
+  const resolvedTheme = useScheme();
+  const layer = useToastLayer();
+  const owns = useOwnsToaster(props.id ?? TOASTER_ID);
   if (!owns) return null;
 
-  const toasterId = props.id ?? V4_TOASTER_ID;
+  const toasterId = props.id ?? TOASTER_ID;
   const toaster = (
     <>
       <ToastAnnouncer toasterId={toasterId} />
@@ -153,7 +153,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         }}
         style={
           {
-            "--width": "min(var(--v4-size-toast), calc(100vw - 2 * var(--v4-space-16)))"
+            "--width": "min(var(--cipher-size-toast), calc(100vw - 2 * var(--cipher-space-16)))"
           } as React.CSSProperties
         }
         toastOptions={{

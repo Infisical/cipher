@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useV4Scheme } from "../scope";
+import { useScheme } from "../scope";
 import { cn } from "../lib/utils";
 
 import styles from "./halftone.module.css";
@@ -137,7 +137,7 @@ export function Halftone({
   ref,
   ...props
 }: HalftoneProps & { ref?: React.Ref<HTMLSpanElement> }) {
-  const scheme = useV4Scheme();
+  const scheme = useScheme();
   const own = React.useRef<HTMLSpanElement>(null);
   const [box, setBox] = React.useState<{
     width: number;
@@ -159,8 +159,8 @@ export function Halftone({
         height: parent.clientHeight,
         top: Number.parseFloat(parentStyle.paddingTop) || 0,
         left: Number.parseFloat(parentStyle.paddingLeft) || 0,
-        gamma: readNumber(element, "--v4-halftone-gamma", 1),
-        cell: Math.max(1, readNumber(element, "--v4-size-halftone-cell", 8))
+        gamma: readNumber(element, "--cipher-halftone-gamma", 1),
+        cell: Math.max(1, readNumber(element, "--cipher-size-halftone-cell", 8))
       };
       setBox((previous) =>
         previous &&

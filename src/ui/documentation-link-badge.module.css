@@ -2,23 +2,23 @@
   text-decoration: none;
 }
 .badge:hover {
-  background-image: linear-gradient(var(--v4-action-ghost-hover), var(--v4-action-ghost-hover));
+  background-image: linear-gradient(var(--cipher-action-ghost-hover), var(--cipher-action-ghost-hover));
 }
 .minified {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--v4-size-badge);
-  height: var(--v4-size-badge);
-  color: var(--v4-info);
+  width: var(--cipher-size-badge);
+  height: var(--cipher-size-badge);
+  color: var(--cipher-info);
 }
 .minified:hover {
-  background: var(--v4-action-ghost-hover);
+  background: var(--cipher-action-ghost-hover);
 }
 .minified > svg {
-  width: var(--v4-size-icon-sm);
-  height: var(--v4-size-icon-sm);
-  stroke-width: var(--v4-stroke-icon);
+  width: var(--cipher-size-icon-sm);
+  height: var(--cipher-size-icon-sm);
+  stroke-width: var(--cipher-stroke-icon);
 }
 .sr {
   position: absolute;

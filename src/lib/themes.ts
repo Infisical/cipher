@@ -1,23 +1,23 @@
-export type V4Scheme = "light" | "dark";
+export type Scheme = "light" | "dark";
 
-export interface V4ThemeDefinition {
+export interface ThemeDefinition {
   id: string;
   name: string;
-  scheme: V4Scheme;
-  base?: V4Scheme;
+  scheme: Scheme;
+  base?: Scheme;
   extends?: string;
   overrides: Readonly<Record<string, string>>;
 }
 
-export const legacyV4Themes: Readonly<Record<string, string>> = {
+export const legacyThemes: Readonly<Record<string, string>> = {
   peach: "light",
   pale: "light",
   "dark-alt": "dark"
 };
 
 /** The theme and every theme it extends, nearest first, plus the base column the chain ends on. */
-export const v4ThemeChain = (themes: readonly V4ThemeDefinition[], id: string) => {
-  const chain: V4ThemeDefinition[] = [];
+export const themeChain = (themes: readonly ThemeDefinition[], id: string) => {
+  const chain: ThemeDefinition[] = [];
   let current = themes.find((theme) => theme.id === id);
   while (current) {
     if (chain.includes(current)) throw new Error(`Theme ${id} extends itself`);
@@ -32,13 +32,13 @@ export const v4ThemeChain = (themes: readonly V4ThemeDefinition[], id: string) =
 };
 
 /** A themed token's raw value in a theme: the nearest override, then the base column. */
-export const v4ThemedValue = (
-  themes: readonly V4ThemeDefinition[],
+export const themedValue = (
+  themes: readonly ThemeDefinition[],
   id: string,
   name: string,
   value: Readonly<Record<string, string>>
 ) => {
-  const { chain, base } = v4ThemeChain(themes, id);
+  const { chain, base } = themeChain(themes, id);
   const override = chain.find((theme) => name in theme.overrides)?.overrides[name];
   return override ?? value[base] ?? value.light;
 };

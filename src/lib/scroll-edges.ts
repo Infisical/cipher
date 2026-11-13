@@ -1,9 +1,9 @@
 /**
  * Edge-aware scroll fade. Any element with data-scroll-fade="y",
  * "x" or "both" gets data-scroll-start-y / data-scroll-end-y (and -x) while more content sits
- * before or after the visible area; v4.css masks only those edges by size-scroll-fade. An area
+ * before or after the visible area; base.css masks only those edges by size-scroll-fade. An area
  * that does not scroll gets no attribute and no fade. One document-level watcher serves every
- * V4Scope, so portaled menus and dialogs are covered too.
+ * CipherScope, so portaled menus and dialogs are covered too.
  */
 const THRESHOLD = 1;
 type Axis = "x" | "y";

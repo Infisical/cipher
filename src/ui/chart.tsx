@@ -5,7 +5,7 @@ import type { TooltipValueType } from "recharts";
 import * as RechartsPrimitive from "recharts";
 
 import { cn } from "../lib/utils";
-import { useV4Scheme } from "../scope";
+import { useScheme } from "../scope";
 
 const INITIAL_DIMENSION = { width: 320, height: 200 } as const;
 
@@ -71,7 +71,7 @@ function ChartContainer({
         data-chart={chartId}
         className={cn(
           "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground flex aspect-video justify-center text-xs [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent",
-          "[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-[var(--v4-hover)]",
+          "[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-[var(--cipher-hover)]",
           className
         )}
         {...props}
@@ -86,7 +86,7 @@ function ChartContainer({
 }
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
-  const theme = useV4Scheme() ?? "light";
+  const theme = useScheme() ?? "light";
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme ?? config.color);
 
   if (!colorConfig.length) {

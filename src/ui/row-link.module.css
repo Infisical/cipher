@@ -9,14 +9,14 @@
   outline: none;
 }
 .rowLink[data-disabled] {
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
   cursor: not-allowed;
 }
 .rowLink[data-chevron] {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
 }
 .label {
   flex: 0 1 auto;
@@ -27,17 +27,17 @@
 }
 .chevron {
   flex: none;
-  width: var(--v4-size-glyph);
-  height: var(--v4-size-glyph);
-  stroke-width: var(--v4-stroke-icon);
-  color: var(--v4-muted);
-  transition: color var(--v4-duration-fast) var(--v4-ease-fade);
+  width: var(--cipher-size-glyph);
+  height: var(--cipher-size-glyph);
+  stroke-width: var(--cipher-stroke-icon);
+  color: var(--cipher-muted);
+  transition: color var(--cipher-duration-fast) var(--cipher-ease-fade);
 }
 .rowLink[data-disabled] .chevron {
-  color: var(--v4-faint);
+  color: var(--cipher-faint);
 }
 :is(:global(tr), :global([data-slot="card"])):is(:hover, :focus-within) .stretched .chevron {
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 .cardLink {
   color: inherit;
@@ -45,7 +45,7 @@
   outline: none;
 }
 .cardLink[data-disabled] {
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
   cursor: not-allowed;
 }
 .stretched::after {
@@ -55,8 +55,8 @@
   z-index: 1;
 }
 .stretched:focus-visible::after {
-  outline: var(--v4-size-focus-ring) solid var(--v4-ink);
-  outline-offset: calc(-1 * var(--v4-size-focus-ring));
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: calc(-1 * var(--cipher-size-focus-ring));
 }
 :global(tr)[data-stretched-link],
 :global([data-slot="card"])[data-stretched-link] {
@@ -64,7 +64,7 @@
   cursor: pointer;
 }
 :global([data-slot="card"])[data-stretched-link]:hover {
-  background-image: linear-gradient(var(--v4-action-ghost-hover), var(--v4-action-ghost-hover));
+  background-image: linear-gradient(var(--cipher-action-ghost-hover), var(--cipher-action-ghost-hover));
 }
 /* :where keeps this at zero specificity, so a control that positions itself absolutely keeps its own layout. */
 :where(:global(tr)[data-stretched-link], :global([data-slot="card"])[data-stretched-link])

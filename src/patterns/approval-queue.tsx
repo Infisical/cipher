@@ -151,13 +151,13 @@ function lower(
 const loadingRow = (index: number): ListRowProps => ({
   value: `loading-${index}`,
   label: "",
-  media: <Skeleton width="var(--v4-size-control-lg)" height="var(--v4-size-control-lg)" />,
+  media: <Skeleton width="var(--cipher-size-control-lg)" height="var(--cipher-size-control-lg)" />,
   title: (
     <span className={styles.queueTitleLine}>
-      <Skeleton width="calc(3 * var(--v4-size-cell-min))" />
+      <Skeleton width="calc(3 * var(--cipher-size-cell-min))" />
     </span>
   ),
-  meta: <Skeleton width="var(--v4-space-24)" />,
+  meta: <Skeleton width="var(--cipher-space-24)" />,
   children: (
     <span className={styles.queueSmallLine}>
       <Skeleton width="70%" />
@@ -166,12 +166,12 @@ const loadingRow = (index: number): ListRowProps => ({
   actions: (
     <>
       <Skeleton
-        width="calc(1.5 * var(--v4-size-cell-min))"
-        height="var(--v4-size-control-default)"
+        width="calc(1.5 * var(--cipher-size-cell-min))"
+        height="var(--cipher-size-control-default)"
       />
       <Skeleton
-        width="calc(1.25 * var(--v4-size-cell-min))"
-        height="var(--v4-size-control-default)"
+        width="calc(1.25 * var(--cipher-size-cell-min))"
+        height="var(--cipher-size-control-default)"
       />
     </>
   )

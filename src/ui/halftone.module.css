@@ -4,15 +4,15 @@
   display: block;
   overflow: clip;
   pointer-events: none;
-  opacity: calc(var(--v4-halftone-peak) * var(--halftone-intensity, 1));
-  color: var(--v4-hue-tint);
-  transition: opacity var(--v4-duration-slow) var(--v4-ease-fade);
+  opacity: calc(var(--cipher-halftone-peak) * var(--halftone-intensity, 1));
+  color: var(--cipher-hue-tint);
+  transition: opacity var(--cipher-duration-slow) var(--cipher-ease-fade);
 }
 .halftone[data-tone="accent"] {
-  color: var(--v4-accent);
+  color: var(--cipher-accent);
 }
 .halftone[data-tone="ink"] {
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 .halftone svg {
   display: block;
@@ -22,15 +22,15 @@
 .hover {
   transform-box: view-box;
   transition:
-    transform 320ms var(--v4-ease-standard),
-    opacity 320ms var(--v4-ease-fade);
+    transform 320ms var(--cipher-ease-standard),
+    opacity 320ms var(--cipher-ease-fade);
 }
 .hover {
   opacity: 0;
   transform: scale(calc(1 / 1.5));
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .halftone {
-  opacity: calc(var(--v4-halftone-peak-hover) * var(--halftone-intensity, 1));
+  opacity: calc(var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1));
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .rest {
   opacity: 0;

@@ -209,7 +209,7 @@ export const Switcher = ({
         className={className}
         align={align}
         side={side}
-        data-v4-switcher=""
+        data-cipher-switcher=""
         surface="menu"
         style={{ width }}
         aria-label={label}
@@ -224,7 +224,7 @@ export const Switcher = ({
           }
         }}
       >
-        {header && <div className="v4-switcher-header">{header}</div>}
+        {header && <div className="cipher-switcher-header">{header}</div>}
         <Command
           ref={attachCommand}
           tabIndex={searchable ? undefined : -1}
@@ -271,7 +271,7 @@ export const Switcher = ({
                       <span className={option.mono ? "font-mono" : undefined}>
                         {option.label}
                         {option.description && (
-                          <span className="v4-switcher-description">{option.description}</span>
+                          <span className="cipher-switcher-description">{option.description}</span>
                         )}
                       </span>
                       {option.meta && (
@@ -306,7 +306,7 @@ export const Switcher = ({
           </CommandList>
         </Command>
         {footer && (
-          <div className="v4-switcher-footer">
+          <div className="cipher-switcher-footer">
             {typeof footer === "function" ? footer({ close }) : footer}
           </div>
         )}

@@ -13,19 +13,19 @@ export default function Example() {
       <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
         <UI.ChartContainer
           className="aspect-auto h-60"
-          config={{ requests: { label: "Requests", color: "var(--v4-text2)" } }}
+          config={{ requests: { label: "Requests", color: "var(--cipher-text2)" } }}
         >
           <BarChart
             accessibilityLayer
             data={data}
             margin={{ top: 24, right: 12, bottom: 4, left: 0 }}
           >
-            <CartesianGrid vertical={false} stroke="var(--v4-line)" />
+            <CartesianGrid vertical={false} stroke="var(--cipher-line)" />
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "var(--v4-ink)", style: { fill: "var(--v4-ink)" } }}
+              tick={{ fill: "var(--cipher-ink)", style: { fill: "var(--cipher-ink)" } }}
             />
             <YAxis
               width={36}
@@ -34,7 +34,7 @@ export default function Example() {
               tickCount={4}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "var(--v4-ink)", style: { fill: "var(--v4-ink)" } }}
+              tick={{ fill: "var(--cipher-ink)", style: { fill: "var(--cipher-ink)" } }}
             />
             <UI.ChartTooltip content={<UI.ChartTooltipContent />} />
             <UI.ChartLegend content={<UI.ChartLegendContent />} />
@@ -44,7 +44,7 @@ export default function Example() {
               fill="var(--color-requests)"
               maxBarSize={40}
             >
-              <LabelList dataKey="requests" position="top" fill="var(--v4-ink)" />
+              <LabelList dataKey="requests" position="top" fill="var(--cipher-ink)" />
             </Bar>
           </BarChart>
         </UI.ChartContainer>

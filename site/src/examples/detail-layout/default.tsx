@@ -79,7 +79,7 @@ export default function Example() {
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
-          <div style={{ maxWidth: "var(--v4-size-measure-form)" }}>
+          <div style={{ maxWidth: "var(--cipher-size-measure-form)" }}>
             <Specimen />
           </div>
         </div>

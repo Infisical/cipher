@@ -29,7 +29,7 @@ const withThemeDefaults = (css: string) => {
     });
   collect(css);
   if (!needed.size) return css;
-  return `.v4 {\n${[...needed].sort().map((name) => `  ${name}: ${tailwindTheme.get(name)};`).join("\n")}\n}\n${css}`;
+  return `.cipher {\n${[...needed].sort().map((name) => `  ${name}: ${tailwindTheme.get(name)};`).join("\n")}\n}\n${css}`;
 };
 
 const stylesheets = (): Plugin => ({
@@ -58,7 +58,7 @@ const stylesheets = (): Plugin => ({
       const asset = bundle[name];
       return asset.type === "asset" ? String(asset.source) : "";
     };
-    const modules = order.filter((name) => name !== "v4.css");
+    const modules = order.filter((name) => name !== "base.css");
     this.emitFile({ type: "asset", fileName: "cipher.css", source: withThemeDefaults(order.map(text).join("\n")) });
     this.emitFile({ type: "asset", fileName: "modules.css", source: modules.map(text).join("\n") });
     order.forEach((name) => delete bundle[name]);

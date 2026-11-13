@@ -15,7 +15,7 @@ const buttonVariants = cva(
   [
     geometry.button,
     controlStyles.focusOutline,
-    "group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-border whitespace-nowrap select-none disabled:pointer-events-none aria-invalid:border-[color:var(--v4-control-invalid-border)] [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    "group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-border whitespace-nowrap select-none disabled:pointer-events-none aria-invalid:border-[color:var(--cipher-control-invalid-border)] [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ],
   {
     variants: {
@@ -25,7 +25,7 @@ const buttonVariants = cva(
         "danger-ghost": "text-destructive hover:bg-destructive/10",
         default: styles.ink,
         outline: [
-          "border-[color:var(--v4-action-outline-border)] bg-[color:var(--v4-action-outline-surface)] hover:bg-[color:var(--v4-action-outline-hover)] hover:text-foreground [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:bg-muted [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:text-foreground",
+          "border-[color:var(--cipher-action-outline-border)] bg-[color:var(--cipher-action-outline-surface)] hover:bg-[color:var(--cipher-action-outline-hover)] hover:text-foreground [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:bg-muted [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:text-foreground",
           styles.neutralSelection
         ],
         secondary: [
@@ -33,7 +33,7 @@ const buttonVariants = cva(
           styles.neutralSelection
         ],
         ghost: [
-          "hover:bg-[color:var(--v4-action-ghost-hover)] hover:text-foreground [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:bg-[color:var(--v4-action-ghost-hover)] [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:text-foreground",
+          "hover:bg-[color:var(--cipher-action-ghost-hover)] hover:text-foreground [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:bg-[color:var(--cipher-action-ghost-hover)] [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:text-foreground",
           styles.neutralSelection
         ],
         bare: styles.bare,
@@ -221,8 +221,8 @@ function Button({
       type={asChild ? type : (type ?? "button")}
       {...props}
       disabled={reason ? undefined : props.disabled}
-      data-v4-button=""
-      data-v4-button-material={material ? "" : undefined}
+      data-cipher-button=""
+      data-cipher-button-material={material ? "" : undefined}
       data-disabled-reason={reason ? "" : undefined}
       aria-busy={loading || undefined}
       aria-disabled={

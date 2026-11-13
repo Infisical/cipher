@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import { type V4ThemeDefinition, v4ThemeChain, v4ThemedValue } from "../src/lib/themes";
+import { type ThemeDefinition, themeChain, themedValue } from "../src/lib/themes";
 
 type TokenValue = string | number | Record<string, string>;
 type Tokens = {
@@ -9,7 +9,7 @@ type Tokens = {
     families: Record<string, string>;
     groups: { styles: ({ name: string } & Record<string, string | number>)[] }[];
   };
-  themes: { list: V4ThemeDefinition[] };
+  themes: { list: ThemeDefinition[] };
 } & Record<string, unknown>;
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -25,7 +25,7 @@ Object.values(tokens).forEach((family) => {
     else constant.push({ name: token.name, value: token.value });
   });
 });
-const cssValue = (value: string | number) => String(value).replace(/\{([^}]+)\}/g, "var(--v4-$1)");
+const cssValue = (value: string | number) => String(value).replace(/\{([^}]+)\}/g, "var(--cipher-$1)");
 const rule = (selector: string, values: string[]) =>
   `${selector} {\n${values.map((value) => `  ${value}`).join("\n")}\n}\n`;
 const cssProperties: Record<string, string> = {
@@ -39,32 +39,32 @@ const cssProperties: Record<string, string> = {
   fontStretch: "font-stretch"
 };
 const typeValues = [
-  ...Object.entries(tokens.type.families).map(([name, value]) => `--v4-font-${name}: ${value};`),
+  ...Object.entries(tokens.type.families).map(([name, value]) => `--cipher-font-${name}: ${value};`),
   ...tokens.type.groups.flatMap((group) =>
     group.styles.flatMap((style) =>
       Object.entries(cssProperties)
         .filter(([key]) => style[key] !== undefined)
-        .map(([key, css]) => `--v4-type-${style.name}-${css}: ${style[key]};`)
+        .map(([key, css]) => `--cipher-type-${style.name}-${css}: ${style[key]};`)
     )
   )
 ];
 const themes = tokens.themes.list;
 const failures: string[] = [];
 let css = "/* Generated from tokens.json by npm run tokens. */\n";
-css += rule(".v4", [
-  ...constant.map((token) => `--v4-${token.name}: ${cssValue(token.value)};`),
-  ...themed.map((token) => `--v4-${token.name}: ${cssValue(token.value.light)};`),
+css += rule(".cipher", [
+  ...constant.map((token) => `--cipher-${token.name}: ${cssValue(token.value)};`),
+  ...themed.map((token) => `--cipher-${token.name}: ${cssValue(token.value.light)};`),
   ...typeValues
 ]);
 css += rule(
-  '.v4[data-scheme="dark"]',
-  themed.map((token) => `--v4-${token.name}: ${cssValue(token.value.dark ?? token.value.light)};`)
+  '.cipher[data-scheme="dark"]',
+  themed.map((token) => `--cipher-${token.name}: ${cssValue(token.value.dark ?? token.value.light)};`)
 );
 const themedNames = new Set(themed.map((token) => token.name));
 themes.forEach((theme) => {
   if (Boolean(theme.base) === Boolean(theme.extends))
     failures.push(`Theme ${theme.id} needs exactly one of base and extends`);
-  const { base } = v4ThemeChain(themes, theme.id);
+  const { base } = themeChain(themes, theme.id);
   if (base !== theme.scheme)
     failures.push(`Theme ${theme.id} declares scheme ${theme.scheme} but resolves to the ${base} base`);
   Object.keys(theme.overrides).forEach((name) => {
@@ -72,15 +72,15 @@ themes.forEach((theme) => {
   });
   const changed = themed.filter(
     (token) =>
-      v4ThemedValue(themes, theme.id, token.name, token.value) !==
+      themedValue(themes, theme.id, token.name, token.value) !==
       (token.value[base] ?? token.value.light)
   );
   if (changed.length)
     css += rule(
-      `.v4[data-theme="${theme.id}"]`,
+      `.cipher[data-theme="${theme.id}"]`,
       changed.map(
         (token) =>
-          `--v4-${token.name}: ${cssValue(v4ThemedValue(themes, theme.id, token.name, token.value))};`
+          `--cipher-${token.name}: ${cssValue(themedValue(themes, theme.id, token.name, token.value))};`
       )
     );
 });

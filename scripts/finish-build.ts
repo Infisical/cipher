@@ -22,9 +22,9 @@ mkdirSync(path.join(dist, "fonts"), { recursive: true });
 readdirSync(path.join(root, "src/fonts")).forEach((file) =>
   cpSync(path.join(root, "src/fonts", file), path.join(dist, "fonts", file))
 );
-const source = readFileSync(path.join(root, "src/v4.css"), "utf8");
+const source = readFileSync(path.join(root, "src/base.css"), "utf8");
 const imported = '@import "./tokens.generated.css";\n';
-if (!source.startsWith(imported)) throw new Error("src/v4.css must open with " + imported.trim());
+if (!source.startsWith(imported)) throw new Error("src/base.css must open with " + imported.trim());
 const fontFace = /@font-face\s*\{[^}]*\}\n*/g;
 writeFileSync(path.join(dist, "fonts.css"), (source.match(fontFace) ?? []).join(""));
 writeFileSync(

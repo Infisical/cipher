@@ -42,7 +42,7 @@ type LayoutProps = React.ComponentPropsWithoutRef<"div"> & {
   align?: "start" | "center" | "end" | "stretch";
   justify?: "start" | "center" | "end" | "between";
 };
-const spacing = (gap: LayoutGap) => (gap === 0 ? 0 : `var(--v4-space-${gap})`);
+const spacing = (gap: LayoutGap) => (gap === 0 ? 0 : `var(--cipher-space-${gap})`);
 const alignment = (align: LayoutProps["align"] | "baseline") =>
   align === "start" ? "flex-start" : align === "end" ? "flex-end" : align;
 export function Stack({
@@ -114,7 +114,7 @@ export function Grid({
 } & {
   ref?: React.Ref<HTMLDivElement>;
 }) {
-  let gridTemplateColumns = `repeat(auto-fit, minmax(min(100%, var(--v4-size-${min}-min)), 1fr))`;
+  let gridTemplateColumns = `repeat(auto-fit, minmax(min(100%, var(--cipher-size-${min}-min)), 1fr))`;
   if (columns === "1:2") gridTemplateColumns = "minmax(0, 1fr) minmax(0, 2fr)";
   else if (columns) gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
   return (

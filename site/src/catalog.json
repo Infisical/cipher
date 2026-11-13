@@ -750,7 +750,7 @@
     "group": "Utilities",
     "examples": [
       {
-        "title": "v4 set (custom), with visible names",
+        "title": "Cipher set (custom), with visible names",
         "module": "icon/default"
       },
       {

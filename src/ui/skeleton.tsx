@@ -42,10 +42,10 @@ function Skeleton({
       ref={ref}
       data-slot="skeleton"
       aria-hidden="true"
-      style={{ width, height: height ?? "var(--v4-size-skeleton-text)", ...style }}
+      style={{ width, height: height ?? "var(--cipher-size-skeleton-text)", ...style }}
       className={cn(
         controlStyles.skeleton,
-        "animate-pulse bg-[color:var(--v4-line-soft)] motion-reduce:animate-none",
+        "animate-pulse bg-[color:var(--cipher-line-soft)] motion-reduce:animate-none",
         className
       )}
       {...props}

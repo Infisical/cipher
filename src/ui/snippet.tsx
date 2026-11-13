@@ -10,8 +10,8 @@ import styles from "./code.module.css";
 const snippetFlags = { "data-input-focus": `:scope > .${styles.input}:focus-visible` };
 
 type SnippetLinesStyle = React.CSSProperties & {
-  "--v4-snippet-lines": number;
-  "--v4-snippet-rows": number;
+  "--cipher-snippet-lines": number;
+  "--cipher-snippet-rows": number;
 };
 const snippetWatch = { subtree: false, focus: true };
 
@@ -61,7 +61,7 @@ export function Snippet({
       {...attributes}
       className={cn(styles.input, styles.snippetLines)}
       data-scroll-fade="y"
-      style={{ "--v4-snippet-lines": lines, "--v4-snippet-rows": rows } as SnippetLinesStyle}
+      style={{ "--cipher-snippet-lines": lines, "--cipher-snippet-rows": rows } as SnippetLinesStyle}
       aria-label={label}
       value={value}
       rows={rows}

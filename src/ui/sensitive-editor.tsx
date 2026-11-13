@@ -279,7 +279,7 @@ function SensitiveEditorSession({
       ref={region}
       tabIndex={-1}
       aria-label={label}
-      data-v4-escape-owner={
+      data-cipher-escape-owner={
         draft !== null || view.kind === "loading" || view.kind === "revealed" ? "" : undefined
       }
       onKeyDown={(event) => {

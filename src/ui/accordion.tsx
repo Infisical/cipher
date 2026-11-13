@@ -31,7 +31,7 @@ function AccordionItem({
     <AccordionPrimitive.Item
       ref={ref}
       data-slot="accordion-item"
-      className={cn("border-[color:var(--v4-line-soft)] not-last:border-b", className)}
+      className={cn("border-[color:var(--cipher-line-soft)] not-last:border-b", className)}
       {...props}
     />
   );
@@ -51,7 +51,7 @@ function AccordionTrigger({
         data-slot="accordion-trigger"
         className={cn(
           controlStyles.label,
-          "group/accordion-trigger **:data-[slot=accordion-trigger-icon]:text-muted-foreground relative flex flex-1 items-start justify-between gap-(--v4-space-8) rounded-lg border border-transparent py-2.5 text-left transition-colors outline-none hover:[&>[data-slot=accordion-trigger-text]]:underline focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-[color:var(--v4-focus-ring)] focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4",
+          "group/accordion-trigger **:data-[slot=accordion-trigger-icon]:text-muted-foreground relative flex flex-1 items-start justify-between gap-(--cipher-space-8) rounded-lg border border-transparent py-2.5 text-left transition-colors outline-none hover:[&>[data-slot=accordion-trigger-text]]:underline focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-[color:var(--cipher-focus-ring)] focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4",
           className
         )}
         {...props}
@@ -92,7 +92,7 @@ function AccordionContent({
       data-slot="accordion-content"
       className={cn(
         controlStyles.body,
-        "overflow-hidden duration-(--v4-duration-moderate) ease-(--v4-ease-spring) data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+        "overflow-hidden duration-(--cipher-duration-moderate) ease-(--cipher-ease-spring) data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
       )}
       {...props}
     >

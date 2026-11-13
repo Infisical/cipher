@@ -3,7 +3,7 @@
 import * as React from "react";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 
-import { useV4PortalContainer } from "../scope";
+import { usePortalContainer } from "../scope";
 import { Button } from "./button";
 import { Icon, type IconName } from "./icon";
 import { Input } from "./input";
@@ -41,7 +41,7 @@ function AlertDialogPortal({
 }: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
   return (
     <AlertDialogPrimitive.Portal
-      container={useV4PortalContainer()}
+      container={usePortalContainer()}
       data-slot="alert-dialog-portal"
       {...props}
     >

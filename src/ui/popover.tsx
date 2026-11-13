@@ -4,7 +4,7 @@ import * as React from "react";
 import { GripHorizontalIcon } from "lucide-react";
 import { Popover as PopoverPrimitive, Slot } from "radix-ui";
 
-import { useV4CollisionBoundary, useV4PortalContainer } from "../scope";
+import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { FrameScope } from "../lib/frame-context";
 import { useOwnedEscape } from "../lib/use-owned-escape";
@@ -103,7 +103,7 @@ function PopoverContent({
   draggable?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<typeof PopoverPrimitive.Content>> }) {
   const escape = useOwnedEscape(ref, onEscapeKeyDown);
-  const boundary = useV4CollisionBoundary();
+  const boundary = useCollisionBoundary();
   const open = React.useContext(PopoverOpenContext);
   const [offset, setOffset] = React.useState(restingOffset);
   const [openedFor, setOpenedFor] = React.useState(open);
@@ -145,7 +145,7 @@ function PopoverContent({
   }, [dragged, collisionPadding, boundary]);
 
   return (
-    <PopoverPrimitive.Portal container={useV4PortalContainer()}>
+    <PopoverPrimitive.Portal container={usePortalContainer()}>
       <PopoverPrimitive.Content
         ref={escape.ref}
         data-slot="popover-content"
@@ -211,7 +211,7 @@ function PopoverContent({
               grab(event.currentTarget);
               const step = parseFloat(
                 getComputedStyle(event.currentTarget).getPropertyValue(
-                  event.shiftKey ? "--v4-space-48" : "--v4-space-8"
+                  event.shiftKey ? "--cipher-space-48" : "--cipher-space-8"
                 )
               );
               moveTo({ x: offset.x + direction.x * step, y: offset.y + direction.y * step });

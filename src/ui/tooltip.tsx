@@ -2,7 +2,7 @@ import * as React from "react";
 import { flushSync } from "react-dom";
 import { Slot, Tooltip as TooltipPrimitive } from "radix-ui";
 
-import { useV4CollisionBoundary, useV4PortalContainer } from "../scope";
+import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
@@ -75,7 +75,7 @@ type TriggerHandlers = Pick<
 >;
 type AnchorHandle = { ref: React.Ref<HTMLElement> | undefined; handlers: TriggerHandlers };
 
-const sharedAttribute = "data-v4-tooltip";
+const sharedAttribute = "data-cipher-tooltip";
 const TooltipScopeContext = React.createContext<SharedStore | null>(null);
 
 function SharedAnchor({
@@ -237,7 +237,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
 
 /**
  * Shares one tooltip among every Tooltip inside it: each trigger renders only its element, marked with
- * data-v4-tooltip, and the scope mounts a single Radix tooltip on the first hover or keyboard focus and
+ * data-cipher-tooltip, and the scope mounts a single Radix tooltip on the first hover or keyboard focus and
  * moves it to whichever trigger is active. Table renders one around its rows.
  */
 function TooltipScope({ children }: { children?: React.ReactNode }) {
@@ -383,12 +383,12 @@ function TooltipContent({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
-    <TooltipPrimitive.Portal container={useV4PortalContainer()}>
+    <TooltipPrimitive.Portal container={usePortalContainer()}>
       <TooltipPrimitive.Content
         ref={ref}
         data-slot="tooltip-content"
         collisionPadding={collisionPadding}
-        collisionBoundary={useV4CollisionBoundary()}
+        collisionBoundary={useCollisionBoundary()}
         sideOffset={sideOffset}
         className={cn("z-50", menu.tooltip, menu.motion, className)}
         {...props}
