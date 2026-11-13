@@ -6,7 +6,7 @@
     {
       "name": "cipher-base",
       "type": "registry:base",
-      "description": "Cipher tokens, the Lightly Peach, Light and Dark themes, fonts, cn and scoped portal support.",
+      "description": "Cipher tokens, the Light and Dark themes, fonts, cn and scoped portal support.",
       "dependencies": [
         "clsx@^2.1.1",
         "motion@^13.2.0",

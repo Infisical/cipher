@@ -938,7 +938,7 @@
         "module": "loader/default"
       },
       {
-        "title": "Boot loader in peach and dark",
+        "title": "Boot loader in light and dark",
         "module": "loader/boot"
       },
       {
