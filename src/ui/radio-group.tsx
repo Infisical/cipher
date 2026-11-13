@@ -5,12 +5,11 @@ import { motion, useReducedMotion } from "motion/react";
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 
 import { exit, spring } from "../lib/motion";
+import { RadioValueContext } from "../lib/radio-value-context";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
 
 import controlStyles from "./controls.module.css";
-
-const RadioValueContext = React.createContext<string | undefined>(undefined);
 
 function RadioGroup({
   className,
@@ -86,7 +85,10 @@ function RadioGroupItem({
         <motion.span
           className={controlStyles.radioDot}
           initial={false}
-          animate={{ scale: selected || reduced ? 1 : 0.3, opacity: selected ? 1 : 0 }}
+          animate={{
+            scale: selected || reduced ? 1 : 0.3,
+            opacity: selected ? 1 : 0
+          }}
           transition={selected ? spring.fast : exit.fast}
         />
       </RadioGroupPrimitive.Indicator>
@@ -153,7 +155,10 @@ function RadioGroupCard({
           <motion.span
             className={controlStyles.radioDot}
             initial={false}
-            animate={{ scale: selected || reduced ? 1 : 0.3, opacity: selected ? 1 : 0 }}
+            animate={{
+              scale: selected || reduced ? 1 : 0.3,
+              opacity: selected ? 1 : 0
+            }}
             transition={selected ? spring.fast : exit.fast}
           />
         </span>

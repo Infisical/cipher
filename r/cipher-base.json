@@ -139,6 +139,12 @@
       "content": "import * as React from \"react\";\n\nexport type PresenceReport = (delta: number) => void;\n\n/**\n * Counts descendants that report themselves through context, so a container styles itself from\n * React state instead of a :has() selector, which would make every DOM change below it relayout the document.\n */\nexport function usePresenceCount() {\n  const [count, setCount] = React.useState(0);\n  const report = React.useCallback<PresenceReport>(\n    (delta) => setCount((value) => value + delta),\n    []\n  );\n  return [count > 0, report] as const;\n}\n\n/** Reports to the nearest counter while active holds. */\nexport function useReportPresence(report: PresenceReport | null | undefined, active: boolean) {\n  React.useLayoutEffect(() => {\n    if (!active || !report) return undefined;\n    report(1);\n    return () => report(-1);\n  }, [active, report]);\n}\n"
     },
     {
+      "path": "src/components/cipher/lib/radio-value-context.ts",
+      "type": "registry:file",
+      "target": "src/components/cipher/lib/radio-value-context.ts",
+      "content": "import * as React from \"react\";\n\nexport const RadioValueContext = React.createContext<string | undefined>(undefined);\n"
+    },
+    {
       "path": "src/components/cipher/lib/scroll-edges.ts",
       "type": "registry:file",
       "target": "src/components/cipher/lib/scroll-edges.ts",

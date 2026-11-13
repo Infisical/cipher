@@ -48,6 +48,26 @@
   color: var(--cipher-muted);
   cursor: not-allowed;
 }
+.cardChoice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.cardChoice:disabled {
+  color: var(--cipher-muted);
+  cursor: not-allowed;
+}
+.cardChoiceLabel {
+  min-width: 0;
+}
 .stretched::after {
   content: "";
   position: absolute;
@@ -69,7 +89,7 @@
 /* :where keeps this at zero specificity, so a control that positions itself absolutely keeps its own layout. */
 :where(:global(tr)[data-stretched-link], :global([data-slot="card"])[data-stretched-link])
   :where(
-    button,
+    button:not(.stretched),
     input,
     select,
     textarea,
@@ -77,7 +97,7 @@
     summary,
     a:not(.stretched),
     [role="button"],
-    [role="checkbox"],
+    [role="checkbox"]:not(.stretched),
     [role="combobox"],
     [role="switch"],
     [data-slot="tooltip-trigger"],

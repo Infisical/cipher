@@ -122,6 +122,11 @@
           "target": "src/components/cipher/lib/presence-count.ts"
         },
         {
+          "path": "src/components/cipher/lib/radio-value-context.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/radio-value-context.ts"
+        },
+        {
           "path": "src/components/cipher/lib/scroll-edges.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/scroll-edges.ts"
@@ -640,7 +645,12 @@
       "name": "card",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/icon"
+      ],
+      "dependencies": [
+        "motion@^13.2.0",
+        "radix-ui@^1.6.7"
       ],
       "files": [
         {

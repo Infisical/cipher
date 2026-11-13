@@ -304,6 +304,14 @@
       {
         "title": "Element description",
         "module": "card/rich-description"
+      },
+      {
+        "title": "Badges after the title",
+        "module": "card/badges"
+      },
+      {
+        "title": "Selected and choice cards",
+        "module": "card/selected"
       }
     ]
   },
