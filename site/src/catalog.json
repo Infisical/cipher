@@ -300,6 +300,10 @@
       {
         "title": "Band actions",
         "module": "card/band-actions"
+      },
+      {
+        "title": "Title hint",
+        "module": "card/framed-hint"
       }
     ]
   },

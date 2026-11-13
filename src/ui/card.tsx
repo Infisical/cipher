@@ -10,6 +10,8 @@ import {
 } from "../lib/stretched-link";
 import { cn } from "../lib/utils";
 
+import { TooltipText } from "./tooltip";
+
 import controlStyles from "./controls.module.css";
 import frameStyles from "./frame.module.css";
 import linkStyles from "./row-link.module.css";
@@ -35,6 +37,7 @@ function Card({
   variant: requestedVariant = "plain",
   title,
   description,
+  hint,
   action,
   footer,
   footerPlacement = "inset",
@@ -53,11 +56,13 @@ function Card({
   /** Decoration such as a Halftone, painted under the surface that holds the title and the card link: the inset of a framed card with a frame footer, otherwise the card itself. That surface becomes the stacking context, so the link overlay and the controls above it stay in one layer. */
   backdrop?: React.ReactNode;
 } & (
-    | { variant?: "plain"; description?: string }
+    | { variant?: "plain"; description?: string; hint?: never }
     | {
         variant: "framed";
         /** A frame holds a small contained table or list, so its head is a title and actions only. A section that needs a description belongs in a plain Card or a SettingsCard. */
         description?: never;
+        /** One short plain-text sentence about the section. The title takes a dotted underline, becomes focusable and shows this in a tooltip on hover and keyboard focus. */
+        hint?: string;
       }
   ) & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const convenience =
@@ -69,6 +74,17 @@ function Card({
   const variant = inFrame ? "plain" : requestedVariant;
   const [hasLink, reportLink] = useStretchedLinkHost();
   const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
+  const heading =
+    title !== undefined &&
+    (hint ? (
+      <CardTitle data-hint="">
+        <TooltipText content={hint} align="start" className={frameStyles.frameTitleHint}>
+          {title}
+        </TooltipText>
+      </CardTitle>
+    ) : (
+      <CardTitle>{title}</CardTitle>
+    ));
   return (
     <div
       ref={cardRef}
@@ -109,9 +125,7 @@ function Card({
                       <CardHeader>
                         <div className={controlStyles.cardTitleGroup}>
                           <div className={controlStyles.cardCopy}>
-                            {title !== undefined && (
-                              <CardTitle>{title}</CardTitle>
-                            )}
+                            {heading}
                             {description !== undefined && (
                               <CardDescription>{description}</CardDescription>
                             )}
@@ -136,7 +150,7 @@ function Card({
                   <CardHeader>
                     <div className={controlStyles.cardTitleGroup}>
                       <div className={controlStyles.cardCopy}>
-                        {title !== undefined && <CardTitle>{title}</CardTitle>}
+                        {heading}
                         {description !== undefined && (
                           <CardDescription>{description}</CardDescription>
                         )}
