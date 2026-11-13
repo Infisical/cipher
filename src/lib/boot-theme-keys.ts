@@ -1,9 +1,8 @@
-/** Storage keys the app theme reads: the shared light, dark or system preference, the named theme per scheme, and a demo preview. */
-export const themeStorage = {
-  shared: "infisical-theme",
-  preferred: "v4-theme",
-  override: "v4-theme-override"
-} as const;
+/** Storage keys the boot theme reads: the shared light, dark or system preference, the named theme per scheme, and a session preview. */
+export type ThemeStorageKeys = { shared: string; preferred: string; override: string };
 
-/** A live org route: /v4/organizations/<id> with an id other than the demo org. */
-export const liveOrgPath = /^\/v4\/organizations\/(?!demo(?:\/|$))[^/]+/;
+export const themeStorage: ThemeStorageKeys = {
+  shared: "cipher-scheme",
+  preferred: "cipher-theme",
+  override: "cipher-theme-override"
+};

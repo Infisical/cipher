@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { readBootTheme } from "../lib/boot-theme";
+import { readBootTheme, type ThemeStorageKeys } from "../lib/boot-theme";
 import { toTheme, themeScheme } from "../lib/theme-registry";
 import { cn } from "../lib/utils";
 import { Loader } from "./loader";
@@ -14,6 +14,10 @@ export type BootLoaderProps = Omit<React.ComponentPropsWithoutRef<"div">, "child
   theme?: string;
   fill?: "viewport" | "container";
   delay?: number;
+  /** Storage keys to read the theme from. Defaults to Cipher's own keys. */
+  storageKeys?: ThemeStorageKeys;
+  /** Honors a ?theme= or session preview. Defaults to true. */
+  allowPreview?: boolean;
 };
 
 /** The page loader for app and session boot, themed from storage so it renders before CipherScope. */
@@ -23,11 +27,13 @@ export function BootLoader({
   theme,
   fill = "viewport",
   delay,
+  storageKeys,
+  allowPreview,
   className,
   ref,
   ...props
 }: BootLoaderProps & { ref?: React.Ref<HTMLDivElement> }) {
-  const resolved = toTheme(theme) ?? readBootTheme();
+  const resolved = toTheme(theme) ?? readBootTheme({ keys: storageKeys, allowPreview });
   return (
     <div
       ref={ref}
