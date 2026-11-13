@@ -120,6 +120,12 @@ function Item({
   const Comp = asChild ? Slot.Root : "div";
   const itemRef = useDescendantFlags<HTMLDivElement>(itemFlags, undefined, ref);
   const composed = title !== undefined || media || icon || description || actions;
+  const hasActions = Boolean(actions) && size !== "sm";
+  const metaNode = meta && (
+    <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>
+      {meta}
+    </span>
+  );
   const body = composed ? (
     <>
       {unread && <span className="sr-only">Unread</span>}
@@ -134,7 +140,7 @@ function Item({
         data-actions-below={
           (Boolean(actions || meta) && actionsPlacement === "below" && size !== "sm") || undefined
         }
-        data-has-actions={(Boolean(actions) && size !== "sm") || undefined}
+        data-has-actions={hasActions || undefined}
       >
         <div className={itemStyles.copy}>
           <div className={itemStyles.titleLine}>
@@ -165,6 +171,7 @@ function Item({
           )}
           {children && !asChild && <div className={itemStyles.body}>{children}</div>}
         </div>
+        {hasActions && metaNode}
         {(actions || meta) && (
           <div
             className={cn(
@@ -172,11 +179,7 @@ function Item({
               actionsPlacement === "below" && size !== "sm" && itemStyles.below
             )}
           >
-            {meta && (
-              <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>
-                {meta}
-              </span>
-            )}
+            {!hasActions && metaNode}
             {actions}
           </div>
         )}
@@ -198,6 +201,7 @@ function Item({
       data-size={size}
       data-unread={unread || undefined}
       data-resolved={resolved || undefined}
+      data-has-actions={(composed && hasActions) || undefined}
       className={cn(
         itemVariants({ variant, size }),
         composed ? itemStyles.layout : "items-center",

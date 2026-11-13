@@ -25,11 +25,12 @@ const rows = [
   }
 ] as const;
 
-const Approvals = () => (
+const Approvals = ({ wrap = false }: { wrap?: boolean }) => (
   <ItemGroup>
     {rows.map((row) => (
       <Item
         key={row.title}
+        truncate={!wrap}
         variant="outline"
         media={<Media icon={row.icon} tone={row.tone} />}
         title={row.title}
@@ -56,6 +57,10 @@ export default function Example() {
       <figure className="m-0 flex w-full max-w-sm min-w-0 flex-col gap-3">
         <Approvals />
         <figcaption className="text-muted-foreground text-xs">{"Stacked: actions on their own row"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full max-w-xs min-w-0 flex-col gap-3">
+        <Approvals wrap />
+        <figcaption className="text-muted-foreground text-xs">{"Stacked, wrapping titles"}</figcaption>
       </figure>
     </div>
   );

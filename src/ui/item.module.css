@@ -87,23 +87,45 @@
 .main[data-actions-below] {
   row-gap: var(--cipher-space-actions-gap);
 }
-.main[data-has-actions] {
+.layout[data-has-actions] {
   container: cipher-item / inline-size;
-  row-gap: var(--cipher-space-actions-gap);
 }
-.main[data-has-actions]:not([data-actions-below]) > .actions {
-  flex-basis: 100%;
+.main[data-has-actions] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "copy meta"
+    "actions actions";
+  align-items: start;
+  gap: var(--cipher-space-actions-gap) 0;
 }
-.main[data-has-actions]:not([data-actions-below]) .meta {
-  margin-inline-start: 0;
+.main[data-has-actions] > .copy {
+  grid-area: copy;
+  min-width: 0;
 }
-@container cipher-item (min-width: 30rem) {
-  .main[data-has-actions]:not([data-actions-below]) > .copy {
-    min-width: 0;
+.main[data-has-actions] > .meta {
+  grid-area: meta;
+  display: flex;
+  align-items: center;
+  min-height: var(--cipher-type-row-title-line-height);
+  margin-inline-start: var(--cipher-space-16);
+}
+.main[data-has-actions] > .actions {
+  grid-area: actions;
+  min-height: 0;
+}
+@container cipher-item (min-width: 44rem) {
+  .main[data-has-actions]:not([data-actions-below]) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: "copy meta actions";
+  }
+  .main[data-has-actions]:not([data-actions-below]) > .meta,
+  .main[data-has-actions]:not([data-actions-below]) > .actions {
+    min-height: calc(2 * var(--cipher-type-row-title-line-height));
   }
   .main[data-has-actions]:not([data-actions-below]) > .actions {
-    flex-basis: auto;
     flex-wrap: nowrap;
+    margin-inline-start: var(--cipher-space-16);
   }
 }
 .below {
