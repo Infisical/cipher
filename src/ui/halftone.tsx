@@ -5,9 +5,13 @@ import { cn } from "../lib/utils";
 
 import styles from "./halftone.module.css";
 
-export type HalftoneAnchor = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+export type HalftoneAnchor =
+  "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
-export type HalftoneProps = Omit<React.ComponentPropsWithoutRef<"span">, "children"> & {
+export type HalftoneProps = Omit<
+  React.ComponentPropsWithoutRef<"span">,
+  "children"
+> & {
   anchor?: HalftoneAnchor;
   reach?: number;
   depth?: number;
@@ -33,17 +37,19 @@ const bayer = (size: number): number[][] => {
       const value = 4 * half[y % span][x % span];
       if (y < span) return x < span ? value : value + 2;
       return x < span ? value + 3 : value + 1;
-    })
+    }),
   );
 };
-const thresholds = bayer(8).map((row) => row.map((value) => (value + 0.5) / 64));
+const thresholds = bayer(8).map((row) =>
+  row.map((value) => (value + 0.5) / 64),
+);
 const alphaSteps = 12;
 const hoverScale = 1.5;
 
 const perlin = (seed: string | number) => {
   let state = [...String(seed)].reduce(
     (hash, char) => Math.imul(hash ^ char.charCodeAt(0), 16777619),
-    2166136261
+    2166136261,
   );
   const random = () => {
     state = (state + 0x6d2b79f5) | 0;
@@ -87,7 +93,7 @@ const cellPaths = (
     gamma,
     cell,
     limit,
-    noise
+    noise,
   }: {
     anchor: HalftoneAnchor;
     reach: number;
@@ -97,7 +103,7 @@ const cellPaths = (
     cell: number;
     limit: { width: number; height: number };
     noise?: (x: number, y: number) => number;
-  }
+  },
 ) => {
   const reachX = Math.min(reach, limit.width);
   const reachY = Math.min(height * depth, limit.height);
@@ -109,11 +115,19 @@ const cellPaths = (
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
       const warp = noise ? 0.3 * noise(column / 5, row / 5) : 0;
-      const jitter = noise ? 0.25 * noise(column / 2 + 31.7, row / 2 + 17.3) : 0;
+      const jitter = noise
+        ? 0.25 * noise(column / 2 + 31.7, row / 2 + 17.3)
+        : 0;
       const distance =
-        Math.hypot(((column + 0.5) * cell) / reachX, ((row + 0.5) * cell) / reachY) + warp;
+        Math.hypot(
+          ((column + 0.5) * cell) / reachX,
+          ((row + 0.5) * cell) / reachY,
+        ) + warp;
       const falloff = Math.min(1, Math.max(0, 1 - distance));
-      const threshold = Math.min(63.5 / 64, Math.max(0.5 / 64, thresholds[row % 8][column % 8] + jitter));
+      const threshold = Math.min(
+        63.5 / 64,
+        Math.max(0.5 / 64, thresholds[row % 8][column % 8] + jitter),
+      );
       if (density * falloff ** gamma <= threshold) continue;
       const step = Math.round(falloff * alphaSteps);
       if (!step) continue;
@@ -124,11 +138,16 @@ const cellPaths = (
       steps.set(step, path);
     }
   }
-  return [...steps].map(([step, path]) => ({ opacity: step / alphaSteps, d: path.join("") }));
+  return [...steps].map(([step, path]) => ({
+    opacity: step / alphaSteps,
+    d: path.join(""),
+  }));
 };
 
 const readNumber = (element: Element, property: string, fallback: number) => {
-  const value = Number.parseFloat(getComputedStyle(element).getPropertyValue(property));
+  const value = Number.parseFloat(
+    getComputedStyle(element).getPropertyValue(property),
+  );
   return Number.isFinite(value) ? value : fallback;
 };
 
@@ -169,15 +188,20 @@ export function Halftone({
     const header =
       bounds === "header" && anchor.startsWith("top")
         ? parent.querySelector<HTMLElement>(
-            ':scope > [data-slot="card-header"], :scope > [data-slot="card-inset"] > [data-slot="card-header"]'
+            ':scope > [data-slot="card-header"], :scope > [data-slot="card-inset"] > [data-slot="card-header"]',
           )
         : null;
     const measure = () => {
       const parentStyle = getComputedStyle(parent);
-      const cell = Math.max(1, readNumber(element, "--cipher-size-halftone-cell", 8));
+      const cell = Math.max(
+        1,
+        readNumber(element, "--cipher-size-halftone-cell", 8),
+      );
       const cap = size ? size * cell : Infinity;
       const headerBottom = header
-        ? header.getBoundingClientRect().bottom - parent.getBoundingClientRect().top - parent.clientTop
+        ? header.getBoundingClientRect().bottom -
+          parent.getBoundingClientRect().top -
+          parent.clientTop
         : Infinity;
       const next = {
         width: parent.clientWidth,
@@ -187,13 +211,17 @@ export function Halftone({
         gamma: readNumber(element, "--cipher-halftone-gamma", 1),
         cell,
         limitWidth: Math.min(parent.clientWidth, cap),
-        limitHeight: Math.round(Math.min(parent.clientHeight, cap, headerBottom))
+        limitHeight: Math.round(
+          Math.min(parent.clientHeight, cap, headerBottom),
+        ),
       };
       setBox((previous) =>
         previous &&
-        (Object.keys(next) as (keyof typeof next)[]).every((key) => previous[key] === next[key])
+        (Object.keys(next) as (keyof typeof next)[]).every(
+          (key) => previous[key] === next[key],
+        )
           ? previous
-          : next
+          : next,
       );
     };
     measure();
@@ -209,14 +237,19 @@ export function Halftone({
     const limit = { width: box.limitWidth, height: box.limitHeight };
     const shared = { anchor, depth, gamma: box.gamma, limit, noise };
     return {
-      rest: cellPaths(box.width, box.height, { ...shared, reach, density, cell: box.cell }),
+      rest: cellPaths(box.width, box.height, {
+        ...shared,
+        reach,
+        density,
+        cell: box.cell,
+      }),
       hover: cellPaths(box.width, box.height, {
         ...shared,
         reach: reach * hoverScale,
         depth: depth * hoverScale,
         density: density * 1.25,
-        cell: box.cell * hoverScale
-      })
+        cell: box.cell * hoverScale,
+      }),
     };
   }, [box, anchor, reach, depth, density, seed]);
   const origin = box
@@ -224,7 +257,7 @@ export function Halftone({
     : undefined;
   const clip = box && {
     x: anchor.endsWith("right") ? box.width - box.limitWidth : 0,
-    y: anchor.startsWith("bottom") ? box.height - box.limitHeight : 0
+    y: anchor.startsWith("bottom") ? box.height - box.limitHeight : 0,
   };
   return (
     <span
@@ -240,7 +273,7 @@ export function Halftone({
         height: box?.height,
         marginTop: box ? -box.top : undefined,
         marginLeft: box ? -box.left : undefined,
-        ["--halftone-intensity" as string]: intensity
+        ["--halftone-intensity" as string]: intensity,
       }}
       {...props}
     >
@@ -251,13 +284,21 @@ export function Halftone({
           shapeRendering="crispEdges"
           focusable="false"
           style={{
-            clipPath: `inset(${clip.y}px ${box.width - clip.x - box.limitWidth}px ${box.height - clip.y - box.limitHeight}px ${clip.x}px)`
+            clipPath: `inset(${clip.y}px ${box.width - clip.x - box.limitWidth}px ${box.height - clip.y - box.limitHeight}px ${clip.x}px)`,
           }}
         >
           {(["rest", "hover"] as const).map((layer) => (
-            <g key={layer} className={styles[layer]} style={{ transformOrigin: origin }}>
+            <g
+              key={layer}
+              className={styles[layer]}
+              style={{ transformOrigin: origin }}
+            >
               {layers[layer].map((path) => (
-                <path key={path.opacity} d={path.d} fillOpacity={path.opacity} />
+                <path
+                  key={path.opacity}
+                  d={path.d}
+                  fillOpacity={path.opacity}
+                />
               ))}
             </g>
           ))}

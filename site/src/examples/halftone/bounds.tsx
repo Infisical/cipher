@@ -8,19 +8,31 @@ export default function Example() {
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <Card
           {...hueScope(113.8)}
-          title={<CardLink link={{ href: "#/components/halftone" }}>Secrets Management</CardLink>}
+          title={
+            <CardLink link={{ href: "#/components/halftone" }}>
+              Secrets Management
+            </CardLink>
+          }
           description="Store, sync, and rotate secrets across environments."
           footer="52 secrets"
-          backdrop={<Halftone bounds="header" size={20} seed="secret-manager" />}
+          backdrop={
+            <Halftone bounds="header" size={20} seed="secret-manager" />
+          }
         />
         <figcaption className="text-muted-foreground text-xs">
-          {"bounds header, size 20: stays in the header corner, clear of the footer"}
+          {
+            "bounds header, size 20: stays in the header corner, clear of the footer"
+          }
         </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <Card
           {...hueScope(250)}
-          title={<CardLink link={{ href: "#/components/halftone" }}>Secrets synced</CardLink>}
+          title={
+            <CardLink link={{ href: "#/components/halftone" }}>
+              Secrets synced
+            </CardLink>
+          }
           description="1,284 in the last 30 days"
           backdrop={<Halftone reveal="hover" size={16} seed="synced" />}
         />
