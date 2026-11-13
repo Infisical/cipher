@@ -126,6 +126,9 @@
 .main[data-has-actions] .titleLine > .unread {
   align-self: center;
 }
+.main[data-has-actions] .titleLine > .title {
+  flex: 1 1 auto;
+}
 .main[data-has-actions] .titleLine > .meta {
   flex: none;
   margin-inline-start: 0;
@@ -138,6 +141,9 @@
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "copy actions";
     column-gap: var(--cipher-space-32);
+  }
+  .main[data-has-actions]:not([data-actions-below]) .titleLine > .title {
+    flex: 0 1 auto;
   }
   .main[data-has-actions]:not([data-actions-below]) > .actions {
     flex-wrap: nowrap;

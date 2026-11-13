@@ -68,7 +68,7 @@ export default function Example() {
       <Case
         id="wrap-stacked"
         width={520}
-        caption="Stacked below 44rem: buttons on their own row at the copy edge"
+        caption="Stacked below 44rem: timestamp at the end of the title row, buttons on their own row at the copy edge"
       >
         <Row
           media={<Media icon="terminal" tone="bad" />}
@@ -83,6 +83,32 @@ export default function Example() {
           rest={longRest}
           meta="12m"
           description="Dana Wu. Needs 2 approvals."
+        />
+      </Case>
+      <Case
+        id="stacked-short"
+        width={520}
+        caption="Stacked, short titles: the timestamp is pinned to the end of the title row"
+      >
+        <Row
+          media={<Media icon="user" tone="info" />}
+          subject="Admin role"
+          meta="3h"
+          description="Priya Shah. Org admin, 7 days."
+        />
+        <Row
+          media={<Media icon="key" tone="ok" />}
+          subject="Rotate"
+          rest=" DB_PASSWORD"
+          meta="just now"
+          description="rotation-bot. ledger-core, production."
+        />
+        <Row
+          media={<Media icon="cert" tone="warn" />}
+          subject="api.acme.com"
+          rest=" certificate request"
+          meta="Nov 4"
+          description="deploy-bot. Profile web-tls."
         />
       </Case>
       <Case id="long-description" caption="No description, and a description that wraps">
