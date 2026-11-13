@@ -26,6 +26,8 @@ export type MultiSelectOption = {
 };
 type Shared = {
   onCreate?: OptionCreateHandler;
+  /** The Create row's text for the trimmed search, for example (query) => `Create tag "${query}"`. */
+  createLabel?: (query: string) => string;
   onEmptyBackspace?: () => void;
   options: readonly MultiSelectOption[];
   label: string;
@@ -475,7 +477,9 @@ export function MultiSelect({
                 loading={creating}
                 disabled={disabled}
                 onClick={create}
-              >{`Create "${query.trim()}"`}</Button>
+              >
+                {props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`}
+              </Button>
             )}
           </div>
         )}

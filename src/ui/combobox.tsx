@@ -92,6 +92,8 @@ type SharedComboboxProps = {
   defaultOpen?: boolean;
   closeOnFocusOutside?: boolean;
   onCreate?: OptionCreateHandler;
+  /** The inline Create row's text for the trimmed search, for example (query) => `Create category "${query}"`. */
+  createLabel?: (query: string) => string;
   /** Lets the person empty the value: Clear all after the chips, or Clear selection atop a single list. */
   clearable?: boolean;
   className?: string;
@@ -299,6 +301,7 @@ export function Combobox({
           closeOnFocusOutside={closeOnFocusOutside}
           renderValue={selected.length ? () => null : undefined}
           onCreate={onCreate}
+          createLabel={props.createLabel}
           className={className}
           onEmptyBackspace={() => {
             const last = selected[selected.length - 1];
@@ -450,7 +453,9 @@ export function Combobox({
                   }}
                 >
                   <span className={menu.title}>
-                    {creating ? "Creating…" : `Create "${query.trim()}"`}
+                    {creating
+                      ? "Creating…"
+                      : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
                   </span>
                   {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
                 </CommandItem>
