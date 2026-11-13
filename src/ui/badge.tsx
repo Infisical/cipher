@@ -3,6 +3,7 @@ import { cva } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
+import { Icon, type IconSource } from "./icon";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -29,6 +30,7 @@ function Badge({
   variant,
   tone,
   dot = false,
+  icon,
   size = "md",
   mono = false,
   children,
@@ -41,11 +43,18 @@ function Badge({
   /** @deprecated Use tone. Each value maps to a tone: default solid, secondary soft, destructive bad, the rest outline. */
   variant?: LegacyBadgeVariant;
   dot?: boolean;
+  /** A leading glyph, decorative: the text stays the badge's name. */
+  icon?: IconSource;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
-  const dotNode = dot ? <span aria-hidden="true" className={helperStyles.badgeDot} /> : null;
+  const dotNode = (
+    <>
+      {dot && <span aria-hidden="true" className={helperStyles.badgeDot} />}
+      {icon && <Icon icon={icon} />}
+    </>
+  );
   const body =
     asChild && React.isValidElement<{ children?: React.ReactNode }>(children) ? (
       React.cloneElement(

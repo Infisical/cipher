@@ -204,6 +204,10 @@
       {
         "title": "Count",
         "module": "badge/count"
+      },
+      {
+        "title": "Icon",
+        "module": "badge/icon"
       }
     ]
   },

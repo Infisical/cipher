@@ -494,7 +494,8 @@
       "name": "badge",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/icon"
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
