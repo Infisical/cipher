@@ -1626,5 +1626,17 @@
         "module": "hue/default"
       }
     ]
+  },
+  {
+    "id": "header-sizes",
+    "title": "Header sizes (sketch)",
+    "summary": "Header control height options.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Scales",
+        "module": "header-sizes/sketch"
+      }
+    ]
   }
 ]

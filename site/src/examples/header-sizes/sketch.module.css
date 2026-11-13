@@ -1,0 +1,62 @@
+.scale {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-16);
+}
+.label {
+  margin: 0;
+  font-family: var(--cipher-type-eyebrow-font-family);
+  font-size: var(--cipher-type-eyebrow-font-size);
+  line-height: var(--cipher-type-eyebrow-line-height);
+  letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
+  text-transform: uppercase;
+  color: var(--cipher-muted);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+.body {
+  padding: var(--cipher-space-12);
+  color: var(--cipher-muted);
+}
+.scale[data-scale="a"] [data-ctx],
+.scale[data-scale="b"] [data-ctx="page"],
+.scale[data-scale="c"] [data-ctx="page"] {
+  --h: var(--cipher-size-control-sm);
+}
+.scale[data-scale="b"] [data-ctx="band"] {
+  --h: var(--cipher-size-nested-md);
+}
+.scale[data-scale="c"] [data-ctx="band"] {
+  --h: var(--cipher-size-nested-sm);
+}
+.scale:not([data-scale="before"]) .row [data-slot="button"] {
+  --cipher-action-requested-height: var(--h);
+}
+.scale:not([data-scale="before"]) .row [data-slot="header-search"] button {
+  --cipher-action-requested-height: var(--h);
+  width: var(--h);
+  height: var(--h);
+}
+.scale[data-scale="c"] [data-ctx="band"] .row [data-slot] {
+  --cipher-action-font-size: var(--cipher-type-caption-font-size);
+  --cipher-action-line-height: var(--cipher-type-caption-line-height);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+}
+.scale:not([data-scale="before"]) .row [data-slot="select-trigger"],
+.scale:not([data-scale="before"]) .row [data-slot="toggle-group"],
+.scale:not([data-scale="before"]) .row [data-slot="badge"] {
+  box-sizing: border-box;
+  height: var(--h);
+  min-height: var(--h);
+}
+.scale:not([data-scale="before"]) .row [data-slot="badge"] {
+  padding-inline: var(--cipher-space-10);
+}
+.scale:not([data-scale="before"]) .row [data-slot="toggle-group-item"] {
+  height: calc(var(--h) - 2 * var(--cipher-space-2) - 2 * var(--cipher-size-control-border));
+  min-height: 0;
+}
