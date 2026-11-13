@@ -29,6 +29,9 @@
   opacity: 0;
   transform: scale(calc(1 / 1.5));
 }
+.halftone[data-reveal="hover"] {
+  opacity: 0;
+}
 :global([data-slot="card"]):is(:hover, :focus-within) .halftone {
   opacity: calc(var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1));
 }

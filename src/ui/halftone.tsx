@@ -16,6 +16,12 @@ export type HalftoneProps = Omit<React.ComponentPropsWithoutRef<"span">, "childr
   tone?: "hue" | "accent" | "ink";
   /** Warps the falloff and the dither thresholds with coherent noise, so each seed gets its own texture. The same seed always draws the same pattern. */
   seed?: string | number;
+  /** Where the wash may reach. header keeps a top-anchored wash inside the card's header, clear of its body and footer. */
+  bounds?: "surface" | "header";
+  /** Caps the corner at this many halftone cells across and down, at rest and on hover. */
+  size?: number;
+  /** hover draws nothing at rest and shows the corner while the card is hovered or focused. */
+  reveal?: "always" | "hover";
 };
 
 const bayer = (size: number): number[][] => {
@@ -80,6 +86,7 @@ const cellPaths = (
     density,
     gamma,
     cell,
+    limit,
     noise
   }: {
     anchor: HalftoneAnchor;
@@ -88,11 +95,13 @@ const cellPaths = (
     density: number;
     gamma: number;
     cell: number;
+    limit: { width: number; height: number };
     noise?: (x: number, y: number) => number;
   }
 ) => {
-  const reachY = height * depth;
-  const columns = Math.ceil(Math.min(width, reach) / cell);
+  const reachX = Math.min(reach, limit.width);
+  const reachY = Math.min(height * depth, limit.height);
+  const columns = Math.ceil(Math.min(width, reachX) / cell);
   const rows = Math.ceil(Math.min(height, reachY) / cell);
   const fromRight = anchor.endsWith("right");
   const fromBottom = anchor.startsWith("bottom");
@@ -102,7 +111,7 @@ const cellPaths = (
       const warp = noise ? 0.3 * noise(column / 5, row / 5) : 0;
       const jitter = noise ? 0.25 * noise(column / 2 + 31.7, row / 2 + 17.3) : 0;
       const distance =
-        Math.hypot(((column + 0.5) * cell) / reach, ((row + 0.5) * cell) / reachY) + warp;
+        Math.hypot(((column + 0.5) * cell) / reachX, ((row + 0.5) * cell) / reachY) + warp;
       const falloff = Math.min(1, Math.max(0, 1 - distance));
       const threshold = Math.min(63.5 / 64, Math.max(0.5 / 64, thresholds[row % 8][column % 8] + jitter));
       if (density * falloff ** gamma <= threshold) continue;
@@ -132,6 +141,9 @@ export function Halftone({
   intensity = 1,
   tone = "hue",
   seed,
+  bounds = "surface",
+  size,
+  reveal = "always",
   className,
   style,
   ref,
@@ -146,21 +158,36 @@ export function Halftone({
     left: number;
     gamma: number;
     cell: number;
+    limitWidth: number;
+    limitHeight: number;
   }>();
   React.useImperativeHandle(ref, () => own.current as HTMLSpanElement);
   React.useLayoutEffect(() => {
     const element = own.current;
     const parent = element?.parentElement;
     if (!element || !parent) return undefined;
+    const header =
+      bounds === "header" && anchor.startsWith("top")
+        ? parent.querySelector<HTMLElement>(
+            ':scope > [data-slot="card-header"], :scope > [data-slot="card-inset"] > [data-slot="card-header"]'
+          )
+        : null;
     const measure = () => {
       const parentStyle = getComputedStyle(parent);
+      const cell = Math.max(1, readNumber(element, "--cipher-size-halftone-cell", 8));
+      const cap = size ? size * cell : Infinity;
+      const headerBottom = header
+        ? header.getBoundingClientRect().bottom - parent.getBoundingClientRect().top - parent.clientTop
+        : Infinity;
       const next = {
         width: parent.clientWidth,
         height: parent.clientHeight,
         top: Number.parseFloat(parentStyle.paddingTop) || 0,
         left: Number.parseFloat(parentStyle.paddingLeft) || 0,
         gamma: readNumber(element, "--cipher-halftone-gamma", 1),
-        cell: Math.max(1, readNumber(element, "--cipher-size-halftone-cell", 8))
+        cell,
+        limitWidth: Math.min(parent.clientWidth, cap),
+        limitHeight: Math.round(Math.min(parent.clientHeight, cap, headerBottom))
       };
       setBox((previous) =>
         previous &&
@@ -173,12 +200,14 @@ export function Halftone({
     if (typeof ResizeObserver === "undefined") return undefined;
     const observer = new ResizeObserver(measure);
     observer.observe(parent);
+    if (header) observer.observe(header);
     return () => observer.disconnect();
-  }, [scheme]);
+  }, [scheme, bounds, size, anchor]);
   const layers = React.useMemo(() => {
     if (!box?.width || !box.height) return undefined;
     const noise = seed === undefined ? undefined : perlin(seed);
-    const shared = { anchor, depth, gamma: box.gamma, noise };
+    const limit = { width: box.limitWidth, height: box.limitHeight };
+    const shared = { anchor, depth, gamma: box.gamma, limit, noise };
     return {
       rest: cellPaths(box.width, box.height, { ...shared, reach, density, cell: box.cell }),
       hover: cellPaths(box.width, box.height, {
@@ -193,12 +222,17 @@ export function Halftone({
   const origin = box
     ? `${anchor.endsWith("right") ? box.width : 0}px ${anchor.startsWith("bottom") ? box.height : 0}px`
     : undefined;
+  const clip = box && {
+    x: anchor.endsWith("right") ? box.width - box.limitWidth : 0,
+    y: anchor.startsWith("bottom") ? box.height - box.limitHeight : 0
+  };
   return (
     <span
       ref={own}
       aria-hidden="true"
       data-slot="halftone"
       data-tone={tone}
+      data-reveal={reveal === "hover" ? "hover" : undefined}
       className={cn(styles.halftone, className)}
       style={{
         ...style,
@@ -210,8 +244,16 @@ export function Halftone({
       }}
       {...props}
     >
-      {box && layers && (
-        <svg width={box.width} height={box.height} shapeRendering="crispEdges" focusable="false">
+      {box && layers && clip && (
+        <svg
+          width={box.width}
+          height={box.height}
+          shapeRendering="crispEdges"
+          focusable="false"
+          style={{
+            clipPath: `inset(${clip.y}px ${box.width - clip.x - box.limitWidth}px ${box.height - clip.y - box.limitHeight}px ${clip.x}px)`
+          }}
+        >
           {(["rest", "hover"] as const).map((layer) => (
             <g key={layer} className={styles[layer]} style={{ transformOrigin: origin }}>
               {layers[layer].map((path) => (

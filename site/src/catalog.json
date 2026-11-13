@@ -1608,6 +1608,10 @@
       {
         "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
+      },
+      {
+        "title": "Bounds, size and reveal (hover a card)",
+        "module": "halftone/bounds"
       }
     ]
   },
