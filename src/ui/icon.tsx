@@ -11,6 +11,8 @@ type IconProps = Omit<React.ComponentPropsWithoutRef<"svg">, "name"> & {
   icon?: LucideIcon;
   size?: number | string;
   label?: string;
+  /** Fills the glyph, for the on state of a toggle such as a favorite star. The fill takes the product hue inside a hue scope, else the current color. */
+  filled?: boolean;
 };
 
 export function Icon({
@@ -19,6 +21,7 @@ export function Icon({
   size,
   strokeWidth,
   label,
+  filled,
   style,
   ref,
   ...props
@@ -30,6 +33,7 @@ export function Icon({
     role: label ? "img" : undefined,
     "aria-label": label,
     "aria-hidden": label ? undefined : true,
+    "data-filled": filled ? "" : undefined,
     focusable: "false" as const,
     style: { width: dimension, height: dimension, strokeWidth, ...style },
     ...props
