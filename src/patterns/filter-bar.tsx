@@ -40,8 +40,8 @@ export type FilterBarProps = {
   value: readonly FilterBarFilter[];
   onChange: (value: FilterBarFilter[]) => void;
   search?: React.ReactNode;
-  /** capped (default) stops the search at size-search-max; full lets it fill the row up to the filters and actions. */
-  searchWidth?: "capped" | "full";
+  /** The search stops at size-search-max; fill stretches it across the row up to the filters and actions. */
+  width?: "fill";
   actions?: React.ReactNode;
 };
 
@@ -73,7 +73,7 @@ export const FilterBar = ({
   value,
   onChange,
   search,
-  searchWidth = "capped",
+  width,
   actions
 }: FilterBarProps) => {
   const [open, setOpen] = React.useState<string | null>(null);
@@ -123,7 +123,7 @@ export const FilterBar = ({
     <div className={styles.bar} data-slot="filter-bar" role="search" aria-label={label}>
       <div className={styles.top}>
         {search && (
-          <div className={styles.search} data-width={searchWidth}>
+          <div className={styles.search} data-width={width}>
             {search}
           </div>
         )}

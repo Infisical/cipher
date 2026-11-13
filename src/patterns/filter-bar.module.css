@@ -14,7 +14,7 @@
   min-width: 0;
   max-width: var(--v4-size-search-max);
 }
-.search[data-width="full"] {
+.search[data-width="fill"] {
   max-width: none;
 }
 .actions {
