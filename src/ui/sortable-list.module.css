@@ -1,0 +1,36 @@
+.row {
+  align-items: center;
+  background: var(--cipher-list-row-surface);
+  touch-action: pan-y;
+}
+.row[data-dragging] {
+  box-shadow: var(--cipher-shadow-raised);
+  border-bottom-color: transparent;
+}
+.row[data-disabled] {
+  color: inherit;
+}
+.handleSlot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  margin-inline-start: calc(-1 * var(--cipher-space-4));
+}
+.handle {
+  color: var(--cipher-muted);
+  cursor: grab;
+  touch-action: none;
+}
+.handle:active,
+.row[data-dragging] .handle {
+  cursor: grabbing;
+  color: var(--cipher-ink);
+}
+.handle[data-lifted] {
+  background: var(--cipher-action-ghost-hover);
+  color: var(--cipher-ink);
+}
+.body {
+  flex: 1;
+  min-width: 0;
+}
