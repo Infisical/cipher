@@ -522,6 +522,10 @@
         "module": "date-range-picker/presets"
       },
       {
+        "title": "Two months, presets, Apply and Cancel",
+        "module": "date-range-picker/apply"
+      },
+      {
         "title": "Future dates disabled",
         "module": "date-range-picker/disabled-future"
       }
