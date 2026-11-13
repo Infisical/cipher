@@ -88,6 +88,7 @@
   --cipher-size-icon-xs: 12px;
   --cipher-size-icon-lg: 20px;
   --cipher-size-icon-xl: 24px;
+  --cipher-size-icon-2xl: 32px;
   --cipher-size-empty-media: 48px;
   --cipher-size-empty-media-sm: var(--cipher-size-control-md);
   --cipher-size-content: 1160px;

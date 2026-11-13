@@ -302,8 +302,8 @@
         "module": "card/band-actions"
       },
       {
-        "title": "Element description",
-        "module": "card/rich-description"
+        "title": "Title hint",
+        "module": "card/framed-hint"
       }
     ]
   },
@@ -564,14 +564,14 @@
     ]
   },
   {
-    "id": "documentation-link-badge",
-    "title": "Documentation link badge",
-    "summary": "An info Badge that opens a documentation page in a new tab, with a fixed label and tooltip.",
+    "id": "documentation-link",
+    "title": "Documentation link",
+    "summary": "An icon link right after a title or label that opens its documentation in a new tab.",
     "group": "Navigation",
     "examples": [
       {
-        "title": "Variants and placement",
-        "module": "documentation-link-badge/default"
+        "title": "Placement",
+        "module": "documentation-link/default"
       }
     ]
   },
@@ -876,6 +876,18 @@
       {
         "title": "Unread rows, errors and a selectable provider",
         "module": "item/default"
+      },
+      {
+        "title": "Approval rows: timestamp by the title",
+        "module": "item/actions-layout"
+      },
+      {
+        "title": "Wrapping, descriptions and buttons",
+        "module": "item/actions-wrapping"
+      },
+      {
+        "title": "Clamping the title with titleLines",
+        "module": "item/title-lines"
       },
       {
         "title": "Variants, sizes and states",
