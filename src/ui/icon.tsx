@@ -11,13 +11,10 @@ type IconProps = Omit<React.ComponentPropsWithoutRef<"svg">, "name"> & {
   icon?: LucideIcon;
   size?: number | string;
   label?: string;
-<<<<<<< HEAD
   /** draw redraws the icon's strokes when the Card around it is hovered or focused. Ignored for Lucide fallbacks and under reduced motion. */
   motion?: "draw";
-=======
   /** Fills the glyph, for the on state of a toggle such as a favorite star. The fill takes the product hue inside a hue scope, else the current color. */
   filled?: boolean;
->>>>>>> origin/main
 };
 
 export function Icon({
@@ -26,11 +23,8 @@ export function Icon({
   size,
   strokeWidth,
   label,
-<<<<<<< HEAD
   motion,
-=======
   filled,
->>>>>>> origin/main
   style,
   ref,
   ...props
