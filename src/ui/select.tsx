@@ -6,7 +6,7 @@ import { useCollisionBoundary, usePortalContainer } from "../scope";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
 import { cn } from "../lib/utils";
-import { Icon } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { useMenuInset } from "./menu-inset";
 
 import controlStyles from "./controls.module.css";
@@ -33,6 +33,7 @@ function Select({
   invalid,
   align = "start",
   menuWidth,
+  icon,
   onChange,
   onValueChange,
   children,
@@ -49,6 +50,8 @@ function Select({
   invalid?: boolean;
   align?: "start" | "center" | "end";
   menuWidth?: React.CSSProperties["width"];
+  /** A glyph at the trigger's start, such as the kind of value it picks. */
+  icon?: IconSource;
   onChange?: (value: string) => void;
   id?: string;
   "aria-describedby"?: string;
@@ -70,6 +73,7 @@ function Select({
           <SelectTrigger
             id={id}
             size={size ?? "default"}
+            icon={icon}
             aria-label={ariaLabel ?? label}
             aria-labelledby={labelledBy}
             aria-describedby={describedBy}
@@ -132,11 +136,13 @@ SelectValue.displayName = "SelectValue";
 function SelectTrigger({
   className,
   size = "default",
+  icon,
   children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default" | "md" | "lg";
+  icon?: IconSource;
 } & { ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Trigger>> }) {
   const name = React.useContext(SelectNameContext);
   const fieldAttributes = useFieldControlAttributes({
@@ -160,6 +166,11 @@ function SelectTrigger({
       {...props}
       {...fieldAttributes}
     >
+      {icon && (
+        <span className={controlStyles.leading} data-slot="select-icon">
+          <Icon icon={icon} />
+        </span>
+      )}
       {children}
       <SelectPrimitive.Icon asChild>
         <Icon name="chev-down" className={controlStyles.chevron} />

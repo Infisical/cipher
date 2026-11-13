@@ -1194,6 +1194,10 @@
         "module": "select/sizes"
       },
       {
+        "title": "Leading icon",
+        "module": "select/icon"
+      },
+      {
         "title": "Long metadata and menu width",
         "module": "select/metadata"
       },
