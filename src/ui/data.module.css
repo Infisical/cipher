@@ -1178,6 +1178,20 @@ tbody > .nativeTableRow[data-loading] {
   letter-spacing: var(--cipher-type-row-title-letter-spacing);
   color: var(--cipher-ink);
 }
+.tableValue[data-wrap],
+.tablePrimary[data-wrap] {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+.tableScroll td[data-wrap] {
+  padding-block: var(--cipher-space-8);
+}
+/* A grid track that starts at the cell floor gives the primary column a small min-content width while keeping its natural max-content, so it truncates before the table overflows behind pinned actions. */
+.tableShrink {
+  display: grid;
+  grid-template-columns: minmax(var(--cipher-size-cell-min), max-content);
+}
 .tableValue[data-mono],
 .tablePrimary[data-mono] {
   font-family: var(--cipher-type-mono-font-family);

@@ -1470,6 +1470,10 @@
         "module": "table/loading"
       },
       {
+        "title": "Wrapping text and a shrinking primary column",
+        "module": "table/wrap"
+      },
+      {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
       },

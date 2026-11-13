@@ -37,6 +37,8 @@ export interface DataTableColumn<Row> {
   primary?: boolean;
   /** Sets the column in mono, for machine values compared character by character: secret keys, key IDs, hashes, hosts. Names people chose stay in the sans. */
   mono?: boolean;
+  /** Wraps long text onto more lines and grows the row, instead of truncating it to one line. */
+  wrap?: boolean;
   sortable?: boolean;
   width?: number;
   minWidth?: number;
@@ -299,6 +301,9 @@ export function DataTable<Row>({
   const leading = columns.some((column) => column.pin === "start");
   const trailing =
     actionsColumn || columns.some((column) => column.pin === true || column.actions);
+  const shrinkColumn = trailing
+    ? columns.find((column) => column.primary && column.width === undefined && !column.wrap)?.id
+    : undefined;
   const pinOffsets = new Map<string, string>();
   columns
     .filter((column) => column.pin === "start")
@@ -394,6 +399,7 @@ export function DataTable<Row>({
             style={columnStyle(column)}
             data-actions={column.actions || undefined}
             data-pin={column.pin ?? column.actions}
+            data-wrap={column.wrap || undefined}
             data-row-interactive={column.actions || column.toggle ? true : undefined}
           >
             {column.toggle ? (
@@ -408,15 +414,18 @@ export function DataTable<Row>({
                 {column.render?.(row, position)}
               </TableRowActions>
             ) : (
-              <div
-                className={column.primary ? styles.tablePrimary : styles.tableValue}
-                data-mono={column.mono || undefined}
-                data-depth={depth > 0 && column.id === indentColumn ? depth : undefined}
-                style={{ maxWidth: column.maxWidth }}
-                title={column.text?.(row)}
-              >
-                {column.render?.(row, position)}
-              </div>
+              <CellContent shrink={column.id === shrinkColumn}>
+                <div
+                  className={column.primary ? styles.tablePrimary : styles.tableValue}
+                  data-mono={column.mono || undefined}
+                  data-wrap={column.wrap || undefined}
+                  data-depth={depth > 0 && column.id === indentColumn ? depth : undefined}
+                  style={{ maxWidth: column.maxWidth }}
+                  title={column.wrap ? undefined : column.text?.(row)}
+                >
+                  {column.render?.(row, position)}
+                </div>
+              </CellContent>
             )}
           </TableCell>
         ))}
@@ -671,6 +680,9 @@ export function DataTable<Row>({
       {actionBar}
     </div>
   );
+}
+function CellContent({ shrink, children }: { shrink: boolean; children: React.ReactNode }) {
+  return shrink ? <div className={styles.tableShrink}>{children}</div> : children;
 }
 export function EnvMark({ present, env }: { present: boolean; env?: string }) {
   return (
