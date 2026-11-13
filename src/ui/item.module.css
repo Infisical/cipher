@@ -87,6 +87,25 @@
 .main[data-actions-below] {
   row-gap: var(--cipher-space-actions-gap);
 }
+.main[data-has-actions] {
+  container: cipher-item / inline-size;
+  row-gap: var(--cipher-space-actions-gap);
+}
+.main[data-has-actions]:not([data-actions-below]) > .actions {
+  flex-basis: 100%;
+}
+.main[data-has-actions]:not([data-actions-below]) .meta {
+  margin-inline-start: 0;
+}
+@container cipher-item (min-width: 30rem) {
+  .main[data-has-actions]:not([data-actions-below]) > .copy {
+    min-width: 0;
+  }
+  .main[data-has-actions]:not([data-actions-below]) > .actions {
+    flex-basis: auto;
+    flex-wrap: nowrap;
+  }
+}
 .below {
   flex-basis: 100%;
 }

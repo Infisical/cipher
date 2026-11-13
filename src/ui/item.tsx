@@ -134,6 +134,7 @@ function Item({
         data-actions-below={
           (Boolean(actions || meta) && actionsPlacement === "below" && size !== "sm") || undefined
         }
+        data-has-actions={(Boolean(actions) && size !== "sm") || undefined}
       >
         <div className={itemStyles.copy}>
           <div className={itemStyles.titleLine}>

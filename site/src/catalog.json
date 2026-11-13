@@ -834,6 +834,10 @@
         "module": "item/default"
       },
       {
+        "title": "Actions layout",
+        "module": "item/actions-layout"
+      },
+      {
         "title": "Variants, sizes and states",
         "module": "item/variants"
       },
