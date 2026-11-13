@@ -3,14 +3,11 @@ import {
   CipherRouterProvider,
   type CipherRouter,
 } from "@infisical/cipher/lib/link";
-import { toTheme, themes } from "@infisical/cipher/lib/theme-registry";
+import { defaultTheme, themeScheme, toTheme } from "@infisical/cipher/lib/theme-registry";
 import { CipherScope } from "@infisical/cipher/scope";
 import { Sidebar, type SidebarSection } from "@infisical/cipher/ui/sidebar";
 import { Toaster } from "@infisical/cipher/ui/sonner";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@infisical/cipher/ui/toggle-group";
+import { Button } from "@infisical/cipher/ui/button";
 import { TooltipProvider } from "@infisical/cipher/ui/tooltip";
 import {
   AppInset,
@@ -83,8 +80,9 @@ const initialTheme = () =>
 export function App() {
   const route = useRoute();
   const [theme, setTheme] = useState(initialTheme);
-  const changeTheme = (next: string) => {
-    if (!next) return;
+  const dark = themeScheme(theme) === "dark";
+  const toggleTheme = () => {
+    const next = defaultTheme[dark ? "light" : "dark"];
     setTheme(next);
     window.localStorage.setItem("cipher-theme", next);
   };
@@ -109,19 +107,14 @@ export function App() {
                 { label: title },
               ]}
               actions={
-                <ToggleGroup
-                  type="single"
-                  size="sm"
-                  value={theme}
-                  onValueChange={changeTheme}
-                  aria-label="Theme"
-                >
-                  {themes.map((entry) => (
-                    <ToggleGroupItem key={entry.id} value={entry.id}>
-                      {entry.name}
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
+                <Button
+                  variant="ghost"
+                  icon={dark ? "moon" : "sun"}
+                  iconOnly
+                  aria-label="Dark theme"
+                  aria-pressed={dark}
+                  onClick={toggleTheme}
+                />
               }
             />
             <Sidebar label="Cipher" sections={sections} current={current} />
