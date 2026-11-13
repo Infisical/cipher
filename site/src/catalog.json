@@ -1148,6 +1148,10 @@
       {
         "title": "DataTable rows and a Card",
         "module": "row-link/default"
+      },
+      {
+        "title": "Cell links in a pricing matrix",
+        "module": "row-link/cell-links"
       }
     ]
   },

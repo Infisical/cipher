@@ -4,7 +4,12 @@ import * as React from "react";
 
 import { keyboardModality } from "../lib/input-modality";
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
-import { StretchedLinkContext, useStretchedLinkHost } from "../lib/stretched-link";
+import {
+  CellLinkContext,
+  StretchedLinkContext,
+  useCellLinkHost,
+  useStretchedLinkHost
+} from "../lib/stretched-link";
 import { cn } from "../lib/utils";
 import { Button, buttonVariants } from "./button";
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "./context-menu";
@@ -344,19 +349,23 @@ function TableCell({
   ref,
   ...props
 }: React.ComponentProps<"td"> & SelectionProps & PinProps) {
+  const [hasLink, reportLink] = useCellLinkHost();
   return (
-    <td
-      ref={ref}
-      data-slot={selection ? "table-selection" : "table-cell"}
-      data-divider={selection && !divider ? "false" : undefined}
-      data-row-interactive={selection || undefined}
-      data-pin={pin}
-      className={cn(styles.nativeTableCell, selection && styles.tableSelectionCell, className)}
-      style={pinStyle(pinOffset, style)}
-      {...props}
-    >
-      {pin === "viewport" ? <div className={styles.viewportContent}>{children}</div> : children}
-    </td>
+    <CellLinkContext value={reportLink}>
+      <td
+        ref={ref}
+        data-slot={selection ? "table-selection" : "table-cell"}
+        data-divider={selection && !divider ? "false" : undefined}
+        data-row-interactive={selection || undefined}
+        data-pin={pin}
+        data-cell-link={hasLink || undefined}
+        className={cn(styles.nativeTableCell, selection && styles.tableSelectionCell, className)}
+        style={pinStyle(pinOffset, style)}
+        {...props}
+      >
+        {pin === "viewport" ? <div className={styles.viewportContent}>{children}</div> : children}
+      </td>
+    </CellLinkContext>
   );
 }
 TableCell.displayName = "TableCell";

@@ -39,6 +39,27 @@
 :is(:global(tr), :global([data-slot="card"])):is(:hover, :focus-within) .stretched .chevron {
   color: var(--cipher-ink);
 }
+/* Static, so the cover is sized by the cell and not by the stretched-row rule that lifts other links. */
+.cellLink {
+  position: static;
+}
+.cellLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.cellLink:focus-visible::after {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: calc(-1 * var(--cipher-size-focus-ring));
+}
+:where(:global(td)[data-cell-link]) {
+  position: relative;
+  cursor: pointer;
+}
+:where(:global(td)[data-cell-link]):hover {
+  background-image: linear-gradient(var(--cipher-hover), var(--cipher-hover));
+}
 .cardLink {
   color: inherit;
   text-decoration: none;
