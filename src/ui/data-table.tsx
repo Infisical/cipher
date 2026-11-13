@@ -200,7 +200,7 @@ export function DataTable<Row>({
   const sections = groups
     ? groups
         .filter((group) => group.rows.length > 0)
-        .map((group) => ({ group, entries: expand(group.rows, 1) }))
+        .map((group) => ({ group, entries: expand(group.rows, 0) }))
     : [{ group: undefined, entries: expand(flatRows ?? [], 0) }];
   const entries = sections.flatMap((section) => section.entries);
   const rows = entries.map((entry) => entry.row);
