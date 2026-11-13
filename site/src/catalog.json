@@ -700,6 +700,10 @@
       {
         "title": "Empty and with filters applied",
         "module": "filter-bar/default"
+      },
+      {
+        "title": "Search width, capped and fill",
+        "module": "filter-bar/width"
       }
     ]
   },
