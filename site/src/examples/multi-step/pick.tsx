@@ -64,7 +64,7 @@ export default function Example() {
           heading: "Pick an app",
           summary: app,
           validate: () => (app ? true : { message: "Pick an app to continue." }),
-          content: ({ next }) => {
+          render: ({ next }) => {
             const row = (entry: string) => (
               <ListRow
                 key={entry}

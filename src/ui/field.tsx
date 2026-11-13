@@ -116,6 +116,7 @@ function Field({
   id,
   ref,
   onInputCapture,
+  onChangeCapture,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> &
   VariantProps<typeof fieldVariants> & {
@@ -137,6 +138,10 @@ function Field({
   const form = React.useContext(FieldErrorsContext);
   const formError = name ? form?.errors[name] : undefined;
   error ??= formError;
+  // A sync clear re-renders the field before the edit's own update and drops the keystroke.
+  const clearFormError = () => {
+    if (name && formError) React.startTransition(() => form?.clear(name));
+  };
   const generated = React.useId();
   const child = React.isValidElement<{ id?: string }>(children) ? children : null;
   const controlId = child?.props.id ?? id ?? generated;
@@ -177,8 +182,11 @@ function Field({
         className={cn(fieldVariants({ orientation }), helperStyles.field, className)}
         onInputCapture={(event) => {
           onInputCapture?.(event);
-          // A sync clear here re-renders the field before the edit's own update and drops the keystroke.
-          if (name && formError) React.startTransition(() => form?.clear(name));
+          clearFormError();
+        }}
+        onChangeCapture={(event) => {
+          onChangeCapture?.(event);
+          clearFormError();
         }}
         {...props}
       >

@@ -46,8 +46,9 @@ export interface MultiStepStep {
   heading?: string;
   description?: React.ReactNode;
   summary?: React.ReactNode;
-  /** A function gets `next`, which validates and advances once the state it was called with has rendered, so a step that is a single pick can advance on pick. */
-  content: React.ReactNode | ((step: { next: () => void }) => React.ReactNode);
+  content?: React.ReactNode;
+  /** Renders the step with `next`, which validates and advances once the state set beside it has rendered, so a step that is a single pick can advance on pick. Used instead of content. */
+  render?: (step: { next: () => void }) => React.ReactNode;
   validate?: () => ValidateResult | Promise<ValidateResult>;
   nextLabel?: string;
 }
@@ -330,9 +331,7 @@ export const MultiStep = ({
             >
               {stepHead}
               <FieldErrors errors={fieldErrors}>
-                {typeof entry.content === "function"
-                  ? entry.content({ next: () => setQueued(true) })
-                  : entry.content}
+                {entry.render ? entry.render({ next: () => setQueued(true) }) : entry.content}
               </FieldErrors>
             </motion.div>
           </AnimatePresence>
