@@ -1506,7 +1506,7 @@
         "module": "text/default"
       },
       {
-        "title": "StatusText tones and loading",
+        "title": "StatusText tones, loading and size",
         "module": "text/status"
       },
       {

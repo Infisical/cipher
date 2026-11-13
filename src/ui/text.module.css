@@ -172,6 +172,24 @@
   height: var(--cipher-size-icon);
   stroke-width: var(--cipher-stroke-icon);
 }
+.status[data-size="sm"] {
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.status[data-size="sm"] > svg {
+  width: var(--cipher-size-icon-sm);
+  height: var(--cipher-size-icon-sm);
+}
+.status[data-size="md"] {
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+}
 .status[data-tone="ok"] {
   color: var(--cipher-ok);
 }

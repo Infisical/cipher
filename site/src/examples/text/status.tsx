@@ -1,4 +1,5 @@
-import { StatusText } from "@infisical/cipher/ui/text";
+import { Inline } from "@infisical/cipher/ui/layout";
+import { Heading, StatusText } from "@infisical/cipher/ui/text";
 
 export default function Status() {
   return (
@@ -38,6 +39,23 @@ export default function Status() {
           <StatusText loading>Submitting</StatusText>
         </div>
         <figcaption className="text-muted-foreground text-xs">{"loading"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <Inline gap={24} align="baseline">
+            <Heading level={3} size="display">
+              1,204
+            </Heading>
+            <Heading level={3} size="display">
+              <StatusText size="sm" loading>
+                Counting
+              </StatusText>
+            </Heading>
+          </Inline>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"size sm inside a display Heading"}
+        </figcaption>
       </figure>
     </div>
   );
