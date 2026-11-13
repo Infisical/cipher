@@ -190,10 +190,10 @@
   border-color: var(--cipher-ink, var(--foreground));
 }
 :global(.cipher) {
-  --cipher-toast-bottom: calc(var(--cipher-size-action-bar) + 2 * var(--cipher-space-action-bar-offset));
+  --cipher-toast-bottom: var(--cipher-space-action-bar-offset);
 }
 :global(.cipher)[data-action-bar-reserve] {
-  --cipher-toast-bottom: calc(2 * var(--cipher-size-action-bar) + 3 * var(--cipher-space-action-bar-offset));
+  --cipher-toast-bottom: calc(var(--cipher-size-action-bar) + 2 * var(--cipher-space-action-bar-offset));
 }
 .toastFixed {
   position: fixed;
