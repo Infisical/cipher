@@ -108,7 +108,7 @@ const items: Item[] = [
     name: baseItemName,
     type: "registry:base",
     description:
-      "Cipher tokens, the Lightly Peach, Light and Dark themes, fonts, cn and scoped portal support.",
+      "Cipher tokens, the Light and Dark themes, fonts, cn and scoped portal support.",
     dependencies: [...baseDependencies].sort().map(declaredPackage),
     files: baseFiles
   }

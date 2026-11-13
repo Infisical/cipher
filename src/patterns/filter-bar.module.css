@@ -12,6 +12,16 @@
 .search {
   flex: 1 1 auto;
   min-width: 0;
+  max-width: var(--v4-size-search-max);
+}
+.search[data-width="fill"] {
+  max-width: none;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--v4-space-8);
+  margin-inline-start: auto;
 }
 .applied {
   display: flex;

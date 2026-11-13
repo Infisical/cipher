@@ -64,6 +64,7 @@
   --v4-size-cell-min: 64px;
   --v4-size-text-min: 160px;
   --v4-size-tile-min: 208px;
+  --v4-size-search-max: 720px;
   --v4-size-card-min: 320px;
   --v4-size-tooltip-max: 320px;
   --v4-size-menu-min: 160px;
@@ -128,28 +129,28 @@
   --v4-ease-press: cubic-bezier(0.23, 1, 0.32, 1);
   --v4-frame: #010101;
   --v4-frame-soft: #ecebe5;
-  --v4-surface: #fbfbf9;
+  --v4-surface: #ffffff;
   --v4-pop: var(--v4-surface);
   --v4-pop-line: var(--v4-line-soft);
-  --v4-inset: var(--v4-surface);
-  --v4-sidebar: var(--v4-tint);
+  --v4-inset: #ffffff;
+  --v4-sidebar: #f5f3ee;
   --v4-sidebar-current: color-mix(in srgb, var(--v4-mix-ink) var(--v4-current-mix), var(--v4-sidebar));
   --v4-sidebar-hover: var(--v4-sidebar-current);
   --v4-paper: #f4f3ee;
-  --v4-tint: #f1f0ea;
+  --v4-tint: #faf8f4;
   --v4-row-done: #f6f5f1;
   --v4-row-done-card: color-mix(in oklab, var(--v4-tint) 50%, transparent);
   --v4-row-done-divided: color-mix(in oklab, var(--v4-ink) 4%, transparent);
   --v4-select: #eeede6;
-  --v4-line-soft: #e6e5e0;
-  --v4-line: #d8d8d4;
+  --v4-line-soft: #e4ded5;
+  --v4-line: #d5cdc2;
   --v4-control: #b0b0a9;
   --v4-crumb-divider: var(--v4-line);
-  --v4-faint: #8e9291;
+  --v4-faint: #85807a;
   --v4-muted: #565654;
   --v4-text2: #2f3234;
   --v4-ink: #010101;
-  --v4-mix-ink: var(--v4-ink);
+  --v4-mix-ink: #2e271d;
   --v4-on-ink: #ffffff;
   --v4-accent: #e3f047;
   --v4-accent-2: #d3df29;
@@ -434,25 +435,6 @@
   --v4-selected-surface: color-mix(in oklab, #555553 var(--v4-selected-mix), transparent);
   --v4-selected-border: #4a4a48;
   --v4-selected-ink: var(--v4-ink);
-}
-.v4[data-theme="peach"] {
-  --v4-surface: #ffffff;
-  --v4-inset: #ffffff;
-  --v4-sidebar: #f5f3ee;
-  --v4-tint: #faf8f4;
-  --v4-line-soft: #e4ded5;
-  --v4-line: #d5cdc2;
-  --v4-faint: #85807a;
-  --v4-mix-ink: #2e271d;
-}
-.v4[data-theme="pale"] {
-  --v4-surface: #ffffff;
-  --v4-inset: #f9f9fa;
-  --v4-sidebar: #efeff0;
-  --v4-tint: #f3f3f3;
-  --v4-line-soft: #dadadd;
-  --v4-line: #cbcbcf;
-  --v4-faint: #828387;
 }
 .v4[data-theme="dark"] {
   --v4-inset: #121213;

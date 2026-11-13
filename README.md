@@ -35,7 +35,7 @@ import { Toaster } from "@infisical/cipher/ui/sonner";
 
 export function App() {
   return (
-    <V4Scope theme="peach" className="min-h-screen bg-background text-foreground">
+    <V4Scope theme="light" className="min-h-screen bg-background text-foreground">
       <Button>Save changes</Button>
       <Toaster />
     </V4Scope>
@@ -43,7 +43,7 @@ export function App() {
 }
 ```
 
-The stylesheet is compiled: it holds the tokens, the three themes, the fonts and every utility the components use, scoped under `.v4`. Your app doesn't need Tailwind, and if it has Tailwind, Cipher's styles don't leak into it.
+The stylesheet is compiled: it holds the tokens, the two themes, the fonts and every utility the components use, scoped under `.v4`. Your app doesn't need Tailwind, and if it has Tailwind, Cipher's styles don't leak into it.
 
 If your app uses Tailwind CSS v4 and you want Cipher's theme utilities (`bg-background`, `text-muted-foreground` and the rest) in your own markup inside `V4Scope`, import the Tailwind entry instead of `styles.css`. Your Tailwind build then compiles Cipher's stylesheet with your sources:
 
@@ -93,7 +93,7 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button --overwrite
 
 ## Themes
 
-`V4Scope` takes a theme id: Lightly Peach (`peach`, the default light theme), Light (`pale`) or Dark (`dark`). Overlays and toasts portal into the scope, so they follow its theme.
+`V4Scope` takes a theme id: Light (`light`) or Dark (`dark`). The retired ids `peach` and `pale` still resolve to Light. Overlays and toasts portal into the scope, so they follow its theme.
 
 ## Links and routing
 
