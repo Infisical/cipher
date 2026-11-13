@@ -1,0 +1,22 @@
+.halftone {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  overflow: clip;
+  pointer-events: none;
+  opacity: calc(var(--v4-halftone-peak) * var(--halftone-intensity, 1));
+  color: var(--v4-hue-tint);
+}
+.halftone[data-tone="accent"] {
+  color: var(--v4-accent);
+}
+.halftone[data-tone="ink"] {
+  color: var(--v4-ink);
+}
+.halftone svg {
+  display: block;
+  fill: currentColor;
+}
+:has(> .halftone) {
+  isolation: isolate;
+}

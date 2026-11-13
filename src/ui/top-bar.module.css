@@ -12,6 +12,14 @@
   overflow: clip;
   background: var(--v4-sidebar);
 }
+.shell[data-grain] {
+  background-image: var(--v4-grain);
+  background-size: 200px 200px;
+  background-blend-mode: overlay;
+}
+.shell[data-grain] :is([data-slot="top-bar"], [data-slot="sidebar"]:not([data-sheet])) {
+  background-color: transparent;
+}
 .inset {
   --v4-page-gutter: max(
     var(--v4-space-16),

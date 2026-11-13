@@ -39,6 +39,7 @@ function Card({
   footer,
   footerPlacement = "inset",
   flush = false,
+  backdrop,
   children,
   ref,
   ...props
@@ -51,6 +52,7 @@ function Card({
   footer?: React.ReactNode;
   footerPlacement?: "inset" | "frame";
   flush?: boolean;
+  backdrop?: React.ReactNode;
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const convenience =
     title !== undefined ||
@@ -90,6 +92,7 @@ function Card({
                   data-slot="card-inset"
                   className={cn(frameStyles.frameInset, controlStyles.cardInset)}
                 >
+                  {backdrop}
                   <FramedContext value={false}>
                     {(title !== undefined || description !== undefined || action) && (
                       <CardHeader>
@@ -126,13 +129,19 @@ function Card({
                     {action && <CardAction>{action}</CardAction>}
                   </CardHeader>
                 )}
-                <CardContent>{children}</CardContent>
+                <CardContent>
+                  {backdrop}
+                  {children}
+                </CardContent>
                 {footer !== undefined && (
                   <CardFooter placement={footerPlacement}>{footer}</CardFooter>
                 )}
               </>
             ) : (
-              children
+              <>
+                {backdrop}
+                {children}
+              </>
             )}
           </FramedContext>
         </FrameScope>

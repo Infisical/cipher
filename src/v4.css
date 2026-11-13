@@ -683,3 +683,23 @@
 .v4 [role="option"]:is([aria-selected="true"], [data-selected]):focus-visible {
   outline-offset: calc(-1 * var(--v4-size-focus-ring) - var(--v4-size-control-border));
 }
+
+/* Declared on each scope element, not once on .v4: a custom property holding var() resolves where it
+   is declared, so colors built on .v4 would never see a nested --v4-hue. */
+.v4 {
+  --v4-hue-icon: currentColor;
+  --v4-hue-tint: var(--v4-faint);
+  --v4-hue-soft: var(--v4-tint);
+}
+.v4[data-hue],
+.v4 [data-hue] {
+  --v4-hue-icon: oklch(var(--v4-hue-subtle-icon) var(--v4-hue));
+  --v4-hue-tint: oklch(var(--v4-hue-subtle-tint) var(--v4-hue));
+  --v4-hue-soft: oklch(var(--v4-hue-subtle-soft) var(--v4-hue));
+}
+.v4[data-hue="pop"],
+.v4 [data-hue="pop"] {
+  --v4-hue-icon: oklch(var(--v4-hue-pop-icon) var(--v4-hue));
+  --v4-hue-tint: oklch(var(--v4-hue-pop-tint) var(--v4-hue));
+  --v4-hue-soft: oklch(var(--v4-hue-pop-soft) var(--v4-hue));
+}

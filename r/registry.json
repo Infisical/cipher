@@ -67,6 +67,11 @@
           "target": "src/components/v4/lib/frame-context.tsx"
         },
         {
+          "path": "src/components/v4/lib/hue.ts",
+          "type": "registry:file",
+          "target": "src/components/v4/lib/hue.ts"
+        },
+        {
           "path": "src/components/v4/lib/input-modality.ts",
           "type": "registry:file",
           "target": "src/components/v4/lib/input-modality.ts"
@@ -1239,6 +1244,25 @@
           "path": "src/components/v4/ui/floating-action-bar.module.css",
           "type": "registry:file",
           "target": "src/components/v4/ui/floating-action-bar.module.css"
+        }
+      ]
+    },
+    {
+      "name": "halftone",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base"
+      ],
+      "files": [
+        {
+          "path": "src/components/v4/ui/halftone.tsx",
+          "type": "registry:file",
+          "target": "src/components/v4/ui/halftone.tsx"
+        },
+        {
+          "path": "src/components/v4/ui/halftone.module.css",
+          "type": "registry:file",
+          "target": "src/components/v4/ui/halftone.module.css"
         }
       ]
     },
