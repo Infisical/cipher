@@ -1578,7 +1578,7 @@
         "module": "halftone/tones"
       },
       {
-        "title": "Intensity, density and reach",
+        "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
       }
     ]

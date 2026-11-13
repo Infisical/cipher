@@ -14,6 +14,8 @@ export type HalftoneProps = Omit<React.ComponentPropsWithoutRef<"span">, "childr
   density?: number;
   intensity?: number;
   tone?: "hue" | "accent" | "ink";
+  /** Warps the falloff and the dither thresholds with coherent noise, so each seed gets its own texture. The same seed always draws the same pattern. */
+  seed?: string | number;
 };
 
 const bayer = (size: number): number[][] => {
@@ -30,17 +32,63 @@ const bayer = (size: number): number[][] => {
 };
 const thresholds = bayer(8).map((row) => row.map((value) => (value + 0.5) / 64));
 const alphaSteps = 12;
+const hoverScale = 1.5;
+
+const perlin = (seed: string | number) => {
+  let state = [...String(seed)].reduce(
+    (hash, char) => Math.imul(hash ^ char.charCodeAt(0), 16777619),
+    2166136261
+  );
+  const random = () => {
+    state = (state + 0x6d2b79f5) | 0;
+    let value = Math.imul(state ^ (state >>> 15), 1 | state);
+    value = (value + Math.imul(value ^ (value >>> 7), 61 | value)) ^ value;
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+  const table = Array.from({ length: 256 }, (_, index) => index);
+  for (let index = 255; index > 0; index -= 1) {
+    const swap = Math.floor(random() * (index + 1));
+    [table[index], table[swap]] = [table[swap], table[index]];
+  }
+  const hash = (x: number, y: number) => table[(table[x & 255] + y) & 255];
+  const gradient = (corner: number, x: number, y: number) =>
+    (corner & 1 ? x : -x) + (corner & 2 ? y : -y);
+  const fade = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
+  return (x: number, y: number) => {
+    const cellX = Math.floor(x);
+    const cellY = Math.floor(y);
+    const dx = x - cellX;
+    const dy = y - cellY;
+    const u = fade(dx);
+    const top =
+      gradient(hash(cellX, cellY), dx, dy) * (1 - u) +
+      gradient(hash(cellX + 1, cellY), dx - 1, dy) * u;
+    const bottom =
+      gradient(hash(cellX, cellY + 1), dx, dy - 1) * (1 - u) +
+      gradient(hash(cellX + 1, cellY + 1), dx - 1, dy - 1) * u;
+    return top + (bottom - top) * fade(dy);
+  };
+};
 
 const cellPaths = (
   width: number,
   height: number,
-  { anchor, reach, depth, density, gamma, cell }: {
+  {
+    anchor,
+    reach,
+    depth,
+    density,
+    gamma,
+    cell,
+    noise
+  }: {
     anchor: HalftoneAnchor;
     reach: number;
     depth: number;
     density: number;
     gamma: number;
     cell: number;
+    noise?: (x: number, y: number) => number;
   }
 ) => {
   const reachY = height * depth;
@@ -51,9 +99,12 @@ const cellPaths = (
   const steps = new Map<number, string[]>();
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
-      const distance = Math.hypot(((column + 0.5) * cell) / reach, ((row + 0.5) * cell) / reachY);
-      const falloff = Math.max(0, 1 - distance);
-      if (density * falloff ** gamma <= thresholds[row % 8][column % 8]) continue;
+      const warp = noise ? 0.3 * noise(column / 5, row / 5) : 0;
+      const jitter = noise ? 0.25 * noise(column / 2 + 31.7, row / 2 + 17.3) : 0;
+      const distance =
+        Math.hypot(((column + 0.5) * cell) / reach, ((row + 0.5) * cell) / reachY) + warp;
+      const falloff = Math.min(1, Math.max(0, 1 - distance));
+      if (density * falloff ** gamma <= thresholds[row % 8][column % 8] + jitter) continue;
       const step = Math.round(falloff * alphaSteps);
       if (!step) continue;
       const x = fromRight ? width - (column + 1) * cell : column * cell;
@@ -71,7 +122,7 @@ const readNumber = (element: Element, property: string, fallback: number) => {
   return Number.isFinite(value) ? value : fallback;
 };
 
-/** Ordered-dither corner wash. Place it as the first child of the surface it decorates; it sizes itself to that parent and sits under its content. */
+/** Ordered-dither corner wash. Place it as the first child of the surface it decorates; it sizes itself to that parent and sits under its content. Inside a Card, hovering the card spreads it into larger cells and raises its strength. */
 export function Halftone({
   anchor = "top-right",
   reach = 216,
@@ -79,6 +130,7 @@ export function Halftone({
   density = 1,
   intensity = 1,
   tone = "hue",
+  seed,
   className,
   style,
   ref,
@@ -122,13 +174,24 @@ export function Halftone({
     observer.observe(parent);
     return () => observer.disconnect();
   }, [scheme]);
-  const paths = React.useMemo(
-    () =>
-      box && box.width && box.height
-        ? cellPaths(box.width, box.height, { anchor, reach, depth, density, ...box })
-        : [],
-    [box, anchor, reach, depth, density]
-  );
+  const layers = React.useMemo(() => {
+    if (!box?.width || !box.height) return undefined;
+    const noise = seed === undefined ? undefined : perlin(seed);
+    const shared = { anchor, depth, gamma: box.gamma, noise };
+    return {
+      rest: cellPaths(box.width, box.height, { ...shared, reach, density, cell: box.cell }),
+      hover: cellPaths(box.width, box.height, {
+        ...shared,
+        reach: reach * hoverScale,
+        depth: depth * hoverScale,
+        density: density * 1.25,
+        cell: box.cell * hoverScale
+      })
+    };
+  }, [box, anchor, reach, depth, density, seed]);
+  const origin = box
+    ? `${anchor.endsWith("right") ? box.width : 0}px ${anchor.startsWith("bottom") ? box.height : 0}px`
+    : undefined;
   return (
     <span
       ref={own}
@@ -146,10 +209,14 @@ export function Halftone({
       }}
       {...props}
     >
-      {box && (
+      {box && layers && (
         <svg width={box.width} height={box.height} shapeRendering="crispEdges" focusable="false">
-          {paths.map((path) => (
-            <path key={path.opacity} d={path.d} fillOpacity={path.opacity} />
+          {(["rest", "hover"] as const).map((layer) => (
+            <g key={layer} className={styles[layer]} style={{ transformOrigin: origin }}>
+              {layers[layer].map((path) => (
+                <path key={path.opacity} d={path.d} fillOpacity={path.opacity} />
+              ))}
+            </g>
           ))}
         </svg>
       )}

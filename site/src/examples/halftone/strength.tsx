@@ -6,7 +6,9 @@ const variants = [
   { label: "intensity 0.5", intensity: 0.5 },
   { label: "default", intensity: 1 },
   { label: "density 0.6", density: 0.6 },
-  { label: "reach 120, depth 1", reach: 120, depth: 1 }
+  { label: "reach 120, depth 1", reach: 120, depth: 1 },
+  { label: "seed alpha", seed: "alpha" },
+  { label: "seed beta", seed: "beta" }
 ];
 
 export default function Example() {

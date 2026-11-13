@@ -690,16 +690,43 @@
   --v4-hue-icon: currentColor;
   --v4-hue-tint: var(--v4-faint);
   --v4-hue-soft: var(--v4-tint);
+  --v4-hue-fill: currentColor;
 }
 .v4[data-hue],
 .v4 [data-hue] {
   --v4-hue-icon: oklch(var(--v4-hue-subtle-icon) var(--v4-hue));
   --v4-hue-tint: oklch(var(--v4-hue-subtle-tint) var(--v4-hue));
   --v4-hue-soft: oklch(var(--v4-hue-subtle-soft) var(--v4-hue));
+  --v4-hue-fill: oklch(var(--v4-hue-subtle-fill) var(--v4-hue));
 }
 .v4[data-hue="pop"],
 .v4 [data-hue="pop"] {
   --v4-hue-icon: oklch(var(--v4-hue-pop-icon) var(--v4-hue));
   --v4-hue-tint: oklch(var(--v4-hue-pop-tint) var(--v4-hue));
   --v4-hue-soft: oklch(var(--v4-hue-pop-soft) var(--v4-hue));
+  --v4-hue-fill: oklch(var(--v4-hue-pop-fill) var(--v4-hue));
+}
+
+.v4 [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > * {
+  stroke-dasharray: 1;
+  animation: v4-icon-draw 480ms var(--v4-ease-standard) backwards;
+}
+.v4 [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(2) {
+  animation-delay: 70ms;
+}
+.v4 [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(n + 3) {
+  animation-delay: 140ms;
+}
+@keyframes v4-icon-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v4 [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > * {
+    animation: none;
+  }
 }
