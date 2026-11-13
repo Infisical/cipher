@@ -35,7 +35,7 @@ import { Toaster } from "@infisical/cipher/ui/sonner";
 
 export function App() {
   return (
-    <V4Scope theme="peach" className="min-h-screen bg-background text-foreground">
+    <V4Scope theme="light" className="min-h-screen bg-background text-foreground">
       <Button>Save changes</Button>
       <Toaster />
     </V4Scope>
@@ -93,7 +93,7 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button --overwrite
 
 ## Themes
 
-`V4Scope` takes a theme id: Lightly Peach (`peach`, the default light theme), Light (`pale`) or Dark (`dark`). Overlays and toasts portal into the scope, so they follow its theme.
+`V4Scope` takes a theme id: Light (`light`) or Dark (`dark`). The retired ids `peach` and `pale` still resolve to Light. Overlays and toasts portal into the scope, so they follow its theme.
 
 ## Links and routing
 
