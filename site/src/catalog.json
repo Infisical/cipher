@@ -94,7 +94,7 @@
         "module": "alert/default"
       },
       {
-        "title": "Variants and actions",
+        "title": "Variants, actions, no title and node title",
         "module": "alert/variants"
       },
       {
