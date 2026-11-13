@@ -3,8 +3,8 @@ import {
   CipherRouterProvider,
   type CipherRouter,
 } from "@infisical/cipher/lib/link";
-import { toV4Theme, v4Themes } from "@infisical/cipher/lib/theme-registry";
-import { V4Scope } from "@infisical/cipher/scope";
+import { toTheme, themes } from "@infisical/cipher/lib/theme-registry";
+import { CipherScope } from "@infisical/cipher/scope";
 import { Sidebar, type SidebarSection } from "@infisical/cipher/ui/sidebar";
 import { Toaster } from "@infisical/cipher/ui/sonner";
 import {
@@ -76,8 +76,8 @@ const router: CipherRouter = {
 };
 
 const initialTheme = () =>
-  toV4Theme(new URLSearchParams(window.location.search).get("theme")) ??
-  toV4Theme(window.localStorage.getItem("cipher-theme")) ??
+  toTheme(new URLSearchParams(window.location.search).get("theme")) ??
+  toTheme(window.localStorage.getItem("cipher-theme")) ??
   "light";
 
 export function App() {
@@ -98,7 +98,7 @@ export function App() {
   const current = component?.id ?? foundation.id;
   const title = component?.title ?? foundation.title;
   return (
-    <V4Scope theme={theme} className="flex h-dvh flex-col overflow-clip">
+    <CipherScope theme={theme} className="flex h-dvh flex-col overflow-clip">
       <CipherRouterProvider router={router}>
         <TooltipProvider>
           <AppShell>
@@ -116,7 +116,7 @@ export function App() {
                   onValueChange={changeTheme}
                   aria-label="Theme"
                 >
-                  {v4Themes.map((entry) => (
+                  {themes.map((entry) => (
                     <ToggleGroupItem key={entry.id} value={entry.id}>
                       {entry.name}
                     </ToggleGroupItem>
@@ -140,6 +140,6 @@ export function App() {
           </AppShell>
         </TooltipProvider>
       </CipherRouterProvider>
-    </V4Scope>
+    </CipherScope>
   );
 }

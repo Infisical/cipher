@@ -9,7 +9,7 @@ export default function Example() {
             <>
               Infisical
               <br />
-              v4
+              Cipher
             </>
           }
           tagline="A quiet interface for secrets, certificates and access."

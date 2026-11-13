@@ -3,14 +3,14 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--v4-space-24);
+  gap: var(--cipher-space-24);
   min-width: 0;
-  border: 1px solid var(--v4-line-soft);
-  background: var(--v4-surface);
-  padding: var(--v4-space-24);
+  border: 1px solid var(--cipher-line-soft);
+  background: var(--cipher-surface);
+  padding: var(--cipher-space-24);
 }
 
 .swatch {
-  height: var(--v4-space-48);
-  border: 1px solid var(--v4-line-soft);
+  height: var(--cipher-space-48);
+  border: 1px solid var(--cipher-line-soft);
 }

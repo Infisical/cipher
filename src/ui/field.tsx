@@ -266,7 +266,7 @@ function FieldLabel({ className, ref, ...props }: React.ComponentProps<typeof La
       ref={labelRef}
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label flex w-fit gap-2 border-[color:var(--v4-line-soft)] group-data-[disabled=true]/field:opacity-50 data-[has-checked]:border-[color:var(--v4-choice-selected-border)] data-[has-checked]:bg-[color:var(--v4-choice-selected-surface)] data-[has-field]:rounded-lg data-[has-field]:border data-[has-field]:not-data-[has-disabled]:hover:bg-[color:var(--v4-hover)] data-[has-field]:data-[has-focus-visible]:border-ring data-[has-field]:data-[has-focus-visible]:ring-2 data-[has-field]:data-[has-focus-visible]:ring-[color:var(--v4-focus-ring)] *:data-[slot=field]:p-2.5",
+        "group/field-label peer/field-label flex w-fit gap-2 border-[color:var(--cipher-line-soft)] group-data-[disabled=true]/field:opacity-50 data-[has-checked]:border-[color:var(--cipher-choice-selected-border)] data-[has-checked]:bg-[color:var(--cipher-choice-selected-surface)] data-[has-field]:rounded-lg data-[has-field]:border data-[has-field]:not-data-[has-disabled]:hover:bg-[color:var(--cipher-hover)] data-[has-field]:data-[has-focus-visible]:border-ring data-[has-field]:data-[has-focus-visible]:ring-2 data-[has-field]:data-[has-focus-visible]:ring-[color:var(--cipher-focus-ring)] *:data-[slot=field]:p-2.5",
         "data-[has-field]:w-full data-[has-field]:flex-col",
         className
       )}

@@ -58,7 +58,7 @@ export default function Example() {
       text: (row) => row.title,
       render: (row) => (
         <div className="flex min-w-0 items-center gap-2">
-          <Icon name={row.icon} size="var(--v4-size-icon)" className="shrink-0" />
+          <Icon name={row.icon} size="var(--cipher-size-icon)" className="shrink-0" />
           <RowLink
             link={{ href: `/design-system/components/${row.group}/${row.id}` }}
             disabled={!row.ready}
@@ -112,7 +112,7 @@ export default function Example() {
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <Card variant="framed">
             <div className="flex items-center gap-3">
-              <Icon name="apps" size="var(--v4-size-icon-xl)" className="shrink-0" />
+              <Icon name="apps" size="var(--cipher-size-icon-xl)" className="shrink-0" />
               <div className="min-w-0 flex-1">
                 <RowLink
                   link={{ href: "/design-system/components/data-display/detail" }}

@@ -568,7 +568,7 @@ export function DataGrid<Row>({
     })
   );
   const effectiveWidth = (column: GridColumn<Row>) => effectiveWidths.get(column.id) ?? 64;
-  const template = `max-content ${columns.map((column) => `${effectiveWidth(column)}px`).join(" ")}${onAddColumn ? " var(--v4-size-control-sm)" : ""}`;
+  const template = `max-content ${columns.map((column) => `${effectiveWidth(column)}px`).join(" ")}${onAddColumn ? " var(--cipher-size-control-sm)" : ""}`;
   const start = height ? Math.max(0, Math.floor(scrollTop / effectiveRowHeight) - 5) : 0;
   const end = height
     ? Math.min(rows.length, start + Math.ceil(height / effectiveRowHeight) + 10)
@@ -634,10 +634,10 @@ export function DataGrid<Row>({
           const text = shown ?? "NULL";
           const rangeEdge = selected
             ? [
-                r === range.r0 && "inset 0 1px 0 var(--v4-accent-line)",
-                r === range.r1 && "inset 0 -1px 0 var(--v4-accent-line)",
-                c === range.c0 && "inset 1px 0 0 var(--v4-accent-line)",
-                c === range.c1 && "inset -1px 0 0 var(--v4-accent-line)"
+                r === range.r0 && "inset 0 1px 0 var(--cipher-accent-line)",
+                r === range.r1 && "inset 0 -1px 0 var(--cipher-accent-line)",
+                c === range.c0 && "inset 1px 0 0 var(--cipher-accent-line)",
+                c === range.c1 && "inset -1px 0 0 var(--cipher-accent-line)"
               ]
                 .filter(Boolean)
                 .join(", ")
@@ -717,7 +717,7 @@ export function DataGrid<Row>({
       data-footer={footer || onAddRow ? "" : undefined}
       role="group"
       aria-label={`${label} workspace`}
-      data-v4-escape-owner={edit ? "" : undefined}
+      data-cipher-escape-owner={edit ? "" : undefined}
       onKeyDown={(event) => {
         if (event.key === "Escape" && edit && !busy) {
           event.preventDefault();

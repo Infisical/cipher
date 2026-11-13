@@ -25,7 +25,7 @@ function Textarea({
       style={
         rows === undefined
           ? style
-          : ({ ...style, "--v4-textarea-rows": rows } as React.CSSProperties)
+          : ({ ...style, "--cipher-textarea-rows": rows } as React.CSSProperties)
       }
       className={cn(controlStyles.field, controlStyles.textarea, "flex w-full", className)}
       {...props}

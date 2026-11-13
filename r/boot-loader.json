@@ -8,15 +8,15 @@
   ],
   "files": [
     {
-      "path": "src/components/v4/ui/boot-loader.tsx",
+      "path": "src/components/cipher/ui/boot-loader.tsx",
       "type": "registry:file",
-      "target": "src/components/v4/ui/boot-loader.tsx",
-      "content": "import * as React from \"react\";\n\nimport { readV4BootTheme } from \"../lib/boot-theme\";\nimport { toV4Theme, v4ThemeScheme } from \"../lib/theme-registry\";\nimport { cn } from \"../lib/utils\";\nimport { Loader } from \"./loader\";\n\nimport \"../v4.css\";\nimport styles from \"./boot-loader.module.css\";\n\nexport type BootLoaderProps = Omit<React.ComponentPropsWithoutRef<\"div\">, \"children\"> & {\n  label: string;\n  description?: string;\n  theme?: string;\n  fill?: \"viewport\" | \"container\";\n  delay?: number;\n};\n\n/** The page loader for app and session boot, themed from storage so it renders before V4Scope. */\nexport function BootLoader({\n  label,\n  description,\n  theme,\n  fill = \"viewport\",\n  delay,\n  className,\n  ref,\n  ...props\n}: BootLoaderProps & { ref?: React.Ref<HTMLDivElement> }) {\n  const resolved = toV4Theme(theme) ?? readV4BootTheme();\n  return (\n    <div\n      ref={ref}\n      data-slot=\"boot-loader\"\n      data-fill={fill}\n      data-theme={resolved}\n      data-scheme={v4ThemeScheme(resolved)}\n      className={cn(\"v4\", styles.boot, className)}\n      {...props}\n    >\n      <Loader size=\"page\" label={label} description={description} delay={delay} />\n    </div>\n  );\n}\nBootLoader.displayName = \"BootLoader\";\n"
+      "target": "src/components/cipher/ui/boot-loader.tsx",
+      "content": "import * as React from \"react\";\n\nimport { readBootTheme, type ThemeStorageKeys } from \"../lib/boot-theme\";\nimport { toTheme, themeScheme } from \"../lib/theme-registry\";\nimport { cn } from \"../lib/utils\";\nimport { Loader } from \"./loader\";\n\nimport \"../base.css\";\nimport styles from \"./boot-loader.module.css\";\n\nexport type BootLoaderProps = Omit<React.ComponentPropsWithoutRef<\"div\">, \"children\"> & {\n  label: string;\n  description?: string;\n  theme?: string;\n  fill?: \"viewport\" | \"container\";\n  delay?: number;\n  /** Storage keys to read the theme from. Defaults to Cipher's own keys. */\n  storageKeys?: ThemeStorageKeys;\n  /** Honors a ?theme= or session preview. Defaults to true. */\n  allowPreview?: boolean;\n};\n\n/** The page loader for app and session boot, themed from storage so it renders before CipherScope. */\nexport function BootLoader({\n  label,\n  description,\n  theme,\n  fill = \"viewport\",\n  delay,\n  storageKeys,\n  allowPreview,\n  className,\n  ref,\n  ...props\n}: BootLoaderProps & { ref?: React.Ref<HTMLDivElement> }) {\n  const resolved = toTheme(theme) ?? readBootTheme({ keys: storageKeys, allowPreview });\n  return (\n    <div\n      ref={ref}\n      data-slot=\"boot-loader\"\n      data-fill={fill}\n      data-theme={resolved}\n      data-scheme={themeScheme(resolved)}\n      className={cn(\"cipher\", styles.boot, className)}\n      {...props}\n    >\n      <Loader size=\"page\" label={label} description={description} delay={delay} />\n    </div>\n  );\n}\nBootLoader.displayName = \"BootLoader\";\n"
     },
     {
-      "path": "src/components/v4/ui/boot-loader.module.css",
+      "path": "src/components/cipher/ui/boot-loader.module.css",
       "type": "registry:file",
-      "target": "src/components/v4/ui/boot-loader.module.css",
+      "target": "src/components/cipher/ui/boot-loader.module.css",
       "content": ".boot {\n  display: flex;\n  flex-direction: column;\n  height: 100dvh;\n}\n.boot[data-fill=\"container\"] {\n  height: 100%;\n}\n"
     }
   ]

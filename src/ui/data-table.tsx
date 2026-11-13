@@ -226,7 +226,7 @@ export function DataTable<Row>({
   if (windowed) stop = effectiveRowHeight ? Math.min(rows.length, start + windowSize) : 0;
   React.useLayoutEffect(() => {
     if (rowHeight !== undefined || !scroll.current) return;
-    const token = parseFloat(getComputedStyle(scroll.current).getPropertyValue("--v4-size-row"));
+    const token = parseFloat(getComputedStyle(scroll.current).getPropertyValue("--cipher-size-row"));
     if (token > 0) setTokenRowHeight(token);
   }, [rowHeight]);
   React.useLayoutEffect(() => {
@@ -293,8 +293,8 @@ export function DataTable<Row>({
   const fixedFloor = columns
     .filter((column) => column.width === undefined)
     .map((column) => {
-      if (column.actions) return "var(--v4-size-row)";
-      return column.minWidth ? `${column.minWidth}px` : "var(--v4-size-cell-min)";
+      if (column.actions) return "var(--cipher-size-row)";
+      return column.minWidth ? `${column.minWidth}px` : "var(--cipher-size-cell-min)";
     });
   const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
@@ -304,24 +304,24 @@ export function DataTable<Row>({
   columns
     .filter((column) => column.pin === "start")
     .reduce((before, column) => {
-      pinOffsets.set(column.id, `calc(${selectable ? "var(--v4-size-row)" : "0px"} + ${before}px)`);
+      pinOffsets.set(column.id, `calc(${selectable ? "var(--cipher-size-row)" : "0px"} + ${before}px)`);
       return before + (column.width ?? 0);
     }, 0);
   const columnStyle = (
     column: DataTableColumn<Row>
   ): React.CSSProperties & {
-    "--v4-pin-offset"?: string;
+    "--cipher-pin-offset"?: string;
   } => ({
     width: column.width ?? (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
     minWidth: column.width ?? (column.actions ? undefined : (column.minWidth ?? 64)),
     maxWidth: column.maxWidth,
     textAlign: column.align,
-    "--v4-pin-offset": pinOffsets.get(column.id)
+    "--cipher-pin-offset": pinOffsets.get(column.id)
   });
   const skeletonRows = Math.max(1, Math.floor(loadingRows));
-  const tableStyle: React.CSSProperties & { "--v4-table-row-height"?: string } = {
+  const tableStyle: React.CSSProperties & { "--cipher-table-row-height"?: string } = {
     maxHeight: height,
-    "--v4-table-row-height": effectiveRowHeight ? `${effectiveRowHeight}px` : undefined
+    "--cipher-table-row-height": effectiveRowHeight ? `${effectiveRowHeight}px` : undefined
   };
   const more = loadMore ? (
     <Button
@@ -472,9 +472,9 @@ export function DataTable<Row>({
                 minWidth: `calc(${[
                   `${fixedWidth}px`,
                   ...fixedFloor,
-                  ...(selectable ? ["var(--v4-size-row)"] : []),
+                  ...(selectable ? ["var(--cipher-size-row)"] : []),
                   ...(actionsColumn
-                    ? [`var(--v4-size-row) + ${slots - 1} * var(--v4-size-row-action-step)`]
+                    ? [`var(--cipher-size-row) + ${slots - 1} * var(--cipher-size-row-action-step)`]
                     : [])
                 ].join(" + ")})`
               }

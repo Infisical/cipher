@@ -1,18 +1,18 @@
 .bar {
   display: flex;
   flex-direction: column;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   min-width: 0;
 }
 .top {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
 }
 .search {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: var(--v4-size-search-max);
+  max-width: var(--cipher-size-search-max);
 }
 .search[data-width="fill"] {
   max-width: none;
@@ -20,20 +20,20 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   margin-inline-start: auto;
 }
 .applied {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--v4-space-8) var(--v4-space-12);
+  gap: var(--cipher-space-8) var(--cipher-space-12);
 }
 .chips {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -45,18 +45,18 @@
   max-width: 100%;
 }
 .field {
-  color: var(--v4-text2);
+  color: var(--cipher-text2);
 }
 .value {
   min-width: 0;
   max-width: 32ch;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: var(--v4-type-row-title-font-weight);
+  font-weight: var(--cipher-type-row-title-font-weight);
 }
 .date {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
 }

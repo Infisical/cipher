@@ -1,0 +1,54 @@
+.halftone {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  overflow: clip;
+  pointer-events: none;
+  opacity: calc(var(--cipher-halftone-peak) * var(--halftone-intensity, 1));
+  color: var(--cipher-hue-tint);
+  transition: opacity var(--cipher-duration-slow) var(--cipher-ease-fade);
+}
+.halftone[data-tone="accent"] {
+  color: var(--cipher-accent);
+}
+.halftone[data-tone="ink"] {
+  color: var(--cipher-ink);
+}
+.halftone svg {
+  display: block;
+  fill: currentColor;
+}
+.rest,
+.hover {
+  transform-box: view-box;
+  transition:
+    transform 320ms var(--cipher-ease-standard),
+    opacity 320ms var(--cipher-ease-fade);
+}
+.hover {
+  opacity: 0;
+  transform: scale(calc(1 / 1.5));
+}
+:global([data-slot="card"]):is(:hover, :focus-within) .halftone {
+  opacity: calc(var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1));
+}
+:global([data-slot="card"]):is(:hover, :focus-within) .rest {
+  opacity: 0;
+  transform: scale(1.5);
+}
+:global([data-slot="card"]):is(:hover, :focus-within) .hover {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hover {
+    display: none;
+  }
+  :global([data-slot="card"]):is(:hover, :focus-within) .rest {
+    opacity: 1;
+    transform: none;
+  }
+}
+:has(> .halftone) {
+  isolation: isolate;
+}

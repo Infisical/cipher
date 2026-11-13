@@ -5,8 +5,8 @@
   display: grid;
   aspect-ratio: 960 / 288;
   overflow: clip;
-  background: var(--v4-surface);
-  color: var(--v4-ink);
+  background: var(--cipher-surface);
+  color: var(--cipher-ink);
 }
 .art {
   position: absolute;
@@ -16,19 +16,19 @@
   height: 100%;
 }
 .slab {
-  fill: var(--v4-ink);
+  fill: var(--cipher-ink);
 }
 .accent {
-  fill: var(--v4-accent);
+  fill: var(--cipher-accent);
 }
 .band {
-  fill: var(--v4-control);
+  fill: var(--cipher-control);
 }
 .block {
   rx: 0;
 }
 .dot {
-  fill: var(--v4-on-ink);
+  fill: var(--cipher-on-ink);
   rx: 0;
 }
 .words {
@@ -39,16 +39,16 @@
 }
 .title {
   margin: 0;
-  font-family: var(--v4-type-display-font-family);
-  font-size: max(var(--v4-type-display-font-size), 10.8cqi);
+  font-family: var(--cipher-type-display-font-family);
+  font-size: max(var(--cipher-type-display-font-size), 10.8cqi);
   line-height: 1;
-  font-weight: var(--v4-type-display-font-weight);
-  letter-spacing: var(--v4-type-display-letter-spacing);
+  font-weight: var(--cipher-type-display-font-weight);
+  letter-spacing: var(--cipher-type-display-letter-spacing);
 }
 .tagline {
   margin: 1.25cqi 0 0 2px;
-  color: var(--v4-muted);
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
 }

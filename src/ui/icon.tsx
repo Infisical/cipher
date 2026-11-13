@@ -11,6 +11,8 @@ type IconProps = Omit<React.ComponentPropsWithoutRef<"svg">, "name"> & {
   icon?: LucideIcon;
   size?: number | string;
   label?: string;
+  /** draw redraws the icon's strokes when the Card around it is hovered or focused. Ignored for Lucide fallbacks and under reduced motion. */
+  motion?: "draw";
   /** Fills the glyph, for the on state of a toggle such as a favorite star. The fill takes the product hue inside a hue scope, else the current color. */
   filled?: boolean;
 };
@@ -21,6 +23,7 @@ export function Icon({
   size,
   strokeWidth,
   label,
+  motion,
   filled,
   style,
   ref,
@@ -44,6 +47,7 @@ export function Icon({
         {...shared}
         data-icon-name={name}
         data-icon-source="custom"
+        data-icon-motion={motion}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -51,7 +55,11 @@ export function Icon({
         strokeLinejoin="round"
       >
         {iconShapes[name].map((shape, index) =>
-          React.createElement(shape.tag, { ...shape.attributes, key: index })
+          React.createElement(shape.tag, {
+            ...shape.attributes,
+            pathLength: motion ? 1 : undefined,
+            key: index
+          })
         )}
       </svg>
     );

@@ -7,7 +7,7 @@ const check = process.argv.includes("--check");
 const out = path.join(root, "r");
 const registryName = "cipher";
 const baseItemName = "cipher-base";
-const installRoot = "src/components/v4";
+const installRoot = "src/components/cipher";
 const registryItem = (name: string) => "@" + registryName + "/" + name;
 const failures: string[] = [];
 

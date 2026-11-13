@@ -23,7 +23,7 @@ const groupWatch = {
   ...fieldBoxWatch,
   attributes: [...fieldBoxWatch.attributes, "data-align"],
   marks: {
-    "data-has-button": ':scope > [data-slot="input-group-addon"]:has([data-v4-button])',
+    "data-has-button": ':scope > [data-slot="input-group-addon"]:has([data-cipher-button])',
     "data-has-kbd": ':scope > [data-slot="input-group-addon"]:has(> kbd)'
   }
 };

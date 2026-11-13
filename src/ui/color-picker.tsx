@@ -26,7 +26,7 @@ export const tagColorPresets: readonly ColorPreset[] = [
 const hexColor = /^#[0-9a-f]{6}$/i;
 
 const swatchStyle = (color: string) =>
-  hexColor.test(color) ? ({ "--v4-color-picker-value": color } as React.CSSProperties) : undefined;
+  hexColor.test(color) ? ({ "--cipher-color-picker-value": color } as React.CSSProperties) : undefined;
 
 export type ColorPickerProps = Omit<
   InputProps,

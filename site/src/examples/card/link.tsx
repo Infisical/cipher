@@ -11,7 +11,7 @@ export default function Example() {
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <Card variant="framed">
             <div className="flex items-start gap-3">
-              <Icon name="apps" size="var(--v4-size-icon-xl)" className="shrink-0" />
+              <Icon name="apps" size="var(--cipher-size-icon-xl)" className="shrink-0" />
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <CardLink
                   link={{ href: "/design-system/components/data-display/detail" }}
@@ -48,7 +48,7 @@ export default function Example() {
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <Card variant="framed">
             <div className="flex items-start gap-3">
-              <Icon name="apps" size="var(--v4-size-icon-xl)" className="shrink-0" />
+              <Icon name="apps" size="var(--cipher-size-icon-xl)" className="shrink-0" />
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <CardLink
                   link={{ href: "/design-system/components/data-display/detail" }}

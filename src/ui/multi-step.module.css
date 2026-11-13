@@ -1,14 +1,14 @@
 .lede {
   margin: 0;
-  color: var(--v4-text2);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
+  color: var(--cipher-text2);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
 }
 .form {
   min-width: 0;
 }
-/* The steps slide inside this clip, so it reaches --v4-focus-clearance past the content on every
+/* The steps slide inside this clip, so it reaches --cipher-focus-clearance past the content on every
    side and gives it back as negative margin: rings at the content edge are drawn, alignment holds. */
 .viewport {
   position: relative;
@@ -16,13 +16,13 @@
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
-  padding: var(--v4-focus-clearance);
-  margin: calc(-1 * var(--v4-focus-clearance));
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
 }
 .body {
   display: flex;
   flex-direction: column;
-  gap: var(--v4-space-field-group);
+  gap: var(--cipher-space-field-group);
   min-width: 0;
 }
 .footer.footer {
@@ -30,23 +30,23 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
 }
 .status {
   min-width: 0;
   margin: 0;
-  color: var(--v4-muted);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
 }
 .error {
-  color: var(--v4-bad);
+  color: var(--cipher-bad);
 }
 .buttons {
   display: flex;
   flex: none;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   margin-inline-start: auto;
 }
 .page {
@@ -56,7 +56,7 @@
 .pageGrid {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
-  gap: var(--v4-space-32);
+  gap: var(--cipher-space-32);
   align-items: start;
   min-width: 0;
 }
@@ -66,17 +66,17 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: var(--v4-space-20);
+  gap: var(--cipher-space-20);
   min-width: 0;
-  padding: var(--v4-space-surface-inset);
-  border: var(--v4-size-control-border) solid var(--v4-line-soft);
+  padding: var(--cipher-space-surface-inset);
+  border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   border-radius: 0;
-  background: var(--v4-surface);
+  background: var(--cipher-surface);
 }
 @container (max-width: 640px) {
   .pageGrid {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--v4-space-16);
+    gap: var(--cipher-space-16);
   }
   .rail {
     display: none;
@@ -88,26 +88,26 @@
 .stepHead {
   display: flex;
   flex-direction: column;
-  gap: var(--v4-space-4);
-  margin-bottom: var(--v4-space-8);
+  gap: var(--cipher-space-4);
+  margin-bottom: var(--cipher-space-8);
 }
 .eyebrow {
   margin: 0;
-  color: var(--v4-muted);
-  font-family: var(--v4-type-eyebrow-font-family);
-  font-size: var(--v4-type-eyebrow-font-size);
-  line-height: var(--v4-type-eyebrow-line-height);
-  font-weight: var(--v4-type-eyebrow-font-weight);
-  letter-spacing: var(--v4-type-eyebrow-letter-spacing);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-eyebrow-font-family);
+  font-size: var(--cipher-type-eyebrow-font-size);
+  line-height: var(--cipher-type-eyebrow-line-height);
+  font-weight: var(--cipher-type-eyebrow-font-weight);
+  letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
   text-transform: uppercase;
 }
 .heading {
   margin: 0;
-  font-family: var(--v4-type-title-font-family);
-  font-size: var(--v4-type-title-font-size);
-  line-height: var(--v4-type-title-line-height);
-  font-weight: var(--v4-type-title-font-weight);
-  letter-spacing: var(--v4-type-title-letter-spacing);
+  font-family: var(--cipher-type-title-font-family);
+  font-size: var(--cipher-type-title-font-size);
+  line-height: var(--cipher-type-title-line-height);
+  font-weight: var(--cipher-type-title-font-weight);
+  letter-spacing: var(--cipher-type-title-letter-spacing);
 }
 .steps {
   display: flex;
@@ -118,24 +118,24 @@
 }
 .step {
   position: relative;
-  padding-bottom: var(--v4-space-20);
+  padding-bottom: var(--cipher-space-20);
 }
 .step:not(:last-child)::before {
   content: "";
   position: absolute;
-  top: var(--v4-space-24);
+  top: var(--cipher-space-24);
   bottom: 0;
   left: 11px;
   width: 1px;
-  background: var(--v4-line-soft);
+  background: var(--cipher-line-soft);
 }
 .step[data-state="done"]::before {
-  background: var(--v4-ink);
+  background: var(--cipher-ink);
 }
 .stepButton {
   display: flex;
   align-items: flex-start;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   width: 100%;
   padding: 0;
   border: 0;
@@ -144,32 +144,32 @@
   text-align: start;
 }
 button.stepButton:focus-visible {
-  outline: var(--v4-size-focus-ring) solid var(--v4-ink);
-  outline-offset: var(--v4-size-focus-ring);
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
 }
 .marker {
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: var(--v4-space-24);
-  height: var(--v4-space-24);
-  border: 1px solid var(--v4-line-soft);
+  width: var(--cipher-space-24);
+  height: var(--cipher-space-24);
+  border: 1px solid var(--cipher-line-soft);
   border-radius: 0;
-  background: var(--v4-surface);
-  color: var(--v4-muted);
-  font-family: var(--v4-type-caption-font-family);
-  font-size: var(--v4-type-caption-font-size);
+  background: var(--cipher-surface);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
   font-variant-numeric: tabular-nums;
 }
 .step[data-state="current"] .marker {
-  border-color: var(--v4-ink);
-  color: var(--v4-ink);
+  border-color: var(--cipher-ink);
+  color: var(--cipher-ink);
 }
 .step[data-state="done"] .marker {
-  border-color: var(--v4-ink);
-  background: var(--v4-ink);
-  color: var(--v4-on-ink);
+  border-color: var(--cipher-ink);
+  background: var(--cipher-ink);
+  color: var(--cipher-on-ink);
 }
 .stepText {
   display: flex;
@@ -178,22 +178,22 @@ button.stepButton:focus-visible {
   padding-top: 2px;
 }
 .stepTitle {
-  color: var(--v4-text2);
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
+  color: var(--cipher-text2);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
 }
 .step[data-state="current"] .stepTitle {
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
   font-weight: 600;
 }
 .stepSummary {
   overflow: hidden;
-  color: var(--v4-muted);
-  font-family: var(--v4-type-caption-font-family);
-  font-size: var(--v4-type-caption-font-size);
-  line-height: var(--v4-type-caption-line-height);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

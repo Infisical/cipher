@@ -1,22 +1,22 @@
 .code {
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
-  font-weight: var(--v4-type-mono-font-weight);
-  letter-spacing: var(--v4-type-mono-letter-spacing);
-  color: var(--v4-text2, var(--foreground));
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
+  color: var(--cipher-text2, var(--foreground));
 }
 .inline {
-  border: var(--v4-size-control-border) solid var(--v4-line-soft, var(--border));
+  border: var(--cipher-size-control-border) solid var(--cipher-line-soft, var(--border));
   border-radius: 0;
-  padding: var(--v4-space-2) var(--v4-space-4);
-  background: var(--v4-tint, var(--muted));
+  padding: var(--cipher-space-2) var(--cipher-space-4);
+  background: var(--cipher-tint, var(--muted));
   overflow-wrap: anywhere;
 }
 .block {
   margin: 0;
   overflow: auto;
-  padding: var(--v4-space-surface-inset);
+  padding: var(--cipher-space-surface-inset);
   tab-size: 2;
   white-space: pre;
   outline-offset: -2px;
@@ -27,21 +27,21 @@
 }
 .line {
   display: inline-block;
-  min-height: var(--v4-type-mono-line-height);
+  min-height: var(--cipher-type-mono-line-height);
   min-width: 100%;
 }
 .highlight {
-  background: var(--v4-accent-wash, var(--muted));
-  min-width: calc(100% + 2 * var(--v4-space-surface-inset));
-  margin-inline: calc(-1 * var(--v4-space-surface-inset));
-  padding-inline: var(--v4-space-surface-inset);
+  background: var(--cipher-accent-wash, var(--muted));
+  min-width: calc(100% + 2 * var(--cipher-space-surface-inset));
+  margin-inline: calc(-1 * var(--cipher-space-surface-inset));
+  padding-inline: var(--cipher-space-surface-inset);
 }
 .number {
   display: inline-block;
   width: 3ch;
-  margin-right: var(--v4-space-content-group);
+  margin-right: var(--cipher-space-content-group);
   text-align: right;
-  color: var(--v4-muted, var(--muted-foreground));
+  color: var(--cipher-muted, var(--muted-foreground));
   user-select: none;
 }
 .codeBlock {
@@ -51,22 +51,22 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--v4-space-8);
-  min-height: var(--v4-space-40);
-  padding: var(--v4-space-4) var(--v4-space-3) var(--v4-space-4)
-    calc(var(--v4-space-12) - var(--v4-size-control-border));
-  font-family: var(--v4-type-mono-sm-font-family);
-  font-size: var(--v4-type-mono-sm-font-size);
-  line-height: var(--v4-type-mono-sm-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-mono-sm-letter-spacing);
-  color: var(--v4-text2);
+  gap: var(--cipher-space-8);
+  min-height: var(--cipher-space-40);
+  padding: var(--cipher-space-4) var(--cipher-space-3) var(--cipher-space-4)
+    calc(var(--cipher-space-12) - var(--cipher-size-control-border));
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
+  color: var(--cipher-text2);
 }
 .codeBlock > .header :global([data-slot="icon"]) {
-  width: var(--v4-size-icon-sm);
-  height: var(--v4-size-icon-sm);
+  width: var(--cipher-size-icon-sm);
+  height: var(--cipher-size-icon-sm);
   flex: none;
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
 }
 .body {
   overflow: hidden;
@@ -76,7 +76,7 @@
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: var(--v4-space-control-gap);
+  gap: var(--cipher-space-control-gap);
 }
 .actions {
   grid-column: 2;
@@ -84,7 +84,7 @@
   align-items: center;
   flex-wrap: wrap;
   justify-content: end;
-  gap: var(--v4-space-control-slot-gap);
+  gap: var(--cipher-space-control-slot-gap);
 }
 .header > :global([data-slot="copy-button"]) {
   display: contents;
@@ -96,21 +96,21 @@
   grid-column: 1 / -1;
 }
 .customContent {
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
-  font-weight: var(--v4-type-body-font-weight);
-  letter-spacing: var(--v4-type-body-letter-spacing);
-  padding: var(--v4-space-surface-inset);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+  padding: var(--cipher-space-surface-inset);
 }
 .tree {
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
-  font-weight: var(--v4-type-mono-font-weight);
-  letter-spacing: var(--v4-type-mono-letter-spacing);
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
   overflow: auto;
-  padding: var(--v4-space-surface-inset);
+  padding: var(--cipher-space-surface-inset);
 }
 .entry {
   display: flex;
@@ -120,45 +120,45 @@
 .treeCaret {
   display: inline-block;
   flex: none;
-  width: var(--v4-space-16);
+  width: var(--cipher-space-16);
 }
 .key {
-  color: var(--v4-ink, var(--foreground));
+  color: var(--cipher-ink, var(--foreground));
   font-weight: 600;
 }
 .primitive {
-  color: var(--v4-ink, var(--foreground));
+  color: var(--cipher-ink, var(--foreground));
   font-weight: 500;
 }
 .string {
-  color: var(--v4-text2, var(--foreground));
+  color: var(--cipher-text2, var(--foreground));
 }
 .punctuation {
-  color: var(--v4-muted, var(--muted-foreground));
+  color: var(--cipher-muted, var(--muted-foreground));
 }
 .snippet {
-  --v4-nested-action-height: var(--v4-size-nested-md);
+  --cipher-nested-action-height: var(--cipher-size-nested-md);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--v4-space-control-slot-gap);
+  gap: var(--cipher-space-control-slot-gap);
   min-width: 0;
-  border: var(--v4-size-control-border) solid var(--v4-control, var(--border));
+  border: var(--cipher-size-control-border) solid var(--cipher-control, var(--border));
   border-radius: 0;
-  background: var(--v4-surface, var(--background));
-  padding: var(--v4-space-control-slot-inset);
-  padding-inline-start: var(--v4-space-control-inline);
-  min-height: var(--v4-size-control-md);
+  background: var(--cipher-surface, var(--background));
+  padding: var(--cipher-space-control-slot-inset);
+  padding-inline-start: var(--cipher-space-control-inline);
+  min-height: var(--cipher-size-control-md);
 }
 .snippetSmall {
-  --v4-nested-action-height: var(--v4-size-nested-sm);
-  min-height: var(--v4-size-control-sm);
+  --cipher-nested-action-height: var(--cipher-size-nested-sm);
+  min-height: var(--cipher-size-control-sm);
 }
 .prompt {
-  color: var(--v4-muted, var(--muted-foreground));
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
+  color: var(--cipher-muted, var(--muted-foreground));
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
   user-select: none;
 }
 .input {
@@ -170,24 +170,24 @@
   outline: none;
   background: transparent;
   color: inherit;
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
-  font-weight: var(--v4-type-mono-font-weight);
-  letter-spacing: var(--v4-type-mono-letter-spacing);
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
 }
 .snippet[data-multiline] {
   align-items: flex-start;
 }
 .snippet[data-multiline] > .prompt {
-  padding-block: calc((var(--v4-nested-action-height) - 1lh) / 2);
+  padding-block: calc((var(--cipher-nested-action-height) - 1lh) / 2);
 }
 /* field-sizing: content ignores rows and is missing in older targets, so the line count also sets a minimum height; content past it scrolls. */
 .snippetLines {
   box-sizing: content-box;
-  min-height: calc(var(--v4-snippet-rows) * 1lh);
-  max-height: calc(var(--v4-snippet-lines) * 1lh);
-  padding-block: calc((var(--v4-nested-action-height) - 1lh) / 2);
+  min-height: calc(var(--cipher-snippet-rows) * 1lh);
+  max-height: calc(var(--cipher-snippet-lines) * 1lh);
+  padding-block: calc((var(--cipher-nested-action-height) - 1lh) / 2);
   overflow-y: auto;
   resize: none;
   field-sizing: content;
@@ -196,12 +196,12 @@
 }
 .snippet {
   transition-property: border-color, box-shadow;
-  transition-duration: var(--v4-duration-fast);
-  transition-timing-function: var(--v4-ease-fade);
+  transition-duration: var(--cipher-duration-fast);
+  transition-timing-function: var(--cipher-ease-fade);
 }
 .snippet[data-input-focus] {
-  border-color: var(--v4-ink);
-  box-shadow: 0 0 0 var(--v4-size-focus-glow) var(--v4-focus-ring);
+  border-color: var(--cipher-ink);
+  box-shadow: 0 0 0 var(--cipher-size-focus-glow) var(--cipher-focus-ring);
 }
 .snippet > :global([data-slot="copy-button"]) {
   display: contents;
@@ -210,19 +210,19 @@
   flex-basis: 100%;
 }
 .token_comment {
-  color: var(--v4-muted, var(--muted-foreground));
+  color: var(--cipher-muted, var(--muted-foreground));
   font-style: italic;
 }
 .token_string {
-  color: var(--v4-text2, var(--foreground));
+  color: var(--cipher-text2, var(--foreground));
 }
 .token_keyword,
 .token_number {
-  color: var(--v4-ink, var(--foreground));
+  color: var(--cipher-ink, var(--foreground));
   font-weight: 500;
 }
 .token_key {
-  color: var(--v4-ink, var(--foreground));
+  color: var(--cipher-ink, var(--foreground));
   font-weight: 600;
 }
 .blockLabel {
@@ -235,8 +235,8 @@
 .treeToggle {
   display: inline-flex;
   align-items: center;
-  min-width: var(--v4-size-nested-sm);
-  min-height: var(--v4-size-nested-sm);
+  min-width: var(--cipher-size-nested-sm);
+  min-height: var(--cipher-size-nested-sm);
   text-align: start;
   background: none;
   border: 0;
@@ -244,20 +244,20 @@
   font: inherit;
 }
 .treeToggle:focus-visible {
-  outline: var(--v4-size-focus-ring) solid var(--v4-ink);
-  outline-offset: var(--v4-size-focus-ring);
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
 }
 .treeChildren {
-  margin-left: calc(var(--v4-space-6) - var(--v4-size-control-border));
-  padding-left: var(--v4-space-10);
-  border-left: var(--v4-size-control-border) solid var(--v4-line);
+  margin-left: calc(var(--cipher-space-6) - var(--cipher-size-control-border));
+  padding-left: var(--cipher-space-10);
+  border-left: var(--cipher-size-control-border) solid var(--cipher-line);
 }
 .notice {
-  margin: var(--v4-space-8) 0;
-  color: var(--v4-muted, var(--muted-foreground));
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
+  margin: var(--cipher-space-8) 0;
+  color: var(--cipher-muted, var(--muted-foreground));
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
 }
 .wrap .entry {
   white-space: pre-wrap;

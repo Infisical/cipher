@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
-import { v4Themes } from "../lib/theme-registry";
+import { themes } from "../lib/theme-registry";
 import { cn } from "../lib/utils";
-import { useV4ActionBarReserve } from "../scope";
+import { useActionBarReport } from "../scope";
 import { Count } from "./badge";
 import { BandDivider, Breadcrumb, type BreadcrumbCrumb } from "./breadcrumb";
 import { Button } from "./button";
@@ -71,7 +71,7 @@ const InsetReserveContext = React.createContext<PresenceReport | null>(null);
 /** Pads AppInset by the floating action bar's height, and lifts the scope's toasts above it, while active holds. */
 export const useActionBarReserve = (active: boolean) => {
   useReportPresence(React.useContext(InsetReserveContext), active);
-  useReportPresence(useV4ActionBarReserve(), active);
+  useReportPresence(useActionBarReport(), active);
 };
 
 const sizeOf = (element: HTMLElement, token: string) =>
@@ -120,9 +120,14 @@ const ownsShortcut = (shell: HTMLElement, event: KeyboardEvent) => {
 
 export function AppShell({
   className,
+  grain = false,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  /** Paints the grain texture into the band around the inset. Off by default. */
+  grain?: boolean;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   const own = React.useRef<HTMLDivElement>(null);
   const [mode, setMode] = React.useState<ShellMode>("wide");
   const [hasNavigation, setHasNavigation] = React.useState(false);
@@ -155,8 +160,8 @@ export function AppShell({
     const measure = () => {
       const width = element.offsetWidth;
       let next: ShellMode = "wide";
-      if (width < sizeOf(element, "--v4-size-shell-collapse")) next = "narrow";
-      else if (width < sizeOf(element, "--v4-size-shell-rail")) next = "rail";
+      if (width < sizeOf(element, "--cipher-size-shell-collapse")) next = "narrow";
+      else if (width < sizeOf(element, "--cipher-size-shell-rail")) next = "rail";
       setMode(next);
       if (next === "wide") setNavigationOpen(false);
     };
@@ -212,6 +217,7 @@ export function AppShell({
           data-has-top-bar={hasTopBar || undefined}
           data-has-sidebar={hasSidebar || undefined}
           data-sidebar-open={sidebarOpen || undefined}
+          data-grain={grain || undefined}
           className={cn(styles.shell, className)}
           {...props}
         />
@@ -385,7 +391,7 @@ export const ShellBottomSheet = ({
 
 const themeOptions: { value: ShellTheme; label: string }[] = [
   { value: "system", label: "System" },
-  ...v4Themes.map((theme) => ({ value: theme.id, label: theme.name }))
+  ...themes.map((theme) => ({ value: theme.id, label: theme.name }))
 ];
 
 export interface TopBarAccount {
