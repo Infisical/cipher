@@ -972,6 +972,10 @@
       {
         "title": "DataList default and compact density",
         "module": "list/density"
+      },
+      {
+        "title": "Rows inside wrapper components",
+        "module": "list/wrapped-rows"
       }
     ]
   },
