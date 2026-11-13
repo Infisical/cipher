@@ -47,7 +47,7 @@ function Card({
   size?: "default" | "sm";
   variant?: "framed" | "plain";
   title?: React.ReactNode;
-  description?: React.ReactNode;
+  description?: string;
   action?: React.ReactNode;
   footer?: React.ReactNode;
   footerPlacement?: "inset" | "frame";
