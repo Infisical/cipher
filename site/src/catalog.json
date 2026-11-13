@@ -740,6 +740,10 @@
       {
         "title": "Date range field",
         "module": "filter-bar/date-range"
+      },
+      {
+        "title": "Filters kept in the URL",
+        "module": "filter-bar/url-state"
       }
     ]
   },
