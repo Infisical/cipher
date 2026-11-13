@@ -488,6 +488,26 @@
     ]
   },
   {
+    "id": "date-range-picker",
+    "title": "Date range picker",
+    "summary": "Pick a start and end date from a calendar in a popover, with optional presets.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Empty, set and two months",
+        "module": "date-range-picker/basic"
+      },
+      {
+        "title": "With presets",
+        "module": "date-range-picker/presets"
+      },
+      {
+        "title": "Future dates disabled",
+        "module": "date-range-picker/disabled-future"
+      }
+    ]
+  },
+  {
     "id": "detail-layout",
     "title": "Detail layout",
     "summary": "Lay out a detail page as stacked content cards with a details sidecar on the right that stacks above them in narrow containers.",
@@ -704,6 +724,10 @@
       {
         "title": "Search width, capped and fill",
         "module": "filter-bar/width"
+      },
+      {
+        "title": "Date range field",
+        "module": "filter-bar/date-range"
       }
     ]
   },
