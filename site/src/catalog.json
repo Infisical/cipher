@@ -328,6 +328,10 @@
       {
         "title": "Six-series palette",
         "module": "chart/palette"
+      },
+      {
+        "title": "Height and aspect",
+        "module": "chart/sizes"
       }
     ]
   },

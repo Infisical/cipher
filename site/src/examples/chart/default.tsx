@@ -12,7 +12,7 @@ export default function Example() {
     <figure aria-label="Requests per day" className="m-0 flex w-full min-w-0 flex-col gap-3">
       <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
         <UI.ChartContainer
-          className="aspect-auto h-60"
+          height={240}
           config={{ requests: { label: "Requests", color: "var(--cipher-text2)" } }}
         >
           <BarChart

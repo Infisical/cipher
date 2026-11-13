@@ -52,9 +52,16 @@ function ChartContainer({
   children,
   config,
   initialDimension = INITIAL_DIMENSION,
+  height,
+  aspect,
+  style,
   ...props
 }: React.ComponentProps<"div"> & {
   config: ChartConfig;
+  /** A fixed height (a number is pixels). Without aspect, the chart then fills the width at that height instead of 16:9. */
+  height?: number | string;
+  /** The width-to-height ratio, as a number (2) or a CSS ratio ("21 / 9"). Defaults to 16:9. */
+  aspect?: number | string;
   children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
   initialDimension?: {
     width: number;
@@ -74,6 +81,11 @@ function ChartContainer({
           "[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-[var(--cipher-hover)]",
           className
         )}
+        style={{
+          height,
+          aspectRatio: aspect ?? (height === undefined ? undefined : "auto"),
+          ...style
+        }}
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
