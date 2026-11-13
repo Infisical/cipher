@@ -36,6 +36,17 @@ function CalendarRoot({
   );
 }
 
+/** The open-ended before and after dates in `disabled`, so navigation stops at the months that can be picked. */
+function disabledBounds(disabled: React.ComponentProps<typeof DayPicker>["disabled"]) {
+  const bounds: { before?: Date; after?: Date } = {};
+  for (const matcher of [disabled ?? []].flat()) {
+    if (typeof matcher !== "object" || matcher instanceof Date || Array.isArray(matcher)) continue;
+    if ("before" in matcher && !("after" in matcher)) bounds.before = matcher.before;
+    if ("after" in matcher && !("before" in matcher)) bounds.after = matcher.after;
+  }
+  return bounds;
+}
+
 function Calendar({
   className,
   classNames,
@@ -50,12 +61,13 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const defaultClassNames = getDefaultClassNames();
+  const bounds = disabledBounds(props.disabled);
 
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "group/calendar max-w-full overflow-x-auto bg-background p-2 [--cell-radius:0px] [--cell-size:var(--cipher-size-control-default)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent",
+        "group/calendar max-w-full overflow-x-auto bg-background p-2 [--cell-radius:0px] [--cell-size:var(--cipher-size-control-default)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent in-data-[slot=popover-content]:p-0",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
@@ -177,6 +189,8 @@ function Calendar({
         ...components
       }}
       {...props}
+      startMonth={props.startMonth ?? bounds.before}
+      endMonth={props.endMonth ?? bounds.after}
     />
   );
 }

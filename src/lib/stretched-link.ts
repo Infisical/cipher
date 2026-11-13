@@ -5,13 +5,11 @@ import { type PresenceReport, usePresenceCount, useReportPresence } from "./pres
 const StretchedLinkContext = React.createContext<PresenceReport | null>(null);
 
 /**
- * A table row or Card whose stretched RowLink or CardLink covers it. Hosts nest: an outer row or Card
- * also counts a link inside an inner one.
+ * A table row or Card whose own stretched RowLink or CardLink covers it. A link inside a nested host,
+ * such as a row in a Card's table, belongs to that host and never makes the outer one clickable.
  */
 export function useStretchedLinkHost() {
-  const [hasLink, report] = usePresenceCount();
-  useReportPresence(React.useContext(StretchedLinkContext), hasLink);
-  return [hasLink, report] as const;
+  return usePresenceCount();
 }
 
 export function useStretchedLink(active: boolean) {
