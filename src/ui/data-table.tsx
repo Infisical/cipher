@@ -299,7 +299,7 @@ export function DataTable<Row>({
   const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
   const trailing =
-    Boolean(rowActions) || columns.some((column) => column.pin === true || column.actions);
+    actionsColumn || columns.some((column) => column.pin === true || column.actions);
   const pinOffsets = new Map<string, string>();
   columns
     .filter((column) => column.pin === "start")
@@ -473,7 +473,7 @@ export function DataTable<Row>({
                   `${fixedWidth}px`,
                   ...fixedFloor,
                   ...(selectable ? ["var(--v4-size-row)"] : []),
-                  ...(rowActions
+                  ...(actionsColumn
                     ? [`var(--v4-size-row) + ${slots - 1} * var(--v4-size-row-action-step)`]
                     : [])
                 ].join(" + ")})`
