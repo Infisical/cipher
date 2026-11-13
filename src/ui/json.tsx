@@ -171,7 +171,7 @@ export const Json = ({
       style={{
         maxHeight:
           maxHeight ??
-          (maxLines ? `calc(${maxLines} * 1lh + 2 * var(--v4-space-surface-inset))` : undefined)
+          (maxLines ? `calc(${maxLines} * 1lh + 2 * var(--cipher-space-surface-inset))` : undefined)
       }}
     >
       <TreeNode key={safe.text} item={tree} depth={0} expanded={defaultExpandDepth} />

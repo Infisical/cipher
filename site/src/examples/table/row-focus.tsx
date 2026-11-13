@@ -71,7 +71,7 @@ function DimAmount() {
   const [value, setValue] = React.useState("");
   React.useLayoutEffect(() => {
     if (ref.current)
-      setValue(getComputedStyle(ref.current).getPropertyValue("--v4-opacity-row-dim").trim());
+      setValue(getComputedStyle(ref.current).getPropertyValue("--cipher-opacity-row-dim").trim());
   }, []);
   return (
     <SmallText muted>

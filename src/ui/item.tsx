@@ -54,13 +54,13 @@ ItemSeparator.displayName = "ItemSeparator";
 const itemVariants = cva(
   [
     controlStyles.focusOutline,
-    "group/item flex w-full flex-wrap rounded-lg text-sm transition-colors duration-(--v4-duration-fast) [a]:transition-colors [a]:hover:bg-[color:var(--v4-action-ghost-hover)]"
+    "group/item flex w-full flex-wrap rounded-lg text-sm transition-colors duration-(--cipher-duration-fast) [a]:transition-colors [a]:hover:bg-[color:var(--cipher-action-ghost-hover)]"
   ],
   {
     variants: {
       variant: {
         default: "border border-transparent",
-        outline: "border border-[color:var(--v4-line-soft)]",
+        outline: "border border-[color:var(--cipher-line-soft)]",
         muted: "border border-transparent bg-muted/50"
       },
       size: {

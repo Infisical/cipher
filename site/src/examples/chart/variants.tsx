@@ -35,10 +35,10 @@ export default function Example() {
             <ChartTooltip defaultIndex={1} content={<ChartTooltipContent indicator="dot" />} />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar dataKey="read" fill="var(--color-read)" isAnimationActive={false}>
-              <LabelList dataKey="read" position="top" fill="var(--v4-ink)" />
+              <LabelList dataKey="read" position="top" fill="var(--cipher-ink)" />
             </Bar>
             <Bar dataKey="write" fill="var(--color-write)" isAnimationActive={false}>
-              <LabelList dataKey="write" position="top" fill="var(--v4-ink)" />
+              <LabelList dataKey="write" position="top" fill="var(--cipher-ink)" />
             </Bar>
           </BarChart>
         </ChartContainer>

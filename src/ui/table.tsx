@@ -80,7 +80,7 @@ function TableHeader({ className, ref, ...props }: React.ComponentProps<"thead">
       <thead
         ref={ref}
         data-slot="table-header"
-        className={cn("[&_tr]:border-b [&_tr]:border-[color:var(--v4-line-soft)]", className)}
+        className={cn("[&_tr]:border-b [&_tr]:border-[color:var(--cipher-line-soft)]", className)}
         {...props}
       />
     </BodyFocusContext>
@@ -113,7 +113,7 @@ function TableFooter({ className, ref, ...props }: React.ComponentProps<"tfoot">
         ref={ref}
         data-slot="table-footer"
         className={cn(
-          "border-t border-[color:var(--v4-line-soft)] font-medium [&>tr]:last:border-b-0",
+          "border-t border-[color:var(--cipher-line-soft)] font-medium [&>tr]:last:border-b-0",
           className
         )}
         {...props}
@@ -241,7 +241,7 @@ function TableRow({
           data-contains-focus={containsFocus || undefined}
           data-stretched-link={hasLink || undefined}
           className={cn(
-            "border-b border-[color:var(--v4-line-soft)] transition-colors duration-(--v4-duration-fast)",
+            "border-b border-[color:var(--cipher-line-soft)] transition-colors duration-(--cipher-duration-fast)",
             styles.nativeTableRow,
             className
           )}
@@ -271,7 +271,7 @@ function TableRow({
 }
 TableRow.displayName = "TableRow";
 
-type PinStyle = React.CSSProperties & { "--v4-pin-offset"?: string };
+type PinStyle = React.CSSProperties & { "--cipher-pin-offset"?: string };
 
 type PinProps = {
   /** start sticks the cell to the inline start while the table scrolls sideways; viewport keeps a full-width cell's content inside the visible width. */
@@ -281,7 +281,7 @@ type PinProps = {
 };
 
 const pinStyle = (pinOffset: string | undefined, style: React.CSSProperties | undefined) =>
-  pinOffset === undefined ? style : ({ "--v4-pin-offset": pinOffset, ...style } as PinStyle);
+  pinOffset === undefined ? style : ({ "--cipher-pin-offset": pinOffset, ...style } as PinStyle);
 
 type SelectionProps = {
   /** Draws the selection column: size-row wide, a centered Checkbox and a persistent line-soft divider on its right. */
@@ -398,7 +398,7 @@ function TableRowIndicators({ className, ref, ...props }: React.ComponentProps<"
 }
 TableRowIndicators.displayName = "TableRowIndicators";
 
-type SlotStyle = React.CSSProperties & { "--v4-row-action-slots"?: number };
+type SlotStyle = React.CSSProperties & { "--cipher-row-action-slots"?: number };
 
 function TableActionsHead({
   slots = 1,
@@ -416,7 +416,7 @@ function TableActionsHead({
       data-slot="table-actions-head"
       data-actions
       className={cn(styles.nativeTableHead, styles.tableActions, className)}
-      style={{ "--v4-row-action-slots": slots, ...style } as SlotStyle}
+      style={{ "--cipher-row-action-slots": slots, ...style } as SlotStyle}
     >
       <span className={styles.sr}>{children}</span>
     </th>
@@ -439,7 +439,7 @@ function TableActionsCell({
       data-actions
       data-row-interactive
       className={cn(styles.nativeTableCell, styles.tableActions, className)}
-      style={{ "--v4-row-action-slots": slots, ...style } as SlotStyle}
+      style={{ "--cipher-row-action-slots": slots, ...style } as SlotStyle}
     />
   );
 }
@@ -480,7 +480,7 @@ function TableLoadingRows({
       {selectable && (
         <TableCell selection pin={leading ? "start" : undefined}>
           <div className={styles.tableSelection}>
-            <Skeleton width="var(--v4-size-icon)" height="var(--v4-size-icon)" />
+            <Skeleton width="var(--cipher-size-icon)" height="var(--cipher-size-icon)" />
           </div>
         </TableCell>
       )}
@@ -499,7 +499,7 @@ function TableLoadingRows({
           )}
           {column.actions ? (
             <TableRowActions>
-              <Skeleton width="var(--v4-size-glyph)" height="var(--v4-size-glyph)" />
+              <Skeleton width="var(--cipher-size-glyph)" height="var(--cipher-size-glyph)" />
             </TableRowActions>
           ) : (
             <Skeleton
@@ -515,7 +515,7 @@ function TableLoadingRows({
           <TableRowActions>
             {Array.from({ length: actionSlots }, (__, slot) => (
               <span key={slot} className={styles.tableRowActionSkeleton}>
-                <Skeleton width="var(--v4-size-glyph)" height="var(--v4-size-glyph)" />
+                <Skeleton width="var(--cipher-size-glyph)" height="var(--cipher-size-glyph)" />
               </span>
             ))}
           </TableRowActions>
@@ -578,7 +578,7 @@ function IdleRowButton({
       data-slot="button"
       data-variant="ghost"
       data-size="icon-row"
-      data-v4-button=""
+      data-cipher-button=""
       data-disabled-reason={disabledReason ? "" : undefined}
       aria-disabled={disabledReason || props.disabled ? true : undefined}
       aria-description={disabledReason}

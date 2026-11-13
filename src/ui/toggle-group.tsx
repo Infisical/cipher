@@ -70,7 +70,7 @@ function ToggleGroup({
       orientation={orientation}
       className={cn(controlStyles.toggleGroup, className)}
       {...props}
-      style={{ "--v4-toggle-group-gap": `${spacing * 4}px`, ...props.style } as React.CSSProperties}
+      style={{ "--cipher-toggle-group-gap": `${spacing * 4}px`, ...props.style } as React.CSSProperties}
     >
       {sliding && <SlidingIndicator state={indicator} className={controlStyles.indicator} />}
       <ToggleGroupContext value={{ variant, size, spacing, orientation }}>

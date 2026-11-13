@@ -60,13 +60,13 @@ export default function Example() {
                     label={connection.title}
                     media={<Skeleton width={40} height={40} />}
                     title={
-                      <span className="flex h-(--v4-type-row-title-line-height) items-center">
+                      <span className="flex h-(--cipher-type-row-title-line-height) items-center">
                         <Skeleton width={48} height={12} />
                       </span>
                     }
                     meta={<Skeleton width={68} height={20} />}
                   >
-                    <span className="flex h-(--v4-type-small-line-height) items-center">
+                    <span className="flex h-(--cipher-type-small-line-height) items-center">
                       <Skeleton width={144} height={10} />
                     </span>
                   </ListRow>

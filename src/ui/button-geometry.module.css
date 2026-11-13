@@ -1,60 +1,60 @@
 .button {
-  --v4-action-requested-height: var(--v4-size-control-default);
-  --v4-action-height: var(--v4-action-requested-height);
-  --v4-action-font-size: var(--v4-type-label-font-size);
-  --v4-action-line-height: var(--v4-type-label-line-height);
-  --v4-action-inset: var(--v4-space-control-inline);
-  --v4-action-icon-size: var(--v4-size-icon);
-  --v4-kbd-host-block: calc(var(--v4-action-height) - 2 * var(--v4-size-control-border));
-  --v4-kbd-host-end: var(--v4-action-inset);
+  --cipher-action-requested-height: var(--cipher-size-control-default);
+  --cipher-action-height: var(--cipher-action-requested-height);
+  --cipher-action-font-size: var(--cipher-type-label-font-size);
+  --cipher-action-line-height: var(--cipher-type-label-line-height);
+  --cipher-action-inset: var(--cipher-space-control-inline);
+  --cipher-action-icon-size: var(--cipher-size-icon);
+  --cipher-kbd-host-block: calc(var(--cipher-action-height) - 2 * var(--cipher-size-control-border));
+  --cipher-kbd-host-end: var(--cipher-action-inset);
   box-sizing: border-box;
-  min-height: var(--v4-action-height);
-  gap: var(--v4-space-control-gap);
+  min-height: var(--cipher-action-height);
+  gap: var(--cipher-space-control-gap);
   padding-block: calc(
-    (var(--v4-action-height) - var(--v4-action-line-height)) / 2 - var(--v4-size-control-border)
+    (var(--cipher-action-height) - var(--cipher-action-line-height)) / 2 - var(--cipher-size-control-border)
   );
-  padding-inline: var(--v4-action-inset);
-  border-width: var(--v4-size-control-border);
+  padding-inline: var(--cipher-action-inset);
+  border-width: var(--cipher-size-control-border);
   border-radius: 0;
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-action-font-size);
-  line-height: var(--v4-action-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-action-font-size);
+  line-height: var(--cipher-action-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
   cursor: default;
 }
 .default {
-  --v4-action-icon-size: var(--v4-size-icon-sm);
-  --v4-action-requested-height: var(--v4-size-control-default);
-  --v4-action-inset: var(--v4-space-control-inline-sm);
+  --cipher-action-icon-size: var(--cipher-size-icon-sm);
+  --cipher-action-requested-height: var(--cipher-size-control-default);
+  --cipher-action-inset: var(--cipher-space-control-inline-sm);
 }
 .regular {
-  --v4-action-requested-height: var(--v4-size-control-md);
+  --cipher-action-requested-height: var(--cipher-size-control-md);
 }
 .large {
-  --v4-action-requested-height: var(--v4-size-control-lg);
-  --v4-action-inset: var(--v4-space-16);
+  --cipher-action-requested-height: var(--cipher-size-control-lg);
+  --cipher-action-inset: var(--cipher-space-16);
 }
 .extraSmall,
 .iconExtraSmall {
-  --v4-action-requested-height: var(--v4-size-control-xs);
-  --v4-action-icon-size: var(--v4-size-icon-xs);
-  --v4-action-font-size: var(--v4-type-caption-font-size);
-  --v4-action-line-height: var(--v4-type-caption-line-height);
-  --v4-action-inset: var(--v4-space-6);
+  --cipher-action-requested-height: var(--cipher-size-control-xs);
+  --cipher-action-icon-size: var(--cipher-size-icon-xs);
+  --cipher-action-font-size: var(--cipher-type-caption-font-size);
+  --cipher-action-line-height: var(--cipher-type-caption-line-height);
+  --cipher-action-inset: var(--cipher-space-6);
 }
 .icon {
-  --v4-action-requested-height: var(--v4-size-nested-lg);
+  --cipher-action-requested-height: var(--cipher-size-nested-lg);
 }
 .iconSmall {
-  --v4-action-requested-height: var(--v4-size-nested-md);
+  --cipher-action-requested-height: var(--cipher-size-nested-md);
 }
 .iconLarge {
-  --v4-action-requested-height: var(--v4-size-control-lg);
+  --cipher-action-requested-height: var(--cipher-size-control-lg);
 }
 .iconRow {
-  --v4-action-requested-height: var(--v4-size-target-row);
-  --v4-action-icon-size: var(--v4-size-glyph);
+  --cipher-action-requested-height: var(--cipher-size-target-row);
+  --cipher-action-icon-size: var(--cipher-size-glyph);
 }
 .icon,
 .iconExtraSmall,
@@ -62,53 +62,53 @@
 .iconLarge,
 .iconRow,
 .iconOnly {
-  width: var(--v4-action-height);
-  min-width: var(--v4-action-height);
+  width: var(--cipher-action-height);
+  min-width: var(--cipher-action-height);
   padding-inline: 0;
 }
 .button svg:not([class*="size-"]) {
-  width: var(--v4-action-icon-size);
-  height: var(--v4-action-icon-size);
+  width: var(--cipher-action-icon-size);
+  height: var(--cipher-action-icon-size);
 }
 .inputGroup {
-  --v4-nested-action-height: var(--v4-size-nested-default);
+  --cipher-nested-action-height: var(--cipher-size-nested-default);
 }
 .inputGroup[data-size="xs"] {
-  --v4-nested-action-height: var(--v4-field-nested);
+  --cipher-nested-action-height: var(--cipher-field-nested);
 }
 .inputGroup[data-size="sm"] {
-  --v4-nested-action-height: var(--v4-size-nested-sm);
+  --cipher-nested-action-height: var(--cipher-size-nested-sm);
 }
 .inputGroup[data-size="md"] {
-  --v4-nested-action-height: var(--v4-size-nested-md);
+  --cipher-nested-action-height: var(--cipher-size-nested-md);
 }
 .inputGroup[data-size="lg"] {
-  --v4-nested-action-height: var(--v4-size-nested-lg);
+  --cipher-nested-action-height: var(--cipher-size-nested-lg);
 }
 .nestedAction {
-  --v4-action-height: min(
-    var(--v4-action-requested-height),
-    var(--v4-nested-action-height, var(--v4-action-requested-height))
+  --cipher-action-height: min(
+    var(--cipher-action-requested-height),
+    var(--cipher-nested-action-height, var(--cipher-action-requested-height))
   );
 }
 .inputGroup > [data-slot="input-group-addon"][data-align="inline-start"][data-has-button] {
-  padding-inline-start: var(--v4-space-control-slot-inset);
+  padding-inline-start: var(--cipher-space-control-slot-inset);
 }
 .inputGroup > [data-slot="input-group-addon"][data-align="inline-end"][data-has-button] {
-  padding-inline-end: var(--v4-space-control-slot-inset);
+  padding-inline-end: var(--cipher-space-control-slot-inset);
 }
-.badged[data-v4-button] {
+.badged[data-cipher-button] {
   position: relative;
   overflow: visible;
 }
 .cornerBadge {
   position: absolute;
-  top: calc(var(--v4-size-control-border) / -2);
-  inset-inline-end: calc(-1 * var(--v4-size-control-border));
+  top: calc(var(--cipher-size-control-border) / -2);
+  inset-inline-end: calc(-1 * var(--cipher-size-control-border));
   z-index: 1;
   display: inline-flex;
   translate: 0 -50%;
-  background: var(--v4-surface);
+  background: var(--cipher-surface);
   pointer-events: none;
 }
 .triggerLayout {
@@ -116,12 +116,12 @@
   text-align: start;
 }
 .triggerLayout.regular {
-  --v4-action-inset: var(--v4-space-control-inline-md);
+  --cipher-action-inset: var(--cipher-space-control-inline-md);
 }
 .triggerLayout.large {
-  --v4-action-inset: var(--v4-space-control-inline);
+  --cipher-action-inset: var(--cipher-space-control-inline);
 }
-[data-v4-button].triggerLayout > [data-press],
+[data-cipher-button].triggerLayout > [data-press],
 .triggerLayout > [data-press] > [data-slot="button-label-group"] {
   display: flex;
   flex: 1 1 auto;
@@ -136,10 +136,10 @@
   white-space: nowrap;
 }
 .triggerLayout svg.triggerChevron {
-  width: var(--v4-size-icon);
-  height: var(--v4-size-icon);
+  width: var(--cipher-size-icon);
+  height: var(--cipher-size-icon);
 }
 .triggerLayout:is([data-variant="outline"], [data-variant="secondary"], [data-variant="ghost"])
   .triggerChevron {
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
 }

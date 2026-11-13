@@ -36,7 +36,7 @@ const symbolIcons: Record<string, LucideIcon> = {
 export const KeyGlyph = ({ glyph }: { glyph: string }) => {
   const symbol = symbolIcons[glyph];
   return symbol ? (
-    <Icon icon={symbol} size="var(--v4-size-icon-xs)" className={styles.icon} />
+    <Icon icon={symbol} size="var(--cipher-size-icon-xs)" className={styles.icon} />
   ) : (
     glyph
   );

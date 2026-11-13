@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../../src/v4.css";
+@import "../../src/base.css";
 @source ".";
 
 body {

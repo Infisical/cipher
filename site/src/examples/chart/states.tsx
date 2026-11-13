@@ -11,7 +11,7 @@ export default function Example() {
             <span role="status" className="sr-only">
               Loading request counts
             </span>
-            <div className="flex h-40 items-end justify-around border-b border-[color:var(--v4-line)] pl-9">
+            <div className="flex h-40 items-end justify-around border-b border-[color:var(--cipher-line)] pl-9">
               {["60%", "85%", "45%"].map((height) => (
                 <Skeleton key={height} width={40} height={height} />
               ))}

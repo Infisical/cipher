@@ -1,56 +1,56 @@
 .bar {
   position: fixed;
-  bottom: var(--v4-space-action-bar-offset);
+  bottom: var(--cipher-space-action-bar-offset);
   left: 50%;
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
-  max-width: calc(100% - 2 * var(--v4-space-16));
-  height: var(--v4-size-action-bar);
+  gap: var(--cipher-space-8);
+  max-width: calc(100% - 2 * var(--cipher-space-16));
+  height: var(--cipher-size-action-bar);
   margin-inline: auto;
-  padding: 0 var(--v4-space-8) 0 var(--v4-space-16);
+  padding: 0 var(--cipher-space-8) 0 var(--cipher-space-16);
   translate: -50% 0;
-  border: 1px solid var(--v4-toast-line);
+  border: 1px solid var(--cipher-toast-line);
   border-radius: 0;
-  background: var(--v4-toast-bg);
-  color: var(--v4-toast-text);
-  box-shadow: var(--v4-shadow-pop);
+  background: var(--cipher-toast-bg);
+  color: var(--cipher-toast-text);
+  box-shadow: var(--cipher-shadow-pop);
   white-space: nowrap;
 }
 :global([data-slot="app-inset"])[data-action-bar-reserve] {
-  padding-bottom: calc(var(--v4-size-action-bar) + var(--v4-space-action-bar-offset));
+  padding-bottom: calc(var(--cipher-size-action-bar) + var(--cipher-space-action-bar-offset));
 }
 .count {
   display: inline-flex;
   align-items: baseline;
-  gap: var(--v4-space-4);
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  gap: var(--cipher-space-4);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
 }
 .number {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 .noun {
-  color: var(--v4-toast-muted);
+  color: var(--cipher-toast-muted);
 }
 .selectAll.selectAll {
-  color: var(--v4-toast-text);
+  color: var(--cipher-toast-text);
 }
 .rule {
   flex: none;
   width: 1px;
-  height: var(--v4-space-20);
-  background: var(--v4-toast-line);
+  height: var(--cipher-space-20);
+  background: var(--cipher-toast-line);
 }
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-4);
+  gap: var(--cipher-space-4);
   min-width: 0;
   overflow: hidden;
 }

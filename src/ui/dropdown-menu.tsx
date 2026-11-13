@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
-import { useV4CollisionBoundary, useV4PortalContainer } from "../scope";
+import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { ListHighlight } from "../lib/list-highlight";
 import { useMenuPrimitive } from "../lib/menu-kind";
@@ -22,7 +22,7 @@ function DropdownMenuPortal({
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
   return (
     <DropdownMenuPrimitive.Portal
-      container={useV4PortalContainer()}
+      container={usePortalContainer()}
       data-slot="dropdown-menu-portal"
       {...props}
     />
@@ -67,12 +67,12 @@ function DropdownMenuContent({
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
   const insetRef = useMenuInset(ref);
   return (
-    <DropdownMenuPrimitive.Portal container={useV4PortalContainer()}>
+    <DropdownMenuPrimitive.Portal container={usePortalContainer()}>
       <DropdownMenuPrimitive.Content
         ref={insetRef}
         data-slot="dropdown-menu-content"
         collisionPadding={collisionPadding}
-        collisionBoundary={useV4CollisionBoundary()}
+        collisionBoundary={useCollisionBoundary()}
         sideOffset={sideOffset}
         align={align}
         className={cn("z-50", menu.surface, menu.panel, menu.inset, menu.motion, className)}
@@ -344,12 +344,12 @@ function DropdownMenuSubContent({
   const Primitive = useMenuPrimitive();
   const insetRef = useMenuInset(ref);
   return (
-    <Primitive.Portal container={useV4PortalContainer()}>
+    <Primitive.Portal container={usePortalContainer()}>
       <Primitive.SubContent
         ref={insetRef}
         data-slot="dropdown-menu-sub-content"
         collisionPadding={collisionPadding}
-        collisionBoundary={useV4CollisionBoundary()}
+        collisionBoundary={useCollisionBoundary()}
         sideOffset={sideOffset}
         alignOffset={alignOffset}
         className={cn(

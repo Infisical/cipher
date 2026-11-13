@@ -1,55 +1,55 @@
 .detail {
   display: flex;
   flex-direction: column;
-  gap: var(--v4-space-4);
+  gap: var(--cipher-space-4);
   min-width: 0;
   margin: 0;
 }
 .label {
-  font-family: var(--v4-type-caption-font-family);
-  font-size: var(--v4-type-caption-font-size);
-  line-height: var(--v4-type-caption-line-height);
-  font-weight: var(--v4-type-caption-font-weight);
-  letter-spacing: var(--v4-type-caption-letter-spacing);
-  color: var(--v4-muted);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+  font-weight: var(--cipher-type-caption-font-weight);
+  letter-spacing: var(--cipher-type-caption-letter-spacing);
+  color: var(--cipher-muted);
 }
 .value {
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
-  font-weight: var(--v4-type-body-font-weight);
-  letter-spacing: var(--v4-type-body-letter-spacing);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
   min-width: 0;
   margin: 0;
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
   overflow-wrap: anywhere;
 }
 .group {
   display: flex;
   flex-direction: column;
-  gap: var(--v4-space-16);
+  gap: var(--cipher-space-16);
   min-width: 0;
 }
 .header {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   min-width: 0;
 }
 .title {
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
   flex: 1 1 auto;
   min-width: 0;
   margin: 0;
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 .action {
   display: flex;
   flex: none;
   align-items: center;
-  gap: var(--v4-space-4);
+  gap: var(--cipher-space-4);
 }

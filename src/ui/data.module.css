@@ -1,7 +1,7 @@
 .gridShell,
 .tableShell,
 .listShell {
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 .gridScroll,
 .tableScroll {
@@ -10,21 +10,21 @@
   position: relative;
 }
 .tableScroll {
-  scroll-padding-block: var(--v4-focus-clearance);
+  scroll-padding-block: var(--cipher-focus-clearance);
 }
 .gridScroll {
-  background: var(--v4-surface);
-  border: var(--v4-size-control-border) solid var(--v4-line-soft);
+  background: var(--cipher-surface);
+  border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .gridScroll {
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
-  font-weight: var(--v4-type-mono-font-weight);
-  letter-spacing: var(--v4-type-mono-letter-spacing);
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
 }
 .tree:focus-visible {
-  outline: 2px solid var(--v4-ink);
+  outline: 2px solid var(--cipher-ink);
   outline-offset: -2px;
 }
 .gridScroll[aria-activedescendant]:focus-visible {
@@ -37,7 +37,7 @@
   min-width: 100%;
 }
 .gridRow {
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .gridRow[data-last] {
   border-bottom-color: transparent;
@@ -45,100 +45,100 @@
 /* With a footer the grid is a framed shell: the borderless tint frame holds the inset
    grid on top and the footer below, so there is exactly one edge at the bottom. */
 .gridShell[data-footer] {
-  --v4-frame-pad: var(--v4-space-3);
-  padding: var(--v4-frame-pad) var(--v4-frame-pad) 0;
-  background: var(--v4-tint);
+  --cipher-frame-pad: var(--cipher-space-3);
+  padding: var(--cipher-frame-pad) var(--cipher-frame-pad) 0;
+  background: var(--cipher-tint);
   border-radius: 0;
 }
 .gridShell[data-footer] > .gridScroll {
   border-radius: 0;
-  box-shadow: var(--v4-shadow-raised);
+  box-shadow: var(--cipher-shadow-raised);
 }
 .gridShell[data-footer] > .status,
 .gridShell[data-footer] > .actions {
-  padding-inline: var(--v4-space-8);
+  padding-inline: var(--cipher-space-8);
 }
 .gridFooter {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-12);
-  min-height: var(--v4-space-40);
-  padding: var(--v4-space-4) var(--v4-space-8);
-  color: var(--v4-muted);
-  font-family: var(--v4-type-caption-font-family);
-  font-size: var(--v4-type-caption-font-size);
-  line-height: var(--v4-type-caption-line-height);
+  gap: var(--cipher-space-12);
+  min-height: var(--cipher-space-40);
+  padding: var(--cipher-space-4) var(--cipher-space-8);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
   font-variant-numeric: tabular-nums;
 }
 .gridAddHeader {
   display: flex;
   align-items: center;
-  padding-inline: var(--v4-space-4);
+  padding-inline: var(--cipher-space-4);
 }
 .gridAddForm {
   display: grid;
-  gap: var(--v4-space-6);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
+  gap: var(--cipher-space-6);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
 }
 .gridAddCheck {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
-  margin-top: var(--v4-space-4);
+  gap: var(--cipher-space-8);
+  margin-top: var(--cipher-space-4);
 }
 .gridAddActions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--v4-space-8);
-  margin-top: var(--v4-space-8);
+  gap: var(--cipher-space-8);
+  margin-top: var(--cipher-space-8);
 }
 .gridKey {
   flex: none;
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
 }
 .gridHead {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: var(--v4-paper);
-  min-height: var(--v4-size-control-sm);
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
-  color: var(--v4-muted);
+  background: var(--cipher-paper);
+  min-height: var(--cipher-size-control-sm);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  color: var(--cipher-muted);
 }
 .gridHeader {
   position: relative;
   display: flex;
   align-items: center;
   gap: 0;
-  border-right: var(--v4-size-control-border) solid var(--v4-line-soft);
-  padding: 0 var(--v4-space-12) 0 0;
+  border-right: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  padding: 0 var(--cipher-space-12) 0 0;
   overflow: visible;
 }
 .gridHeader[data-selected] {
-  background: var(--v4-select);
-  color: var(--v4-ink);
+  background: var(--cipher-select);
+  color: var(--cipher-ink);
 }
 .gridHeaderLabel {
   display: flex;
   flex: 1;
   min-width: 0;
   align-items: center;
-  gap: var(--v4-space-6);
-  padding-inline: var(--v4-space-8);
+  gap: var(--cipher-space-6);
+  padding-inline: var(--cipher-space-8);
   overflow: hidden;
 }
 .gridHeaderLabel > span {
   display: inline-flex;
   align-items: center;
-  gap: var(--v4-space-4);
-  color: var(--v4-ink);
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  gap: var(--cipher-space-4);
+  color: var(--cipher-ink);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -147,16 +147,16 @@
 .gridHeader small {
   min-width: 0;
   overflow: hidden;
-  color: var(--v4-muted);
-  font-family: var(--v4-type-mono-sm-font-family);
-  font-size: var(--v4-type-mono-sm-font-size);
-  line-height: var(--v4-type-mono-sm-line-height);
-  font-weight: var(--v4-type-mono-sm-font-weight);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-weight: var(--cipher-type-mono-sm-font-weight);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .gridSort[data-active] {
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 .gridSort:not([data-active]) {
   opacity: 0;
@@ -168,19 +168,19 @@
   position: sticky;
   left: 0;
   z-index: 1;
-  background: var(--v4-surface);
-  padding: var(--v4-space-6) var(--v4-space-8);
-  min-width: var(--v4-space-40);
+  background: var(--cipher-surface);
+  padding: var(--cipher-space-6) var(--cipher-space-8);
+  min-width: var(--cipher-space-40);
   text-align: right;
-  color: var(--v4-faint);
-  border-right: var(--v4-size-control-border) solid var(--v4-line-soft);
+  color: var(--cipher-faint);
+  border-right: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .gridHead > .gutter {
   background: inherit;
 }
 .gutter[data-selected] {
-  background: var(--v4-select);
-  color: var(--v4-ink);
+  background: var(--cipher-select);
+  color: var(--cipher-ink);
 }
 .gutter button {
   font: inherit;
@@ -189,38 +189,38 @@
   border: 0;
 }
 .gridCell {
-  padding: var(--v4-space-6) var(--v4-space-8);
+  padding: var(--cipher-space-6) var(--cipher-space-8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-right: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-right: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   position: relative;
 }
-:global(.v4) {
-  --overlay-hover: var(--v4-hover-mix);
-  --overlay-press: var(--v4-press-mix);
+:global(.cipher) {
+  --overlay-hover: var(--cipher-hover-mix);
+  --overlay-press: var(--cipher-press-mix);
 }
 .gridRow:hover > .gridCell:not([data-selected], [data-dirty]) {
-  background: color-mix(in oklab, var(--v4-mix-ink) var(--overlay-hover), transparent);
+  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
 }
 .gridCell[data-selected] {
-  background: var(--v4-accent-wash);
+  background: var(--cipher-accent-wash);
 }
 .gridNull {
-  color: var(--v4-faint);
+  color: var(--cipher-faint);
   font-style: italic;
 }
 .gridCell[data-dirty] {
-  background: var(--v4-warn-wash);
+  background: var(--cipher-warn-wash);
 }
 .gridCell[data-active] {
-  outline: 2px solid var(--v4-ink);
+  outline: 2px solid var(--cipher-ink);
   outline-offset: -2px;
 }
 .gridCell textarea {
   font: inherit;
   color: inherit;
-  background: var(--v4-surface);
+  background: var(--cipher-surface);
   position: absolute;
   inset: 0;
   width: 100%;
@@ -228,23 +228,23 @@
   resize: none;
   border: 0;
   box-sizing: border-box;
-  outline: 2px solid var(--v4-ink);
+  outline: 2px solid var(--cipher-ink);
   outline-offset: -2px;
-  padding: var(--v4-space-6) var(--v4-space-8);
+  padding: var(--cipher-space-6) var(--cipher-space-8);
   line-height: inherit;
   white-space: pre;
   overflow: hidden;
 }
 .gridCell textarea[aria-invalid="true"] {
-  outline-color: var(--v4-bad);
+  outline-color: var(--cipher-bad);
 }
 .resize {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: calc(-1 * (var(--v4-space-12) + var(--v4-size-control-border)));
+  right: calc(-1 * (var(--cipher-space-12) + var(--cipher-size-control-border)));
   z-index: 1;
-  width: var(--v4-space-24);
+  width: var(--cipher-space-24);
   cursor: col-resize;
   touch-action: none;
 }
@@ -252,81 +252,81 @@
   content: "";
   position: absolute;
   inset-block: 0;
-  left: calc(50% - var(--v4-size-control-border));
-  width: var(--v4-size-control-border);
+  left: calc(50% - var(--cipher-size-control-border));
+  width: var(--cipher-size-control-border);
   background: transparent;
   pointer-events: none;
-  transition: background-color var(--v4-duration-fast) var(--v4-ease-fade);
+  transition: background-color var(--cipher-duration-fast) var(--cipher-ease-fade);
 }
 .resize:hover::after {
-  background: var(--v4-control);
+  background: var(--cipher-control);
 }
 .resize:focus-visible {
-  outline: 2px solid var(--v4-ink);
+  outline: 2px solid var(--cipher-ink);
   outline-offset: -2px;
 }
 .status {
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  color: var(--v4-muted);
-  padding: var(--v4-space-8) 0 0;
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-muted);
+  padding: var(--cipher-space-8) 0 0;
   overflow-wrap: anywhere;
 }
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   flex-wrap: wrap;
-  padding: var(--v4-space-12) 0 0;
+  padding: var(--cipher-space-12) 0 0;
 }
 .actions [role="alert"] {
-  color: var(--v4-bad);
+  color: var(--cipher-bad);
 }
 .empty {
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  padding: var(--v4-space-surface-inset-sm);
-  color: var(--v4-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  padding: var(--cipher-space-surface-inset-sm);
+  color: var(--cipher-muted);
 }
 .editor {
   display: grid;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   min-width: 0;
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 .label {
-  font-family: var(--v4-type-field-label-font-family);
-  font-size: var(--v4-type-field-label-font-size);
-  line-height: var(--v4-type-field-label-line-height);
-  font-weight: var(--v4-type-field-label-font-weight);
-  letter-spacing: var(--v4-type-field-label-letter-spacing);
+  font-family: var(--cipher-type-field-label-font-family);
+  font-size: var(--cipher-type-field-label-font-size);
+  line-height: var(--cipher-type-field-label-line-height);
+  font-weight: var(--cipher-type-field-label-font-weight);
+  letter-spacing: var(--cipher-type-field-label-letter-spacing);
 }
 .secret {
-  --v4-nested-action-height: var(--v4-size-nested-default);
+  --cipher-nested-action-height: var(--cipher-size-nested-default);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--v4-space-control-slot-gap);
-  padding: var(--v4-space-control-slot-inset);
-  padding-inline-start: var(--v4-space-control-inline);
-  min-height: var(--v4-size-control-default);
-  border: var(--v4-size-control-border) solid var(--v4-control);
+  gap: var(--cipher-space-control-slot-gap);
+  padding: var(--cipher-space-control-slot-inset);
+  padding-inline-start: var(--cipher-space-control-inline);
+  min-height: var(--cipher-size-control-default);
+  border: var(--cipher-size-control-border) solid var(--cipher-control);
   border-radius: 0;
-  background: var(--v4-tint);
+  background: var(--cipher-tint);
   min-width: 0;
 }
 .machine {
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
-  font-weight: var(--v4-type-body-font-weight);
-  letter-spacing: var(--v4-type-body-letter-spacing);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
   overflow-wrap: anywhere;
   white-space: pre;
   overflow: hidden;
@@ -336,72 +336,72 @@
 }
 .editorInput {
   display: block;
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
-  font-weight: var(--v4-type-body-font-weight);
-  letter-spacing: var(--v4-type-body-letter-spacing);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
   border-radius: 0;
-  background: var(--v4-surface);
-  color: var(--v4-ink);
-  border: var(--v4-size-control-border) solid var(--v4-control);
-  min-height: var(--v4-size-control-default);
-  max-height: calc(12 * var(--v4-type-body-line-height));
+  background: var(--cipher-surface);
+  color: var(--cipher-ink);
+  border: var(--cipher-size-control-border) solid var(--cipher-control);
+  min-height: var(--cipher-size-control-default);
+  max-height: calc(12 * var(--cipher-type-body-line-height));
   padding: calc(
-      (var(--v4-size-control-default) - var(--v4-type-body-line-height)) / 2 -
-        var(--v4-size-control-border)
+      (var(--cipher-size-control-default) - var(--cipher-type-body-line-height)) / 2 -
+        var(--cipher-size-control-border)
     )
-    var(--v4-space-control-inline);
+    var(--cipher-space-control-inline);
   width: 100%;
   resize: none;
   field-sizing: content;
   transition-property: border-color, box-shadow;
-  transition-duration: var(--v4-duration-fast);
-  transition-timing-function: var(--v4-ease-fade);
+  transition-duration: var(--cipher-duration-fast);
+  transition-timing-function: var(--cipher-ease-fade);
 }
 .editorInput:focus-visible {
   outline: none;
-  border-color: var(--v4-ink);
-  box-shadow: 0 0 0 var(--v4-size-focus-glow) var(--v4-focus-ring);
+  border-color: var(--cipher-ink);
+  box-shadow: 0 0 0 var(--cipher-size-focus-glow) var(--cipher-focus-ring);
 }
 .editorInput::placeholder {
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
 }
 .editorSlot {
   flex: none;
-  width: var(--v4-nested-action-height);
-  height: var(--v4-nested-action-height);
+  width: var(--cipher-nested-action-height);
+  height: var(--cipher-nested-action-height);
 }
 .editorActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
 }
 .editorError {
-  color: var(--v4-bad);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
+  color: var(--cipher-bad);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
   overflow-wrap: anywhere;
 }
 .copy {
-  --v4-nested-action-height: var(--v4-size-nested-sm);
+  --cipher-nested-action-height: var(--cipher-size-nested-sm);
   display: inline-grid;
   align-items: center;
-  gap: var(--v4-space-control-slot-gap);
+  gap: var(--cipher-space-control-slot-gap);
   min-width: 0;
 }
 .copysm {
-  --v4-nested-action-height: var(--v4-size-nested-sm);
+  --cipher-nested-action-height: var(--cipher-size-nested-sm);
 }
 .copymd {
-  --v4-nested-action-height: var(--v4-size-nested-md);
+  --cipher-nested-action-height: var(--cipher-size-nested-md);
 }
 .copylg {
-  --v4-nested-action-height: var(--v4-size-nested-lg);
+  --cipher-nested-action-height: var(--cipher-size-nested-lg);
 }
 .secret > .copy {
   display: contents;
@@ -410,55 +410,55 @@
   flex-basis: 100%;
 }
 .smallStatus {
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  color: var(--v4-bad);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-bad);
   overflow-wrap: anywhere;
 }
 .tree {
   list-style: none;
   margin: 0;
   padding: 0;
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
   overflow: auto;
 }
 .tree ul {
   list-style: none;
   margin: 0;
-  padding: 0 0 0 var(--v4-space-16);
-  border-left: 1px solid var(--v4-line);
+  padding: 0 0 0 var(--cipher-space-16);
+  border-left: 1px solid var(--cipher-line);
 }
 .treeRow {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
-  min-height: var(--v4-size-control-sm);
-  padding: 0 var(--v4-space-8);
+  gap: var(--cipher-space-8);
+  min-height: var(--cipher-size-control-sm);
+  padding: 0 var(--cipher-space-8);
   outline-offset: -2px;
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
-  font-weight: var(--v4-type-mono-font-weight);
-  letter-spacing: var(--v4-type-mono-letter-spacing);
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
 }
 .tree [role="treeitem"]:focus-visible {
   outline: none;
 }
 .treeRow[data-size="sm"] {
-  min-height: var(--v4-size-nested-md);
+  min-height: var(--cipher-size-nested-md);
 }
 .treeRow:hover {
-  background: color-mix(in oklab, var(--v4-mix-ink) var(--overlay-hover), transparent);
+  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
 }
 .treeRow[data-selected="true"] {
-  background: var(--v4-select);
+  background: var(--cipher-select);
   font-weight: 600;
 }
 .treeRow[aria-disabled="true"] {
-  color: var(--v4-faint);
+  color: var(--cipher-faint);
   cursor: not-allowed;
 }
 .treeName {
@@ -469,49 +469,49 @@
   min-width: 0;
 }
 .treeMeta {
-  font-family: var(--v4-type-mono-sm-font-family);
-  font-size: var(--v4-type-mono-sm-font-size);
-  line-height: var(--v4-type-mono-sm-line-height);
-  font-weight: var(--v4-type-mono-sm-font-weight);
-  letter-spacing: var(--v4-type-mono-sm-letter-spacing);
-  color: var(--v4-muted);
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-weight: var(--cipher-type-mono-sm-font-weight);
+  letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
+  color: var(--cipher-muted);
   white-space: nowrap;
 }
 .listHeader {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--v4-space-12);
-  padding: var(--v4-space-surface-inset-sm);
-  padding-inline: calc(var(--v4-space-surface-inset-sm) + var(--v4-size-control-border));
-  color: var(--v4-ink);
+  gap: var(--cipher-space-12);
+  padding: var(--cipher-space-surface-inset-sm);
+  padding-inline: calc(var(--cipher-space-surface-inset-sm) + var(--cipher-size-control-border));
+  color: var(--cipher-ink);
 }
 .listTitle {
   flex: 1;
   min-width: 0;
   overflow-wrap: anywhere;
-  font-family: var(--v4-type-title-sm-font-family);
-  font-size: var(--v4-type-title-sm-font-size);
-  line-height: var(--v4-type-title-sm-line-height);
-  font-weight: var(--v4-type-title-sm-font-weight);
-  letter-spacing: var(--v4-type-title-sm-letter-spacing);
+  font-family: var(--cipher-type-title-sm-font-family);
+  font-size: var(--cipher-type-title-sm-font-size);
+  line-height: var(--cipher-type-title-sm-line-height);
+  font-weight: var(--cipher-type-title-sm-font-weight);
+  letter-spacing: var(--cipher-type-title-sm-letter-spacing);
 }
 .listHeaderAction {
   margin-inline-start: auto;
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  color: var(--v4-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-muted);
 }
 .listHeaderCount {
   flex: none;
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
   font-variant-numeric: tabular-nums;
-  font-family: var(--v4-type-caption-font-family);
-  font-size: var(--v4-type-caption-font-size);
-  line-height: var(--v4-type-caption-line-height);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
 }
 .listHeaderCount + .listHeaderAction {
   margin-inline-start: 0;
@@ -526,54 +526,54 @@
   overflow: hidden;
 }
 .listShell[data-variant="plain"] > .list {
-  background: var(--v4-surface);
-  border: var(--v4-size-control-border) solid var(--v4-line-soft);
+  background: var(--cipher-surface);
+  border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   border-radius: 0;
 }
 .listShell[data-variant="framed"] > .status {
-  padding: var(--v4-space-8) var(--v4-space-12) var(--v4-space-4);
+  padding: var(--cipher-space-8) var(--cipher-space-12) var(--cipher-space-4);
 }
 .listShell > [data-select] {
-  padding-inline-start: calc(var(--v4-space-12) + var(--v4-size-control-border));
+  padding-inline-start: calc(var(--cipher-space-12) + var(--cipher-size-control-border));
 }
 .sectionHead {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--v4-space-12);
-  height: var(--v4-space-32);
-  padding: 0 var(--v4-space-16) var(--v4-space-6);
+  gap: var(--cipher-space-12);
+  height: var(--cipher-space-32);
+  padding: 0 var(--cipher-space-16) var(--cipher-space-6);
 }
 .listShell[data-size="sm"] .sectionHead {
-  padding-inline: calc(var(--v4-space-16) - var(--v4-space-2));
+  padding-inline: calc(var(--cipher-space-16) - var(--cipher-space-2));
 }
 .sectionLabel {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
   text-transform: uppercase;
-  font-family: var(--v4-type-eyebrow-font-family);
-  font-size: var(--v4-type-eyebrow-font-size);
-  line-height: var(--v4-type-eyebrow-line-height);
-  font-weight: var(--v4-type-eyebrow-font-weight);
-  letter-spacing: var(--v4-type-eyebrow-letter-spacing);
+  font-family: var(--cipher-type-eyebrow-font-family);
+  font-size: var(--cipher-type-eyebrow-font-size);
+  line-height: var(--cipher-type-eyebrow-line-height);
+  font-weight: var(--cipher-type-eyebrow-font-weight);
+  letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
 }
 .sectionMeta {
   flex: none;
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
   font-variant-numeric: tabular-nums;
-  font-family: var(--v4-type-caption-font-family);
-  font-size: var(--v4-type-caption-font-size);
-  line-height: var(--v4-type-caption-line-height);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
 }
 .listShell[data-variant="bare"] .listRow {
   border-bottom-color: transparent;
 }
 .listShell[data-variant="segmented"] .list {
   display: grid;
-  gap: var(--v4-space-4);
+  gap: var(--cipher-space-4);
 }
 .listShell[data-variant="segmented"] > .listHeader,
 .listShell[data-variant="divided"] > .listHeader,
@@ -581,17 +581,17 @@
 .listShell[data-variant="divided"] > .status,
 .listShell[data-variant="segmented"] .sectionHead,
 .listShell[data-variant="divided"] .sectionHead {
-  padding-inline: var(--v4-space-surface-inset-sm);
+  padding-inline: var(--cipher-space-surface-inset-sm);
 }
 .listRow {
   display: flex;
   align-items: flex-start;
-  gap: var(--v4-space-12);
-  padding: var(--v4-space-surface-inset-sm);
+  gap: var(--cipher-space-12);
+  padding: var(--cipher-space-surface-inset-sm);
   position: relative;
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   min-width: 0;
-  --v4-list-row-surface: var(--v4-surface);
+  --cipher-list-row-surface: var(--cipher-surface);
 }
 .rowMedia {
   position: relative;
@@ -600,89 +600,89 @@
 }
 .rowMedia > .unread {
   position: absolute;
-  top: calc(-1 * var(--v4-space-2));
-  right: calc(-1 * var(--v4-space-2));
-  box-shadow: 0 0 0 var(--v4-space-2) var(--v4-list-row-surface);
+  top: calc(-1 * var(--cipher-space-2));
+  right: calc(-1 * var(--cipher-space-2));
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-list-row-surface);
 }
 .listRow > .rowActions,
 .listRow > .rowCheck {
   display: flex;
   align-items: center;
-  height: var(--v4-type-row-title-line-height);
+  height: var(--cipher-type-row-title-line-height);
 }
 .listRow:last-child {
   border-bottom: 0;
 }
 :where(.listShell[data-variant="segmented"]) .listRow {
   border-bottom: 0;
-  background: var(--v4-tint);
-  --v4-list-row-surface: var(--v4-tint);
+  background: var(--cipher-tint);
+  --cipher-list-row-surface: var(--cipher-tint);
 }
 .listRow[data-selected],
 .listRow[data-current] {
-  background: var(--v4-selected-surface);
-  --v4-list-row-surface: var(--v4-selected-surface);
+  background: var(--cipher-selected-surface);
+  --cipher-list-row-surface: var(--cipher-selected-surface);
 }
 .listRow[data-interactive] {
-  transition: background-color var(--v4-duration-fast) var(--v4-ease-fade);
+  transition: background-color var(--cipher-duration-fast) var(--cipher-ease-fade);
 }
 .listRow[data-interactive]:not([data-selected], [data-current]):hover {
-  background: color-mix(in oklab, var(--v4-mix-ink) var(--overlay-hover), transparent);
-  --v4-list-row-surface: color-mix(
+  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
+  --cipher-list-row-surface: color-mix(
     in oklab,
-    var(--v4-mix-ink) var(--overlay-hover),
-    var(--v4-surface)
+    var(--cipher-mix-ink) var(--overlay-hover),
+    var(--cipher-surface)
   );
 }
 :where(.listShell[data-variant="segmented"])
   .listRow[data-interactive]:not([data-selected], [data-current]):hover {
-  background: color-mix(in oklab, var(--v4-mix-ink) var(--overlay-hover), var(--v4-tint));
-  --v4-list-row-surface: color-mix(
+  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), var(--cipher-tint));
+  --cipher-list-row-surface: color-mix(
     in oklab,
-    var(--v4-mix-ink) var(--overlay-hover),
-    var(--v4-tint)
+    var(--cipher-mix-ink) var(--overlay-hover),
+    var(--cipher-tint)
   );
 }
 .listRow[data-interactive][data-pressed]:not([data-selected], [data-current]) {
-  background: color-mix(in oklab, var(--v4-mix-ink) var(--overlay-press), transparent);
+  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-press), transparent);
 }
 :where(.listShell[data-variant="segmented"])
   .listRow[data-interactive][data-pressed]:not([data-selected], [data-current]) {
-  background: color-mix(in oklab, var(--v4-mix-ink) var(--overlay-press), var(--v4-tint));
+  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-press), var(--cipher-tint));
 }
 .listRow[data-resolved] {
-  background: var(--v4-row-done);
-  --v4-list-row-surface: var(--v4-row-done);
-  color: var(--v4-muted);
+  background: var(--cipher-row-done);
+  --cipher-list-row-surface: var(--cipher-row-done);
+  color: var(--cipher-muted);
 }
 :where(.listShell[data-variant="segmented"]) .listRow[data-resolved] {
-  background: var(--v4-row-done-card);
-  --v4-list-row-surface: var(--v4-row-done-card);
+  background: var(--cipher-row-done-card);
+  --cipher-list-row-surface: var(--cipher-row-done-card);
 }
 :where(.listShell[data-variant="divided"]) .listRow[data-resolved] {
-  background: var(--v4-row-done-divided);
-  --v4-list-row-surface: var(--v4-row-done-divided);
+  background: var(--cipher-row-done-divided);
+  --cipher-list-row-surface: var(--cipher-row-done-divided);
 }
 .listRow[data-disabled] {
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
 }
 .listRow[data-size="sm"] {
-  padding: var(--v4-space-8) var(--v4-space-surface-inset-sm);
-  min-height: var(--v4-space-40);
+  padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
+  min-height: var(--cipher-space-40);
 }
 .listBody {
   flex: 1;
   min-width: 0;
   display: grid;
-  gap: var(--v4-space-4);
+  gap: var(--cipher-space-4);
 }
 .listBody > .rowActions {
-  padding-top: calc(var(--v4-space-actions-gap) - var(--v4-space-4));
+  padding-top: calc(var(--cipher-space-actions-gap) - var(--cipher-space-4));
 }
 .titleLine {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   min-width: 0;
 }
 .titleLine > .rowTitle {
@@ -690,11 +690,11 @@
 }
 .rowTitle {
   color: inherit;
-  font-family: var(--v4-type-row-title-font-family);
-  font-size: var(--v4-type-row-title-font-size);
-  line-height: var(--v4-type-row-title-line-height);
-  font-weight: var(--v4-type-row-title-font-weight);
-  letter-spacing: var(--v4-type-row-title-letter-spacing);
+  font-family: var(--cipher-type-row-title-font-family);
+  font-size: var(--cipher-type-row-title-font-size);
+  line-height: var(--cipher-type-row-title-line-height);
+  font-weight: var(--cipher-type-row-title-font-weight);
+  letter-spacing: var(--cipher-type-row-title-letter-spacing);
   text-decoration: none;
   background: none;
   border: 0;
@@ -724,16 +724,16 @@ button.rowTitle::after {
   align-self: flex-start;
   margin-left: auto;
   white-space: nowrap;
-  color: var(--v4-muted);
-  font-family: var(--v4-type-mono-sm-font-family);
-  font-size: var(--v4-type-mono-sm-font-size);
-  line-height: var(--v4-type-row-title-line-height);
-  font-weight: var(--v4-type-mono-sm-font-weight);
-  letter-spacing: var(--v4-type-mono-sm-letter-spacing);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-row-title-line-height);
+  font-weight: var(--cipher-type-mono-sm-font-weight);
+  letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
 }
 .rowActions {
   display: flex;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   position: relative;
   z-index: 1;
   flex-wrap: wrap;
@@ -745,27 +745,27 @@ button.rowTitle::after {
   flex-shrink: 0;
 }
 .description {
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  color: var(--v4-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-muted);
   margin: 0;
   overflow-wrap: anywhere;
 }
 .rowError {
-  color: var(--v4-bad);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
+  color: var(--cipher-bad);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
 }
 .unread {
-  width: var(--v4-space-6);
-  height: var(--v4-space-6);
-  background: var(--v4-accent-fg);
+  width: var(--cipher-space-6);
+  height: var(--cipher-space-6);
+  background: var(--cipher-accent-fg);
   border-radius: 0;
   flex-shrink: 0;
 }
@@ -775,24 +775,24 @@ button.rowTitle::after {
   vertical-align: middle;
 }
 .tableToggle + * {
-  margin-inline-start: var(--v4-space-8);
+  margin-inline-start: var(--cipher-space-8);
 }
 .tableToggleCell {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-4);
-  min-height: var(--v4-size-target-row);
+  gap: var(--cipher-space-4);
+  min-height: var(--cipher-size-target-row);
 }
 .tableToggleCell > .tableToggle + * {
   margin-inline-start: 0;
 }
 .tableToggleAbsent {
   display: flex;
-  min-height: var(--v4-size-target-row);
+  min-height: var(--cipher-size-target-row);
   align-items: center;
   justify-content: center;
-  width: var(--v4-size-icon-lg);
-  color: var(--v4-faint);
+  width: var(--cipher-size-icon-lg);
+  color: var(--cipher-faint);
 }
 .sr {
   position: absolute;
@@ -806,25 +806,25 @@ button.rowTitle::after {
   border: 0;
 }
 .dataList {
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
-  font-weight: var(--v4-type-body-font-weight);
-  letter-spacing: var(--v4-type-body-letter-spacing);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
   display: grid;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   margin: 0;
 }
 .dataPair {
   align-items: center;
   display: flex;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   justify-content: space-between;
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
-  padding: var(--v4-space-8) 0;
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  padding: var(--cipher-space-8) 0;
 }
 .dataPair dt {
-  color: var(--v4-muted);
+  color: var(--cipher-muted);
   min-width: min-content;
   max-width: 45%;
 }
@@ -836,18 +836,18 @@ button.rowTitle::after {
 }
 .dataList[data-density="compact"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--v4-space-16);
+  column-gap: var(--cipher-space-16);
   row-gap: 0;
 }
 .dataList[data-density="compact"] .dataPair {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(min-content, var(--v4-size-data-list-term)) minmax(0, 1fr);
+  grid-template-columns: minmax(min-content, var(--cipher-size-data-list-term)) minmax(0, 1fr);
   align-content: center;
   align-items: baseline;
-  gap: 0 var(--v4-space-12);
-  min-height: var(--v4-size-data-list-row);
-  padding: var(--v4-space-4) 0;
+  gap: 0 var(--cipher-space-12);
+  min-height: var(--cipher-size-data-list-row);
+  padding: var(--cipher-space-4) 0;
 }
 .dataList[data-density="compact"] .dataPair[data-span="half"] {
   grid-column: auto;
@@ -861,11 +861,11 @@ button.rowTitle::after {
   text-align: start;
 }
 .dataList[data-variant="stat"] dd {
-  font-family: var(--v4-type-display-font-family);
-  font-size: var(--v4-type-display-font-size);
-  line-height: var(--v4-type-display-line-height);
-  font-weight: var(--v4-type-display-font-weight);
-  letter-spacing: var(--v4-type-display-letter-spacing);
+  font-family: var(--cipher-type-display-font-family);
+  font-size: var(--cipher-type-display-font-size);
+  line-height: var(--cipher-type-display-line-height);
+  font-weight: var(--cipher-type-display-font-weight);
+  letter-spacing: var(--cipher-type-display-letter-spacing);
   font-variant-numeric: tabular-nums;
 }
 @media (max-width: 480px) {
@@ -908,7 +908,7 @@ button.rowTitle::after {
   position: absolute;
   inset: 0;
   z-index: 6;
-  border: var(--v4-size-focus-ring) solid var(--v4-ink);
+  border: var(--cipher-size-focus-ring) solid var(--cipher-ink);
   pointer-events: none;
 }
 /* A table row draws the same ring from its cells: a box on the tr itself becomes an extra column in table layout. Zero specificity keeps pinned cells sticky. */
@@ -920,18 +920,18 @@ button.rowTitle::after {
   content: "";
   position: absolute;
   inset-block: 0;
-  inset-inline: 0 calc(-1 * var(--v4-size-control-border));
+  inset-inline: 0 calc(-1 * var(--cipher-size-control-border));
   z-index: 6;
-  border: 0 solid var(--v4-ink);
-  border-block-width: var(--v4-size-focus-ring);
+  border: 0 solid var(--cipher-ink);
+  border-block-width: var(--cipher-size-focus-ring);
   pointer-events: none;
 }
 .nativeTableRow[data-focus-ring] > :is(td, th):first-child::after {
-  border-inline-start-width: var(--v4-size-focus-ring);
+  border-inline-start-width: var(--cipher-size-focus-ring);
 }
 .nativeTableRow[data-focus-ring] > :is(td, th):last-child::after {
   inset-inline-end: 0;
-  border-inline-end-width: var(--v4-size-focus-ring);
+  border-inline-end-width: var(--cipher-size-focus-ring);
 }
 .tableScroll tbody tr[data-activatable] {
   cursor: pointer;
@@ -946,44 +946,44 @@ tbody > .nativeTableRow[data-loading] {
   width: 80%;
 }
 .tableScroll [data-depth="1"] {
-  padding-inline-start: calc(var(--v4-focus-clearance) + var(--v4-space-row-indent));
+  padding-inline-start: calc(var(--cipher-focus-clearance) + var(--cipher-space-row-indent));
 }
 .tableScroll [data-depth="2"] {
-  padding-inline-start: calc(var(--v4-focus-clearance) + 2 * var(--v4-space-row-indent));
+  padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
 }
 .tableGroupRow {
-  --v4-table-row-ground: var(--v4-tint);
-  --v4-table-row-layers: none;
-  background-color: var(--v4-tint);
+  --cipher-table-row-ground: var(--cipher-tint);
+  --cipher-table-row-layers: none;
+  background-color: var(--cipher-tint);
 }
 .tableScroll th.tableGroupHead {
-  height: var(--v4-table-row-height, var(--v4-size-row));
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
-  color: var(--v4-ink);
+  height: var(--cipher-table-row-height, var(--cipher-size-row));
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  color: var(--cipher-ink);
   text-align: start;
   text-transform: none;
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
 }
 .tableGroupLabel {
   display: flex;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
   min-width: 0;
   overflow: hidden;
-  padding: var(--v4-focus-clearance);
-  margin: calc(-1 * var(--v4-focus-clearance));
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
 }
 .tableGroupMeta {
-  color: var(--v4-muted);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
 }
 /* Each group is its own tbody, so the frame's surface, edge and lift are drawn once across them instead of once per group. */
 .tableScroll tbody[data-group]:not(:first-of-type)::after {
@@ -996,7 +996,7 @@ tbody > .nativeTableRow[data-loading] {
   box-shadow: none;
 }
 .tableScroll tbody[data-group]:not(:last-of-type) > tr:last-child > td {
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .tableSkeleton[data-primary] {
   width: 60%;
@@ -1006,7 +1006,7 @@ tbody > .nativeTableRow[data-loading] {
   inset-inline-start: 0;
   inset-block-end: 0;
   z-index: 4;
-  background: var(--v4-tint);
+  background: var(--cipher-tint);
 }
 .tableScroll table {
   position: relative;
@@ -1020,63 +1020,63 @@ tbody > .nativeTableRow[data-loading] {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: var(--v4-frame-inner-radius);
+  border-radius: var(--cipher-frame-inner-radius);
   pointer-events: none;
 }
 .tableScroll tbody::before {
   z-index: -1;
-  background: var(--v4-surface);
-  box-shadow: var(--v4-shadow-raised);
+  background: var(--cipher-surface);
+  box-shadow: var(--cipher-shadow-raised);
 }
 .tableScroll tbody::after {
   z-index: 4;
-  border: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .tableScroll thead {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: var(--v4-tint);
+  background: var(--cipher-tint);
 }
 .tableShell[data-embedded] thead,
 .tableShell[data-embedded] th[data-pin="true"],
 .tableShell[data-embedded] .tablePagination {
-  background: var(--v4-surface);
+  background: var(--cipher-surface);
 }
 .tableShell[data-embedded] td:is([data-pin="true"], [data-pin="start"]:first-child) {
-  --v4-pin-frame: 0 0 transparent;
+  --cipher-pin-frame: 0 0 transparent;
 }
 .tableShell[data-embedded] .tablePagination {
-  border-top: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .tableShell[data-embedded] th {
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .tableShell[data-embedded] tbody::before,
 .tableShell[data-embedded] tbody::after {
   content: none;
 }
 .tableScroll th {
-  height: var(--v4-space-40);
-  color: var(--v4-muted);
+  height: var(--cipher-space-40);
+  color: var(--cipher-muted);
   text-transform: uppercase;
-  font-family: var(--v4-type-eyebrow-font-family);
-  font-size: var(--v4-type-eyebrow-font-size);
-  line-height: var(--v4-type-eyebrow-line-height);
-  font-weight: var(--v4-type-eyebrow-font-weight);
-  letter-spacing: var(--v4-type-eyebrow-letter-spacing);
+  font-family: var(--cipher-type-eyebrow-font-family);
+  font-size: var(--cipher-type-eyebrow-font-size);
+  line-height: var(--cipher-type-eyebrow-line-height);
+  font-weight: var(--cipher-type-eyebrow-font-weight);
+  letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
   white-space: nowrap;
 }
 .tableScroll td,
 .tableScroll th {
-  padding: 0 var(--v4-space-row-inline);
-  border-bottom: var(--v4-size-control-border) solid var(--v4-line-soft);
+  padding: 0 var(--cipher-space-row-inline);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .tableScroll th {
   border-bottom: 0;
 }
 .tableScroll td {
-  height: var(--v4-table-row-height, var(--v4-size-row));
+  height: var(--cipher-table-row-height, var(--cipher-size-row));
 }
 .tableScroll tbody tr:last-child > td {
   border-bottom: 0;
@@ -1085,42 +1085,42 @@ tbody > .nativeTableRow[data-loading] {
   margin-inline: auto;
 }
 .tableScroll [data-variant="striped"] tbody tr:nth-child(even) {
-  --v4-table-row-ground: var(--v4-row-done);
-  background-color: var(--v4-table-row-ground);
+  --cipher-table-row-ground: var(--cipher-row-done);
+  background-color: var(--cipher-table-row-ground);
 }
 .tableScroll [data-variant="bordered"] td:not(:last-child),
 .tableScroll [data-variant="bordered"] th:not(:last-child) {
-  border-right: var(--v4-size-control-border) solid var(--v4-line-soft);
+  border-right: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .tableScroll [data-variant="bordered"] th:not(:last-child) {
-  border-right-color: var(--v4-line-soft);
+  border-right-color: var(--cipher-line-soft);
 }
 .tableScroll [data-pin="true"] {
   position: sticky;
   right: 0;
-  border-left: var(--v4-size-control-border) solid var(--v4-line-soft);
-  --v4-pin-frame: var(--v4-frame-pad) 0 0 var(--v4-tint);
+  border-left: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  --cipher-pin-frame: var(--cipher-frame-pad) 0 0 var(--cipher-tint);
 }
 .tableScroll td[data-pin="true"] {
-  --v4-pin-frame:
-    inset calc(-1 * var(--v4-size-control-border)) 0 0 var(--v4-line-soft),
-    var(--v4-frame-pad) 0 0 var(--v4-tint);
+  --cipher-pin-frame:
+    inset calc(-1 * var(--cipher-size-control-border)) 0 0 var(--cipher-line-soft),
+    var(--cipher-frame-pad) 0 0 var(--cipher-tint);
 }
 .tableScroll th:is([data-pin="true"], [data-pin="start"]) {
-  background: var(--v4-tint);
+  background: var(--cipher-tint);
 }
 .tableScroll :is(td, th)[data-pin="start"]:first-child {
-  --v4-pin-frame: calc(-1 * var(--v4-frame-pad)) 0 0 var(--v4-tint);
+  --cipher-pin-frame: calc(-1 * var(--cipher-frame-pad)) 0 0 var(--cipher-tint);
 }
 .tableSort {
   display: inline-flex;
   align-items: center;
-  gap: var(--v4-space-4);
+  gap: var(--cipher-space-4);
   box-sizing: border-box;
-  width: calc(100% + 2 * var(--v4-space-row-inline));
+  width: calc(100% + 2 * var(--cipher-space-row-inline));
   height: 100%;
-  margin-inline: calc(-1 * var(--v4-space-row-inline));
-  padding: 0 var(--v4-space-row-inline);
+  margin-inline: calc(-1 * var(--cipher-space-row-inline));
+  padding: 0 var(--cipher-space-row-inline);
   font: inherit;
   letter-spacing: inherit;
   text-transform: inherit;
@@ -1130,16 +1130,16 @@ tbody > .nativeTableRow[data-loading] {
   white-space: nowrap;
 }
 .tableSort[data-active] {
-  color: var(--v4-ink);
+  color: var(--cipher-ink);
 }
 @media (hover: hover) {
   .tableSort:hover {
-    background-color: var(--v4-hover);
+    background-color: var(--cipher-hover);
   }
 }
 /* An open menu keeps its header filled so the menu reads as attached; aria-expanded counts because a wrapping Tooltip overwrites data-state, and only on a popup trigger. */
 .tableSort[aria-haspopup]:is([data-state="open"], [aria-expanded="true"]) {
-  background-color: var(--v4-hover);
+  background-color: var(--cipher-hover);
 }
 .tableSort:not([data-active], [aria-haspopup]) > svg {
   opacity: 0;
@@ -1149,16 +1149,16 @@ tbody > .nativeTableRow[data-loading] {
 }
 .tableSort > svg {
   flex: none;
-  width: calc((var(--v4-size-icon-xs) + var(--v4-size-icon-sm)) / 2);
-  height: calc((var(--v4-size-icon-xs) + var(--v4-size-icon-sm)) / 2);
+  width: calc((var(--cipher-size-icon-xs) + var(--cipher-size-icon-sm)) / 2);
+  height: calc((var(--cipher-size-icon-xs) + var(--cipher-size-icon-sm)) / 2);
 }
 /* The trigger fills its cell, so the ring sits inside it where neighbouring cells, pinned columns and the scroll edge cannot clip it. */
 .tableSort:focus-visible {
-  outline: var(--v4-size-focus-ring) solid var(--v4-ink);
-  outline-offset: calc(-1 * var(--v4-size-focus-ring));
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: calc(-1 * var(--cipher-size-focus-ring));
 }
 /* The overflow that truncates a cell would clip the ring of a control rendered in it, so the box
-   reaches --v4-focus-clearance past the text on every side and gives it back as negative margin.
+   reaches --cipher-focus-clearance past the text on every side and gives it back as negative margin.
    content-box keeps min-width and a column's maxWidth on the text, as before. */
 .tableValue,
 .tablePrimary {
@@ -1166,25 +1166,25 @@ tbody > .nativeTableRow[data-loading] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  min-width: var(--v4-size-cell-min);
-  padding: var(--v4-focus-clearance);
-  margin: calc(-1 * var(--v4-focus-clearance));
+  min-width: var(--cipher-size-cell-min);
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
 }
 .tablePrimary {
-  font-family: var(--v4-type-row-title-font-family);
-  font-size: var(--v4-type-row-title-font-size);
-  line-height: var(--v4-type-row-title-line-height);
-  font-weight: var(--v4-type-row-title-font-weight);
-  letter-spacing: var(--v4-type-row-title-letter-spacing);
-  color: var(--v4-ink);
+  font-family: var(--cipher-type-row-title-font-family);
+  font-size: var(--cipher-type-row-title-font-size);
+  line-height: var(--cipher-type-row-title-line-height);
+  font-weight: var(--cipher-type-row-title-font-weight);
+  letter-spacing: var(--cipher-type-row-title-letter-spacing);
+  color: var(--cipher-ink);
 }
 .tableValue[data-mono],
 .tablePrimary[data-mono] {
-  font-family: var(--v4-type-mono-font-family);
-  font-size: var(--v4-type-mono-font-size);
-  line-height: var(--v4-type-mono-line-height);
-  font-weight: var(--v4-type-mono-font-weight);
-  letter-spacing: var(--v4-type-mono-letter-spacing);
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
 }
 
 .treeRow > button {
@@ -1193,15 +1193,15 @@ tbody > .nativeTableRow[data-loading] {
   border: 0;
   color: inherit;
   padding: 0;
-  min-width: var(--v4-space-16);
+  min-width: var(--cipher-space-16);
   font: inherit;
 }
 .treeRow > button:focus-visible {
-  outline: 2px solid var(--v4-ink);
+  outline: 2px solid var(--cipher-ink);
   outline-offset: -2px;
 }
 
-.editorActions > :global(button[data-slot="button"][data-v4-button]) {
+.editorActions > :global(button[data-slot="button"][data-cipher-button]) {
   max-width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -1218,34 +1218,34 @@ tbody > .nativeTableRow[data-loading] {
 
 .pattern {
   display: grid;
-  gap: var(--v4-space-12);
+  gap: var(--cipher-space-12);
   min-width: 0;
 }
 .patternToolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--v4-space-8);
+  gap: var(--cipher-space-8);
 }
 .patternToolbar > span {
   margin-inline-end: auto;
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
-  color: var(--v4-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-muted);
 }
 .patternNotice {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--v4-space-8);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
+  gap: var(--cipher-space-8);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
 }
 .tableScroll[data-virtual] tbody tr:not([data-spacer]) > td {
   padding-block: 0;
@@ -1257,7 +1257,7 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll[data-virtual] .tablePrimary,
 .tableScroll[data-virtual] .tableRowActions,
 .tableScroll[data-virtual] .tableSelection {
-  min-height: calc(var(--v4-table-row-height, var(--v4-size-row)) - var(--v4-size-control-border));
+  min-height: calc(var(--cipher-table-row-height, var(--cipher-size-row)) - var(--cipher-size-control-border));
   display: flex;
   align-items: center;
 }
@@ -1268,23 +1268,23 @@ tbody > .nativeTableRow[data-loading] {
 }
 
 .nativeTable {
-  --v4-row-glyph-pull: calc((var(--v4-size-glyph) - var(--v4-size-target-row)) / 2);
-  font-family: var(--v4-type-body-font-family);
-  font-size: var(--v4-type-body-font-size);
-  line-height: var(--v4-type-body-line-height);
-  font-weight: var(--v4-type-body-font-weight);
-  letter-spacing: var(--v4-type-body-letter-spacing);
+  --cipher-row-glyph-pull: calc((var(--cipher-size-glyph) - var(--cipher-size-target-row)) / 2);
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
 }
 /* Row states are layers on the row's ground, so a pinned cell repaints the same stack opaquely and nothing scrolls through it. */
 .nativeTableRow {
-  --v4-table-row-ground: var(--v4-surface);
-  --v4-table-row-state: transparent;
-  --v4-table-row-hover: transparent;
-  --v4-table-row-layers:
-    linear-gradient(var(--v4-table-row-hover), var(--v4-table-row-hover)),
-    linear-gradient(var(--v4-table-row-state), var(--v4-table-row-state));
-  background-color: var(--v4-table-row-ground);
-  background-image: var(--v4-table-row-layers);
+  --cipher-table-row-ground: var(--cipher-surface);
+  --cipher-table-row-state: transparent;
+  --cipher-table-row-hover: transparent;
+  --cipher-table-row-layers:
+    linear-gradient(var(--cipher-table-row-hover), var(--cipher-table-row-hover)),
+    linear-gradient(var(--cipher-table-row-state), var(--cipher-table-row-state));
+  background-color: var(--cipher-table-row-ground);
+  background-image: var(--cipher-table-row-layers);
 }
 .tableScroll thead > .nativeTableRow {
   background-color: transparent;
@@ -1296,14 +1296,14 @@ tbody > .nativeTableRow[data-loading] {
     [data-row-kind],
     [data-full-width]
   ) {
-  --v4-table-row-hover: var(--v4-hover);
+  --cipher-table-row-hover: var(--cipher-hover);
 }
 .nativeTableRow[data-state="selected"] {
-  --v4-table-row-state: var(--v4-selected-surface);
+  --cipher-table-row-state: var(--cipher-selected-surface);
 }
 /* filter, not opacity, so the dim composes with opacity reveals inside the cells; a cell holding only text dims itself, since text has no element to filter. */
 :where(tbody > .nativeTableRow > td[data-text-only], tbody > .nativeTableRow > td > *) {
-  transition: filter var(--v4-duration-moderate) var(--v4-ease-fade);
+  transition: filter var(--cipher-duration-moderate) var(--cipher-ease-fade);
 }
 /* A row that holds the focused row in a nested table, and the row it expands from, keep full strength. */
 :where(
@@ -1317,7 +1317,7 @@ tbody > .nativeTableRow[data-loading] {
   )
   > td
   > * {
-  filter: opacity(var(--v4-opacity-row-dim));
+  filter: opacity(var(--cipher-opacity-row-dim));
 }
 @media (hover: hover) {
   tbody > .nativeTableRow:hover > td[data-text-only],
@@ -1332,29 +1332,29 @@ tbody > .nativeTableRow[data-loading] {
 }
 .nativeTableHead,
 .nativeTableCell {
-  padding: 0 var(--v4-space-row-inline);
+  padding: 0 var(--cipher-space-row-inline);
   text-align: start;
   vertical-align: middle;
   white-space: nowrap;
 }
 .nativeTableCell {
-  height: var(--v4-table-row-height, var(--v4-size-row));
+  height: var(--cipher-table-row-height, var(--cipher-size-row));
 }
 .nativeTableHead {
-  height: var(--v4-size-control-md);
-  color: var(--v4-muted);
-  font-family: var(--v4-type-label-font-family);
-  font-size: var(--v4-type-label-font-size);
-  line-height: var(--v4-type-label-line-height);
-  font-weight: var(--v4-type-label-font-weight);
-  letter-spacing: var(--v4-type-label-letter-spacing);
+  height: var(--cipher-size-control-md);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
 }
 .nativeTableCaption {
-  margin-top: var(--v4-space-12);
-  color: var(--v4-muted);
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
+  margin-top: var(--cipher-space-12);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
 }
 
 .tableRowActions {
@@ -1362,7 +1362,7 @@ tbody > .nativeTableRow[data-loading] {
   flex: none;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--v4-space-row-actions-gap);
+  gap: var(--cipher-space-row-actions-gap);
   width: max-content;
   margin-inline-start: auto;
 }
@@ -1374,29 +1374,29 @@ td.tableActions {
   position: sticky;
   inset-inline-end: 0;
   width: calc(
-    var(--v4-size-row) + (var(--v4-row-action-slots, 1) - 1) * var(--v4-size-row-action-step)
+    var(--cipher-size-row) + (var(--cipher-row-action-slots, 1) - 1) * var(--cipher-size-row-action-step)
   );
-  padding-inline: var(--v4-space-row-actions-inset);
+  padding-inline: var(--cipher-space-row-actions-inset);
   text-align: end;
-  background-color: var(--v4-surface);
-  border-inline-start: var(--v4-size-control-border) solid var(--v4-line-soft);
-  --v4-nested-action-height: var(--v4-size-target-row);
+  background-color: var(--cipher-surface);
+  border-inline-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  --cipher-nested-action-height: var(--cipher-size-target-row);
 }
-.tableActions [data-v4-button] {
-  --v4-action-height: min(var(--v4-action-requested-height), var(--v4-nested-action-height));
+.tableActions [data-cipher-button] {
+  --cipher-action-height: min(var(--cipher-action-requested-height), var(--cipher-nested-action-height));
 }
 /* DataTable draws the frame edge inside the pinned cell, so the end pad clears that line too. */
 .tableScroll td.tableActions {
-  padding-inline-end: calc(var(--v4-space-row-actions-inset) + var(--v4-size-control-border));
+  padding-inline-end: calc(var(--cipher-space-row-actions-inset) + var(--cipher-size-control-border));
 }
 .tableScroll th.tableActions {
-  background-color: var(--v4-tint);
+  background-color: var(--cipher-tint);
 }
 td.tableActions,
 .tableScroll td[data-pin="true"],
 :is(td, th)[data-pin="start"] {
-  background-color: var(--v4-table-row-ground);
-  background-image: var(--v4-table-row-layers);
+  background-color: var(--cipher-table-row-ground);
+  background-image: var(--cipher-table-row-layers);
 }
 /* Pinned cells stack over scrolled cells, and pinned header cells over pinned body cells, inside the table's 4 to 6 range. */
 td:is([data-pin="true"], [data-pin="start"], .tableActions) {
@@ -1407,23 +1407,23 @@ th[data-pin="start"] {
 }
 :is(td, th)[data-pin="start"] {
   position: sticky;
-  inset-inline-start: var(--v4-pin-offset, 0px);
+  inset-inline-start: var(--cipher-pin-offset, 0px);
 }
 .tableSelectionCell[data-pin="start"] {
-  min-width: var(--v4-size-row);
+  min-width: var(--cipher-size-row);
 }
 .tableSelectionCell[data-pin="start"] ~ [data-pin="start"] {
-  --v4-pin-offset: var(--v4-size-row);
+  --cipher-pin-offset: var(--cipher-size-row);
 }
 /* A pinned cell draws its column edge and DataTable's frame-pad cover as inset and outer shadows, so both stick with the cell; a table border would stay with the scrolled columns. */
 :is(td, th):is([data-pin], .tableActions) {
-  box-shadow: var(--v4-pin-edge, 0 0 transparent), var(--v4-pin-frame, 0 0 transparent);
+  box-shadow: var(--cipher-pin-edge, 0 0 transparent), var(--cipher-pin-frame, 0 0 transparent);
 }
 :is([data-scroll-start-x] > table, [data-scroll-start-x] > .nativeTableContainer > table)
   > *
   > tr
   > [data-pin="start"][data-pin-edge] {
-  --v4-pin-edge: inset calc(-1 * var(--v4-size-control-border)) 0 0 var(--v4-line-soft);
+  --cipher-pin-edge: inset calc(-1 * var(--cipher-size-control-border)) 0 0 var(--cipher-line-soft);
   border-inline-end-color: transparent;
 }
 /* Pinned columns fade scrolled content into their own paint, inherited from the cell so stripe, hover, selected and the header band all match; it shows only while the scroll-edge watcher reports content past that edge. */
@@ -1432,12 +1432,12 @@ th[data-pin="start"] {
   content: "";
   position: absolute;
   inset-block: 0;
-  width: var(--v4-size-scroll-fade);
+  width: var(--cipher-size-scroll-fade);
   pointer-events: none;
   background-color: inherit;
   background-image: inherit;
   opacity: 0;
-  transition: opacity var(--v4-duration-moderate) var(--v4-ease-fade);
+  transition: opacity var(--cipher-duration-moderate) var(--cipher-ease-fade);
 }
 :is(td, th)[data-pin="start"][data-pin-edge]::before {
   inset-inline-start: 100%;
@@ -1468,7 +1468,7 @@ th[data-pin="start"] {
   > *
   > tr
   > :is(.tableActions, [data-pin="true"]) {
-  --v4-pin-edge: inset var(--v4-size-control-border) 0 0 var(--v4-line-soft);
+  --cipher-pin-edge: inset var(--cipher-size-control-border) 0 0 var(--cipher-line-soft);
   border-inline-start-color: transparent;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1482,10 +1482,10 @@ th[data-pin="start"] {
     .tableScroll,
     .nativeTableContainer
   )[data-scroll-fade][data-scroll-start-x][data-has-start-pin] {
-  --v4-fade-x-start: 0px;
+  --cipher-fade-x-start: 0px;
 }
 :is(.tableScroll, .nativeTableContainer)[data-scroll-fade][data-scroll-end-x][data-has-end-pin] {
-  --v4-fade-x-end: 0px;
+  --cipher-fade-x-end: 0px;
 }
 /* A full-width cell keeps its content in the scroll container's visible width, sized from the container, so a nested table never scrolls out of view. */
 :is(.tableScroll, .nativeTableContainer)[data-has-viewport-cell] {
@@ -1502,11 +1502,11 @@ td[data-pin="viewport"] {
 }
 th.tableSelectionCell,
 td.tableSelectionCell {
-  width: var(--v4-size-row);
+  width: var(--cipher-size-row);
   padding-inline: 0;
-  border-inline-end: var(--v4-size-control-border) solid var(--v4-line-soft);
-  background-color: var(--v4-table-row-ground);
-  background-image: var(--v4-table-row-layers);
+  border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  background-color: var(--cipher-table-row-ground);
+  background-image: var(--cipher-table-row-layers);
 }
 .tableSelectionCell[data-divider="false"] {
   border-inline-end: 0;
@@ -1516,36 +1516,36 @@ td.tableSelectionCell {
 }
 /* The frame edge draws over the cell's first pixel, so a start pad of one line centers the checkbox between that edge and the divider. */
 .tableScroll .tableSelectionCell {
-  padding-inline: var(--v4-size-control-border) 0;
+  padding-inline: var(--cipher-size-control-border) 0;
 }
 .tableScroll th.tableSelectionCell {
-  background-color: var(--v4-tint);
+  background-color: var(--cipher-tint);
 }
 .tableRowActionSkeleton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--v4-size-target-row);
+  width: var(--cipher-size-target-row);
 }
 .tableRowIndicators {
   display: flex;
   flex: none;
   align-items: center;
-  gap: var(--v4-space-row-actions-gap);
-  margin-inline: auto var(--v4-row-glyph-pull);
-  color: var(--v4-muted);
+  gap: var(--cipher-space-row-actions-gap);
+  margin-inline: auto var(--cipher-row-glyph-pull);
+  color: var(--cipher-muted);
 }
 .tableRowIndicators > * {
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: var(--v4-size-target-row);
-  height: var(--v4-size-target-row);
+  width: var(--cipher-size-target-row);
+  height: var(--cipher-size-target-row);
 }
 .tableRowIndicators svg {
-  width: var(--v4-size-glyph);
-  height: var(--v4-size-glyph);
+  width: var(--cipher-size-glyph);
+  height: var(--cipher-size-glyph);
 }
 
 .nativeTableContainer {
@@ -1558,11 +1558,11 @@ td.tableSelectionCell {
 }
 
 .rowBadge {
-  font-family: var(--v4-type-small-font-family);
-  font-size: var(--v4-type-small-font-size);
-  line-height: var(--v4-type-small-line-height);
-  font-weight: var(--v4-type-small-font-weight);
-  letter-spacing: var(--v4-type-small-letter-spacing);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
 }
 
 .copy > :global(button) {

@@ -24,28 +24,28 @@ Each release tag points at a commit that holds the built package, so the install
 
 `motion` and `sonner` are peer dependencies, so your app and Cipher share one copy. Install `recharts` too if you use the chart.
 
-Import the stylesheet once and wrap Cipher UI in `V4Scope`:
+Import the stylesheet once and wrap Cipher UI in `CipherScope`:
 
 ```tsx
 import "@infisical/cipher/styles.css";
 
-import { V4Scope } from "@infisical/cipher/scope";
+import { CipherScope } from "@infisical/cipher/scope";
 import { Button } from "@infisical/cipher/ui/button";
 import { Toaster } from "@infisical/cipher/ui/sonner";
 
 export function App() {
   return (
-    <V4Scope theme="light" className="min-h-screen bg-background text-foreground">
+    <CipherScope theme="light" className="min-h-screen bg-background text-foreground">
       <Button>Save changes</Button>
       <Toaster />
-    </V4Scope>
+    </CipherScope>
   );
 }
 ```
 
-The stylesheet is compiled: it holds the tokens, the two themes, the fonts and every utility the components use, scoped under `.v4`. Your app doesn't need Tailwind, and if it has Tailwind, Cipher's styles don't leak into it.
+The stylesheet is compiled: it holds the tokens, the two themes, the fonts and every utility the components use, scoped under `.cipher`. Your app doesn't need Tailwind, and if it has Tailwind, Cipher's styles don't leak into it.
 
-If your app uses Tailwind CSS v4 and you want Cipher's theme utilities (`bg-background`, `text-muted-foreground` and the rest) in your own markup inside `V4Scope`, import the Tailwind entry instead of `styles.css`. Your Tailwind build then compiles Cipher's stylesheet with your sources:
+If your app uses Tailwind CSS v4 and you want Cipher's theme utilities (`bg-background`, `text-muted-foreground` and the rest) in your own markup inside `CipherScope`, import the Tailwind entry instead of `styles.css`. Your Tailwind build then compiles Cipher's stylesheet with your sources:
 
 ```css
 @import "tailwindcss";
@@ -73,13 +73,13 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button @cipher/dialog
 
 Replace `<ref>` with a release tag or commit SHA to pin a version, or `main` to follow the latest. Every item depends on `@cipher/cipher-base`, which the CLI installs for you. To see what's available, run `npx shadcn@latest search @cipher`.
 
-Files land under `src/components/v4/` and import each other by relative path, so they don't depend on your import aliases. Import the stylesheet once, after your Tailwind entry, and wrap Cipher UI in `V4Scope`:
+Files land under `src/components/cipher/` and import each other by relative path, so they don't depend on your import aliases. Import the stylesheet once, after your Tailwind entry, and wrap Cipher UI in `CipherScope`:
 
 ```tsx
 import "./index.css";
-import "./components/v4/v4.css";
+import "./components/cipher/base.css";
 
-import { V4Scope } from "./components/v4/scope";
+import { CipherScope } from "./components/cipher/scope";
 ```
 
 To update, point the `@cipher` URL in `components.json` at the new ref, then review and apply the changes:
@@ -93,7 +93,7 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button --overwrite
 
 ## Themes
 
-`V4Scope` takes a theme id: Light (`light`) or Dark (`dark`). The retired ids `peach` and `pale` still resolve to Light. Overlays and toasts portal into the scope, so they follow its theme.
+`CipherScope` takes a theme id: Light (`light`) or Dark (`dark`). The retired ids `peach` and `pale` still resolve to Light. Overlays and toasts portal into the scope, so they follow its theme.
 
 ## Links and routing
 

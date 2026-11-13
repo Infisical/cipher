@@ -33,7 +33,7 @@ function ScrollArea({
         }
         data-scroll-edge={edgeBehavior === "border" ? "border" : undefined}
         tabIndex={0}
-        className="size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--v4-focus-ring)] focus-visible:outline-1"
+        className="size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--cipher-focus-ring)] focus-visible:outline-1"
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
@@ -58,14 +58,14 @@ function ScrollBar({
       data-orientation={orientation}
       orientation={orientation}
       className={cn(
-        "flex touch-none p-0.5 transition-opacity duration-(--v4-duration-fast) ease-(--v4-ease-fade) select-none data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:flex-col data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2 data-[state=hidden]:opacity-0 data-[state=visible]:opacity-100",
+        "flex touch-none p-0.5 transition-opacity duration-(--cipher-duration-fast) ease-(--cipher-ease-fade) select-none data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:flex-col data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2 data-[state=hidden]:opacity-0 data-[state=visible]:opacity-100",
         className
       )}
       {...props}
     >
       <ScrollAreaPrimitive.ScrollAreaThumb
         data-slot="scroll-area-thumb"
-        className="relative flex-1 rounded-none bg-[color:var(--v4-scroll-thumb)] hover:bg-[color:var(--v4-scroll-thumb-hover)]"
+        className="relative flex-1 rounded-none bg-[color:var(--cipher-scroll-thumb)] hover:bg-[color:var(--cipher-scroll-thumb-hover)]"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
   );
