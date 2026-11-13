@@ -1,0 +1,33 @@
+:global([data-slot="field"]),
+:global([data-slot="card-header"][data-framed]) {
+  --documentation-link-context: var(--cipher-size-icon-xs);
+}
+.link {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  padding: var(--cipher-size-focus-ring);
+  margin: calc(-1 * var(--cipher-size-focus-ring));
+  color: var(--cipher-muted);
+  text-decoration: none;
+  transition-property: color;
+  transition-duration: var(--cipher-duration-fast);
+  transition-timing-function: var(--cipher-ease-standard);
+}
+.link[data-size="sm"] {
+  --documentation-link-size: var(--cipher-size-icon-xs);
+}
+.link[data-size="md"] {
+  --documentation-link-size: var(--cipher-size-icon);
+}
+.link:hover,
+.link:focus-visible {
+  color: var(--cipher-ink);
+}
+.link > svg {
+  width: var(--documentation-link-size, var(--documentation-link-context, var(--cipher-size-icon)));
+  height: var(--documentation-link-size, var(--documentation-link-context, var(--cipher-size-icon)));
+  stroke-width: var(--cipher-stroke-icon);
+}
