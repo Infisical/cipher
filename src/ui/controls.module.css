@@ -1163,6 +1163,6 @@
 .group > .groupSeparator[data-between-outlines] {
   display: none;
 }
-.card[data-variant="framed"] > :is(.cardInset, .cardBody) {
+.card[data-variant="framed"] > :is(.cardInset, .cardBody, .cardFooter:not([data-placement="frame"])) {
   box-shadow: var(--v4-shadow-card-inset);
 }

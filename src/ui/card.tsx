@@ -52,6 +52,7 @@ function Card({
   footer?: React.ReactNode;
   footerPlacement?: "inset" | "frame";
   flush?: boolean;
+  /** Decoration such as a Halftone, painted under the surface that holds the title and the card link: the inset of a framed card with a frame footer, otherwise the card itself. That surface becomes the stacking context, so the link overlay and the controls above it stay in one layer. */
   backdrop?: React.ReactNode;
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const convenience =
@@ -116,6 +117,7 @@ function Card({
               </>
             ) : convenience ? (
               <>
+                {backdrop}
                 {(title !== undefined || description !== undefined || action) && (
                   <CardHeader>
                     <div className={controlStyles.cardTitleGroup}>
@@ -129,10 +131,7 @@ function Card({
                     {action && <CardAction>{action}</CardAction>}
                   </CardHeader>
                 )}
-                <CardContent>
-                  {backdrop}
-                  {children}
-                </CardContent>
+                <CardContent>{children}</CardContent>
                 {footer !== undefined && (
                   <CardFooter placement={footerPlacement}>{footer}</CardFooter>
                 )}

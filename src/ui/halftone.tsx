@@ -104,7 +104,8 @@ const cellPaths = (
       const distance =
         Math.hypot(((column + 0.5) * cell) / reach, ((row + 0.5) * cell) / reachY) + warp;
       const falloff = Math.min(1, Math.max(0, 1 - distance));
-      if (density * falloff ** gamma <= thresholds[row % 8][column % 8] + jitter) continue;
+      const threshold = Math.min(63.5 / 64, Math.max(0.5 / 64, thresholds[row % 8][column % 8] + jitter));
+      if (density * falloff ** gamma <= threshold) continue;
       const step = Math.round(falloff * alphaSteps);
       if (!step) continue;
       const x = fromRight ? width - (column + 1) * cell : column * cell;
@@ -159,7 +160,7 @@ export function Halftone({
         top: Number.parseFloat(parentStyle.paddingTop) || 0,
         left: Number.parseFloat(parentStyle.paddingLeft) || 0,
         gamma: readNumber(element, "--v4-halftone-gamma", 1),
-        cell: readNumber(element, "--v4-size-halftone-cell", 8)
+        cell: Math.max(1, readNumber(element, "--v4-size-halftone-cell", 8))
       };
       setBox((previous) =>
         previous &&
