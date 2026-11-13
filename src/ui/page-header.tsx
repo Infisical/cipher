@@ -57,7 +57,11 @@ export function PageHeader({
             <h1 className={cn(styles.title, mono && styles.mono)}>{title}</h1>
             {badges && <span className={styles.badges}>{badges}</span>}
           </div>
-          {description && <p className={styles.description}>{description}</p>}
+          {description && (
+            <div data-slot="page-header-description" className={styles.description}>
+              {description}
+            </div>
+          )}
         </div>
         {actions && <div className={styles.actions}>{actions}</div>}
       </div>

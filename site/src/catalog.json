@@ -1050,7 +1050,7 @@
     "group": "Navigation",
     "examples": [
       {
-        "title": "Top-level page and object page",
+        "title": "Top-level page, object page and block description",
         "module": "page-header/default"
       }
     ]
