@@ -496,6 +496,18 @@
     ]
   },
   {
+    "id": "date-picker",
+    "title": "Date picker",
+    "summary": "Pick one date from a calendar in a popover, with optional presets.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Empty, and set with presets",
+        "module": "date-picker/default"
+      }
+    ]
+  },
+  {
     "id": "date-range-picker",
     "title": "Date range picker",
     "summary": "Pick a start and end date from a calendar in a popover, with optional presets.",

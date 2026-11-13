@@ -7,7 +7,7 @@ import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 import controlStyles from "./controls.module.css";
-import styles from "./date-range-picker.module.css";
+import styles from "./date-picker.module.css";
 
 export type CompleteDateRange = { from: Date; to: Date };
 export type DateRangePreset = { label: string; range: DateRange };

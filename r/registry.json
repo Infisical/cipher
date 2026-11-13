@@ -1028,6 +1028,36 @@
       ]
     },
     {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/calendar",
+        "@cipher/cipher-base",
+        "@cipher/popover"
+      ],
+      "dependencies": [
+        "react-day-picker@^10.0.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/date-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/date-picker.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/controls.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/controls.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/date-picker.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/date-picker.module.css"
+        }
+      ]
+    },
+    {
       "name": "date-range-picker",
       "type": "registry:ui",
       "registryDependencies": [
@@ -1051,9 +1081,9 @@
           "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/cipher/ui/date-range-picker.module.css",
+          "path": "src/components/cipher/ui/date-picker.module.css",
           "type": "registry:file",
-          "target": "src/components/cipher/ui/date-range-picker.module.css"
+          "target": "src/components/cipher/ui/date-picker.module.css"
         }
       ]
     },
