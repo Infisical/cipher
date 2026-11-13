@@ -4,11 +4,11 @@ import { Field } from "@infisical/cipher/ui/field";
 import { MultiSelect, type MultiSelectOption } from "@infisical/cipher/ui/multi-select";
 
 const options: MultiSelectOption[] = [
-  { value: "dev", label: "Development", description: "138 secrets" },
-  { value: "staging", label: "Staging", description: "96 secrets" },
-  { value: "prod", label: "Production", description: "212 secrets" },
-  { value: "pr-482", label: "pr-482", description: "Expires Oct 1", group: "Preview" },
-  { value: "pr-490", label: "pr-490", description: "Expired", group: "Preview", disabled: true }
+  { value: "dev", label: "Development", meta: "138 secrets" },
+  { value: "staging", label: "Staging", meta: "96 secrets" },
+  { value: "prod", label: "Production", meta: "212 secrets" },
+  { value: "pr-482", label: "pr-482", meta: "Expires Oct 1", group: "Preview" },
+  { value: "pr-490", label: "pr-490", meta: "Expired", group: "Preview", disabled: true }
 ];
 const many: MultiSelectOption[] = [
   "Development",
