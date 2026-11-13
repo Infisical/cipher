@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "../lib/utils";
 import { Button } from "./button";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
 
 import styles from "./helpers.module.css";
@@ -12,7 +12,7 @@ export type ToastItem = {
   title: string;
   description?: string;
   tone?: "neutral" | "ok" | "bad" | "loading";
-  icon?: IconName;
+  icon?: IconSource;
   action?: { label: string; onClick: () => void };
   duration?: number;
 };
@@ -54,7 +54,7 @@ const Toast = ({ item, onDismiss }: { item: ToastItem; onDismiss?: (id: string) 
         <Spinner />
       ) : (
         <Icon
-          name={
+          icon={
             item.icon ?? (item.tone === "bad" ? "alert-c" : item.tone === "ok" ? "check-c" : "info")
           }
         />

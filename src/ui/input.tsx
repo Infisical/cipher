@@ -3,7 +3,7 @@ import * as React from "react";
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { cn } from "../lib/utils";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Kbd } from "./kbd";
 
 import styles from "./controls.module.css";
@@ -25,7 +25,7 @@ export const fieldBoxWatch = {
 
 export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size"> & {
   size?: number | "xs" | "sm" | "md" | "lg";
-  icon?: IconName;
+  icon?: IconSource;
   mono?: boolean;
   invalid?: boolean;
   kbd?: string;
@@ -83,7 +83,7 @@ export function Input({
     >
       {leading && (
         <span className={styles.leading}>
-          <Icon name={leading} />
+          <Icon icon={leading} />
         </span>
       )}
       {input}

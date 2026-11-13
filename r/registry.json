@@ -1009,9 +1009,6 @@
         "@cipher/table",
         "@cipher/tooltip"
       ],
-      "dependencies": [
-        "lucide-react@^0.544.0"
-      ],
       "files": [
         {
           "path": "src/components/cipher/ui/data-table.tsx",
@@ -2297,9 +2294,6 @@
         "@cipher/skeleton",
         "@cipher/tooltip"
       ],
-      "dependencies": [
-        "lucide-react@^0.544.0"
-      ],
       "files": [
         {
           "path": "src/components/cipher/ui/table.tsx",
@@ -2535,9 +2529,6 @@
         "@cipher/sonner",
         "@cipher/toggle-group",
         "@cipher/tooltip"
-      ],
-      "dependencies": [
-        "lucide-react@^0.544.0"
       ],
       "files": [
         {

@@ -300,6 +300,10 @@
       {
         "title": "Band actions",
         "module": "card/band-actions"
+      },
+      {
+        "title": "Element description",
+        "module": "card/rich-description"
       }
     ]
   },
@@ -432,6 +436,10 @@
       {
         "title": "Secret path",
         "module": "combobox/secret-path"
+      },
+      {
+        "title": "Groups and descriptions",
+        "module": "combobox/groups"
       }
     ]
   },
@@ -648,6 +656,10 @@
       {
         "title": "Forbidden with a page action",
         "module": "error-state/forbidden"
+      },
+      {
+        "title": "Custom primary action",
+        "module": "error-state/custom-action"
       }
     ]
   },
@@ -784,6 +796,10 @@
       {
         "title": "Sizes and naming",
         "module": "icon/sizes"
+      },
+      {
+        "title": "New glyphs and icon components",
+        "module": "icon/components"
       }
     ]
   },
@@ -844,6 +860,10 @@
       {
         "title": "Controlled editing",
         "module": "input/editing"
+      },
+      {
+        "title": "Number",
+        "module": "input/number"
       }
     ]
   },

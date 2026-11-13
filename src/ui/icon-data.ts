@@ -756,5 +756,57 @@ export const iconShapes = {
         d: "M9 20h6M12 16v4"
       }
     }
+  ],
+  flask: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 3.5h6M10 3.5v6l-5.2 8.6a1.6 1.6 0 0 0 1.4 2.4h11.6a1.6 1.6 0 0 0 1.4-2.4L14 9.5v-6M7.2 14.5h9.6"
+      }
+    }
+  ],
+  package: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 3.5 19.5 7.5v9L12 20.5l-7.5-4v-9z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m4.5 7.5 7.5 4 7.5-4M12 11.5v9M8.2 5.5l7.5 4"
+      }
+    }
+  ],
+  sparkles: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M10 6c.6 3.6 2.4 5.4 6 6-3.6.6-5.4 2.4-6 6-.6-3.6-2.4-5.4-6-6 3.6-.6 5.4-2.4 6-6z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M18 3.5v4M16 5.5h4M18 16.5v3M16.5 18h3"
+      }
+    }
+  ],
+  shield: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"
+      }
+    }
+  ],
+  infinity: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 12c-1.8-2.4-3.3-3.5-5-3.5a3.5 3.5 0 0 0 0 7c1.7 0 3.2-1.1 5-3.5zm0 0c1.8 2.4 3.3 3.5 5 3.5a3.5 3.5 0 0 0 0-7c-1.7 0-3.2 1.1-5 3.5z"
+      }
+    }
   ]
 } as const;

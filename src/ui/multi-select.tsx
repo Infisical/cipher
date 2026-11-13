@@ -17,7 +17,10 @@ import styles from "./picker.module.css";
 export type MultiSelectOption = {
   value: string;
   label: string;
+  /** A muted line under the label. Search matches it as well as the label. */
   description?: string;
+  /** A short muted value at the row's end, such as a count. */
+  meta?: string;
   disabled?: boolean;
   group?: string;
 };
@@ -173,7 +176,9 @@ export function MultiSelect({
       );
   }
   const filtered = options.filter((option) =>
-    `${option.label} ${option.description ?? ""}`.toLowerCase().includes(query.toLowerCase())
+    `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
+      .toLowerCase()
+      .includes(query.toLowerCase())
   );
   const enabled = filtered.filter((option) => !option.disabled && !disabled);
   const currentActive = enabled.find((option) => option.value === active) ?? enabled[0];
@@ -439,10 +444,15 @@ export function MultiSelect({
                         )}
                       </span>
                     )}
-                    <span className={styles.optionLabel}>{option.label}</span>
-                    {option.description && (
-                      <span className={styles.optionMeta}>{option.description}</span>
+                    {option.description ? (
+                      <span className={cn(menu.text, styles.optionLabel)}>
+                        <span className={menu.title}>{option.label}</span>
+                        <span className={menu.description}>{option.description}</span>
+                      </span>
+                    ) : (
+                      <span className={styles.optionLabel}>{option.label}</span>
                     )}
+                    {option.meta && <span className={styles.optionMeta}>{option.meta}</span>}
                     {!multiple && (
                       <span className={styles.optionCheck}>
                         {selected.includes(option.value) && <Icon name="check" />}
