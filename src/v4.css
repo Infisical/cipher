@@ -410,6 +410,12 @@
 .v4 [data-slot="scroll-area-viewport"] {
   scroll-padding: var(--v4-focus-clearance);
 }
+/* Accordion content clips so its height can animate; the clip reaches --v4-focus-clearance past the
+   content at the inline edges, where its fields sit flush, and gives it back as negative margin. */
+.v4 [data-slot="accordion-content"] {
+  padding-inline: var(--v4-focus-clearance);
+  margin-inline: calc(-1 * var(--v4-focus-clearance));
+}
 .v4 [data-slot="alert-dialog-scroll"][data-before-footer] {
   padding-bottom: var(--v4-focus-clearance);
   margin-bottom: calc(-1 * var(--v4-focus-clearance));
