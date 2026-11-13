@@ -646,7 +646,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "motion@^13.2.0",
@@ -1111,19 +1112,18 @@
       ]
     },
     {
-      "name": "documentation-link-badge",
+      "name": "documentation-link",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/badge",
         "@cipher/cipher-base",
         "@cipher/icon",
         "@cipher/tooltip"
       ],
       "files": [
         {
-          "path": "src/components/cipher/ui/documentation-link-badge.tsx",
+          "path": "src/components/cipher/ui/documentation-link.tsx",
           "type": "registry:file",
-          "target": "src/components/cipher/ui/documentation-link-badge.tsx"
+          "target": "src/components/cipher/ui/documentation-link.tsx"
         },
         {
           "path": "src/components/cipher/ui/controls.module.css",
@@ -1131,9 +1131,9 @@
           "target": "src/components/cipher/ui/controls.module.css"
         },
         {
-          "path": "src/components/cipher/ui/documentation-link-badge.module.css",
+          "path": "src/components/cipher/ui/documentation-link.module.css",
           "type": "registry:file",
-          "target": "src/components/cipher/ui/documentation-link-badge.module.css"
+          "target": "src/components/cipher/ui/documentation-link.module.css"
         }
       ]
     },
@@ -1430,7 +1430,8 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/separator"
+        "@cipher/separator",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",

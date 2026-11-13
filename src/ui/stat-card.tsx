@@ -19,7 +19,7 @@ const trendTone = { up: "ok", down: "bad", flat: "neutral" } as const;
 
 export type StatCardProps = Omit<
   React.ComponentProps<typeof Card>,
-  "title" | "badges" | "description" | "action" | "footer" | "footerPlacement" | "children"
+  "title" | "badges" | "description" | "hint" | "action" | "footer" | "footerPlacement" | "children"
 > & {
   label: React.ReactNode;
   value: React.ReactNode;

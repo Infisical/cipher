@@ -81,7 +81,7 @@ export default function Example() {
                 <Badge tone="ok">Enterprise</Badge>
               </>
             }
-            description="Just-in-time access to databases and servers."
+            hint="Just-in-time access to databases and servers."
             footer={
               <>
                 <Meta mono={false}>Attaches to plans</Meta>

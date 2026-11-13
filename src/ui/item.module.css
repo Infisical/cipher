@@ -87,6 +87,72 @@
 .main[data-actions-below] {
   row-gap: var(--cipher-space-actions-gap);
 }
+.layout[data-has-actions] {
+  container: cipher-item / inline-size;
+}
+.layout[data-has-actions][data-variant="outline"] {
+  padding: var(--cipher-space-24);
+  border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.layout[data-has-actions] > .lead {
+  align-self: flex-start;
+  min-height: calc(
+    var(--cipher-type-row-title-line-height) + var(--cipher-space-2) +
+      var(--cipher-type-small-line-height)
+  );
+}
+.main[data-has-actions] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "copy"
+    "actions";
+  align-items: start;
+  row-gap: var(--cipher-space-actions-gap);
+}
+.main[data-has-actions] > .copy {
+  grid-area: copy;
+  min-width: 0;
+}
+.main[data-has-actions] > .actions {
+  grid-area: actions;
+  justify-content: flex-start;
+  min-height: 0;
+}
+.main[data-has-actions] .titleLine {
+  flex-wrap: nowrap;
+  align-items: baseline;
+}
+.main[data-has-actions] .titleLine > .unread {
+  align-self: center;
+}
+.main[data-has-actions] .titleLine > .title {
+  flex: 1 1 auto;
+}
+.main[data-has-actions] .titleLine > .meta {
+  flex: none;
+  margin-inline-start: 0;
+}
+.main[data-has-actions] .description {
+  margin-top: var(--cipher-space-2);
+}
+@container cipher-item (min-width: 44rem) {
+  .main[data-has-actions]:not([data-actions-below]) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "copy actions";
+    column-gap: var(--cipher-space-32);
+  }
+  .main[data-has-actions]:not([data-actions-below]) .titleLine > .title {
+    flex: 0 1 auto;
+  }
+  .main[data-has-actions]:not([data-actions-below]) > .actions {
+    flex-wrap: nowrap;
+    min-height: calc(
+      var(--cipher-type-row-title-line-height) + var(--cipher-space-2) +
+        var(--cipher-type-small-line-height)
+    );
+  }
+}
 .below {
   flex-basis: 100%;
 }
@@ -170,6 +236,12 @@
 .titleLine > .title {
   flex: 0 1 auto;
   min-width: 0;
+}
+.titleLine > .clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .meta {
   font-family: var(--cipher-type-mono-sm-font-family);

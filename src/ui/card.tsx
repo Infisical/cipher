@@ -16,6 +16,7 @@ import {
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
+import { TooltipText } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import frameStyles from "./frame.module.css";
@@ -44,6 +45,7 @@ function Card({
   title,
   badges,
   description,
+  hint,
   action,
   footer,
   footerPlacement = "inset",
@@ -55,11 +57,9 @@ function Card({
   ...props
 }: Omit<React.ComponentPropsWithoutRef<"div">, "title"> & {
   size?: "default" | "sm";
-  variant?: "framed" | "plain";
   title?: React.ReactNode;
   /** Badges on the title's line, right after its text, such as a plan tier. */
   badges?: React.ReactNode;
-  description?: React.ReactNode;
   action?: React.ReactNode;
   footer?: React.ReactNode;
   footerPlacement?: "inset" | "frame";
@@ -68,7 +68,16 @@ function Card({
   backdrop?: React.ReactNode;
   /** Paints the card as chosen. A CardChoice inside sets it on its own; pass it for a selection the card does not own, and give the link aria-current when a selected card is the current item. */
   selected?: boolean;
-} & { ref?: React.Ref<React.ComponentRef<"div">> }) {
+} & (
+    | { variant?: "plain"; description?: string; hint?: never }
+    | {
+        variant: "framed";
+        /** A frame holds a small contained table or list, so its head is a title and actions only. A section that needs a description belongs in a plain Card or a SettingsCard. */
+        description?: never;
+        /** One short plain-text sentence about the section. The title takes a dotted underline, becomes focusable and shows this in a tooltip on hover and keyboard focus. */
+        hint?: string;
+      }
+  ) & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const convenience =
     title !== undefined ||
     badges !== undefined ||
@@ -80,6 +89,17 @@ function Card({
   const [hasLink, reportLink] = useStretchedLinkHost();
   const [choiceChecked, reportChoice] = usePresenceCount();
   const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
+  const heading =
+    title !== undefined &&
+    (hint ? (
+      <CardTitle data-hint="">
+        <TooltipText content={hint} align="start" className={frameStyles.frameTitleHint}>
+          {title}
+        </TooltipText>
+      </CardTitle>
+    ) : (
+      <CardTitle>{title}</CardTitle>
+    ));
   const header = (title !== undefined ||
     badges !== undefined ||
     description !== undefined ||
@@ -89,11 +109,11 @@ function Card({
         <div className={controlStyles.cardCopy}>
           {badges !== undefined ? (
             <div className={controlStyles.cardTitleRow}>
-              {title !== undefined && <CardTitle>{title}</CardTitle>}
+              {heading}
               <CardBadges>{badges}</CardBadges>
             </div>
           ) : (
-            title !== undefined && <CardTitle>{title}</CardTitle>
+            heading
           )}
           {description !== undefined && <CardDescription>{description}</CardDescription>}
         </div>
