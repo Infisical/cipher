@@ -636,6 +636,7 @@
       "name": "card",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/badge",
         "@cipher/cipher-base",
         "@cipher/tooltip"
       ],
