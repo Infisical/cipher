@@ -218,6 +218,8 @@ export interface ListProps extends ListHeaderProps {
   onSelectionChange?: (ids: string[]) => void;
   loading?: boolean;
   loadingRows?: number;
+  /** A background refetch: the current rows stay, with a thin sweep on the top edge instead of loading's skeleton rows. */
+  refreshing?: boolean;
   empty?: React.ReactNode;
   /** State that must stay visible under the rows, never an action result; those go to a toast. */
   footer?: React.ReactNode;
@@ -237,6 +239,7 @@ export function List({
   onSelectionChange,
   loading,
   loadingRows = 3,
+  refreshing = false,
   empty = "No items",
   footer: footerProp
 }: ListProps) {
@@ -352,6 +355,9 @@ export function List({
           data-embedded={embedded || undefined}
           data-size={size}
         >
+          {refreshing && !loading && (
+            <span className={styles.refreshing} data-slot="list-refreshing" aria-hidden />
+          )}
           {(title || headerCount || action) && (
             <div
               className={framed ? frame.frameHead : styles.listHeader}
@@ -391,7 +397,7 @@ export function List({
             ref={list}
             className={cn(styles.list, framed && frame.frameInset)}
             aria-label={label}
-            aria-busy={loading}
+            aria-busy={loading || refreshing || undefined}
             tabIndex={-1}
             onKeyDown={key}
             onFocusCapture={(event) => {

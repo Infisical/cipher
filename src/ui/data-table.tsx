@@ -112,6 +112,8 @@ interface DataTableBaseProps<Row> {
   pagination?: React.ReactNode;
   loading?: boolean;
   loadingRows?: number;
+  /** A background refetch: the current rows stay, with a thin sweep on the top edge instead of loading's skeleton. */
+  refreshing?: boolean;
   actionBar?: React.ReactNode;
   /** Row ids being edited. Their rows render focused and the other rows dim until the value clears. */
   focusedRowId?: string | readonly string[];
@@ -163,6 +165,7 @@ export function DataTable<Row>({
   pagination,
   loading = false,
   loadingRows = 5,
+  refreshing = false,
   actionBar,
   focusedRowId,
   rowActions,
@@ -471,7 +474,7 @@ export function DataTable<Row>({
       <Table
         aria-label={label}
         aria-rowcount={rows.length + (groups ? sections.length : 0) + 1}
-        aria-busy={loading || undefined}
+        aria-busy={loading || refreshing || undefined}
         data-variant={variant}
         data-layout={fixedLayout ? "fixed" : undefined}
         style={
@@ -664,6 +667,9 @@ export function DataTable<Row>({
       data-variant={variant}
       data-embedded={embedded || undefined}
     >
+      {refreshing && !loading && (
+        <span className={styles.refreshing} data-slot="data-table-refreshing" aria-hidden />
+      )}
       <FrameScope framed>{scrollFrame}</FrameScope>
       {!height && more && <div className={styles.actions}>{more}</div>}
       {persistentStatus && <div className={styles.status}>{persistentStatus}</div>}

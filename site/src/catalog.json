@@ -976,6 +976,10 @@
       {
         "title": "Rows inside wrapper components",
         "module": "list/wrapped-rows"
+      },
+      {
+        "title": "Refreshing in the background",
+        "module": "list/refreshing"
       }
     ]
   },
@@ -1468,6 +1472,10 @@
       {
         "title": "Loading rows",
         "module": "table/loading"
+      },
+      {
+        "title": "Refreshing in the background",
+        "module": "table/refreshing"
       },
       {
         "title": "Wrapping text and a shrinking primary column",
