@@ -300,10 +300,6 @@
       {
         "title": "Band actions",
         "module": "card/band-actions"
-      },
-      {
-        "title": "Element description",
-        "module": "card/rich-description"
       }
     ]
   },
