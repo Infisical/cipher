@@ -8,6 +8,7 @@ import { useDescendantFlags } from "../lib/descendant-flags";
 import { useInFrame } from "../lib/frame-context";
 import { cn } from "../lib/utils";
 import { Icon, type IconName } from "./icon";
+import { Tooltip } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -91,9 +92,49 @@ export type ItemProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> &
     actionsPlacement?: "end" | "below";
     unread?: boolean;
     resolved?: boolean;
+    /**
+     * Keeps the title and description on one line with an ellipsis, and puts the full text in a
+     * native tooltip. Defaults to true, except on a row with actions at the default or md size,
+     * where the title wraps beside its timestamp. titleLines takes over the title when set, so
+     * truncate then governs only the description.
+     */
     truncate?: boolean;
+    /**
+     * Clamps the title to this many lines and shows the full title in a Tooltip while it is cut
+     * off. Unset leaves the title to truncate. titleLines={1} reads like truncate but uses a Cipher
+     * tooltip instead of a native one.
+     */
+    titleLines?: number;
     mono?: boolean;
   };
+
+function ClampedTitle({
+  lines,
+  className,
+  children
+}: {
+  lines: number;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const [element, setElement] = React.useState<HTMLSpanElement | null>(null);
+  const [clamped, setClamped] = React.useState(false);
+  React.useLayoutEffect(() => {
+    if (!element) return;
+    const measure = () => setClamped(element.scrollHeight > element.clientHeight + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [element, lines, children]);
+  return (
+    <Tooltip content={clamped ? children : undefined}>
+      <span ref={setElement} className={className} style={{ WebkitLineClamp: lines }}>
+        {children}
+      </span>
+    </Tooltip>
+  );
+}
 function Item({
   className,
   variant = "default",
@@ -110,7 +151,8 @@ function Item({
   actionsPlacement = "end",
   unread,
   resolved,
-  truncate = true,
+  truncate,
+  titleLines,
   mono = false,
   children,
   ref,
@@ -120,6 +162,13 @@ function Item({
   const Comp = asChild ? Slot.Root : "div";
   const itemRef = useDescendantFlags<HTMLDivElement>(itemFlags, undefined, ref);
   const composed = title !== undefined || media || icon || description || actions;
+  const hasActions = Boolean(actions) && (size === "default" || size === "md");
+  const truncated = truncate ?? !hasActions;
+  const metaNode = meta && (
+    <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>
+      {meta}
+    </span>
+  );
   const body = composed ? (
     <>
       {unread && <span className="sr-only">Unread</span>}
@@ -134,24 +183,35 @@ function Item({
         data-actions-below={
           (Boolean(actions || meta) && actionsPlacement === "below" && size !== "sm") || undefined
         }
+        data-has-actions={hasActions || undefined}
       >
         <div className={itemStyles.copy}>
           <div className={itemStyles.titleLine}>
             {unread && !(media || icon) && (
               <span className={itemStyles.unread} aria-hidden="true" />
             )}
-            <span
-              className={cn(itemStyles.title, mono && itemStyles.mono)}
-              title={typeof title === "string" ? title : undefined}
-            >
-              {title}
-            </span>
+            {titleLines ? (
+              <ClampedTitle
+                lines={titleLines}
+                className={cn(itemStyles.title, itemStyles.clamp, mono && itemStyles.mono)}
+              >
+                {title}
+              </ClampedTitle>
+            ) : (
+              <span
+                className={cn(itemStyles.title, mono && itemStyles.mono)}
+                title={truncated && typeof title === "string" ? title : undefined}
+              >
+                {title}
+              </span>
+            )}
             {badge}
+            {hasActions && metaNode}
           </div>
           {description && (
             <div
               className={itemStyles.description}
-              title={typeof description === "string" ? description : undefined}
+              title={truncated && typeof description === "string" ? description : undefined}
             >
               {description}
             </div>
@@ -171,11 +231,7 @@ function Item({
               actionsPlacement === "below" && size !== "sm" && itemStyles.below
             )}
           >
-            {meta && (
-              <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>
-                {meta}
-              </span>
-            )}
+            {!hasActions && metaNode}
             {actions}
           </div>
         )}
@@ -197,10 +253,11 @@ function Item({
       data-size={size}
       data-unread={unread || undefined}
       data-resolved={resolved || undefined}
+      data-has-actions={(composed && hasActions) || undefined}
       className={cn(
         itemVariants({ variant, size }),
         composed ? itemStyles.layout : "items-center",
-        !truncate && itemStyles.wrap,
+        !truncated && itemStyles.wrap,
         className
       )}
       {...props}
