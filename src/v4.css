@@ -609,7 +609,7 @@
   stroke-width: var(--v4-stroke-icon);
 }
 .v4 [data-slot="icon"][data-filled] {
-  fill: var(--v4-hue-icon, currentColor);
+  fill: var(--v4-hue-fill, currentColor);
 }
 
 /* Press: the control box never moves or resizes. Its label (text and icons) shrinks slightly on
