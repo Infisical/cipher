@@ -1046,7 +1046,7 @@
     "group": "Composites",
     "examples": [
       {
-        "title": "Connect an integration in three containers",
+        "title": "Connect an integration in three containers, with a blocked final step",
         "module": "multi-step/default"
       }
     ]

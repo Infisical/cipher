@@ -42,6 +42,8 @@ export interface MultiStepStep {
   content: React.ReactNode;
   validate?: () => ValidateResult | Promise<ValidateResult>;
   nextLabel?: string;
+  /** Blocks Continue (or the final action on the last step) and says why, as Button's disabledReason does: it stays focusable and shows the reason in a tooltip. */
+  disabledReason?: string;
 }
 
 export type StepsProps = {
@@ -202,7 +204,7 @@ export const MultiStep = ({
     activeStep()?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   });
   const advance = async () => {
-    if (busy || !entry) return;
+    if (busy || !entry || entry.disabledReason) return;
     setError(undefined);
     setBusy(true);
     try {
@@ -310,7 +312,14 @@ export const MultiStep = ({
             Back
           </Button>
         )}
-        <Button type="submit" form={formId} variant="primary" size="sm" loading={busy}>
+        <Button
+          type="submit"
+          form={formId}
+          variant="primary"
+          size="sm"
+          loading={busy}
+          disabledReason={entry.disabledReason}
+        >
           {last ? completeLabel : (entry.nextLabel ?? "Continue")}
         </Button>
       </div>
