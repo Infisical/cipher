@@ -254,6 +254,10 @@
         "module": "button/composition"
       },
       {
+        "title": "Icon toggles",
+        "module": "button/icon-toggles"
+      },
+      {
         "title": "Inside a form",
         "module": "button/form-type"
       },

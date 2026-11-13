@@ -131,7 +131,7 @@ export function SecretValue({
         variant="ghost"
         className={geometry.nestedAction}
         iconOnly
-        icon="eye"
+        icon={shown ? "eye-off" : "eye"}
         title={shown ? "Hide value" : "Reveal value"}
         aria-pressed={shown}
         onClick={() => setRevealed(shown ? null : value)}
@@ -337,7 +337,7 @@ function SensitiveEditorSession({
             variant="ghost"
             className={geometry.nestedAction}
             iconOnly
-            icon="eye"
+            icon={view.kind === "revealed" ? "eye-off" : "eye"}
             title={
               !onReveal
                 ? "You do not have permission to view this value"

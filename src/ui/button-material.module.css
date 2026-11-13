@@ -185,6 +185,17 @@
   color: var(--v4-selected-ink);
   border-color: var(--v4-selected-border);
 }
+.bare.bare,
+.bare.bare:is(:hover, [aria-pressed="true"], [data-state="on"], [aria-current="page"]) {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--v4-text2);
+}
+.bare.bare:is(:hover, [aria-pressed="true"], [data-state="on"], [aria-current="page"]):not(
+    :disabled
+  ) {
+  color: var(--v4-ink);
+}
 .paintTransition {
   transition-property: background-color, color, border-color, text-decoration-color;
   transition-duration: var(--v4-duration-fast);

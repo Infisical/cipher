@@ -36,6 +36,7 @@ const buttonVariants = cva(
           "hover:bg-[color:var(--v4-action-ghost-hover)] hover:text-foreground [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:bg-[color:var(--v4-action-ghost-hover)] [&[aria-haspopup]:is([data-state=open],[aria-expanded=true])]:text-foreground",
           styles.neutralSelection
         ],
+        bare: styles.bare,
         destructive: styles.danger,
         link: styles.link
       },
@@ -54,7 +55,7 @@ const buttonVariants = cva(
     },
     compoundVariants: [
       {
-        variant: ["primary", "default", "danger-ghost", "outline", "secondary", "ghost", "link"],
+        variant: ["primary", "default", "danger-ghost", "outline", "secondary", "ghost", "bare", "link"],
         className: [styles.paintTransition, "disabled:opacity-50", styles.reasonDisabled]
       },
       { variant: "destructive", className: styles.paintTransition }
@@ -119,6 +120,9 @@ function Button({
     props["aria-disabled"] === true ||
     props["aria-disabled"] === "true";
   const material = variant === "accent";
+  const iconToggle =
+    (selected ?? props["aria-pressed"]) !== undefined && (iconOnly || size?.startsWith("icon"));
+  const resolvedVariant = variant === "ghost" && iconToggle ? "bare" : variant;
   const preventActivation = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -210,7 +214,7 @@ function Button({
     <Comp
       ref={ref}
       data-slot="button"
-      data-variant={variant}
+      data-variant={resolvedVariant}
       data-size={size}
       data-layout={layout}
       data-underline={variant === "link" ? (underline ?? "always") : undefined}
@@ -227,7 +231,7 @@ function Button({
       aria-description={reason ?? props["aria-description"]}
       aria-pressed={selected ?? props["aria-pressed"]}
       className={cn(
-        buttonVariants({ variant, size }),
+        buttonVariants({ variant: resolvedVariant, size }),
         iconOnly && geometry.iconOnly,
         badge && geometry.badged,
         trigger && geometry.triggerLayout,

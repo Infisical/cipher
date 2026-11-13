@@ -140,6 +140,28 @@ export const iconShapes = {
       }
     }
   ],
+  "eye-off": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "12",
+        r: "2.8"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M4 4l16 16"
+      }
+    }
+  ],
   history: [
     {
       tag: "path",
