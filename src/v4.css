@@ -608,6 +608,9 @@
   height: var(--v4-size-icon);
   stroke-width: var(--v4-stroke-icon);
 }
+.v4 [data-slot="icon"][data-filled] {
+  fill: var(--v4-hue-icon, currentColor);
+}
 
 /* Press: the control box never moves or resizes. Its label (text and icons) shrinks slightly on
    press and springs back; the pressed fill stays on the box. Reduced motion keeps the fill only. */

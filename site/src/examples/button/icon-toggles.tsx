@@ -16,7 +16,7 @@ export default function Example() {
         aria-pressed={favorite}
         onClick={() => setFavorite(!favorite)}
       >
-        <Icon icon={StarIcon} fill={favorite ? "currentColor" : "none"} />
+        <Icon icon={StarIcon} filled={favorite} />
       </Button>
       <Button
         variant="ghost"
