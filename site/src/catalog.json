@@ -1478,6 +1478,14 @@
         "module": "table/refreshing"
       },
       {
+        "title": "Footer totals, secondary lines and muted rows",
+        "module": "table/summary-row"
+      },
+      {
+        "title": "Row props: drop targets and reorder",
+        "module": "table/drop-targets"
+      },
+      {
         "title": "Wrapping text and a shrinking primary column",
         "module": "table/wrap"
       },

@@ -14,6 +14,7 @@ import {
   TableActionsHead,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeadButton,
   TableHeader,
@@ -39,6 +40,10 @@ export interface DataTableColumn<Row> {
   mono?: boolean;
   /** Wraps long text onto more lines and grows the row, instead of truncating it to one line. */
   wrap?: boolean;
+  /** A muted second line under the cell's value, such as an email under a name or a key under a label. */
+  secondary?: (row: Row, index: number) => React.ReactNode;
+  /** The column's cell in a summary row under the body, such as a total. Any column with a footer adds the row. */
+  footer?: React.ReactNode;
   sortable?: boolean;
   width?: number;
   minWidth?: number;
@@ -50,6 +55,15 @@ export interface DataTableColumn<Row> {
   pin?: boolean | "start";
   hideHeader?: boolean;
 }
+/** Attributes and handlers for a data row's tr, such as drag and drop handlers that make it a drop target. */
+export type DataTableRowProps = Omit<
+  React.HTMLAttributes<HTMLTableRowElement>,
+  "children" | "dangerouslySetInnerHTML" | "className" | "style"
+> & {
+  /** Draws a drop indicator: an edge before or after the row, or the whole row as the target. */
+  "data-drop-target"?: "before" | "after" | "inside";
+  [data: `data-${string}`]: string | number | boolean | undefined;
+};
 export interface DataTableToggle<Row> {
   checked: (row: Row) => boolean | "indeterminate";
   onChange: (rowIds: string[], checked: boolean) => void;
@@ -127,6 +141,10 @@ interface DataTableBaseProps<Row> {
   containerClassName?: string;
   /** One level of child rows under a row, indented by space-row-indent. */
   getRowChildren?: (row: Row) => readonly Row[] | undefined;
+  /** Rows that stay in the table but read as inactive, such as disabled or archived ones: muted text on the done ground. */
+  isRowMuted?: (row: Row) => boolean;
+  /** Extra attributes and handlers for each data row's tr. Handlers run before DataTable's own, which skip a default-prevented event. */
+  rowProps?: (row: Row, index: number) => DataTableRowProps;
 }
 export type DataTableProps<Row> = DataTableBaseProps<Row> &
   (
@@ -171,7 +189,9 @@ export function DataTable<Row>({
   rowActions,
   rowContextMenu = true,
   containerRef,
-  containerClassName
+  containerClassName,
+  isRowMuted,
+  rowProps
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
   const [ownSelected, setOwnSelected] = React.useState<readonly string[]>(defaultSelectedIds);
@@ -326,6 +346,9 @@ export function DataTable<Row>({
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
   const skeletonRows = Math.max(1, Math.floor(loadingRows));
+  const showFooter =
+    !loading && rows.length > 0 && columns.some((column) => column.footer !== undefined);
+  const rowCount = rows.length + (groups ? sections.length : 0) + 1;
   const tableStyle: React.CSSProperties & { "--cipher-table-row-height"?: string } = {
     maxHeight: height,
     "--cipher-table-row-height": effectiveRowHeight ? `${effectiveRowHeight}px` : undefined
@@ -357,13 +380,18 @@ export function DataTable<Row>({
     position: number,
     rowIndex: number
   ) => {
+    const extra = rowProps?.(row, position);
     const tableRow = (
       <TableRow
+        {...extra}
         key={getRowId(row)}
         aria-rowindex={rowIndex}
         data-row-index={position}
-        tabIndex={onRowActivate ? 0 : position === focusRow ? -1 : undefined}
-        onBlur={position === focusRow ? () => setFocusRow(null) : undefined}
+        tabIndex={onRowActivate ? 0 : position === focusRow ? -1 : (extra?.tabIndex ?? undefined)}
+        onBlur={(event) => {
+          extra?.onBlur?.(event);
+          if (position === focusRow) setFocusRow(null);
+        }}
         data-state={selected.includes(getRowId(row)) ? "selected" : undefined}
         focused={
           typeof focusedRowId === "string"
@@ -371,9 +399,18 @@ export function DataTable<Row>({
             : Boolean(focusedRowId?.includes(getRowId(row)))
         }
         data-activatable={onRowActivate ? "" : undefined}
-        onClick={onRowActivate ? () => onRowActivate(row) : undefined}
+        data-muted={isRowMuted?.(row) || undefined}
+        onClick={
+          onRowActivate || extra?.onClick
+            ? (event) => {
+                extra?.onClick?.(event);
+                if (!event.defaultPrevented) onRowActivate?.(row);
+              }
+            : undefined
+        }
         onKeyDown={(event) => {
-          if (event.target !== event.currentTarget) return;
+          extra?.onKeyDown?.(event);
+          if (event.defaultPrevented || event.target !== event.currentTarget) return;
           if (event.key === "Enter" && onRowActivate) {
             event.preventDefault();
             onRowActivate(row);
@@ -403,6 +440,7 @@ export function DataTable<Row>({
             data-actions={column.actions || undefined}
             data-pin={column.pin ?? column.actions}
             data-wrap={column.wrap || undefined}
+            data-secondary={column.secondary ? true : undefined}
             data-row-interactive={column.actions || column.toggle ? true : undefined}
           >
             {column.toggle ? (
@@ -417,7 +455,13 @@ export function DataTable<Row>({
                 {column.render?.(row, position)}
               </TableRowActions>
             ) : (
-              <CellContent shrink={column.id === shrinkColumn}>
+              <CellContent
+                shrink={column.id === shrinkColumn}
+                secondary={column.secondary?.(row, position)}
+                wrap={column.wrap}
+                depth={depth > 0 && column.id === indentColumn ? depth : undefined}
+                maxWidth={column.maxWidth}
+              >
                 <div
                   className={column.primary ? styles.tablePrimary : styles.tableValue}
                   data-mono={column.mono || undefined}
@@ -473,7 +517,7 @@ export function DataTable<Row>({
     >
       <Table
         aria-label={label}
-        aria-rowcount={rows.length + (groups ? sections.length : 0) + 1}
+        aria-rowcount={rowCount + (showFooter ? 1 : 0)}
         aria-busy={loading || refreshing || undefined}
         data-variant={variant}
         data-layout={fixedLayout ? "fixed" : undefined}
@@ -648,6 +692,35 @@ export function DataTable<Row>({
               </TableBody>
             );
           })}
+        {showFooter && (
+          <TableFooter className={styles.tableFoot} data-slot="data-table-footer">
+            <TableRow aria-rowindex={rowCount + 1}>
+              {selectable && <TableCell selection pin={leading ? "start" : undefined} />}
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  className={column.actions ? styles.tableActions : undefined}
+                  style={columnStyle(column)}
+                  data-actions={column.actions || undefined}
+                  data-pin={column.pin ?? column.actions}
+                  data-wrap={column.wrap || undefined}
+                >
+                  {column.footer !== undefined && (
+                    <div
+                      className={column.primary ? styles.tablePrimary : styles.tableValue}
+                      data-mono={column.mono || undefined}
+                      data-wrap={column.wrap || undefined}
+                      style={{ maxWidth: column.maxWidth }}
+                    >
+                      {column.footer}
+                    </div>
+                  )}
+                </TableCell>
+              ))}
+              {rowActions && actionsColumn && <TableActionsCell slots={slots} data-pin="true" />}
+            </TableRow>
+          </TableFooter>
+        )}
       </Table>
       {height && more && <div className={cn(frame.frameFoot, styles.tableMore)}>{more}</div>}
       {pagination && (
@@ -687,8 +760,38 @@ export function DataTable<Row>({
     </div>
   );
 }
-function CellContent({ shrink, children }: { shrink: boolean; children: React.ReactNode }) {
-  return shrink ? <div className={styles.tableShrink}>{children}</div> : children;
+function CellContent({
+  shrink,
+  secondary,
+  wrap,
+  depth,
+  maxWidth,
+  children
+}: {
+  shrink: boolean;
+  secondary: React.ReactNode;
+  wrap?: boolean;
+  depth?: number;
+  maxWidth?: number;
+  children: React.ReactNode;
+}) {
+  const content =
+    secondary === undefined || secondary === null || secondary === false ? (
+      children
+    ) : (
+      <div className={styles.tableLines}>
+        {children}
+        <div
+          className={styles.tableSecondary}
+          data-wrap={wrap || undefined}
+          data-depth={depth}
+          style={{ maxWidth }}
+        >
+          {secondary}
+        </div>
+      </div>
+    );
+  return shrink ? <div className={styles.tableShrink}>{content}</div> : content;
 }
 export function EnvMark({ present, env }: { present: boolean; env?: string }) {
   return (

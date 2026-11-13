@@ -1229,8 +1229,58 @@ tbody > .nativeTableRow[data-loading] {
   overflow-wrap: anywhere;
   text-overflow: clip;
 }
-.tableScroll td[data-wrap] {
-  padding-block: var(--cipher-space-8);
+.tableScroll td:is([data-wrap], [data-secondary]) {
+  padding-block: var(--cipher-space-6);
+}
+.tableLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-2);
+  min-width: 0;
+}
+.tableSecondary {
+  box-sizing: content-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-inline: var(--cipher-focus-clearance);
+  margin-inline: calc(-1 * var(--cipher-focus-clearance));
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.tableSecondary[data-wrap] {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+.tableScroll .tableSecondary[data-depth="1"] {
+  padding-inline-start: calc(var(--cipher-focus-clearance) + var(--cipher-space-row-indent));
+}
+.tableScroll .tableSecondary[data-depth="2"] {
+  padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
+}
+.tableScroll[data-virtual] .tableLines > * {
+  min-height: 0;
+}
+/* The summary row sits on the frame band under the raised body, like the header above it. */
+.tableFoot > .nativeTableRow {
+  --cipher-table-row-ground: var(--cipher-tint);
+  --cipher-table-row-layers: none;
+  background-color: transparent;
+  font-variant-numeric: tabular-nums;
+}
+.tableScroll .tableFoot td {
+  border-bottom: 0;
+}
+.tableShell[data-embedded] .tableFoot > .nativeTableRow {
+  --cipher-table-row-ground: var(--cipher-surface);
+}
+.tableShell[data-embedded] .tableFoot td {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 /* A grid track that starts at the cell floor gives the primary column a small min-content width while keeping its natural max-content, so it truncates before the table overflows behind pinned actions. */
 .tableShrink {
@@ -1350,6 +1400,7 @@ tbody > .nativeTableRow[data-loading] {
 }
 .nativeTableRow:is(:hover, [data-expanded-within], [data-menu-open]):not(
     thead > *,
+    tfoot > *,
     [data-loading],
     [data-spacer],
     [data-row-kind],
@@ -1359,6 +1410,33 @@ tbody > .nativeTableRow[data-loading] {
 }
 .nativeTableRow[data-state="selected"] {
   --cipher-table-row-state: var(--cipher-selected-surface);
+}
+.nativeTableRow[data-muted] {
+  --cipher-table-row-ground: var(--cipher-row-done);
+  background-color: var(--cipher-table-row-ground);
+  color: var(--cipher-muted);
+}
+.nativeTableRow[data-muted] .tablePrimary {
+  color: inherit;
+}
+/* A drop indicator is an inset edge on every cell, so pinned cells, which paint their own box shadow, draw it too. */
+.nativeTableRow {
+  --cipher-drop-edge: 0 0 transparent;
+}
+.nativeTableRow[data-drop-target="before"] {
+  --cipher-drop-edge: inset 0 var(--cipher-size-focus-ring) 0 var(--cipher-ink);
+}
+.nativeTableRow[data-drop-target="after"] {
+  --cipher-drop-edge: inset 0 calc(-1 * var(--cipher-size-focus-ring)) 0 var(--cipher-ink);
+}
+.nativeTableRow[data-drop-target="inside"] {
+  --cipher-table-row-state: var(--cipher-selected-surface);
+  --cipher-drop-edge:
+    inset 0 var(--cipher-size-focus-ring) 0 var(--cipher-ink),
+    inset 0 calc(-1 * var(--cipher-size-focus-ring)) 0 var(--cipher-ink);
+}
+:where(.nativeTableRow[data-drop-target] > td) {
+  box-shadow: var(--cipher-drop-edge);
 }
 /* filter, not opacity, so the dim composes with opacity reveals inside the cells; a cell holding only text dims itself, since text has no element to filter. */
 :where(tbody > .nativeTableRow > td[data-text-only], tbody > .nativeTableRow > td > *) {
@@ -1476,7 +1554,10 @@ th[data-pin="start"] {
 }
 /* A pinned cell draws its column edge and DataTable's frame-pad cover as inset and outer shadows, so both stick with the cell; a table border would stay with the scrolled columns. */
 :is(td, th):is([data-pin], .tableActions) {
-  box-shadow: var(--cipher-pin-edge, 0 0 transparent), var(--cipher-pin-frame, 0 0 transparent);
+  box-shadow:
+    var(--cipher-drop-edge, 0 0 transparent),
+    var(--cipher-pin-edge, 0 0 transparent),
+    var(--cipher-pin-frame, 0 0 transparent);
 }
 :is([data-scroll-start-x] > table, [data-scroll-start-x] > .nativeTableContainer > table)
   > *
