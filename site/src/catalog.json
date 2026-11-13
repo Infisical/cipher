@@ -246,7 +246,7 @@
         "module": "button/sizes"
       },
       {
-        "title": "Loading and disabled",
+        "title": "Loading, loading label and disabled",
         "module": "button/states"
       },
       {

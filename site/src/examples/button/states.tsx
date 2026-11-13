@@ -25,6 +25,14 @@ export default function Example() {
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col items-center gap-3 text-center">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-center gap-3">
+          <Button variant="accent" loading loadingLabel="Saving">
+            Save changes
+          </Button>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"Loading label"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col items-center gap-3 text-center">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-center gap-3">
           <Button disabled>Save changes</Button>
         </div>
         <figcaption className="text-muted-foreground text-xs">{"Disabled"}</figcaption>
