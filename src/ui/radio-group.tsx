@@ -45,12 +45,21 @@ RadioGroup.displayName = "RadioGroup";
 
 function RadioGroupItem({
   className,
+  label,
+  description,
   ref,
   ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {
+}: React.ComponentProps<typeof RadioGroupPrimitive.Item> & {
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+}) {
   const reduced = useReducedMotion();
   const selected = React.useContext(RadioValueContext) === props.value;
-  return (
+  const generated = React.useId();
+  const id = props.id ?? generated;
+  const titleId = `${generated}-title`;
+  const descriptionId = `${generated}-description`;
+  const item = (
     <RadioGroupPrimitive.Item
       ref={ref}
       data-slot="radio-group-item"
@@ -61,6 +70,13 @@ function RadioGroupItem({
         className
       )}
       {...props}
+      id={id}
+      aria-labelledby={label ? titleId : props["aria-labelledby"]}
+      aria-describedby={
+        [props["aria-describedby"], label && description ? descriptionId : undefined]
+          .filter(Boolean)
+          .join(" ") || undefined
+      }
     >
       <RadioGroupPrimitive.Indicator
         forceMount
@@ -75,6 +91,23 @@ function RadioGroupItem({
         />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
+  );
+  return label ? (
+    <label htmlFor={id} className={controlStyles.choice}>
+      {item}
+      <span className={controlStyles.choiceText}>
+        <span id={titleId} className={controlStyles.choiceTitle}>
+          {label}
+        </span>
+        {description && (
+          <span id={descriptionId} className={controlStyles.choiceDescription}>
+            {description}
+          </span>
+        )}
+      </span>
+    </label>
+  ) : (
+    item
   );
 }
 RadioGroupItem.displayName = "RadioGroupItem";
