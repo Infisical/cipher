@@ -724,6 +724,26 @@
     ]
   },
   {
+    "id": "header-search",
+    "title": "Header search",
+    "summary": "Search a framed table from a glyph in its header: filters in memory, or runs a debounced server query.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Client filtering",
+        "module": "header-search/client"
+      },
+      {
+        "title": "Applied query indicators",
+        "module": "header-search/indicators"
+      },
+      {
+        "title": "Server search",
+        "module": "header-search/server"
+      }
+    ]
+  },
+  {
     "id": "hover-card",
     "title": "Hover Card",
     "summary": "Show supplementary information on hover or keyboard focus.",

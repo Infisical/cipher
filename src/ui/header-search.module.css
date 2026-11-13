@@ -1,0 +1,73 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+[data-cipher-button].trigger:is([data-state="open"], :hover) {
+  color: var(--cipher-ink);
+}
+.root[data-indicator="ink"][data-applied] > [data-cipher-button].trigger {
+  border-color: var(--cipher-selected-border);
+  background-color: var(--cipher-selected-surface);
+  color: var(--cipher-selected-ink);
+}
+.root[data-indicator="dot"][data-applied] > [data-cipher-button].trigger {
+  color: var(--cipher-ink);
+}
+.dot {
+  position: absolute;
+  top: var(--cipher-space-4);
+  right: var(--cipher-space-4);
+  width: var(--cipher-size-unread);
+  height: var(--cipher-size-unread);
+  background: var(--cipher-accent-fg);
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-tint);
+  pointer-events: none;
+}
+.root[data-indicator="chip"][data-applied] {
+  border: var(--cipher-size-control-border) solid var(--cipher-selected-border);
+  background-color: var(--cipher-selected-surface);
+}
+.root[data-indicator="chip"][data-applied] > [data-cipher-button] {
+  height: calc(var(--cipher-size-control-xs) - 2 * var(--cipher-size-control-border));
+  color: var(--cipher-selected-ink);
+}
+.root[data-indicator="chip"][data-applied] > .trigger {
+  padding-inline-end: var(--cipher-space-2);
+}
+.query {
+  display: block;
+  max-width: var(--cipher-size-text-min);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+[data-cipher-button].clear:not(:hover) {
+  color: var(--cipher-text2);
+}
+.panel.panel {
+  width: min(var(--cipher-size-menu-max), var(--radix-popper-available-width, 100vw));
+  gap: 0;
+  padding: var(--cipher-space-4);
+}
+.panel [data-field-box],
+.panel [data-field-box][data-control-focus] {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+.field::-webkit-search-cancel-button,
+.field::-webkit-search-decoration {
+  appearance: none;
+}
+.hint {
+  padding: var(--cipher-space-6) var(--cipher-space-8) var(--cipher-space-4);
+  border-top: var(--cipher-size-control-border) solid var(--cipher-pop-line);
+  color: var(--cipher-muted);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+}
+.hint[data-empty] {
+  display: none;
+}

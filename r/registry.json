@@ -1267,6 +1267,30 @@
       ]
     },
     {
+      "name": "header-search",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/input",
+        "@cipher/popover",
+        "@cipher/spinner",
+        "@cipher/tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/header-search.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/header-search.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/header-search.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/header-search.module.css"
+        }
+      ]
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "registryDependencies": [
