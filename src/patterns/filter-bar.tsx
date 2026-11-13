@@ -40,6 +40,8 @@ export type FilterBarProps = {
   value: readonly FilterBarFilter[];
   onChange: (value: FilterBarFilter[]) => void;
   search?: React.ReactNode;
+  /** capped (default) stops the search at size-search-max; full lets it fill the row up to the filters and actions. */
+  searchWidth?: "capped" | "full";
   actions?: React.ReactNode;
 };
 
@@ -65,7 +67,15 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
   return { verb: "is", value };
 };
 
-export const FilterBar = ({ label, fields, value, onChange, search, actions }: FilterBarProps) => {
+export const FilterBar = ({
+  label,
+  fields,
+  value,
+  onChange,
+  search,
+  searchWidth = "capped",
+  actions
+}: FilterBarProps) => {
   const [open, setOpen] = React.useState<string | null>(null);
   const [focusTarget, setFocusTarget] = React.useState<string | null>(null);
   const picked = React.useRef<string | null>(null);
@@ -112,7 +122,11 @@ export const FilterBar = ({ label, fields, value, onChange, search, actions }: F
   return (
     <div className={styles.bar} data-slot="filter-bar" role="search" aria-label={label}>
       <div className={styles.top}>
-        {search && <div className={styles.search}>{search}</div>}
+        {search && (
+          <div className={styles.search} data-width={searchWidth}>
+            {search}
+          </div>
+        )}
         {fields.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -146,7 +160,7 @@ export const FilterBar = ({ label, fields, value, onChange, search, actions }: F
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        {actions}
+        {actions && <div className={styles.actions}>{actions}</div>}
       </div>
       {value.length > 0 && (
         <div className={styles.applied}>

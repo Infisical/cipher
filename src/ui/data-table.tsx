@@ -284,7 +284,8 @@ export function DataTable<Row>({
   const slots = rowActions
     ? rowActionSlots(rowActions.inline?.length ?? 0, Boolean(rowActions.renderMenu))
     : 0;
-  const span = columns.length + (selectable ? 1 : 0) + (rowActions ? 1 : 0);
+  const actionsColumn = Boolean(rowActions) && (loading || rows.length > 0);
+  const span = columns.length + (selectable ? 1 : 0) + (actionsColumn ? 1 : 0);
   const hasGrowingColumn = columns.some((column) => column.grow && column.width === undefined);
   const fixedLayout = columns.every(
     (column) => column.width !== undefined || column.grow || column.actions
@@ -554,7 +555,7 @@ export function DataTable<Row>({
                 )}
               </TableHead>
             ))}
-            {rowActions && (
+            {rowActions && actionsColumn && (
               <TableActionsHead slots={slots} data-pin="true">
                 {rowActions.header ?? "Actions"}
               </TableActionsHead>
