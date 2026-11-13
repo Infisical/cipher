@@ -10,7 +10,11 @@ import { Separator } from "./separator";
 import { Tooltip } from "./tooltip";
 
 import { useDescendantFlags } from "../lib/descendant-flags";
-import { FieldControlContext } from "../lib/field-context";
+import {
+  FieldControlContext,
+  type FieldErrorMap,
+  FieldErrorsContext
+} from "../lib/field-context";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
 
@@ -107,15 +111,19 @@ function Field({
   help,
   group = false,
   wide = false,
+  name,
   children,
   id,
   ref,
+  onInputCapture,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> &
   VariantProps<typeof fieldVariants> & {
     label?: React.ReactNode;
     description?: React.ReactNode;
     error?: string;
+    /** Keys this field into the surrounding FieldErrors (MultiStep provides one per step), which shows that error here until the next edit. */
+    name?: string;
     optional?: boolean;
     wide?: boolean;
   } & (
@@ -126,6 +134,9 @@ function Field({
       }
     | { help?: never; group: true }
   ) & { ref?: React.Ref<React.ComponentRef<"div">> }) {
+  const form = React.useContext(FieldErrorsContext);
+  const formError = name ? form?.errors[name] : undefined;
+  error ??= formError;
   const generated = React.useId();
   const child = React.isValidElement<{ id?: string }>(children) ? children : null;
   const controlId = child?.props.id ?? id ?? generated;
@@ -164,6 +175,11 @@ function Field({
         data-width={wide ? "wide" : undefined}
         data-invalid={Boolean(error) || undefined}
         className={cn(fieldVariants({ orientation }), helperStyles.field, className)}
+        onInputCapture={(event) => {
+          onInputCapture?.(event);
+          // A sync clear here re-renders the field before the edit's own update and drops the keystroke.
+          if (name && formError) React.startTransition(() => form?.clear(name));
+        }}
         {...props}
       >
         {label ? (
@@ -201,6 +217,27 @@ function Field({
   );
 }
 Field.displayName = "Field";
+
+const noneCleared: string[] = [];
+
+/** Shows each error on the Field with that name, until the field is next edited. */
+function FieldErrors({ errors, children }: { errors: FieldErrorMap; children: React.ReactNode }) {
+  const [cleared, setCleared] = React.useState<{ from: FieldErrorMap; names: string[] }>({
+    from: errors,
+    names: noneCleared
+  });
+  const names = cleared.from === errors ? cleared.names : noneCleared;
+  const value = React.useMemo(
+    () => ({
+      errors: Object.fromEntries(
+        Object.entries(errors).filter(([name]) => !names.includes(name))
+      ),
+      clear: (name: string) => setCleared({ from: errors, names: [...names, name] })
+    }),
+    [errors, names]
+  );
+  return <FieldErrorsContext value={value}>{children}</FieldErrorsContext>;
+}
 
 function FieldContent({ className, ref, ...props }: React.ComponentProps<"div">) {
   return (
@@ -373,6 +410,7 @@ export {
   FieldContent,
   FieldDescription,
   FieldError,
+  FieldErrors,
   FieldGroup,
   FieldHelp,
   FieldLabel,
