@@ -302,7 +302,7 @@
         "module": "card/link"
       },
       {
-        "title": "Band actions",
+        "title": "Frame bands: 28px controls and a tight corner inset",
         "module": "card/band-actions"
       },
       {
@@ -316,6 +316,10 @@
       {
         "title": "Selected and choice cards",
         "module": "card/selected"
+      },
+      {
+        "title": "Header and footer without a body",
+        "module": "card/no-body"
       }
     ]
   },

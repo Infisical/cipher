@@ -38,6 +38,8 @@
   --cipher-size-touch-row: var(--cipher-space-48);
   --cipher-space-surface-inset: var(--cipher-space-16);
   --cipher-space-surface-inset-sm: var(--cipher-space-12);
+  --cipher-space-frame-inline: var(--cipher-space-6);
+  --cipher-space-frame-title-inline: calc(var(--cipher-space-12) - var(--cipher-space-frame-inline));
   --cipher-space-overlay-inset: var(--cipher-space-20);
   --cipher-space-menu-inset: var(--cipher-space-3);
   --cipher-space-control-slot-inset: var(--cipher-space-3);
@@ -105,6 +107,7 @@
   --cipher-size-data-list-term: 128px;
   --cipher-size-data-list-row: var(--cipher-size-control-sm);
   --cipher-size-control-default: var(--cipher-size-control-sm);
+  --cipher-size-control-band: var(--cipher-size-nested-md);
   --cipher-size-nested-default: var(--cipher-size-nested-sm);
   --cipher-size-row: var(--cipher-size-control-lg);
   --cipher-size-target-row: var(--cipher-size-nested-md);

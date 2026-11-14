@@ -1,7 +1,10 @@
 .field {
-  --cipher-field-height: var(--cipher-size-control-sm);
+  --cipher-field-height: var(--cipher-size-control-default);
   --cipher-field-inline: var(--cipher-space-control-inline-sm);
-  --cipher-field-nested: var(--cipher-size-nested-sm);
+  --cipher-field-nested: calc(
+    var(--cipher-field-height) - 2 *
+      (var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border))
+  );
   box-sizing: border-box;
   min-height: var(--cipher-field-height);
   padding-block: calc(
@@ -357,6 +360,12 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card > .cardInset,
 .cardInset > .cardBody {
   flex-grow: 1;
+}
+.card > .cardBody:empty {
+  display: none;
+}
+.card > .cardBody:empty + .cardFooter {
+  margin-top: auto;
 }
 .card[data-variant="framed"] > .cardHeader {
   align-items: center;

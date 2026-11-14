@@ -9,7 +9,7 @@ export default function Example() {
         title="Cross-project sharing"
         hint="Projects listed here can import or reference folders from this one."
         action={
-          <Button variant="outline" size="xs" icon="plus">
+          <Button variant="outline" icon="plus">
             Add project
           </Button>
         }
