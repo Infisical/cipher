@@ -1,28 +1,7 @@
 import tokens from "@infisical/cipher/tokens.json";
 import { PageHeader } from "@infisical/cipher/ui/page-header";
 
-import styles from "./preview.module.css";
-
-const themedColors = tokens.color.tokens.filter((token) => typeof token.value === "object");
-
-function ColorPage() {
-  return (
-    <>
-      <PageHeader title="Color" description="Every themed color token. Switch the theme to compare." />
-      <div className="mt-8 grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-x-6 gap-y-8">
-        {themedColors.map((token) => (
-          <figure key={token.name} className="m-0 flex flex-col gap-2">
-            <div className={styles.swatch} style={{ background: `var(--cipher-${token.name})` }} />
-            <figcaption className="flex flex-col gap-1">
-              <code className="text-sm">{token.name}</code>
-              <span className="text-muted-foreground line-clamp-2 text-xs">{token.usage}</span>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-    </>
-  );
-}
+import { ColorPage } from "./color/color-page";
 
 const typeStyle = (name: string) => ({
   fontFamily: `var(--cipher-type-${name}-font-family)`,
