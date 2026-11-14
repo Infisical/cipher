@@ -892,6 +892,10 @@
       {
         "title": "Number",
         "module": "input/number"
+      },
+      {
+        "title": "Fixed widths",
+        "module": "input/widths"
       }
     ]
   },
@@ -1012,6 +1016,14 @@
       {
         "title": "DataList default and compact density",
         "module": "list/density"
+      },
+      {
+        "title": "Rows inside wrapper components",
+        "module": "list/wrapped-rows"
+      },
+      {
+        "title": "Refreshing in the background",
+        "module": "list/refreshing"
       }
     ]
   },
@@ -1080,6 +1092,10 @@
       {
         "title": "Connect an integration in three containers",
         "module": "multi-step/default"
+      },
+      {
+        "title": "Pick, configure and connect in a sheet",
+        "module": "multi-step/pick"
       }
     ]
   },
@@ -1158,6 +1174,10 @@
         "module": "radio-group/descriptions"
       },
       {
+        "title": "Columns",
+        "module": "radio-group/columns"
+      },
+      {
         "title": "States",
         "module": "radio-group/states"
       },
@@ -1180,6 +1200,10 @@
       {
         "title": "DataTable rows and a Card",
         "module": "row-link/default"
+      },
+      {
+        "title": "Cell links in a pricing matrix",
+        "module": "row-link/cell-links"
       }
     ]
   },
@@ -1510,8 +1534,28 @@
         "module": "table/loading"
       },
       {
+        "title": "Refreshing in the background",
+        "module": "table/refreshing"
+      },
+      {
+        "title": "Footer totals, secondary lines and muted rows",
+        "module": "table/summary-row"
+      },
+      {
+        "title": "Row props: drop targets and reorder",
+        "module": "table/drop-targets"
+      },
+      {
+        "title": "Wrapping text and a shrinking primary column",
+        "module": "table/wrap"
+      },
+      {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
+      },
+      {
+        "title": "Group selection",
+        "module": "table/group-selection"
       },
       {
         "title": "Column toggle, permission matrix",
@@ -1696,6 +1740,10 @@
       {
         "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
+      },
+      {
+        "title": "Bounds, size and reveal (hover a card)",
+        "module": "halftone/bounds"
       }
     ]
   },

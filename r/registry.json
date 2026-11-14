@@ -640,6 +640,7 @@
       "name": "card",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/badge",
         "@cipher/cipher-base",
         "@cipher/tooltip"
       ],
@@ -1704,9 +1705,11 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/dialog",
+        "@cipher/field",
         "@cipher/icon",
         "@cipher/progress",
-        "@cipher/sheet"
+        "@cipher/sheet",
+        "@cipher/sonner"
       ],
       "dependencies": [
         "motion@^13.2.0"
@@ -1977,7 +1980,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/input"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"

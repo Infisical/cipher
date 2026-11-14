@@ -135,6 +135,31 @@ function ClampedTitle({
     </Tooltip>
   );
 }
+const hasVisibleText = (root: HTMLElement) => {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (!node.textContent?.trim()) continue;
+    let element = node.parentElement;
+    while (element && element !== root && element.offsetWidth > 1) element = element.parentElement;
+    if (element === root) return true;
+  }
+  return false;
+};
+
+function useIconOnly(enabled: boolean) {
+  const [element, setElement] = React.useState<HTMLDivElement | null>(null);
+  const [iconOnly, setIconOnly] = React.useState(false);
+  React.useLayoutEffect(() => {
+    if (!enabled || !element) return setIconOnly(false);
+    const sync = () => setIconOnly(!hasVisibleText(element));
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(element, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, [enabled, element]);
+  return [iconOnly, setElement] as const;
+}
+
 function Item({
   className,
   variant = "default",
@@ -164,6 +189,7 @@ function Item({
   const composed = title !== undefined || media || icon || description || actions;
   const hasActions = Boolean(actions) && (size === "default" || size === "md");
   const truncated = truncate ?? !hasActions;
+  const [actionsIconOnly, actionsRef] = useIconOnly(hasActions);
   const metaNode = meta && (
     <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>
       {meta}
@@ -184,6 +210,7 @@ function Item({
           (Boolean(actions || meta) && actionsPlacement === "below" && size !== "sm") || undefined
         }
         data-has-actions={hasActions || undefined}
+        data-actions-icon-only={(hasActions && actionsIconOnly) || undefined}
       >
         <div className={itemStyles.copy}>
           <div className={itemStyles.titleLine}>
@@ -226,6 +253,7 @@ function Item({
         </div>
         {(actions || meta) && (
           <div
+            ref={actionsRef}
             className={cn(
               itemStyles.actions,
               actionsPlacement === "below" && size !== "sm" && itemStyles.below

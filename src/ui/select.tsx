@@ -7,6 +7,7 @@ import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
+import type { FieldWidth } from "./input";
 import { useMenuInset } from "./menu-inset";
 
 import controlStyles from "./controls.module.css";
@@ -30,6 +31,7 @@ function Select({
   label,
   placeholder = "Choose an option",
   size,
+  width,
   invalid,
   align = "start",
   menuWidth,
@@ -47,6 +49,8 @@ function Select({
   label?: string;
   placeholder?: string;
   size?: "sm" | "default" | "md" | "lg";
+  /** A fixed token width for the trigger that doesn't shrink. Unset fills the row. */
+  width?: FieldWidth;
   invalid?: boolean;
   align?: "start" | "center" | "end";
   menuWidth?: React.CSSProperties["width"];
@@ -74,6 +78,7 @@ function Select({
             id={id}
             size={size ?? "default"}
             icon={icon}
+            width={width}
             aria-label={ariaLabel ?? label}
             aria-labelledby={labelledBy}
             aria-describedby={describedBy}
@@ -137,12 +142,15 @@ function SelectTrigger({
   className,
   size = "default",
   icon,
+  width,
   children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default" | "md" | "lg";
   icon?: IconSource;
+  /** A fixed token width that doesn't shrink. Unset fills the row. */
+  width?: FieldWidth;
 } & { ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Trigger>> }) {
   const name = React.useContext(SelectNameContext);
   const fieldAttributes = useFieldControlAttributes({
@@ -154,6 +162,7 @@ function SelectTrigger({
       ref={ref}
       data-slot="select-trigger"
       data-size={size}
+      data-width={width}
       className={cn(
         controlStyles.field,
         controlStyles.trigger,

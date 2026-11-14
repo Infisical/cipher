@@ -75,6 +75,9 @@
   display: grid;
   min-width: 0;
 }
+.inlineGrow {
+  flex: 1 1 var(--cipher-size-text-min);
+}
 .stack > *,
 .inline > *,
 .grid > * {

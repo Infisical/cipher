@@ -100,6 +100,17 @@ export function Inline({
   );
 }
 Inline.displayName = "Inline";
+/** An Inline child that takes the row's leftover width, such as a field beside buttons that hug their labels. */
+export function InlineGrow({
+  className,
+  ref,
+  ...props
+}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+  return (
+    <div ref={ref} data-slot="inline-grow" className={cn(styles.inlineGrow, className)} {...props} />
+  );
+}
+InlineGrow.displayName = "InlineGrow";
 export function Grid({
   gap = 16,
   columns,
