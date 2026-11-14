@@ -1354,12 +1354,20 @@
   {
     "id": "settings-card",
     "title": "Settings card",
-    "summary": "One setting, or a few that save together, with a footer that shows status and Save.",
+    "summary": "One setting, or a few that save together. Settings that apply at once autosave and show their status beside the title; Save sits in a footer only when changes must go together.",
     "group": "Composites",
     "examples": [
       {
         "title": "Save, locked and danger",
         "module": "settings-card/default"
+      },
+      {
+        "title": "States",
+        "module": "settings-card/states"
+      },
+      {
+        "title": "Autosave",
+        "module": "settings-card/autosave"
       },
       {
         "title": "Embedded table",

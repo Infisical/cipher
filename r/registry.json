@@ -2139,6 +2139,7 @@
         "@cipher/cipher-base",
         "@cipher/icon",
         "@cipher/skeleton",
+        "@cipher/sonner",
         "@cipher/spinner"
       ],
       "files": [
