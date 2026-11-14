@@ -51,7 +51,7 @@
   );
 }
 .root[data-preset="crash"] .mark > span[data-target] {
-  border-color: var(--cipher-accent);
+  border-color: var(--cipher-accent-edge);
   background: var(--cipher-accent);
   translate: var(--cipher-space-4) var(--cipher-space-4);
 }

@@ -1842,12 +1842,16 @@
   {
     "id": "hue",
     "title": "Hue scope",
-    "summary": "Set one hue on any element and its descendants get icon, tint and soft colors on a shared ramp, subtle where hues mix and pop inside a single-hue scope.",
+    "summary": "Set one hue on any element and its descendants get icon, tint and soft colors on a shared ramp, subtle where hues mix and pop inside a single-hue scope. The accent and the text on it follow the hue.",
     "group": "Utilities",
     "examples": [
       {
         "title": "Subtle and pop",
         "module": "hue/default"
+      },
+      {
+        "title": "Accent in a scope",
+        "module": "hue/accent"
       }
     ]
   }

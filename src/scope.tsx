@@ -153,17 +153,20 @@ CipherScope.displayName = "CipherScope";
 export function HuePortal({
   hue,
   level,
+  lightness,
   children
 }: {
   hue: number;
   level?: HueLevel;
+  lightness?: number;
   children?: React.ReactNode;
 }) {
   const parent = usePortalContainer();
   const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
   return (
     <>
-      {parent && createPortal(<div ref={setContainer} {...hueScope(hue, level)} />, parent)}
+      {parent &&
+        createPortal(<div ref={setContainer} {...hueScope(hue, level, { lightness })} />, parent)}
       <PortalContainerContext value={container ?? parent}>{children}</PortalContainerContext>
     </>
   );

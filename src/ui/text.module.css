@@ -208,5 +208,6 @@
 }
 .highlight {
   background-color: var(--cipher-accent);
+  box-shadow: inset 0 0 0 1px var(--cipher-accent-edge);
   color: var(--cipher-on-accent);
 }

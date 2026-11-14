@@ -31,11 +31,29 @@ const maxChroma = (l: number, hue: number) => {
   return low;
 };
 
-const ramps = new Map<number, string[]>();
+const luminance = (l: number, c: number, hue: number) => {
+  const [r, g, b] = toLinearRgb(l, c, hue).map((value) => Math.min(1, Math.max(0, value)));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const encode = (value: number) =>
+  value <= 0.0031308 ? 12.92 * value : 1.055 * value ** (1 / 2.4) - 0.055;
+const decode = (value: number) =>
+  value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+const mixedWithWhite = (l: number, c: number, hue: number, amount: number) => {
+  const [r, g, b] = toLinearRgb(l, c, hue).map((value) =>
+    decode(encode(Math.min(1, Math.max(0, value))) * amount + (1 - amount))
+  );
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+const INK = 0.0003;
 
-/** The accent and its hover step for a hue as oklch lightness and chroma pairs. Each sits at the lightest point where the hue holds the brand chroma (clamped to 0.7 to 0.917), so near-black on-accent passes AAA on every hue and the brand hue lands on Infisical yellow exactly. */
-export const accentRamp = (hue: number) => {
-  const cached = ramps.get(hue);
+const ramps = new Map<string, { accent: string; accent2: string; on: string }>();
+
+/** The accent, its hover step and the text on them for a hue. The accent sits at the lightest oklch point where the hue holds the brand chroma (clamped to 0.7 to 0.917), so the brand hue lands on Infisical yellow exactly; pass lightness to pin a darker accent. The text is near-black or white, whichever keeps the higher contrast on the worst of the fill, the hover step and the lightest stop of the button material. */
+export const accentRamp = (hue: number, lightness?: number) => {
+  const key = `${hue}:${lightness ?? ""}`;
+  const cached = ramps.get(key);
   if (cached) return cached;
   let cusp = BRAND.l;
   let best = 0;
@@ -50,24 +68,35 @@ export const accentRamp = (hue: number) => {
       cusp = l;
     }
   }
-  const l = Math.max(0.7, cusp);
+  const l = lightness ?? Math.max(0.7, cusp);
   const c = Math.min(BRAND.c, maxChroma(l, hue));
   const l2 = l - STEP;
-  const ramp = [l, c, l2, Math.min(c, maxChroma(l2, hue))].map((value) => value.toFixed(3));
-  const pairs = [`${ramp[0]} ${ramp[1]}`, `${ramp[2]} ${ramp[3]}`];
-  ramps.set(hue, pairs);
-  return pairs;
+  const c2 = Math.min(c, maxChroma(l2, hue));
+  const fills = [luminance(l, c, hue), luminance(l2, c2, hue), mixedWithWhite(l, c, hue, 0.78)];
+  const worst = (text: number) => Math.min(...fills.map((fill) => contrast(fill, text)));
+  const ramp = {
+    accent: `${l.toFixed(3)} ${c.toFixed(3)}`,
+    accent2: `${l2.toFixed(3)} ${c2.toFixed(3)}`,
+    on: worst(1) > worst(INK) ? "#ffffff" : "#010101"
+  };
+  ramps.set(key, ramp);
+  return ramp;
 };
 
 /** Props that make an element a hue scope: its descendants read --cipher-hue-icon, --cipher-hue-tint, --cipher-hue-soft and --cipher-hue-fill built from this hue, and the accent (accent, accent-2, accent-wash, accent-line, accent-fg and the accent button material) follows it too. Use subtle where several hues share a page and pop inside a single-hue scope. Outside every scope the accent is Infisical yellow. */
-export const hueScope = (hue: number, level: HueLevel = "subtle") => {
-  const [accent, accent2] = accentRamp(hue);
+export const hueScope = (
+  hue: number,
+  level: HueLevel = "subtle",
+  options: { lightness?: number } = {}
+) => {
+  const { accent, accent2, on } = accentRamp(hue, options.lightness);
   return {
     "data-hue": level,
     style: {
       "--cipher-hue": hue,
       "--cipher-accent-lc": accent,
-      "--cipher-accent-2-lc": accent2
+      "--cipher-accent-2-lc": accent2,
+      "--cipher-accent-on": on
     } as React.CSSProperties
   };
 };
