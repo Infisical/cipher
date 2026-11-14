@@ -369,35 +369,17 @@ export const iconShapes = {
       }
     }
   ],
-  looseleaf: [
+  "book-open": [
     {
       tag: "path",
       attributes: {
-        d: "M9 3.5h8.5A1.5 1.5 0 0 1 19 5v14a1.5 1.5 0 0 1-1.5 1.5H9"
+        d: "M12 7c-1.6-1.6-4-2.5-8-2.5v13c4 0 6.4.9 8 2.5"
       }
     },
     {
       tag: "path",
       attributes: {
-        d: "M9 3.5v17"
-      }
-    },
-    {
-      tag: "path",
-      attributes: {
-        d: "M10.5 7H7a1.5 1.5 0 0 0 0 3h3.5"
-      }
-    },
-    {
-      tag: "path",
-      attributes: {
-        d: "M10.5 14H7a1.5 1.5 0 0 0 0 3h3.5"
-      }
-    },
-    {
-      tag: "path",
-      attributes: {
-        d: "M12.5 12H16"
+        d: "M12 7c1.6-1.6 4-2.5 8-2.5v13c-4 0-6.4.9-8 2.5V7z"
       }
     }
   ],
