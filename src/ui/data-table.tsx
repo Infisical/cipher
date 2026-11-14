@@ -117,7 +117,7 @@ interface DataTableBaseProps<Row> {
   sort?: { columnId: string; direction: "asc" | "desc" };
   onSortChange?: (sort: { columnId: string; direction: "asc" | "desc" }) => void;
   empty?: React.ReactNode;
-  /** Caps the table in its own scroll window. The window is trimmed to the header plus whole rows, so no row is cut at the bottom edge. */
+  /** Caps the table in its own scroll window. With virtual, the window is trimmed to the header plus whole rows, so no row is cut at the bottom edge. */
   height?: number;
   /**
    * Renders only the rows in view. With height it windows the table's own scroll; without height the
@@ -283,15 +283,18 @@ export function DataTable<Row>({
   const windowed = Boolean(virtual && !groups);
   const flowing = windowed && !height;
   const [viewport, setViewport] = React.useState(0);
-  const [headHeight, setHeadHeight] = React.useState(0);
+  const [chrome, setChrome] = React.useState({ head: 0, rest: 0 });
   const windowSize =
     windowed && effectiveRowHeight
       ? Math.ceil((height ?? viewport) / effectiveRowHeight) + 8
       : rows.length;
+  const wholeRows =
+    windowed && height && effectiveRowHeight && chrome.head
+      ? Math.floor((height - chrome.head - chrome.rest) / effectiveRowHeight)
+      : 0;
   const frameHeight =
-    height && effectiveRowHeight && headHeight
-      ? headHeight +
-        Math.max(1, Math.floor((height - headHeight) / effectiveRowHeight)) * effectiveRowHeight
+    wholeRows > 0 && effectiveRowHeight
+      ? chrome.head + chrome.rest + wholeRows * effectiveRowHeight
       : height;
   const start =
     windowed && effectiveRowHeight
@@ -300,20 +303,38 @@ export function DataTable<Row>({
   let stop = rows.length;
   if (windowed) stop = effectiveRowHeight ? Math.min(rows.length, start + windowSize) : 0;
   React.useLayoutEffect(() => {
-    const head = scroll.current?.querySelector("thead");
-    if (!height || !head) return;
-    const measure = () => setHeadHeight(head.getBoundingClientRect().height);
+    const container = scroll.current;
+    const head = container?.querySelector("thead");
+    if (!height || !windowed || !container || !head) return;
+    const measure = () => {
+      const band = container.querySelector<HTMLElement>("[data-slot='data-table-pagination']");
+      const next = {
+        head: head.getBoundingClientRect().height,
+        rest:
+          container.offsetHeight - container.clientHeight + (band?.getBoundingClientRect().height ?? 0)
+      };
+      setChrome((current) =>
+        current.head === next.head && current.rest === next.rest ? current : next
+      );
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(head);
+    observer.observe(container);
     return () => observer.disconnect();
-  }, [height]);
+  }, [height, windowed]);
   React.useLayoutEffect(() => {
     const container = scroll.current;
     if (!flowing || !container) return;
     let scroller = container.parentElement;
-    while (scroller && !/auto|scroll/.test(getComputedStyle(scroller).overflowY))
+    while (
+      scroller &&
+      scroller !== document.body &&
+      scroller !== document.documentElement &&
+      !/auto|scroll/.test(getComputedStyle(scroller).overflowY)
+    )
       scroller = scroller.parentElement;
+    if (scroller === document.body || scroller === document.documentElement) scroller = null;
     const sync = () => {
       const viewTop = scroller ? scroller.getBoundingClientRect().top : 0;
       setTop(Math.max(0, viewTop - container.getBoundingClientRect().top));
@@ -322,11 +343,13 @@ export function DataTable<Row>({
     sync();
     const target = scroller ?? window;
     target.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
     const observer = new ResizeObserver(sync);
     observer.observe(scroller ?? document.documentElement);
     observer.observe(container);
     return () => {
       target.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
       observer.disconnect();
     };
   }, [flowing]);
