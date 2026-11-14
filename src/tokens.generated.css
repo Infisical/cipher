@@ -172,7 +172,6 @@
   --cipher-on-ink: var(--cipher-white);
   --cipher-accent: #e3f047;
   --cipher-accent-2: #d3df29;
-  --cipher-accent-edge: var(--cipher-accent-2);
   --cipher-on-accent: #010101;
   --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 28%, white);
   --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 55%, var(--cipher-line));
@@ -388,7 +387,6 @@
   --cipher-on-ink: var(--cipher-black);
   --cipher-accent: #e3f047;
   --cipher-accent-2: #d1de23;
-  --cipher-accent-edge: transparent;
   --cipher-on-accent: #010101;
   --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 11%, black);
   --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 25%, black);
@@ -497,7 +495,6 @@
 .cipher [data-hue] {
   --cipher-accent: oklch(var(--cipher-accent-lc, 0.917 0.183) var(--cipher-hue));
   --cipher-accent-2: oklch(var(--cipher-accent-2-lc, 0.867 0.183) var(--cipher-hue));
-  --cipher-accent-edge: var(--cipher-accent-2);
   --cipher-on-accent: var(--cipher-accent-on, #010101);
   --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 28%, white);
   --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 55%, var(--cipher-line));
@@ -520,7 +517,6 @@
 }
 .cipher[data-scheme="dark"][data-hue],
 .cipher[data-scheme="dark"] [data-hue] {
-  --cipher-accent-edge: transparent;
   --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 11%, black);
   --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 25%, black);
   --cipher-accent-fg: var(--cipher-accent);
