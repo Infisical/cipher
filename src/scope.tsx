@@ -2,6 +2,7 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 import { MotionConfig } from "motion/react";
 
+import { type HueLevel, hueScope } from "./lib/hue";
 import { type PresenceReport, usePresenceCount } from "./lib/presence-count";
 import { watchScrollEdges } from "./lib/scroll-edges";
 import { defaultTheme, toTheme, themeScheme } from "./lib/theme-registry";
@@ -147,3 +148,26 @@ export function CipherScope({
   );
 }
 CipherScope.displayName = "CipherScope";
+
+/** Carries a hue scope to overlays: sheets, dialogs, menus and popovers opened under it render outside the scoped element, so they portal into a container in the same hue and their accent matches the page. Put it around the element that spreads hueScope with the same hue. */
+export function HuePortal({
+  hue,
+  level,
+  lightness,
+  children
+}: {
+  hue: number;
+  level?: HueLevel;
+  lightness?: number;
+  children?: React.ReactNode;
+}) {
+  const parent = usePortalContainer();
+  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
+  return (
+    <>
+      {parent &&
+        createPortal(<div ref={setContainer} {...hueScope(hue, level, { lightness })} />, parent)}
+      <PortalContainerContext value={container ?? parent}>{children}</PortalContainerContext>
+    </>
+  );
+}
