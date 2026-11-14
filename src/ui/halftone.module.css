@@ -21,19 +21,6 @@
   display: block;
   fill: currentColor;
 }
-.figure {
-  fill: var(--cipher-hue-icon);
-  opacity: 0;
-  transition: opacity var(--cipher-duration-slow) var(--cipher-ease-fade);
-}
-:global([data-slot="card"]):is(:hover, :focus-within) .figure {
-  opacity: 1;
-  transition: opacity var(--cipher-duration-moderate) var(--cipher-ease-fade) var(--figure-delay);
-}
-.halftone svg.holder {
-  position: absolute;
-  visibility: hidden;
-}
 .rest {
   transition: opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
 }
@@ -60,18 +47,6 @@
 .ambient {
   animation: shimmer var(--halftone-wave) ease-in-out infinite;
 }
-.figure .ambient {
-  animation-name: shimmer-figure;
-}
-@keyframes shimmer-figure {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
 @keyframes shimmer {
   0%,
   100% {
@@ -91,10 +66,6 @@
   }
   .ambient {
     animation: none;
-  }
-  .figure,
-  :global([data-slot="card"]):is(:hover, :focus-within) .figure {
-    transition: none;
   }
 }
 :has(> .halftone) {
