@@ -369,6 +369,38 @@ export const iconShapes = {
       }
     }
   ],
+  looseleaf: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 3.5h8.5A1.5 1.5 0 0 1 19 5v14a1.5 1.5 0 0 1-1.5 1.5H9"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 3.5v17"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.5 7H7a1.5 1.5 0 0 0 0 3h3.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.5 14H7a1.5 1.5 0 0 0 0 3h3.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12.5 12H16"
+      }
+    }
+  ],
   external: [
     {
       tag: "path",
