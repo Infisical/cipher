@@ -305,7 +305,8 @@ export function Combobox({
           searchable
           quickActions={false}
           anchorRef={fieldRef}
-          defaultOpen={props.defaultOpen}
+          open={open}
+          onOpenChange={setOpen}
           closeOnFocusOutside={closeOnFocusOutside}
           renderValue={selected.length ? () => null : undefined}
           onCreate={onCreate}
@@ -324,8 +325,9 @@ export function Combobox({
             size="icon-xs"
             aria-label={props.clearLabel ?? "Clear all selections"}
             data-slot="combobox-clear"
+            onPointerDown={(event) => event.preventDefault()}
             onClick={() => {
-              refocus.current = null;
+              refocus.current = open ? undefined : null;
               apply(selected.filter(isLocked));
             }}
           >
@@ -381,9 +383,10 @@ export function Combobox({
           size="icon-xs"
           aria-label={props.clearLabel ?? "Clear selection"}
           data-slot="combobox-clear"
+          onPointerDown={(event) => event.preventDefault()}
           onClick={() => {
             apply([]);
-            triggerRef.current?.focus();
+            if (!open) triggerRef.current?.focus();
           }}
         >
           <Icon name="x" />
@@ -407,6 +410,13 @@ export function Combobox({
         surface="menu"
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();
+        }}
+        onInteractOutside={(event) => {
+          const clear =
+            event.target instanceof Element &&
+            event.target.closest('[data-slot="combobox-clear"]');
+          if (clear && (!clear.isConnected || triggerRef.current?.parentElement?.contains(clear)))
+            event.preventDefault();
         }}
       >
         <Command shouldFilter={false}>
