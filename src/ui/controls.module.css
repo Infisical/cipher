@@ -178,8 +178,18 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.trigger > .leading {
+  flex: none;
+}
+.trigger > .leading + * {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .trigger [data-placeholder],
-.trigger[data-placeholder] > :first-child {
+.trigger[data-placeholder] > :first-child,
+.trigger[data-placeholder] > .leading + * {
   color: var(--cipher-muted);
 }
 .textarea {

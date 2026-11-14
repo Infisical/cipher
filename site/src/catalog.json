@@ -496,6 +496,18 @@
     ]
   },
   {
+    "id": "date-picker",
+    "title": "Date picker",
+    "summary": "Pick one date from a calendar in a popover, with optional presets.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Empty, and set with presets",
+        "module": "date-picker/default"
+      }
+    ]
+  },
+  {
     "id": "date-range-picker",
     "title": "Date range picker",
     "summary": "Pick a start and end date from a calendar in a popover, with optional presets.",
@@ -508,6 +520,10 @@
       {
         "title": "With presets",
         "module": "date-range-picker/presets"
+      },
+      {
+        "title": "Two months, presets, Apply and Cancel",
+        "module": "date-range-picker/apply"
       },
       {
         "title": "Future dates disabled",
@@ -700,6 +716,10 @@
       {
         "title": "Label help",
         "module": "field/help"
+      },
+      {
+        "title": "Help and actions on a group",
+        "module": "field/group-help"
       }
     ]
   },
@@ -740,6 +760,14 @@
       {
         "title": "Date range field",
         "module": "filter-bar/date-range"
+      },
+      {
+        "title": "Filters kept in the URL",
+        "module": "filter-bar/url-state"
+      },
+      {
+        "title": "Search only",
+        "module": "filter-bar/search-only"
       }
     ]
   },
@@ -1220,6 +1248,10 @@
       {
         "title": "Sizes",
         "module": "select/sizes"
+      },
+      {
+        "title": "Leading icon",
+        "module": "select/icon"
       },
       {
         "title": "Long metadata and menu width",
