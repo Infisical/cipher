@@ -40,7 +40,7 @@ export function DocumentationLink({
         data-size={size}
         className={cn(controlStyles.focusOutlineInset, styles.link, className)}
       >
-        <Icon name="external" />
+        <Icon name="book-open" />
       </a>
     </Tooltip>
   );
