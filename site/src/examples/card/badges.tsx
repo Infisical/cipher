@@ -39,7 +39,7 @@ export default function Example() {
               </>
             }
             action={
-              <Button variant="outline" size="xs">
+              <Button variant="outline">
                 Manage
               </Button>
             }

@@ -36,7 +36,7 @@ export default function Example() {
             variant="framed"
             title="Evaluation order"
             action={
-              <Button variant="outline" size="xs" icon="plus">
+              <Button variant="outline" icon="plus">
                 Add rule
               </Button>
             }
