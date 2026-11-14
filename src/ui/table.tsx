@@ -445,6 +445,57 @@ function TableActionsCell({
 }
 TableActionsCell.displayName = "TableActionsCell";
 
+/** A full-width header row that names the rows under it. Put it first in its own TableBody, one body per group. */
+function TableGroupRow({
+  label,
+  meta,
+  actions,
+  checkbox,
+  selectable = checkbox !== undefined,
+  colSpan,
+  actionSlots,
+  className,
+  ref,
+  ...props
+}: Omit<React.ComponentProps<"tr">, "children"> & {
+  label: React.ReactNode;
+  /** Muted text after the label, such as the group's row count. */
+  meta?: React.ReactNode;
+  /** The group's own actions, drawn in the actions column. Needs actionSlots. */
+  actions?: React.ReactNode;
+  /** A Checkbox that selects the group's rows, drawn in the selection column. */
+  checkbox?: React.ReactNode;
+  /** Keeps the selection column when the group has no checkbox, so the label lines up with the rows. */
+  selectable?: boolean;
+  /** Columns the label spans, not counting the selection and actions columns. */
+  colSpan: number;
+  /** Width of the table's actions column. Omit when the table has none. */
+  actionSlots?: number;
+}) {
+  return (
+    <tr
+      ref={ref}
+      data-slot="table-group-row"
+      className={cn(styles.tableGroupRow, className)}
+      {...props}
+    >
+      {selectable && <TableCell selection>{checkbox}</TableCell>}
+      <th scope="rowgroup" colSpan={colSpan} className={styles.tableGroupHead}>
+        <div className={styles.tableGroupLabel}>
+          {label}
+          {meta !== undefined && <span className={styles.tableGroupMeta}>{meta}</span>}
+        </div>
+      </th>
+      {actionSlots !== undefined && (
+        <TableActionsCell slots={actionSlots} data-pin="true">
+          {actions}
+        </TableActionsCell>
+      )}
+    </tr>
+  );
+}
+TableGroupRow.displayName = "TableGroupRow";
+
 export type TableLoadingColumn = {
   /** Draws a shorter bar, as for the column that names the row. */
   primary?: boolean;
@@ -869,6 +920,7 @@ export {
   TableCaption,
   TableCell,
   TableFooter,
+  TableGroupRow,
   TableHead,
   TableHeadButton,
   TableHeader,

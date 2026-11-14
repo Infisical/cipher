@@ -957,9 +957,9 @@ tbody > .nativeTableRow[data-loading] {
   padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
 }
 .tableGroupRow {
-  --cipher-table-row-ground: var(--cipher-tint);
+  --cipher-table-row-ground: var(--cipher-paper);
   --cipher-table-row-layers: none;
-  background-color: var(--cipher-tint);
+  background-color: var(--cipher-paper);
 }
 .tableScroll th.tableGroupHead {
   height: var(--cipher-table-row-height, var(--cipher-size-row));

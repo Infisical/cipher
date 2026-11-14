@@ -1474,6 +1474,10 @@
         "module": "table/grouped-rows"
       },
       {
+        "title": "Group selection",
+        "module": "table/group-selection"
+      },
+      {
         "title": "Column toggle, permission matrix",
         "module": "table/column-toggle"
       },
