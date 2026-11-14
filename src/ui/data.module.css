@@ -57,6 +57,13 @@
 .tableScroll {
   scroll-padding-block: var(--cipher-focus-clearance);
 }
+.tableScroll[data-flow] {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.tableScroll tbody > tr {
+  scroll-margin-top: var(--cipher-space-40);
+}
 .gridScroll {
   background: var(--cipher-surface);
   border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
