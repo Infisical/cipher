@@ -350,6 +350,13 @@ export function MultiSelect({
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();
         }}
+        onInteractOutside={(event) => {
+          const clear =
+            event.target instanceof Element &&
+            event.target.closest('[data-slot="combobox-clear"]');
+          if (clear && (!clear.isConnected || anchorRef?.current?.contains(clear)))
+            event.preventDefault();
+        }}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           (searchable ? search.current : list.current)?.focus();
