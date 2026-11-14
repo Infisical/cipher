@@ -348,7 +348,8 @@
   --cipher-type-mono-sm-font-weight: 400;
   --cipher-type-mono-sm-letter-spacing: 0;
 }
-.cipher[data-scheme="dark"] {
+.cipher[data-scheme="dark"],
+.cipher[data-theme="dark"] {
   --cipher-black: #010101;
   --cipher-white: #ffffff;
   --cipher-neutral-100: #f1f0ea;
