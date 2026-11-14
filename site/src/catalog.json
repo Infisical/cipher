@@ -1040,6 +1040,10 @@
       {
         "title": "Connect an integration in three containers",
         "module": "multi-step/default"
+      },
+      {
+        "title": "Pick, configure and connect in a sheet",
+        "module": "multi-step/pick"
       }
     ]
   },
