@@ -1324,6 +1324,22 @@
     ]
   },
   {
+    "id": "sortable-list",
+    "title": "Sortable List",
+    "summary": "Rows a person puts in order, by dragging the grip or from the keyboard.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Basic list and a locked item",
+        "module": "sortable-list/default"
+      },
+      {
+        "title": "Inside a framed Card with row actions",
+        "module": "sortable-list/card"
+      }
+    ]
+  },
+  {
     "id": "spinner",
     "title": "Spinner",
     "summary": "Show the Infisical pixel mark while real work remains pending.",

@@ -2159,6 +2159,39 @@
       ]
     },
     {
+      "name": "sortable-list",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base"
+      ],
+      "dependencies": [
+        "motion@^13.2.0"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/sortable-list.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/sortable-list.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/data.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/data.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/frame.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/frame.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/sortable-list.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/sortable-list.module.css"
+        }
+      ]
+    },
+    {
       "name": "spinner",
       "type": "registry:ui",
       "registryDependencies": [
