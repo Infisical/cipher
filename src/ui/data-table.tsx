@@ -326,15 +326,18 @@ export function DataTable<Row>({
   React.useLayoutEffect(() => {
     const container = scroll.current;
     if (!flowing || !container) return;
+    const root = document.documentElement;
+    const viewportScroll = (element: HTMLElement) =>
+      element === root ||
+      (element === document.body && getComputedStyle(root).overflowY === "visible");
     let scroller = container.parentElement;
     while (
       scroller &&
-      scroller !== document.body &&
-      scroller !== document.documentElement &&
+      !viewportScroll(scroller) &&
       !/auto|scroll/.test(getComputedStyle(scroller).overflowY)
     )
       scroller = scroller.parentElement;
-    if (scroller === document.body || scroller === document.documentElement) scroller = null;
+    if (scroller && viewportScroll(scroller)) scroller = null;
     const sync = () => {
       const viewTop = scroller ? scroller.getBoundingClientRect().top : 0;
       setTop(Math.max(0, viewTop - container.getBoundingClientRect().top));
