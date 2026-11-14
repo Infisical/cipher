@@ -1,0 +1,1 @@
+{"version":3,"file":"duration-input.module.js","names":[],"sources":["../../src/ui/duration-input.module.css"],"sourcesContent":[".durationInput {\n  display: grid;\n  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);\n  gap: var(--cipher-space-8);\n  min-width: 0;\n}\n"],"mappings":""}

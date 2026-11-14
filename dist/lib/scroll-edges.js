@@ -1,0 +1,102 @@
+// src/lib/scroll-edges.ts
+/**
+* Edge-aware scroll fade. Any element with data-scroll-fade="y",
+* "x" or "both" gets data-scroll-start-y / data-scroll-end-y (and -x) while more content sits
+* before or after the visible area; base.css masks only those edges by size-scroll-fade. An area
+* that does not scroll gets no attribute and no fade. One document-level watcher serves every
+* CipherScope, so portaled menus and dialogs are covered too.
+*/
+var THRESHOLD = 1;
+var tracked = /* @__PURE__ */ new WeakMap();
+var started = 0;
+var stop = null;
+var axesOf = (element) => {
+	const value = element.getAttribute("data-scroll-fade");
+	if (value === "both") return ["x", "y"];
+	return value === "x" ? ["x"] : ["y"];
+};
+var attach = (element) => {
+	if (tracked.has(element)) return;
+	let frame = 0;
+	const update = () => {
+		frame = 0;
+		const style = getComputedStyle(element);
+		axesOf(element).forEach((axis) => {
+			const overflow = axis === "y" ? style.overflowY : style.overflowX;
+			if (overflow === "visible" || overflow === "clip") {
+				element.removeAttribute(`data-scroll-start-${axis}`);
+				element.removeAttribute(`data-scroll-end-${axis}`);
+				return;
+			}
+			const offset = axis === "y" ? element.scrollTop : Math.abs(element.scrollLeft);
+			const size = axis === "y" ? element.clientHeight : element.clientWidth;
+			const total = axis === "y" ? element.scrollHeight : element.scrollWidth;
+			element.toggleAttribute(`data-scroll-start-${axis}`, offset > THRESHOLD);
+			element.toggleAttribute(`data-scroll-end-${axis}`, offset + size < total - THRESHOLD);
+		});
+	};
+	const schedule = () => {
+		if (!frame) frame = requestAnimationFrame(update);
+	};
+	element.addEventListener("scroll", schedule, { passive: true });
+	const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
+	resize?.observe(element);
+	Array.from(element.children).forEach((child) => resize?.observe(child));
+	const content = new MutationObserver(() => {
+		Array.from(element.children).forEach((child) => resize?.observe(child));
+		schedule();
+	});
+	content.observe(element, {
+		childList: true,
+		subtree: true,
+		characterData: true
+	});
+	tracked.set(element, () => {
+		cancelAnimationFrame(frame);
+		element.removeEventListener("scroll", schedule);
+		resize?.disconnect();
+		content.disconnect();
+	});
+	update();
+};
+var sweep = (root) => {
+	if (root instanceof HTMLElement && root.hasAttribute("data-scroll-fade")) attach(root);
+	root.querySelectorAll("[data-scroll-fade]").forEach(attach);
+};
+/** Starts the shared watcher while at least one caller holds it; returns the release. */
+var watchScrollEdges = () => {
+	if (typeof document === "undefined") return () => {};
+	started += 1;
+	if (started === 1) {
+		sweep(document.body);
+		const observer = new MutationObserver((records) => {
+			records.forEach((record) => {
+				record.addedNodes.forEach((node) => {
+					if (node instanceof HTMLElement) sweep(node);
+				});
+				record.removedNodes.forEach((node) => {
+					if (!(node instanceof HTMLElement)) return;
+					[node, ...node.querySelectorAll("[data-scroll-fade]")].forEach((element) => {
+						tracked.get(element)?.();
+						tracked.delete(element);
+					});
+				});
+				if (record.type === "attributes" && record.target instanceof HTMLElement) sweep(record.target);
+			});
+		});
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ["data-scroll-fade"]
+		});
+		stop = () => observer.disconnect();
+	}
+	return () => {
+		started -= 1;
+		if (started === 0) stop?.();
+	};
+};
+export { watchScrollEdges };
+
+//# sourceMappingURL=scroll-edges.js.map
