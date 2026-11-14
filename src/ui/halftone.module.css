@@ -1,5 +1,5 @@
 .halftone {
-  --halftone-wave: 7.2s;
+  --halftone-wave: 6s;
   position: absolute;
   z-index: -1;
   display: block;
@@ -22,14 +22,14 @@
   fill: currentColor;
 }
 .rest {
-  transition: opacity 320ms var(--cipher-ease-fade);
+  transition: opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
 }
 .hover {
   opacity: 0;
   clip-path: ellipse(var(--halftone-rest) at var(--halftone-at));
   transition:
-    clip-path 560ms var(--cipher-ease-standard),
-    opacity 240ms var(--cipher-ease-fade);
+    clip-path calc(var(--cipher-duration-slow) * 4) var(--cipher-ease-fade),
+    opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
 }
 .halftone[data-reveal="hover"] {
   opacity: 0;
@@ -53,7 +53,7 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.2;
   }
 }
 @media (prefers-reduced-motion: reduce) {
