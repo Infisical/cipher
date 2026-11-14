@@ -142,6 +142,11 @@
           "target": "src/components/cipher/lib/sliding-indicator.tsx"
         },
         {
+          "path": "src/components/cipher/lib/sortable.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/sortable.ts"
+        },
+        {
           "path": "src/components/cipher/lib/stretched-link.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/stretched-link.ts"
@@ -1029,6 +1034,7 @@
         "@cipher/checkbox",
         "@cipher/cipher-base",
         "@cipher/icon",
+        "@cipher/sortable-list",
         "@cipher/table",
         "@cipher/tooltip"
       ],
@@ -2241,6 +2247,29 @@
           "path": "src/components/cipher/ui/sonner.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/sonner.module.css"
+        }
+      ]
+    },
+    {
+      "name": "sortable-grid",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base",
+        "@cipher/sortable-list"
+      ],
+      "dependencies": [
+        "motion@^13.2.0"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/sortable-grid.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/sortable-grid.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/sortable-grid.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/sortable-grid.module.css"
         }
       ]
     },

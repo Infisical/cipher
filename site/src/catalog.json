@@ -1456,6 +1456,18 @@
     ]
   },
   {
+    "id": "sortable-grid",
+    "title": "Sortable Grid",
+    "summary": "Cards a person puts in order across rows and columns, by dragging the grip or from the keyboard.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Product cards and a locked card",
+        "module": "sortable-grid/default"
+      }
+    ]
+  },
+  {
     "id": "spinner",
     "title": "Spinner",
     "summary": "Show the Infisical pixel mark while real work remains pending.",
@@ -1580,6 +1592,10 @@
       {
         "title": "Row props: drop targets and reorder",
         "module": "table/drop-targets"
+      },
+      {
+        "title": "Sortable rows with a locked rule",
+        "module": "table/sortable-rows"
       },
       {
         "title": "Wrapping text and a shrinking primary column",

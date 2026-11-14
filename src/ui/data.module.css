@@ -1715,3 +1715,17 @@ td.tableSelectionCell {
   white-space: normal;
   overflow-wrap: anywhere;
 }
+.tableSortCell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  margin-inline-start: calc(-1 * var(--cipher-space-4));
+}
+.tableSortCell > :last-child {
+  flex: 1;
+  min-width: 0;
+}
+.nativeTableRow[data-sortable-lifted] {
+  --cipher-table-row-state: var(--cipher-selected-surface);
+}
