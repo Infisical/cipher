@@ -1,6 +1,7 @@
 import { hueScope } from "@infisical/cipher/lib/hue";
 import { Card, CardLink } from "@infisical/cipher/ui/card";
 import { Halftone } from "@infisical/cipher/ui/halftone";
+import { Icon } from "@infisical/cipher/ui/icon";
 
 export default function Example() {
   return (
@@ -15,11 +16,18 @@ export default function Example() {
           }
           description="Store, sync, and rotate secrets across environments."
           footer="52 secrets"
-          backdrop={<Halftone bounds="header" ambient seed="secret-manager" />}
+          backdrop={
+            <Halftone
+              bounds="header"
+              ambient
+              seed="secret-manager"
+              figure={<Icon name="key" />}
+            />
+          }
         />
         <figcaption className="text-muted-foreground text-xs">
           {
-            "bounds header, ambient: fills the header, clear of the footer, and grows outward on hover"
+            "bounds header, ambient, figure: fills the header, clear of the footer, and traces the icon in cells on hover"
           }
         </figcaption>
       </figure>
