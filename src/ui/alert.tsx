@@ -27,11 +27,20 @@ function Alert({
 }: Omit<React.ComponentPropsWithoutRef<"div">, "title"> & {
   variant?: "default" | "destructive" | null;
   tone?: "neutral" | "info" | "ok" | "warn" | "bad";
-  title?: string;
+  /** Without a title the children are the message, still with the tone icon and actions. Children composed from AlertTitle, AlertDescription and an icon render as given. */
+  title?: React.ReactNode;
   actions?: React.ReactNode;
   onDismiss?: () => void;
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const alertRef = useDescendantFlags(alertFlags, alertWatch, ref);
+  const composed = React.Children.toArray(children).some(
+    (child) =>
+      React.isValidElement(child) &&
+      (child.type === AlertTitle ||
+        child.type === AlertDescription ||
+        child.type === Icon ||
+        child.type === "svg")
+  );
   return (
     <div
       ref={alertRef}
@@ -42,7 +51,9 @@ function Alert({
       className={cn(helperStyles.alert, className)}
       {...props}
     >
-      {title ? (
+      {composed ? (
+        children
+      ) : (
         <>
           <Icon
             name={
@@ -55,14 +66,12 @@ function Alert({
                     : "info"
             }
           />
-          <AlertTitle>{title}</AlertTitle>
+          {title != null && title !== false && <AlertTitle>{title}</AlertTitle>}
           <AlertDescription>
             {children}
             {actions && <div className={helperStyles.alertActions}>{actions}</div>}
           </AlertDescription>
         </>
-      ) : (
-        children
       )}
       {onDismiss && (
         <AlertAction>

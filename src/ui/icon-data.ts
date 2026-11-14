@@ -808,5 +808,275 @@ export const iconShapes = {
         d: "M12 12c-1.8-2.4-3.3-3.5-5-3.5a3.5 3.5 0 0 0 0 7c1.7 0 3.2-1.1 5-3.5zm0 0c1.8 2.4 3.3 3.5 5 3.5a3.5 3.5 0 0 0 0-7c-1.7 0-3.2 1.1-5 3.5z"
       }
     }
+  ],
+  pencil: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M4.5 19.5l1-4L15.8 5.2a2 2 0 0 1 2.8 0l.2.2a2 2 0 0 1 0 2.8L8.5 18.5z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m13.5 7.5 3 3"
+      }
+    }
+  ],
+  cloud: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M17 18.5H9a6 6 0 1 1 5.7-8H17a4 4 0 0 1 0 8z"
+      }
+    }
+  ],
+  flag: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M5.5 20.5v-16"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M5.5 4.5c4.5-2 8.5 2 13 0V14c-4.5 2-8.5-2-13 0"
+      }
+    }
+  ],
+  undo: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 13.5 4.5 9 9 4.5M4.5 9h10a5 5 0 0 1 0 10H11"
+      }
+    }
+  ],
+  pause: [
+    {
+      tag: "rect",
+      attributes: {
+        x: "6",
+        y: "5",
+        width: "4",
+        height: "14",
+        rx: "1"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "14",
+        y: "5",
+        width: "4",
+        height: "14",
+        rx: "1"
+      }
+    }
+  ],
+  hourglass: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M6 3.5h12M6 20.5h12"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.5 3.5V6c0 2.5 4.5 4 4.5 6s-4.5 3.5-4.5 6v2.5M16.5 3.5V6c0 2.5-4.5 4-4.5 6s4.5 3.5 4.5 6v2.5"
+      }
+    }
+  ],
+  alarm: [
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "13",
+        r: "7"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 9.5V13l2.5 1.5M4.5 6 7 3.5M19.5 6 17 3.5M7 19l-1.5 1.5M17 19l1.5 1.5"
+      }
+    }
+  ],
+  activity: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M3.5 12H7l2.5-7 5 14 2.5-7h3.5"
+      }
+    }
+  ],
+  rocket: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.5 15.5C8 9.5 13 4.5 19.5 4.5c0 6.5-5 11.5-11 11z"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "15",
+        cy: "9",
+        r: "1.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 11.5H5.5L8 8h3.5M12.5 15v3.5L16 16v-3.5M6.5 17.5l-2 2"
+      }
+    }
+  ],
+  archive: [
+    {
+      tag: "rect",
+      attributes: {
+        x: "3.5",
+        y: "4.5",
+        width: "17",
+        height: "4",
+        rx: "1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M5 8.5v10A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-10M10 12.5h4"
+      }
+    }
+  ],
+  "archive-restore": [
+    {
+      tag: "rect",
+      attributes: {
+        x: "3.5",
+        y: "4.5",
+        width: "17",
+        height: "4",
+        rx: "1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M5 8.5v10A1.5 1.5 0 0 0 6.5 20H8M19 8.5v10a1.5 1.5 0 0 1-1.5 1.5H16M9.5 14.5 12 12l2.5 2.5M12 12v8"
+      }
+    }
+  ],
+  "arrow-right-left": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M16 4l3.5 3.5L16 11M19.5 7.5h-15M8 13l-3.5 3.5L8 20M4.5 16.5h15"
+      }
+    }
+  ],
+  receipt: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M5.5 3.5h13v17l-2.2-1.2-2.1 1.2-2.2-1.2-2.2 1.2-2.1-1.2-2.2 1.2z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 8h6M9 11.5h6M9 15h3.5"
+      }
+    }
+  ],
+  "credit-card": [
+    {
+      tag: "rect",
+      attributes: {
+        x: "3",
+        y: "5.5",
+        width: "18",
+        height: "13",
+        rx: "1.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M3 10h18M7 15h3"
+      }
+    }
+  ],
+  "calendar-clock": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M20 10V7a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 4 7v11a1.5 1.5 0 0 0 1.5 1.5H10M4 10h6.5M8.5 3.5v4M15.5 3.5v4"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "16",
+        cy: "16",
+        r: "4.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M16 14v2l1.5 1"
+      }
+    }
+  ],
+  "chart-column": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M4 4v14.5A1.5 1.5 0 0 0 5.5 20H20M9 16.5v-3M13.5 16.5v-9M18 16.5V11"
+      }
+    }
+  ],
+  gift: [
+    {
+      tag: "rect",
+      attributes: {
+        x: "3.5",
+        y: "8",
+        width: "17",
+        height: "4",
+        rx: "1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 8v12.5M5.5 12v7A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5v-7"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 8c-1-2.5-2.5-4-4-4a2 2 0 0 0 0 4M12 8c1-2.5 2.5-4 4-4a2 2 0 0 1 0 4"
+      }
+    }
+  ],
+  "file-text": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M13.5 3.5v5h5M9 9h2M9 12.5h6M9 16h6"
+      }
+    }
   ]
 } as const;

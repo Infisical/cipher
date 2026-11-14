@@ -6,6 +6,7 @@ import { Button } from "./button";
 import { Icon } from "./icon";
 
 import { FrameScope } from "../lib/frame-context";
+import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
 import { renderInForm, splitOverlaySections } from "../lib/overlay-sections";
 import { useOwnedEscape } from "../lib/use-owned-escape";
@@ -71,6 +72,7 @@ function DialogContent({
   onEscapeKeyDown,
   onPointerDownOutside,
   onInteractOutside,
+  onOpenAutoFocus,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
@@ -104,6 +106,10 @@ function DialogContent({
         data-sections={sections ? "" : undefined}
         aria-busy={pending || undefined}
         className={cn("z-50", overlay.pop, overlay.dialog, className)}
+        onOpenAutoFocus={(event) => {
+          onOpenAutoFocus?.(event);
+          focusFirstControl(event);
+        }}
         {...props}
         {...guard}
       >

@@ -61,7 +61,11 @@ export function PageHeader({
               </span>
             )}
           </div>
-          {description && <p className={styles.description}>{description}</p>}
+          {description && (
+            <div data-slot="page-header-description" className={styles.description}>
+              {description}
+            </div>
+          )}
         </div>
         {actions && <div className={styles.actions}>{actions}</div>}
       </div>

@@ -2,6 +2,7 @@ import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 
 import { type FieldErrorMap } from "../lib/field-context";
+import { formControlSelector } from "../lib/initial-focus";
 import { exit, fade, spring } from "../lib/motion";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
@@ -51,6 +52,8 @@ export interface MultiStepStep {
   render?: (step: { next: () => void }) => React.ReactNode;
   validate?: () => ValidateResult | Promise<ValidateResult>;
   nextLabel?: string;
+  /** Blocks Continue (or the final action on the last step) and says why, as Button's disabledReason does: it stays focusable and shows the reason in a tooltip. */
+  disabledReason?: string;
 }
 
 export type StepsProps = {
@@ -141,9 +144,6 @@ export type MultiStepProps = {
 
 const noErrors: FieldErrorMap = {};
 
-const fieldSelector =
-  ":is(input:not([type=hidden]), textarea, select, [role=combobox], button[role=radio], button[role=checkbox], button[role=switch]):not(:disabled, [aria-disabled=true])";
-
 export const MultiStep = ({
   steps,
   variant = "dialog",
@@ -198,7 +198,7 @@ export const MultiStep = ({
     const step = viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`);
     (
       step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
-      step?.querySelector<HTMLElement>(fieldSelector)
+      step?.querySelector<HTMLElement>(formControlSelector)
     )?.focus();
   }, [current]);
   const measure = React.useCallback((node: HTMLDivElement | null) => {
@@ -234,7 +234,7 @@ export const MultiStep = ({
     activeStep()?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   });
   const advance = async () => {
-    if (busy || !entry) return;
+    if (busy || !entry || entry.disabledReason) return;
     setError(undefined);
     setBusy(true);
     try {
@@ -366,7 +366,14 @@ export const MultiStep = ({
             Back
           </Button>
         )}
-        <Button type="submit" form={formId} variant="primary" size="sm" loading={busy}>
+        <Button
+          type="submit"
+          form={formId}
+          variant="primary"
+          size="sm"
+          loading={busy}
+          disabledReason={entry.disabledReason}
+        >
           {last ? completeLabel : (entry.nextLabel ?? "Continue")}
         </Button>
       </div>

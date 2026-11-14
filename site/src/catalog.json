@@ -46,7 +46,7 @@
     "group": "Patterns",
     "examples": [
       {
-        "title": "Recent project activity",
+        "title": "Recent project activity, keyset pages and empty",
         "module": "activity-log/default"
       }
     ]
@@ -94,7 +94,7 @@
         "module": "alert/default"
       },
       {
-        "title": "Variants and actions",
+        "title": "Variants, actions, no title and node title",
         "module": "alert/variants"
       },
       {
@@ -204,6 +204,10 @@
       {
         "title": "Count",
         "module": "badge/count"
+      },
+      {
+        "title": "Icon",
+        "module": "badge/icon"
       }
     ]
   },
@@ -246,7 +250,7 @@
         "module": "button/sizes"
       },
       {
-        "title": "Loading and disabled",
+        "title": "Loading, loading label and disabled",
         "module": "button/states"
       },
       {
@@ -328,6 +332,10 @@
       {
         "title": "Six-series palette",
         "module": "chart/palette"
+      },
+      {
+        "title": "Height and aspect",
+        "module": "chart/sizes"
       }
     ]
   },
@@ -828,6 +836,10 @@
       {
         "title": "New glyphs and icon components",
         "module": "icon/components"
+      },
+      {
+        "title": "Editing, billing and lifecycle glyphs at 24 and 16",
+        "module": "icon/operations"
       }
     ]
   },
@@ -1090,7 +1102,7 @@
     "group": "Composites",
     "examples": [
       {
-        "title": "Connect an integration in three containers",
+        "title": "Connect an integration in three containers, with a blocked final step",
         "module": "multi-step/default"
       },
       {
@@ -1106,7 +1118,7 @@
     "group": "Navigation",
     "examples": [
       {
-        "title": "Top-level page and object page",
+        "title": "Top-level page, object page and block description",
         "module": "page-header/default"
       }
     ]
@@ -1590,11 +1602,11 @@
     "group": "Utilities",
     "examples": [
       {
-        "title": "Heading roles and body text",
+        "title": "Heading roles, body text and preWrap",
         "module": "text/default"
       },
       {
-        "title": "StatusText tones and loading",
+        "title": "StatusText tones, loading and size",
         "module": "text/status"
       },
       {

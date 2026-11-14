@@ -32,3 +32,15 @@
 .queueSmallLine {
   min-height: var(--cipher-type-small-line-height);
 }
+.activityActor {
+  color: var(--cipher-ink);
+}
+.activitySummary {
+  color: var(--cipher-text2);
+  font-weight: var(--cipher-type-body-font-weight);
+}
+.activityBadges {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-4);
+}

@@ -635,6 +635,10 @@
   transform: translateY(var(--cipher-space-2));
   color: currentColor;
 }
+.alert[data-has-icon]:not([data-has-title]) > svg {
+  grid-row: 1;
+  transform: translateY(calc(var(--cipher-space-2) / 2));
+}
 .alert[data-has-icon] > :is(.alertTitle, .alertDescription) {
   grid-column: 2;
 }
