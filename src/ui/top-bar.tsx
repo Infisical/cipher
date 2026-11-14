@@ -2,7 +2,7 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
-import { themes } from "../lib/theme-registry";
+import { themeScheme, themes } from "../lib/theme-registry";
 import { cn } from "../lib/utils";
 import { useActionBarReport } from "../scope";
 import { Count } from "./badge";
@@ -24,6 +24,7 @@ import { Toaster } from "./sonner";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { Tooltip, TooltipProvider } from "./tooltip";
 
+import geometry from "./button-geometry.module.css";
 import styles from "./top-bar.module.css";
 
 export type ShellMode = "wide" | "rail" | "narrow";
@@ -388,12 +389,20 @@ const themeOptions: { value: ShellTheme; label: string }[] = [
   ...themes.map((theme) => ({ value: theme.id, label: theme.name }))
 ];
 
+const themeIcons = { system: "monitor", light: "sun", dark: "moon" } as const;
+
 export interface TopBarAccount {
   name: string;
   email?: string;
   items?: readonly ShellMenuEntry[];
   theme?: { value: ShellTheme; onChange: (value: ShellTheme) => void; label?: string };
   endItems?: readonly ShellMenuEntry[];
+  label?: string;
+}
+
+export interface TopBarTheme {
+  value: ShellTheme;
+  onChange: (value: ShellTheme) => void;
   label?: string;
 }
 
@@ -519,6 +528,7 @@ export type TopBarProps = Omit<React.ComponentPropsWithoutRef<"header">, "childr
   search?: { onClick: () => void; label?: string; shortcut?: string };
   notifications?: TopBarNotifications;
   account?: TopBarAccount;
+  theme?: TopBarTheme;
   actions?: React.ReactNode;
   label?: string;
   navigationLabel?: string;
@@ -529,6 +539,7 @@ export function TopBar({
   search,
   notifications,
   account,
+  theme,
   actions,
   label = "Location",
   navigationLabel = "Open navigation",
@@ -627,6 +638,33 @@ export function TopBar({
                 {searchLabel}
               </Button>
             </Tooltip>
+          )}
+          {theme && (
+            <ToggleGroup
+              type="single"
+              aria-label={theme.label ?? "Theme"}
+              value={theme.value}
+              onValueChange={(value) => {
+                if (value) theme.onChange(value);
+              }}
+              size={narrow ? "lg" : "default"}
+            >
+              {themeOptions.map((option) => (
+                <Tooltip key={option.value} content={option.label} side="bottom">
+                  <ToggleGroupItem
+                    value={option.value}
+                    aria-label={option.label}
+                    className={geometry.iconOnly}
+                  >
+                    <Icon
+                      name={
+                        themeIcons[option.value === "system" ? "system" : themeScheme(option.value)]
+                      }
+                    />
+                  </ToggleGroupItem>
+                </Tooltip>
+              ))}
+            </ToggleGroup>
           )}
           {!narrow && account && (
             <>
