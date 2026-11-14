@@ -1,4 +1,5 @@
 .halftone {
+  --halftone-wave: 6s;
   position: absolute;
   z-index: -1;
   display: block;
@@ -15,38 +16,56 @@
   color: var(--cipher-ink);
 }
 .halftone svg {
+  position: absolute;
+  inset: 0;
   display: block;
   fill: currentColor;
 }
-.rest,
-.hover {
-  transform-box: view-box;
-  transition:
-    transform 320ms var(--cipher-ease-standard),
-    opacity 320ms var(--cipher-ease-fade);
+.rest {
+  transition: opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
 }
 .hover {
   opacity: 0;
-  transform: scale(calc(1 / 1.5));
+  clip-path: ellipse(var(--halftone-rest) at var(--halftone-at));
+  transition:
+    clip-path calc(var(--cipher-duration-slow) * 4) var(--cipher-ease-fade),
+    opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
+}
+.halftone[data-reveal="hover"] {
+  opacity: 0;
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .halftone {
   opacity: calc(var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1));
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .rest {
   opacity: 0;
-  transform: scale(1.5);
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .hover {
   opacity: 1;
-  transform: scale(1);
+  clip-path: ellipse(var(--halftone-grown) at var(--halftone-at));
+}
+.ambient {
+  animation: shimmer var(--halftone-wave) ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .hover {
-    display: none;
+    clip-path: none;
+    transition: none;
   }
-  :global([data-slot="card"]):is(:hover, :focus-within) .rest {
-    opacity: 1;
-    transform: none;
+  .rest {
+    transition: none;
+  }
+  .ambient {
+    animation: none;
   }
 }
 :has(> .halftone) {
