@@ -94,8 +94,10 @@ type SharedComboboxProps = {
   onCreate?: OptionCreateHandler;
   /** The inline Create row's text for the trimmed search, for example (query) => `Create category "${query}"`. */
   createLabel?: (query: string) => string;
-  /** Lets the person empty the value: Clear all after the chips, or Clear selection atop a single list. */
+  /** Shows a clear X in place of the chevron while the value holds something the person can remove. Locked (disabled) options stay selected. */
   clearable?: boolean;
+  /** The clear X's accessible name, for example Remove usage cap. Defaults to Clear selection, or Clear all selections with multiple. */
+  clearLabel?: string;
   /** A fixed token width that doesn't shrink. Unset fills the row. */
   width?: FieldWidth;
   className?: string;
@@ -253,14 +255,16 @@ export function Combobox({
     apply([option.value]);
     closeDialog();
   };
+  const canClear = Boolean(props.clearable) && selected.some((value) => !isLocked(value));
   if (props.multiple)
     return (
       <div
         ref={fieldBoxRef}
         data-width={width}
-        className={cn(controlStyles.field, styles.multiCombobox)}
+        className={cn(controlStyles.field, styles.multiCombobox, styles.comboboxField)}
         data-size="sm"
         data-field-box=""
+        data-clear={canClear || undefined}
       >
         {selected.map((value) => {
           const chipLabel = options.find((option) => option.value === value)?.label ?? value;
@@ -313,18 +317,19 @@ export function Combobox({
               apply(selected.slice(0, -1));
           }}
         />
-        {props.clearable && selected.some((value) => !isLocked(value)) && (
+        {canClear && (
           <Button
             type="button"
             variant="ghost"
-            size="xs"
+            size="icon-xs"
+            aria-label={props.clearLabel ?? "Clear all selections"}
             data-slot="combobox-clear"
             onClick={() => {
               refocus.current = null;
               apply(selected.filter(isLocked));
             }}
           >
-            Clear all
+            <Icon name="x" />
           </Button>
         )}
       </div>
@@ -357,9 +362,36 @@ export function Combobox({
         className={cn(controlStyles.field, controlStyles.trigger, mono && styles.mono, className)}
       >
         <span>{selectedOption?.label ?? (selected[0] || placeholder)}</span>
-        <Icon name="chev-down" className={controlStyles.chevron} />
+        <Icon name="chev-down" className={controlStyles.chevron} data-chevron="" />
       </button>
     </PopoverTrigger>
+  );
+  const control = props.clearable ? (
+    <div
+      data-slot="combobox-control"
+      data-width={width}
+      data-clear={canClear || undefined}
+      className={styles.comboboxControl}
+    >
+      {trigger}
+      {canClear && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-xs"
+          aria-label={props.clearLabel ?? "Clear selection"}
+          data-slot="combobox-clear"
+          onClick={() => {
+            apply([]);
+            triggerRef.current?.focus();
+          }}
+        >
+          <Icon name="x" />
+        </Button>
+      )}
+    </div>
+  ) : (
+    trigger
   );
   return (
     <Popover
@@ -368,7 +400,7 @@ export function Combobox({
         if (!disabled) changeOpen(next);
       }}
     >
-      {trigger}
+      {control}
       <PopoverContent
         id={contentId}
         align="start"
@@ -389,24 +421,6 @@ export function Combobox({
             trailing={loading ? <Spinner /> : undefined}
           />
           <CommandList aria-busy={loading || undefined}>
-            {props.clearable && !query && selected[0] && !isLocked(selected[0]) && (
-              <>
-                <CommandGroup>
-                  <CommandItem
-                    value="combobox-clear"
-                    data-slot="combobox-clear"
-                    onSelect={() => {
-                      apply([]);
-                      changeOpen(false);
-                    }}
-                  >
-                    <Icon name="x" />
-                    <span className={menu.title}>Clear selection</span>
-                  </CommandItem>
-                </CommandGroup>
-                <CommandSeparator />
-              </>
-            )}
             {!onSearch && !dialogCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
             {(onSearch || dialogCreation) && !filtered.length && (
               <p role="status" data-slot="combobox-status" className={menu.empty}>

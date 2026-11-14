@@ -105,6 +105,7 @@
 }
 .chip > span:first-child {
   min-width: 0;
+  max-width: var(--cipher-size-field-md);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -135,9 +136,73 @@
     )
     0;
 }
-.multiCombobox > [data-slot="combobox-clear"] {
+.comboboxField,
+.comboboxControl {
+  --cipher-combobox-trailing-end: calc(
+    var(--cipher-field-inline) + var(--cipher-size-icon) / 2 - var(--cipher-field-nested) / 2
+  );
+  position: relative;
+}
+.comboboxField[data-size] {
+  padding-inline-end: calc(
+    var(--cipher-combobox-trailing-end) + var(--cipher-field-nested) +
+      var(--cipher-space-control-slot-gap)
+  );
+}
+.comboboxField > [data-slot="multi-select"][data-slot] {
+  flex: 1 1 var(--cipher-field-nested);
+  min-width: var(--cipher-field-nested);
+  position: static;
+  padding-inline-end: 0;
+}
+.comboboxField > [data-slot="multi-select"] > [data-chevron],
+.comboboxField > [data-slot="combobox-clear"] {
+  position: absolute;
+  top: var(--cipher-space-control-slot-inset);
+  inset-inline-end: var(--cipher-combobox-trailing-end);
+}
+.comboboxField > [data-slot="multi-select"] > [data-chevron] {
+  box-sizing: border-box;
+  width: var(--cipher-field-nested);
+  height: var(--cipher-field-nested);
+  padding: calc((var(--cipher-field-nested) - var(--cipher-size-icon)) / 2);
+  pointer-events: auto;
+}
+.comboboxField[data-clear] > [data-slot="multi-select"] > [data-chevron] {
+  display: none;
+}
+.comboboxControl {
+  --cipher-field-inline: var(--cipher-space-control-inline-sm);
+  --cipher-field-nested: var(--cipher-size-nested-sm);
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+.comboboxControl[data-width] {
+  flex-shrink: 0;
+  max-width: 100%;
+}
+.comboboxControl[data-width="xs"] {
+  width: var(--cipher-size-field-xs);
+}
+.comboboxControl[data-width="sm"] {
+  width: var(--cipher-size-field-sm);
+}
+.comboboxControl[data-width="md"] {
+  width: var(--cipher-size-field-md);
+}
+.comboboxControl > [data-slot="combobox-clear"] {
+  position: absolute;
+  top: calc(var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border));
+  inset-inline-end: calc(var(--cipher-combobox-trailing-end) + var(--cipher-size-control-border));
+}
+.comboboxControl[data-clear] [data-chevron] {
+  visibility: hidden;
+}
+:is(.comboboxField, .comboboxControl) > [data-slot="combobox-clear"] {
   --cipher-action-height: var(--cipher-field-nested);
-  margin-inline-end: var(--cipher-space-control-slot-inset);
+  --cipher-action-icon-size: var(--cipher-size-icon);
+  color: var(--cipher-muted);
 }
 .multiCombobox > .chip > [data-cipher-button] {
   --cipher-action-height: calc(var(--cipher-field-nested) - 2 * var(--cipher-size-control-border));
