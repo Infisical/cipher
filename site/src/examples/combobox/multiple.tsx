@@ -9,7 +9,7 @@ export default function Example() {
     <div className="flex w-full min-w-0 flex-col items-start gap-6">
       <Field
         label="Visible environments"
-        description="Audit is required by policy, so Clear all keeps it."
+        description="Audit is required by policy, so clearing keeps it."
       >
         <Combobox
           label="Visible environments"
