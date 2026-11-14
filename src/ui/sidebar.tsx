@@ -138,7 +138,14 @@ const RowContent = ({
   trailing?: React.ReactNode;
 }) => (
   <>
-    {item.icon && !child && <Icon icon={item.icon} size={18} className={styles.icon} />}
+    {!child &&
+      (item.icon ? (
+        <Icon icon={item.icon} size={18} className={styles.icon} />
+      ) : (
+        <span className={styles.monogram} aria-hidden="true">
+          {item.label.charAt(0)}
+        </span>
+      ))}
     <span className={styles.label}>{item.label}</span>
     {count ? (
       <>
@@ -629,6 +636,17 @@ const SidebarView = ({
     }
     onNavigate?.(item);
   };
+  React.useEffect(() => {
+    const nav = navRef.current;
+    const row =
+      nav?.querySelector<HTMLElement>('[aria-current="page"]') ??
+      nav?.querySelector<HTMLElement>("[data-holds-current]");
+    if (!nav || !row) return;
+    const box = nav.getBoundingClientRect();
+    const target = row.getBoundingClientRect();
+    if (target.top >= box.top && target.bottom <= box.bottom) return;
+    nav.scrollTop += target.top - box.top - (box.height - target.height) / 2;
+  }, [current, view, railed]);
   const lastScope = React.useRef(scope);
   const [enter, setEnter] = React.useState<"forward" | "back">();
   React.useEffect(() => {
@@ -858,7 +876,7 @@ const SidebarView = ({
             )}
             {shownSections.map((section, index) => (
               <div key={section.label ?? index} className={styles.section}>
-                {section.label && (
+                {section.label && !(rail && section.icon) && (
                   <p className={styles.sectionLabel}>
                     <span>{section.label}</span>
                   </p>

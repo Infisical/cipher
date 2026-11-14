@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import tokens from "@infisical/cipher/tokens.json";
 import { PageHeader } from "@infisical/cipher/ui/page-header";
 
@@ -56,18 +57,46 @@ function TypographyPage() {
   );
 }
 
+function SpacingRow({ name, value }: { name: string; value: string }) {
+  const bar = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState<number>();
+  useLayoutEffect(() => {
+    setWidth(
+      bar.current ? Math.round(bar.current.getBoundingClientRect().width * 10) / 10 : undefined
+    );
+  }, []);
+  const alias = value.includes("{");
+  return (
+    <div className="grid grid-cols-[18rem_4rem_1fr] items-center gap-6">
+      <div className="flex min-w-0 flex-col">
+        <code className="text-sm whitespace-nowrap">{name}</code>
+        {alias && <code className="text-muted-foreground text-xs">{value}</code>}
+      </div>
+      <span className="text-muted-foreground text-xs whitespace-nowrap tabular-nums">
+        {width === undefined ? value : `${width}px`}
+      </span>
+      <div className="flex h-3 items-center">
+        <div
+          ref={bar}
+          className="h-3 bg-(--cipher-ink)"
+          style={{ width: `var(--cipher-${name})` }}
+        />
+        {width === 0 && <div className="h-3 w-px bg-(--cipher-faint)" aria-hidden="true" />}
+      </div>
+    </div>
+  );
+}
+
 function SpacingPage() {
   return (
     <>
       <PageHeader title="Spacing" description="The spacing scale. Corners are square everywhere." />
       <div className="mt-8 flex flex-col gap-3">
-        {tokens.spacing.tokens.filter((token) => token.name.startsWith("space-")).map((token) => (
-          <div key={token.name} className="grid grid-cols-[10rem_4rem_1fr] items-center gap-6">
-            <code className="text-sm">{token.name}</code>
-            <span className="text-muted-foreground text-xs">{token.value}</span>
-            <div className="h-3 bg-(--cipher-ink)" style={{ width: token.value }} />
-          </div>
-        ))}
+        {tokens.spacing.tokens
+          .filter((token) => token.name.startsWith("space-"))
+          .map((token) => (
+            <SpacingRow key={token.name} name={token.name} value={token.value} />
+          ))}
       </div>
     </>
   );

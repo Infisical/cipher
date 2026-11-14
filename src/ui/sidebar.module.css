@@ -431,6 +431,18 @@
   width: var(--cipher-size-sidebar-icon);
   height: var(--cipher-size-sidebar-icon);
 }
+.monogram {
+  display: none;
+}
+.sidebar[data-collapsed] .monogram {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--cipher-size-sidebar-icon);
+  height: var(--cipher-size-sidebar-icon);
+  text-transform: uppercase;
+}
 .label {
   flex: 1 1 auto;
   min-width: 0;
