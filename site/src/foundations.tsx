@@ -9,10 +9,7 @@ const themedColors = tokens.color.tokens.filter((token) => typeof token.value ==
 function ColorPage() {
   return (
     <>
-      <PageHeader
-        title="Color"
-        description="Every themed color token. Switch the theme to compare."
-      />
+      <PageHeader title="Color" description="Every themed color token. Switch the theme to compare." />
       <div className="mt-8 grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-x-6 gap-y-8">
         {themedColors.map((token) => (
           <figure key={token.name} className="m-0 flex flex-col gap-2">
@@ -39,10 +36,7 @@ const typeStyle = (name: string) => ({
 function TypographyPage() {
   return (
     <>
-      <PageHeader
-        title="Typography"
-        description="Archivo for everything people read, Geist Mono for machine values."
-      />
+      <PageHeader title="Typography" description="Archivo for everything people read, Geist Mono for machine values." />
       {tokens.type.groups.map((group) => (
         <section key={group.name} className="mt-10">
           <h2 className="mb-3 text-sm font-medium">{group.name}</h2>
