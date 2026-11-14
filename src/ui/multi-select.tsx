@@ -338,7 +338,7 @@ export function MultiSelect({
             >
               {summary}
             </span>
-            <Icon name="chev-down" className={controlStyles.chevron} />
+            <Icon name="chev-down" className={controlStyles.chevron} data-chevron="" />
           </button>
         )}
       </PopoverTrigger>
