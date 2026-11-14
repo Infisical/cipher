@@ -35,7 +35,16 @@ import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
 import styles from "./picker.module.css";
 
-export type ComboboxOption = { value: string; label: string; meta?: string; disabled?: boolean };
+export type ComboboxOption = {
+  value: string;
+  label: string;
+  /** A muted line under the label. Search matches it as well as the label. */
+  description?: string;
+  meta?: string;
+  /** Options that share a group sit under its heading, in the order each group first appears. */
+  group?: string;
+  disabled?: boolean;
+};
 export type ComboboxCreationFormProps = {
   /** The trimmed search text when the row was chosen, for prefilling a name. */
   query: string;
@@ -205,8 +214,11 @@ export function Combobox({
   const filtered = onSearch
     ? options
     : options.filter((option) =>
-        `${option.label} ${option.meta ?? ""}`.toLowerCase().includes(query.toLowerCase())
+        `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
+          .toLowerCase()
+          .includes(query.toLowerCase())
       );
+  const groups = [...new Set(filtered.map((option) => option.group ?? ""))];
   const canCreate =
     inlineCreate &&
     query.trim() &&
@@ -277,7 +289,7 @@ export function Combobox({
           ref={ref}
           id={props.id}
           aria-describedby={props["aria-describedby"]}
-          options={options.map((option) => ({ ...option, description: option.meta }))}
+          options={options}
           value={selected}
           onChange={apply}
           label={label}
@@ -398,26 +410,43 @@ export function Combobox({
                 {loading ? "Searching…" : emptyText}
               </p>
             )}
-            <CommandGroup>
-              {filtered.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  disabled={option.disabled || disabled}
-                  data-checked={selected.includes(option.value)}
-                  onSelect={() => {
-                    setPicked(option);
-                    apply([option.value]);
-                    changeOpen(false);
-                  }}
-                >
-                  <span className={menu.title}>
-                    <Highlight text={option.label} query={query} />
-                  </span>
-                  {option.meta && <span className={menu.meta}>{option.meta}</span>}
-                </CommandItem>
-              ))}
-              {canCreate && (
+            {groups.map((group) => (
+              <CommandGroup key={group} heading={group || undefined}>
+                {filtered
+                  .filter((option) => (option.group ?? "") === group)
+                  .map((option) => (
+                    <CommandItem
+                      key={option.value}
+                      value={option.value}
+                      disabled={option.disabled || disabled}
+                      data-checked={selected.includes(option.value)}
+                      onSelect={() => {
+                        setPicked(option);
+                        apply([option.value]);
+                        changeOpen(false);
+                      }}
+                    >
+                      {option.description ? (
+                        <span className={menu.text}>
+                          <span className={menu.title}>
+                            <Highlight text={option.label} query={query} />
+                          </span>
+                          <span className={menu.description}>
+                            <Highlight text={option.description} query={query} />
+                          </span>
+                        </span>
+                      ) : (
+                        <span className={menu.title}>
+                          <Highlight text={option.label} query={query} />
+                        </span>
+                      )}
+                      {option.meta && <span className={menu.meta}>{option.meta}</span>}
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+            ))}
+            {canCreate && (
+              <CommandGroup>
                 <CommandItem
                   disabled={creating || loading || disabled || Boolean(creationBlocked)}
                   value={`create:${query}`}
@@ -430,8 +459,8 @@ export function Combobox({
                   </span>
                   {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
                 </CommandItem>
-              )}
-            </CommandGroup>
+              </CommandGroup>
+            )}
             {dialogCreation && (
               <>
                 {filtered.length > 0 && <CommandSeparator />}

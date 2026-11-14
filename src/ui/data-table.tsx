@@ -1,11 +1,10 @@
 import * as React from "react";
-import type { LucideIcon } from "lucide-react";
 
 import { FrameScope, useInFrame } from "../lib/frame-context";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import {
   rowActionSlots,
   RowActions,
@@ -60,7 +59,7 @@ export interface DataTableToggle<Row> {
 }
 export interface DataTableRowAction<Row> {
   label: string | ((row: Row) => string);
-  icon: IconName | LucideIcon;
+  icon: IconSource;
   onSelect: (row: Row) => void;
   disabledReason?: (row: Row) => string | undefined;
 }

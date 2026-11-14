@@ -7,7 +7,7 @@ import { Separator } from "./separator";
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { useInFrame } from "../lib/frame-context";
 import { cn } from "../lib/utils";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Tooltip } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
@@ -83,7 +83,7 @@ export type ItemProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> &
     asChild?: boolean;
     title?: React.ReactNode;
     description?: React.ReactNode;
-    icon?: IconName;
+    icon?: IconSource;
     media?: React.ReactNode;
     badge?: React.ReactNode;
     meta?: React.ReactNode;
@@ -439,7 +439,7 @@ export function Media({
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"span"> & {
-  icon?: IconName;
+  icon?: IconSource;
   size?: "sm" | "md" | number;
   tone?: "ok" | "warn" | "bad" | "info";
 } & { ref?: React.Ref<HTMLSpanElement> }) {
@@ -460,7 +460,7 @@ export function Media({
     >
       {icon ? (
         <Icon
-          name={icon}
+          icon={icon}
           size={size === "sm" || (typeof size === "number" && size <= 28) ? 14 : 18}
         />
       ) : (

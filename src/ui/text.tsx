@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cn } from "../lib/utils";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
 
 import styles from "./text.module.css";
@@ -94,7 +94,7 @@ export function StatusText({
   ...props
 }: React.ComponentPropsWithoutRef<"span"> & {
   tone?: "neutral" | "ok" | "warn" | "bad";
-} & ({ icon: IconName; loading?: boolean } | { icon?: IconName; loading: true }) & {
+} & ({ icon: IconSource; loading?: boolean } | { icon?: IconSource; loading: true }) & {
     ref?: React.Ref<HTMLSpanElement>;
   }) {
   return (
@@ -106,7 +106,7 @@ export function StatusText({
       className={cn(styles.status, className)}
       {...props}
     >
-      {loading || !icon ? <Spinner /> : <Icon name={icon} />}
+      {loading || !icon ? <Spinner /> : <Icon icon={icon} />}
       <span>{children}</span>
     </span>
   );

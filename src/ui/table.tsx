@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import type { LucideIcon } from "lucide-react";
 
 import { keyboardModality } from "../lib/input-modality";
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
@@ -16,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./dropdown-menu";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Skeleton } from "./skeleton";
 import { Tooltip, TooltipScope } from "./tooltip";
 
@@ -578,7 +577,7 @@ function TableLoadingRows({
 
 export type RowAction = {
   label: string;
-  icon: IconName | LucideIcon;
+  icon: IconSource;
   onSelect: () => void;
   disabledReason?: string;
 };
@@ -602,10 +601,7 @@ function RowActionButton({ action, label }: { action: RowAction; label: string }
             action.onSelect();
           }}
         >
-          <Icon
-            name={typeof action.icon === "string" ? action.icon : undefined}
-            icon={typeof action.icon === "string" ? undefined : action.icon}
-          />
+          <Icon icon={action.icon} />
           <span className="sr-only">{`${action.label} for ${label}`}</span>
         </Button>
       </span>
@@ -743,10 +739,7 @@ function RowActions({
                 if (!action.disabledReason) action.onSelect();
               }}
             >
-              <Icon
-                name={typeof action.icon === "string" ? action.icon : undefined}
-                icon={typeof action.icon === "string" ? undefined : action.icon}
-              />
+              <Icon icon={action.icon} />
               <span className="sr-only">{`${action.label} for ${label}`}</span>
             </IdleRowButton>
           </span>
@@ -890,10 +883,7 @@ function RowContextMenu({
               description={action.disabledReason}
               onSelect={action.onSelect}
             >
-              <Icon
-                name={typeof action.icon === "string" ? action.icon : undefined}
-                icon={typeof action.icon === "string" ? undefined : action.icon}
-              />
+              <Icon icon={action.icon} />
               {action.label}
             </DropdownMenuItem>
           ))}

@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { isDev } from "../lib/dev";
+import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { Button } from "../ui/button";
 import { CodeBlock } from "../ui/code-block";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -15,7 +16,19 @@ export type ErrorStatePreset = "not-found" | "forbidden" | "crash";
 export type ErrorStateLayout = "auto" | "in-shell" | "full-page";
 export type ErrorStateDetail = { label: string; value: string };
 
-export type ErrorStateProps = {
+type ErrorStatePrimaryTarget =
+  | {
+      /** Makes the primary action a link to this target, through the app's router. */
+      actionLink?: CipherLinkTarget;
+      onAction?: never;
+    }
+  | {
+      actionLink?: never;
+      /** Makes the primary action a button that runs this. */
+      onAction?: () => void;
+    };
+
+export type ErrorStateProps = ErrorStatePrimaryTarget & {
   preset: ErrorStatePreset;
   /** auto renders in the content area when an AppShell is above it, and full-page (fixed over its containing block, the viewport in the app) when there is none, such as when the shell itself failed. */
   layout?: ErrorStateLayout;
@@ -31,6 +44,8 @@ export type ErrorStateProps = {
   onHome?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   onBack?: () => void;
   onReload?: () => void;
+  /** The primary action's label. Defaults to Reload on crash and Go to organization home otherwise. */
+  actionLabel?: string;
   /** Called once per error when crash mounts, to send it to error reporting. */
   onReport?: (error: unknown) => void;
   /** The page's own flows, such as Request access. They sit after the preset's primary action and before its secondary one; keep them outline so the primary stays the one accent. */
@@ -67,7 +82,10 @@ export function ErrorState({
   onBack = () => window.history.back(),
   onReload = () => window.location.reload(),
   onReport,
-  actions
+  actions,
+  actionLabel,
+  actionLink,
+  onAction
 }: ErrorStateProps) {
   const shell = useAppShell();
   const fullPage = layout === "full-page" || (layout === "auto" && !shell);
@@ -91,13 +109,28 @@ export function ErrorState({
     .filter(Boolean)
     .join("\n");
 
-  const home = (
-    <Button variant={crash ? "outline" : "accent"} asChild>
-      <a href={homeHref} onClick={onHome}>
-        Go to organization home
-      </a>
-    </Button>
-  );
+  const label = actionLabel ?? (crash ? "Reload" : "Go to organization home");
+  let primary: React.ReactNode;
+  if (actionLink !== undefined)
+    primary = (
+      <Button variant="accent" asChild>
+        <CipherLink link={actionLink}>{label}</CipherLink>
+      </Button>
+    );
+  else if (onAction || crash)
+    primary = (
+      <Button variant="accent" onClick={onAction ?? onReload}>
+        {label}
+      </Button>
+    );
+  else
+    primary = (
+      <Button variant="accent" asChild>
+        <a href={homeHref} onClick={onHome}>
+          {label}
+        </a>
+      </Button>
+    );
 
   return (
     <div
@@ -121,15 +154,17 @@ export function ErrorState({
         <div className={styles.actions}>
           {crash ? (
             <>
-              <Button variant="accent" onClick={onReload}>
-                Reload
-              </Button>
+              {primary}
               {actions}
-              {home}
+              <Button variant="outline" asChild>
+                <a href={homeHref} onClick={onHome}>
+                  Go to organization home
+                </a>
+              </Button>
             </>
           ) : (
             <>
-              {home}
+              {primary}
               {actions}
               <Button variant="outline" onClick={onBack}>
                 Go back

@@ -11,7 +11,7 @@ import {
   CommandList,
   CommandSeparator
 } from "./command";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Kbd } from "./kbd";
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -31,7 +31,7 @@ export interface SwitcherOption {
 }
 export interface SwitcherAction {
   label: string;
-  icon?: IconName;
+  icon?: IconSource;
   shortcut?: string;
   danger?: boolean;
   disabled?: boolean;
@@ -76,7 +76,7 @@ const SwitcherActionItem = ({
   const clicked = useRef(false);
   const content = (
     <>
-      {action.icon && <Icon name={action.icon} />}
+      {action.icon && <Icon icon={action.icon} />}
       {action.label}
       {action.shortcut && <Kbd>{action.shortcut}</Kbd>}
     </>

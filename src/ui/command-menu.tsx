@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Columns2, LayoutTemplate, type LucideIcon, Palette, SquareCode, Zap } from "lucide-react";
+import { Columns2, LayoutTemplate, Palette, SquareCode, Zap } from "lucide-react";
 
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
@@ -14,7 +14,7 @@ import {
   CommandList,
   CommandShortcut
 } from "./command";
-import { Icon, type IconName } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { Kbd } from "./kbd";
 import { Spinner } from "./spinner";
 import { Highlight } from "./text";
@@ -25,7 +25,7 @@ import styles from "./picker.module.css";
 export type CommandMenuItem = {
   id: string;
   label: string;
-  icon?: IconName | LucideIcon;
+  icon?: IconSource;
   kind?: CommandMenuItemKind;
   media?: React.ReactNode;
   description?: string;
@@ -53,7 +53,7 @@ export type CommandMenuItemKind =
   | "project"
   | "organization"
   | "person";
-const kindIcons: Record<CommandMenuItemKind, IconName | LucideIcon> = {
+const kindIcons: Record<CommandMenuItemKind, IconSource> = {
   page: "file",
   component: "apps",
   pattern: LayoutTemplate,
@@ -304,12 +304,7 @@ export const CommandMenu = ({
                     ) : (
                       (() => {
                         const glyph = item.icon ?? (item.kind && kindIcons[item.kind]);
-                        if (!glyph) return null;
-                        return typeof glyph === "string" ? (
-                          <Icon name={glyph} />
-                        ) : (
-                          <Icon icon={glyph} />
-                        );
+                        return glyph ? <Icon icon={glyph} /> : null;
                       })()
                     )}
                     <span data-command-label className={cn(menu.text, styles.commandText)}>
