@@ -1,0 +1,50 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+[data-cipher-button].trigger:is([data-state="open"], :hover),
+.root[data-applied] > [data-cipher-button].trigger {
+  color: var(--cipher-ink);
+}
+.dot {
+  position: absolute;
+  top: var(--cipher-space-4);
+  right: var(--cipher-space-4);
+  width: var(--cipher-size-unread);
+  height: var(--cipher-size-unread);
+  border-radius: 0;
+  background: var(--cipher-accent-fg);
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-surface);
+  pointer-events: none;
+}
+[data-framed] .dot {
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-tint);
+}
+.panel.panel {
+  width: min(var(--cipher-size-menu-max), var(--radix-popper-available-width, 100vw));
+  gap: 0;
+  padding: var(--cipher-space-4);
+}
+.panel [data-field-box],
+.panel [data-field-box][data-control-focus] {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+.field::-webkit-search-cancel-button,
+.field::-webkit-search-decoration {
+  appearance: none;
+}
+.hint {
+  padding: var(--cipher-space-6) var(--cipher-space-8) var(--cipher-space-4);
+  border-top: var(--cipher-size-control-border) solid var(--cipher-pop-line);
+  color: var(--cipher-muted);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+}
+.hint[data-empty] {
+  display: none;
+}
