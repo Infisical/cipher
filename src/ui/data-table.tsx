@@ -1,10 +1,12 @@
 import * as React from "react";
 
 import { FrameScope, useInFrame } from "../lib/frame-context";
+import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { Icon, type IconSource } from "./icon";
+import { SortableAnnouncer, SortableHandle } from "./sortable-list";
 import {
   rowActionSlots,
   RowActions,
@@ -148,6 +150,16 @@ interface DataTableBaseProps<Row> {
   isRowMuted?: (row: Row) => boolean;
   /** Extra attributes and handlers for each data row's tr. Handlers run before DataTable's own, which skip a default-prevented event. */
   rowProps?: (row: Row, index: number) => DataTableRowProps;
+  /**
+   * Lets a person put the rows in order: a grip at the start of the first column picks a row up by
+   * pointer or keyboard, and a drop edge shows where it lands. Flat rows only; leave sort unset while it
+   * is on.
+   */
+  reorder?: {
+    onReorder: (rows: Row[]) => void;
+    /** A disabled row keeps its grip inert; other rows can still move past it. */
+    isRowDisabled?: (row: Row) => boolean;
+  };
 }
 export type DataTableProps<Row> = DataTableBaseProps<Row> &
   (
@@ -194,7 +206,8 @@ export function DataTable<Row>({
   containerRef,
   containerClassName,
   isRowMuted,
-  rowProps
+  rowProps,
+  reorder
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
   const [ownSelected, setOwnSelected] = React.useState<readonly string[]>(defaultSelectedIds);
@@ -390,6 +403,63 @@ export function DataTable<Row>({
   ) : (
     rows.length > 0 && end
   );
+  const sortRows = useSortable({
+    items: flatRows ?? [],
+    getKey: getRowId,
+    getLabel: rowLabel,
+    onReorder: (next) => reorder?.onReorder(next)
+  });
+  const dropEdge = (position: number) => {
+    const lift = sortRows.lift;
+    if (!reorder || !lift || lift.to === lift.from || position !== lift.to) return undefined;
+    return lift.to < lift.from ? "before" : "after";
+  };
+  const startRowDrag = (row: Row, body: HTMLElement | null) => {
+    sortRows.pick(row, true);
+    const follow = (event: PointerEvent) => {
+      const lift = sortRows.liftRef.current;
+      const hit = Array.from(body?.querySelectorAll<HTMLElement>("tr[data-row-index]") ?? []).find(
+        (element) => {
+          const box = element.getBoundingClientRect();
+          return event.clientY >= box.top && event.clientY <= box.bottom;
+        }
+      );
+      if (!lift || !hit) return;
+      const box = hit.getBoundingClientRect();
+      const slot = Number(hit.dataset.rowIndex) + (event.clientY > box.top + box.height / 2 ? 1 : 0);
+      sortRows.moveTo(slot > lift.from ? slot - 1 : slot);
+    };
+    const stop = () => {
+      window.removeEventListener("pointermove", follow);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+    };
+    window.addEventListener("pointermove", follow);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
+  };
+  const rowHandle = (row: Row) => {
+    const key = getRowId(row);
+    const lifted = sortRows.lift?.key === key;
+    return (
+      <SortableHandle
+        itemKey={key}
+        label={rowLabel(row)}
+        instructions={sortRows.instructions}
+        lifted={lifted && !sortRows.lift?.pointer}
+        disabled={Boolean(reorder?.isRowDisabled?.(row))}
+        onPointerDown={(event) => {
+          sortRows.container.current = event.currentTarget.closest("table");
+          if (!sortRows.lift) startRowDrag(row, event.currentTarget.closest("tbody"));
+        }}
+        onKeyDown={(event) => {
+          sortRows.container.current = (event.currentTarget as HTMLElement).closest("table");
+          sortRows.keyDown(event, row, event.key === "ArrowUp" ? -1 : event.key === "ArrowDown" ? 1 : 0);
+        }}
+        onBlur={(event) => sortRows.blur(event, row)}
+      />
+    );
+  };
   const rowInline = (row: Row) =>
     rowActions?.inline?.map((action) => ({
       label: typeof action.label === "string" ? action.label : action.label(row),
@@ -422,6 +492,8 @@ export function DataTable<Row>({
         }
         data-activatable={onRowActivate ? "" : undefined}
         data-muted={isRowMuted?.(row) || undefined}
+        data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
+        data-sortable-lifted={sortRows.lift?.key === getRowId(row) || undefined}
         onClick={
           onRowActivate || extra?.onClick
             ? (event) => {
@@ -454,50 +526,60 @@ export function DataTable<Row>({
             />
           </TableCell>
         )}
-        {columns.map((column) => (
-          <TableCell
-            key={column.id}
-            className={column.actions ? styles.tableActions : undefined}
-            style={columnStyle(column)}
-            data-actions={column.actions || undefined}
-            data-pin={column.pin ?? column.actions}
-            data-wrap={column.wrap || undefined}
-            data-secondary={column.secondary ? true : undefined}
-            data-row-interactive={column.actions || column.toggle ? true : undefined}
-          >
-            {column.toggle ? (
-              <ToggleCell
-                toggle={column.toggle}
-                row={row}
-                label={`${column.header} for ${rowLabel(row)}`}
-                rowId={getRowId(row)}
-              />
-            ) : column.actions ? (
-              <TableRowActions style={{ maxWidth: column.maxWidth }}>
-                {column.render?.(row, position)}
-              </TableRowActions>
-            ) : (
-              <CellContent
-                shrink={column.id === shrinkColumn}
-                secondary={column.secondary?.(row, position)}
-                wrap={column.wrap}
-                depth={depth > 0 && column.id === indentColumn ? depth : undefined}
-                maxWidth={column.maxWidth}
+        {columns.map((column, columnIndex) => {
+          const content = column.toggle ? (
+            <ToggleCell
+              toggle={column.toggle}
+              row={row}
+              label={`${column.header} for ${rowLabel(row)}`}
+              rowId={getRowId(row)}
+            />
+          ) : column.actions ? (
+            <TableRowActions style={{ maxWidth: column.maxWidth }}>
+              {column.render?.(row, position)}
+            </TableRowActions>
+          ) : (
+            <CellContent
+              shrink={column.id === shrinkColumn}
+              secondary={column.secondary?.(row, position)}
+              wrap={column.wrap}
+              depth={depth > 0 && column.id === indentColumn ? depth : undefined}
+              maxWidth={column.maxWidth}
+            >
+              <div
+                className={column.primary ? styles.tablePrimary : styles.tableValue}
+                data-mono={column.mono || undefined}
+                data-wrap={column.wrap || undefined}
+                data-depth={depth > 0 && column.id === indentColumn ? depth : undefined}
+                style={{ maxWidth: column.maxWidth }}
+                title={column.wrap ? undefined : column.text?.(row)}
               >
-                <div
-                  className={column.primary ? styles.tablePrimary : styles.tableValue}
-                  data-mono={column.mono || undefined}
-                  data-wrap={column.wrap || undefined}
-                  data-depth={depth > 0 && column.id === indentColumn ? depth : undefined}
-                  style={{ maxWidth: column.maxWidth }}
-                  title={column.wrap ? undefined : column.text?.(row)}
-                >
-                  {column.render?.(row, position)}
+                {column.render?.(row, position)}
+              </div>
+            </CellContent>
+          );
+          return (
+            <TableCell
+              key={column.id}
+              className={column.actions ? styles.tableActions : undefined}
+              style={columnStyle(column)}
+              data-actions={column.actions || undefined}
+              data-pin={column.pin ?? column.actions}
+              data-wrap={column.wrap || undefined}
+              data-secondary={column.secondary ? true : undefined}
+              data-row-interactive={column.actions || column.toggle ? true : undefined}
+            >
+              {reorder && columnIndex === 0 ? (
+                <div className={styles.tableSortCell}>
+                  {rowHandle(row)}
+                  {content}
                 </div>
-              </CellContent>
-            )}
-          </TableCell>
-        ))}
+              ) : (
+                content
+              )}
+            </TableCell>
+          );
+        })}
         {rowActions && (
           <TableActionsCell slots={slots} data-pin="true">
             <RowActions
@@ -772,6 +854,11 @@ export function DataTable<Row>({
           </>
         )}
       </span>
+      {reorder && (
+        <SortableAnnouncer instructions={sortRows.instructions} announcement={sortRows.announcement}>
+          Press Space or Enter to pick up a row, then use the arrow keys to move it. Alt with an arrow key moves one step.
+        </SortableAnnouncer>
+      )}
       {actionBar}
     </div>
   );

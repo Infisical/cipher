@@ -3,6 +3,7 @@ import { Reorder, useDragControls, useReducedMotion } from "motion/react";
 
 import { FrameScope, useInFrame } from "../lib/frame-context";
 import { snap, spring } from "../lib/motion";
+import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 
@@ -34,12 +35,72 @@ export interface SortableListProps<T> {
   className?: string;
 }
 
-const move = <T,>(list: readonly T[], from: number, to: number) => {
-  const next = [...list];
-  const [item] = next.splice(from, 1);
-  next.splice(to, 0, item as T);
-  return next;
-};
+/** The grip button every sortable surface uses: label it with the item's name, and key it so focus follows the item through a move. */
+export function SortableHandle({
+  itemKey,
+  label,
+  instructions,
+  lifted,
+  disabled,
+  onPointerDown,
+  onKeyDown,
+  onBlur
+}: {
+  itemKey: string;
+  label: string;
+  instructions: string;
+  lifted: boolean;
+  disabled: boolean;
+  onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => void;
+  onKeyDown: (event: React.KeyboardEvent) => void;
+  onBlur: (event: React.FocusEvent) => void;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon-row"
+      icon="grip"
+      iconOnly
+      className={sortable.handle}
+      aria-describedby={instructions}
+      disabled={disabled}
+      data-sortable-handle={itemKey}
+      data-cipher-escape-owner={lifted || undefined}
+      data-lifted={lifted || undefined}
+      onPointerDown={(event) => {
+        if (disabled || event.button !== 0) return;
+        event.preventDefault();
+        onPointerDown(event);
+      }}
+      onKeyDown={onKeyDown}
+      onBlur={onBlur}
+    >
+      {`Reorder ${label}`}
+    </Button>
+  );
+}
+
+/** Screen reader instructions for the handles and the live region that announces each move. */
+export function SortableAnnouncer({
+  instructions,
+  announcement,
+  children
+}: {
+  instructions: string;
+  announcement: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <span id={instructions} className={styles.sr}>
+        {children}
+      </span>
+      <span className={styles.sr} role="status" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </span>
+    </>
+  );
+}
 
 export function SortableList<T>({
   items,
@@ -59,87 +120,8 @@ export function SortableList<T>({
   const embedded = inFrame && variant === "framed";
   const framed = variant === "framed" && !embedded;
   const reduced = useReducedMotion();
-  const instructions = React.useId();
-  const [draft, setDraft] = React.useState<T[] | null>(null);
-  const [lifted, setLifted] = React.useState<string | null>(null);
-  const [announcement, setAnnouncement] = React.useState("");
-  const draftRef = React.useRef<T[] | null>(null);
-  const origin = React.useRef(0);
-  const focusKey = React.useRef<string | null>(null);
-  const list = React.useRef<HTMLUListElement>(null);
-  const shown = draft ?? items;
-  const total = shown.length;
-
-  React.useLayoutEffect(() => {
-    const key = focusKey.current;
-    if (!key || !list.current) return;
-    focusKey.current = null;
-    const handle = Array.from(
-      list.current.querySelectorAll<HTMLElement>("[data-sortable-handle]")
-    ).find((element) => element.dataset.sortableHandle === key);
-    if (handle && handle.ownerDocument.activeElement !== handle) handle.focus({ preventScroll: true });
-  });
-
-  const updateDraft = (next: T[] | null) => {
-    draftRef.current = next;
-    setDraft(next);
-  };
-  const changed = (next: readonly T[]) => next.some((item, index) => item !== items[index]);
-  const position = (index: number) => `position ${index + 1} of ${total}`;
-  const commit = (next: T[], item: T) => {
-    updateDraft(null);
-    setLifted(null);
-    if (!changed(next)) return false;
-    onReorder(next);
-    setAnnouncement(`Dropped ${getLabel(item)} at ${position(next.indexOf(item))}.`);
-    return true;
-  };
-
-  const keyDown = (event: React.KeyboardEvent, item: T) => {
-    const key = getKey(item);
-    const name = getLabel(item);
-    const current = draftRef.current ?? [...items];
-    const index = current.indexOf(item);
-    const step = event.key === "ArrowUp" ? -1 : event.key === "ArrowDown" ? 1 : 0;
-    if (lifted === key) {
-      if (event.key === " " || event.key === "Enter") {
-        event.preventDefault();
-        if (!commit(current, item)) setAnnouncement(`Dropped ${name} at ${position(index)}.`);
-      } else if (event.key === "Escape") {
-        event.preventDefault();
-        updateDraft(null);
-        setLifted(null);
-        focusKey.current = key;
-        setAnnouncement(`Cancelled. ${name} returned to ${position(origin.current)}.`);
-      } else if (step) {
-        event.preventDefault();
-        const target = index + step;
-        if (target < 0 || target >= current.length) return;
-        updateDraft(move(current, index, target));
-        focusKey.current = key;
-        setAnnouncement(`Moved ${name} to ${position(target)}.`);
-      } else if (event.key === "Tab") {
-        commit(current, item);
-      }
-      return;
-    }
-    if (event.key === " " || event.key === "Enter") {
-      event.preventDefault();
-      origin.current = index;
-      updateDraft(current);
-      setLifted(key);
-      setAnnouncement(
-        `Picked up ${name}, ${position(index)}. Use the arrow keys to move, Space or Enter to drop, Escape to cancel.`
-      );
-    } else if (step && event.altKey) {
-      event.preventDefault();
-      const target = index + step;
-      if (target < 0 || target >= current.length) return;
-      onReorder(move(current, index, target));
-      focusKey.current = key;
-      setAnnouncement(`Moved ${name} to ${position(target)}.`);
-    }
-  };
+  const sort = useSortable({ items, getKey, getLabel, onReorder });
+  const held = sort.lift ? items[sort.lift.from] : undefined;
 
   return (
     <FrameScope framed={inFrame || framed}>
@@ -152,55 +134,67 @@ export function SortableList<T>({
         data-disabled={disabled || undefined}
       >
         <Reorder.Group
-          ref={list}
+          ref={(node: HTMLUListElement | null) => {
+            sort.container.current = node;
+          }}
           as="ul"
           axis="y"
-          values={shown as T[]}
-          onReorder={(next) => updateDraft(next)}
+          values={sort.preview as T[]}
+          onReorder={(next) => {
+            if (held !== undefined) sort.moveTo(next.indexOf(held));
+          }}
           className={cn(styles.list, framed && frame.frameInset)}
           aria-label={label}
         >
-          {shown.map((item, index) => {
+          {sort.preview.map((item, index) => {
             const key = getKey(item);
             const itemDisabled = disabled || Boolean(isItemDisabled?.(item));
+            const lifted = sort.lift?.key === key;
             return (
               <SortableRow
                 key={key}
                 item={item}
-                itemKey={key}
-                label={getLabel(item)}
                 size={size}
                 disabled={itemDisabled}
-                lifted={lifted === key}
-                instructions={instructions}
+                lifted={lifted}
                 transition={reduced ? snap : spring.moderate}
-                onStart={() => {
-                  if (lifted) return;
-                  updateDraft([...items]);
-                }}
-                onEnd={() => {
-                  const next = draftRef.current;
-                  if (next && !lifted) commit(next, item);
-                }}
-                onKeyDown={(event) => keyDown(event, item)}
-                onBlur={(event) => {
-                  if (lifted === key && event.relatedTarget) {
-                    const next = draftRef.current;
-                    if (next) commit(next, item);
-                  }
-                }}
+                onDragEnd={sort.drop}
+                handle={(controls) => (
+                  <SortableHandle
+                    itemKey={key}
+                    label={getLabel(item)}
+                    instructions={sort.instructions}
+                    lifted={lifted && !sort.lift?.pointer}
+                    disabled={itemDisabled}
+                    onPointerDown={(event) => {
+                      if (sort.lift) return;
+                      sort.pick(item, true);
+                      controls.start(event);
+                    }}
+                    onKeyDown={(event) =>
+                      sort.keyDown(
+                        event,
+                        item,
+                        event.key === "ArrowUp" ? -1 : event.key === "ArrowDown" ? 1 : 0
+                      )
+                    }
+                    onBlur={(event) => sort.blur(event, item)}
+                  />
+                )}
               >
-                {renderItem(item, { index, dragging: lifted === key, disabled: itemDisabled })}
+                {renderItem(item, {
+                  index,
+                  dragging: lifted,
+                  disabled: itemDisabled
+                })}
               </SortableRow>
             );
           })}
         </Reorder.Group>
-        <span id={instructions} className={styles.sr}>
-          Press Space or Enter to pick up, then use the arrow keys to move. Alt with an arrow key moves one step.
-        </span>
-        <span className={styles.sr} role="status" aria-live="polite" aria-atomic="true">
-          {announcement}
-        </span>
+        <SortableAnnouncer instructions={sort.instructions} announcement={sort.announcement}>
+          Press Space or Enter to pick up, then use the arrow keys to move. Alt with an arrow key
+          moves one step.
+        </SortableAnnouncer>
       </div>
     </FrameScope>
   );
@@ -208,31 +202,21 @@ export function SortableList<T>({
 
 function SortableRow<T>({
   item,
-  itemKey,
-  label,
   size,
   disabled,
   lifted,
-  instructions,
   transition,
-  onStart,
-  onEnd,
-  onKeyDown,
-  onBlur,
+  onDragEnd,
+  handle,
   children
 }: {
   item: T;
-  itemKey: string;
-  label: string;
   size: "md" | "sm";
   disabled: boolean;
   lifted: boolean;
-  instructions: string;
   transition: typeof snap | (typeof spring)["moderate"];
-  onStart: () => void;
-  onEnd: () => void;
-  onKeyDown: (event: React.KeyboardEvent) => void;
-  onBlur: (event: React.FocusEvent) => void;
+  onDragEnd: () => void;
+  handle: (controls: ReturnType<typeof useDragControls>) => React.ReactNode;
   children: React.ReactNode;
 }) {
   const controls = useDragControls();
@@ -247,7 +231,7 @@ function SortableRow<T>({
       onDragStart={() => setDragging(true)}
       onDragEnd={() => {
         setDragging(false);
-        onEnd();
+        onDragEnd();
       }}
       className={cn(styles.listRow, sortable.row)}
       data-slot="sortable-list-item"
@@ -255,30 +239,7 @@ function SortableRow<T>({
       data-disabled={disabled || undefined}
       data-dragging={dragging || lifted || undefined}
     >
-      <span className={sortable.handleSlot}>
-        <Button
-          variant="ghost"
-          size="icon-row"
-          icon="grip"
-          iconOnly
-          className={sortable.handle}
-          aria-describedby={instructions}
-          disabled={disabled}
-          data-sortable-handle={itemKey}
-          data-cipher-escape-owner={lifted || undefined}
-          data-lifted={lifted || undefined}
-          onPointerDown={(event) => {
-            if (disabled || event.button !== 0) return;
-            event.preventDefault();
-            onStart();
-            controls.start(event);
-          }}
-          onKeyDown={onKeyDown}
-          onBlur={onBlur}
-        >
-          {`Reorder ${label}`}
-        </Button>
-      </span>
+      <span className={sortable.handleSlot}>{handle(controls)}</span>
       <div className={sortable.body}>{children}</div>
     </Reorder.Item>
   );
