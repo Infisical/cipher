@@ -1,0 +1,714 @@
+@import "./tokens.css";
+@reference "tailwindcss";
+@reference "tw-animate-css";
+@source "./ui";
+@source "./patterns";
+
+.cipher {
+  @tailwind utilities source(none);
+}
+
+/* Register utility names without changing the existing product theme values. */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+}
+
+.cipher {
+  /* How far a focus ring reaches past its control: an outline size-focus-ring wide past an equal
+     offset, or a field's size-focus-glow. Overflow containers keep this much clear at their edges. */
+  --cipher-focus-clearance: max(var(--cipher-size-focus-glow), 2 * var(--cipher-size-focus-ring));
+  --default-transition-duration: var(--cipher-duration-fast);
+  --default-transition-timing-function: var(--cipher-ease-fade);
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --card: var(--color-card);
+  --card-foreground: var(--color-card-foreground);
+  --popover: var(--color-popover);
+  --popover-foreground: var(--color-popover-foreground);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-foreground);
+  --secondary: var(--color-secondary);
+  --secondary-foreground: var(--color-secondary-foreground);
+  --muted: var(--color-muted);
+  --muted-foreground: var(--color-muted-foreground);
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-accent-foreground);
+  --destructive: var(--color-destructive);
+  --destructive-foreground: var(--color-destructive-foreground);
+  --border: var(--color-border);
+  --input: var(--color-input);
+  --ring: var(--color-ring);
+  --sidebar: var(--color-sidebar);
+  --sidebar-foreground: var(--color-sidebar-foreground);
+  --sidebar-primary: var(--color-sidebar-primary);
+  --sidebar-primary-foreground: var(--color-sidebar-primary-foreground);
+  --sidebar-accent: var(--color-sidebar-accent);
+  --sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
+  --sidebar-border: var(--color-sidebar-border);
+  --sidebar-ring: var(--color-sidebar-ring);
+  --chart-1: var(--color-chart-1);
+  --chart-2: var(--color-chart-2);
+  --chart-3: var(--color-chart-3);
+  --chart-4: var(--color-chart-4);
+  --chart-5: var(--color-chart-5);
+  --chart-6: var(--color-chart-6);
+  --radius: var(--radius-lg);
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+  --color-background: var(--cipher-inset);
+  --color-foreground: var(--cipher-ink);
+  --color-card: var(--cipher-surface);
+  --color-card-foreground: var(--cipher-ink);
+  --color-popover: var(--cipher-pop);
+  --color-popover-foreground: var(--cipher-ink);
+  --color-primary: var(--cipher-ink);
+  --color-primary-foreground: var(--cipher-on-ink);
+  --color-secondary: var(--cipher-tint);
+  --color-secondary-foreground: var(--cipher-ink);
+  --color-muted: var(--cipher-tint);
+  --color-muted-foreground: var(--cipher-muted);
+  --color-accent: var(--cipher-select);
+  --color-accent-foreground: var(--cipher-ink);
+  --color-destructive: var(--cipher-bad);
+  --color-destructive-foreground: var(--cipher-on-ink);
+  --color-border: #e1e0db;
+  --color-input: var(--cipher-control);
+  --color-ring: var(--cipher-ink);
+  --color-sidebar: var(--cipher-sidebar);
+  --color-sidebar-foreground: var(--cipher-ink);
+  --color-sidebar-primary: var(--cipher-ink);
+  --color-sidebar-primary-foreground: var(--cipher-on-ink);
+  --color-sidebar-accent: #ebeae5;
+  --color-sidebar-accent-foreground: var(--cipher-ink);
+  --color-sidebar-border: #e1e0db;
+  --color-sidebar-ring: var(--cipher-ink);
+  --color-chart-1: var(--cipher-chart-1);
+  --color-chart-2: var(--cipher-chart-2);
+  --color-chart-3: var(--cipher-chart-3);
+  --color-chart-4: var(--cipher-chart-4);
+  --color-chart-5: var(--cipher-chart-5);
+  --color-chart-6: var(--cipher-chart-6);
+  color-scheme: light;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-family: var(--cipher-font-sans);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+}
+
+.cipher[data-scheme="dark"] {
+  color-scheme: dark;
+  --color-border: #262729;
+  --color-sidebar-accent: #1c1c1c;
+  --color-sidebar-border: #1b1c1d;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-family: var(--cipher-font-sans);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+}
+
+/* A theme flip changes every colour token at once, so a transitioned surface would fade from the old theme for a moment. */
+.cipher[data-theme-switching],
+.cipher[data-theme-switching] *,
+.cipher[data-theme-switching] *::before,
+.cipher[data-theme-switching] *::after {
+  transition: none !important;
+}
+
+.cipher :where(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+}
+
+.cipher :where(code, kbd, pre, .font-mono) {
+  font-family: "Geist Mono", ui-monospace, Menlo, monospace;
+}
+
+/* Every element declares its own colour, so a hovered ancestor does not light up the scrollers inside it. */
+:where(.cipher),
+:where(.cipher) :where(*) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--cipher-scroll-thumb) transparent;
+}
+:where(.cipher) :where(*):hover {
+  scrollbar-color: var(--cipher-scroll-thumb-hover) transparent;
+}
+/* Chrome 121+ ignores ::-webkit-scrollbar once scrollbar-color is set, so only older Safari reads this. */
+@supports not (scrollbar-color: red red) {
+  :where(.cipher) ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+  }
+  :where(.cipher) ::-webkit-scrollbar-thumb {
+    background: var(--cipher-scroll-thumb);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 0;
+  }
+  :where(.cipher) ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--cipher-scroll-thumb-hover);
+  }
+}
+
+/* Zero-specificity focus fallback: any rule a component or example writes wins over it. */
+:where(.cipher)
+  :where(
+    :focus-visible:not(
+        [tabindex="-1"],
+        [role="dialog"],
+        [role="alertdialog"],
+        [role="menu"],
+        [role="listbox"],
+        [data-slot$="-content"]
+      )
+  ) {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
+}
+:where(.cipher)
+  :where(
+    [role="region"],
+    [role="tabpanel"],
+    [role="application"],
+    [role="tree"],
+    [role="grid"],
+    pre
+  ):where(:focus-visible) {
+  outline-color: var(--cipher-focus-ring);
+  outline-offset: calc(-1 * var(--cipher-size-focus-ring));
+}
+
+/* Browser autofill paints its own !important ground and text colour, which author styles cannot
+   outrank. Ink restores the text and caret, and the ground transition is held back for good, so a
+   field keeps its own ground; input-otp styles its hidden input itself. */
+.cipher :is(input, textarea, select):not([data-input-otp]):is(:-webkit-autofill, :autofill) {
+  background-clip: border-box;
+  -webkit-text-fill-color: var(--cipher-ink);
+  caret-color: var(--cipher-ink);
+  transition-property: border-color, box-shadow, background-color;
+  transition-duration: var(--cipher-duration-fast);
+  transition-delay: 0s, 0s, calc(var(--cipher-duration-slow) * 100000000);
+}
+.cipher input[data-np-input-autofilled] {
+  transition: none !important;
+}
+
+.cipher .cipher-switcher-header,
+.cipher .cipher-switcher-footer {
+  --cipher-menu-pad: var(--cipher-space-3);
+  display: flex;
+  flex-direction: column;
+  padding: var(--cipher-menu-pad);
+}
+.cipher .cipher-switcher-header {
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.cipher .cipher-switcher-footer {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+/* Switcher popovers (sidebar account, breadcrumb switchers) use the shared menu recipe: the same 3px panel inset, rows and eyebrow as every other menu; the current row is an inset rounded tint. */
+.cipher [data-cipher-switcher] [cmdk-list] {
+  --cipher-menu-icon-slot: 0px;
+}
+.cipher [data-cipher-switcher] [cmdk-item][data-current][data-current] {
+  font-weight: 600;
+}
+/* Shared highlight: one translucent block per list marks the hovered, keyboard-active or current
+   row and glides between them (lib/list-highlight.tsx). Rows inside such a list draw no tint. */
+.cipher [data-slot="list-highlight"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--cipher-hover);
+}
+.cipher [data-slot="list-highlight"][data-danger][data-danger] {
+  background-color: var(--cipher-action-danger-surface);
+}
+.cipher [data-slot="sidebar"] [data-slot="list-highlight"][data-slot] {
+  background-color: var(--cipher-sidebar-current);
+}
+.cipher [data-slot="sidebar"] [data-slot="list-highlight"][data-thumb="hover"] {
+  background-color: var(--cipher-sidebar-hover);
+}
+.cipher
+  [data-list-highlight][data-list-highlight]
+  :is(
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"],
+    [cmdk-item],
+    [data-sidebar-target]
+  ) {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+.cipher [data-cipher-switcher] [cmdk-item]:not([data-has-meta]) > span.inline-flex:last-child {
+  margin-inline-start: auto;
+}
+.cipher [data-cipher-switcher] [data-switcher-meta] {
+  color: var(--cipher-muted);
+  font-weight: var(--cipher-type-body-font-weight);
+}
+.cipher .cipher-switcher-description {
+  display: block;
+  color: var(--cipher-muted);
+  font-size: var(--cipher-type-small-font-size);
+}
+
+.cipher :is([data-slot="dialog-content"], [data-slot="alert-dialog-content"]) {
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+  --cipher-dialog-pad: var(--cipher-space-16);
+  border-radius: 0;
+  padding: var(--cipher-dialog-pad);
+  gap: var(--cipher-space-content-group);
+}
+.cipher
+  :is(
+    [data-slot="dialog-title"],
+    [data-slot="alert-dialog-title"],
+    [data-slot="sheet-title"]
+  ) {
+  font-family: var(--cipher-type-title-font-family);
+  font-size: var(--cipher-type-title-font-size);
+  line-height: var(--cipher-type-title-line-height);
+  font-weight: var(--cipher-type-title-font-weight);
+  letter-spacing: var(--cipher-type-title-letter-spacing);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.cipher
+  :is(
+    [data-slot="dialog-description"],
+    [data-slot="alert-dialog-description"],
+    [data-slot="sheet-description"],
+    [data-slot="popover-description"]
+  ) {
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+  color: var(--cipher-muted);
+  overflow-wrap: anywhere;
+}
+.cipher :is([data-slot="dialog-header"], [data-slot="alert-dialog-header"]) {
+  gap: var(--cipher-space-6);
+}
+.cipher [data-slot="dialog-content"][data-has-close] [data-slot="dialog-header"],
+.cipher [data-slot="sheet-content"][data-has-close] [data-slot="sheet-header"] {
+  padding-inline-end: calc(
+    var(--cipher-dialog-pad, var(--cipher-space-overlay-inset)) + var(--cipher-size-nested-md)
+  );
+}
+/* Overlay scroll model: when Content holds the section slots it lays out as a column with no gap.
+   Dialog and Sheet pin the header and any subheader above a line rule and the footer below one,
+   and only the body scrolls; the rules mark those edges, so the scroller fades only where no rule
+   sits. AlertDialog keeps its header in the scroller with the edge fade. */
+.cipher :is([data-slot="dialog-content"], [data-slot="alert-dialog-content"])[data-sections] {
+  padding: 0;
+  gap: 0;
+}
+.cipher :is([data-slot="dialog-scroll"], [data-slot="alert-dialog-scroll"]) {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--cipher-dialog-pad);
+  gap: var(--cipher-space-content-group);
+}
+/* Every overlay scroller keeps --cipher-focus-clearance clear at its block edges, so overflow never
+   clips the ring of the first or last control, or of one Tab scrolls to an edge. */
+.cipher
+  :is(
+    [data-slot="dialog-scroll"],
+    [data-slot="alert-dialog-scroll"],
+    [data-slot="sheet-scroll"],
+    [data-slot="dialog-content"],
+    [data-slot="alert-dialog-content"],
+    [data-slot="sheet-content"]
+  ) {
+  scroll-padding-block: var(--cipher-focus-clearance);
+}
+.cipher [data-slot="scroll-area-viewport"] {
+  scroll-padding: var(--cipher-focus-clearance);
+}
+.cipher [data-slot="alert-dialog-scroll"][data-before-footer] {
+  padding-bottom: var(--cipher-focus-clearance);
+  margin-bottom: calc(-1 * var(--cipher-focus-clearance));
+}
+.cipher [data-slot="dialog-head"] {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  padding: var(--cipher-dialog-pad);
+  gap: var(--cipher-space-content-group);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.cipher
+  :is(
+    [data-slot="dialog-subheader"],
+    [data-slot="sheet-subheader"]
+  ) {
+  min-width: 0;
+}
+/* Dialog spacing model: one pad (--cipher-dialog-pad) on all four sides; header, body and footer
+   stack with the content gap and carry no margins of their own. The Dialog footer is a paper
+   band that bleeds to the panel edge, as in the reference; the AlertDialog footer has no band. */
+.cipher [data-slot="dialog-footer"] {
+  margin: 0 calc(-1 * var(--cipher-dialog-pad)) calc(-1 * var(--cipher-dialog-pad));
+  padding: var(--cipher-dialog-pad);
+  gap: var(--cipher-space-12);
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  background: var(--cipher-paper);
+  border-radius: 0;
+}
+.cipher [data-sections] > [data-slot="dialog-footer"],
+.cipher [data-sections] > [data-slot="dialog-form"] > [data-slot="dialog-footer"] {
+  flex: none;
+  margin: 0;
+}
+.cipher [data-slot="alert-dialog-footer"] {
+  gap: var(--cipher-space-12);
+}
+.cipher [data-sections] > [data-slot="alert-dialog-footer"] {
+  flex: none;
+  padding: var(--cipher-dialog-pad);
+}
+.cipher [data-slot="alert-dialog-media"] {
+  background: var(--cipher-tint);
+  color: var(--cipher-text2);
+  border-radius: 0;
+}
+.cipher [data-slot="alert-dialog-media"][data-tone="danger"] {
+  background: var(--cipher-bad-bg);
+  color: var(--cipher-bad);
+}
+.cipher :is([data-slot="sheet-content"]) {
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+  max-height: 100dvh;
+  overflow-y: auto;
+  gap: var(--cipher-space-content-group);
+}
+.cipher
+  :is(
+    [data-slot="sheet-header"],
+    [data-slot="sheet-footer"]
+  ) {
+  padding: var(--cipher-space-overlay-inset);
+  gap: var(--cipher-space-6);
+}
+.cipher :is([data-slot="sheet-footer"]) {
+  gap: var(--cipher-space-8);
+}
+.cipher [data-slot="sheet-content"] {
+  border-radius: 0;
+}
+.cipher :is([data-slot="popover-title"]) {
+  font-family: var(--cipher-type-title-sm-font-family);
+  font-size: var(--cipher-type-title-sm-font-size);
+  line-height: var(--cipher-type-title-sm-line-height);
+  font-weight: var(--cipher-type-title-sm-font-weight);
+  letter-spacing: var(--cipher-type-title-sm-letter-spacing);
+}
+.cipher :is([data-slot="command"]) {
+  font-family: var(--cipher-type-body-font-family);
+  font-size: var(--cipher-type-body-font-size);
+  line-height: var(--cipher-type-body-line-height);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+  border-radius: 0;
+}
+.cipher :is([data-slot="chart"], [data-slot="chart-tooltip"], [data-slot="chart-legend"]) {
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+  font-weight: var(--cipher-type-caption-font-weight);
+  letter-spacing: var(--cipher-type-caption-letter-spacing);
+}
+
+.cipher [data-command-dialog] {
+  padding: 0;
+}
+.cipher [data-slot="chart-tooltip"] {
+  border-radius: 0;
+}
+
+.cipher :is([data-slot="sheet-body"]) {
+  min-width: 0;
+  flex: 1 0 auto;
+  padding: 0 var(--cipher-space-overlay-inset);
+}
+.cipher :is([data-slot="sheet-subheader"]) {
+  padding: 0 var(--cipher-space-overlay-inset) var(--cipher-space-overlay-inset);
+}
+.cipher [data-slot="sheet-head"] {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.cipher [data-sections] > [data-slot="sheet-footer"],
+.cipher [data-sections] > [data-slot="sheet-form"] > [data-slot="sheet-footer"] {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+/* A form around the sections owns its footer submit; it draws no box, so the pinned layout is the same. */
+.cipher [data-sections] > :is([data-slot="sheet-form"], [data-slot="dialog-form"]) {
+  display: contents;
+}
+.cipher
+  :is(
+    [data-slot="sheet-header"],
+    [data-slot="sheet-subheader"],
+    [data-slot="sheet-footer"]
+  ) {
+  flex-shrink: 0;
+}
+
+.cipher :is([data-slot="sheet-content"])[data-sections] {
+  overflow: hidden;
+  gap: 0;
+}
+.cipher [data-slot="sheet-sections"] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.cipher [data-slot="sheet-foot"] {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.cipher :is([data-slot="sheet-scroll"]) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cipher [data-slot="sheet-head"] + [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:first-child {
+  padding-top: var(--cipher-space-overlay-inset);
+}
+.cipher [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:last-child {
+  padding-bottom: var(--cipher-space-overlay-inset);
+}
+.cipher
+  :is([data-slot="sheet-head"], [data-slot="dialog-head"])
+  + :is([data-slot="sheet-scroll"], [data-slot="dialog-scroll"])[data-scroll-start-y] {
+  --cipher-fade-y-start: 0px;
+}
+.cipher :is([data-slot="sheet-scroll"], [data-slot="dialog-scroll"])[data-before-footer][data-scroll-end-y] {
+  --cipher-fade-y-end: 0px;
+}
+
+.cipher [data-slot="chart-tooltip"] .font-mono {
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-weight: var(--cipher-type-mono-sm-font-weight);
+  letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
+}
+
+/* tw-animate otherwise falls back to its own timing. Base layer, so an explicit duration-* or ease-* utility still wins. */
+@layer base {
+  .cipher [class*="animate-in"],
+  .cipher [class*="animate-out"] {
+    --tw-duration: var(--cipher-duration-fast);
+    --tw-ease: var(--cipher-ease-spring);
+  }
+}
+
+/* Zero-specificity icon defaults: a component class or an explicit size wins. */
+:where(.cipher) :where([data-slot="icon"], svg.lucide) {
+  width: var(--cipher-size-icon);
+  height: var(--cipher-size-icon);
+  stroke-width: var(--cipher-stroke-icon);
+}
+.cipher [data-slot="icon"][data-filled] {
+  fill: var(--cipher-hue-fill, currentColor);
+}
+
+/* Press: the control box never moves or resizes. Its label (text and icons) shrinks slightly on
+   press and springs back; the pressed fill stays on the box. Reduced motion keeps the fill only. */
+.cipher [data-press] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: inherit;
+  min-width: 0;
+  max-width: 100%;
+  transform-origin: center;
+  transition: scale var(--cipher-duration-fast) var(--cipher-ease-press);
+}
+.cipher :active:not(:disabled, [aria-disabled="true"]) > [data-press] {
+  scale: 0.97;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cipher :active > [data-press] {
+    scale: none;
+  }
+}
+
+/* Edge-aware scroll fade (lib/scroll-edges.ts): only an edge with more content past it fades. */
+.cipher [data-scroll-fade] {
+  --cipher-fade-y-start: 0px;
+  --cipher-fade-y-end: 0px;
+  --cipher-fade-x-start: 0px;
+  --cipher-fade-x-end: 0px;
+}
+.cipher [data-scroll-fade][data-scroll-start-y] {
+  --cipher-fade-y-start: var(--cipher-size-scroll-fade);
+}
+.cipher [data-scroll-fade][data-scroll-end-y] {
+  --cipher-fade-y-end: var(--cipher-size-scroll-fade);
+}
+.cipher [data-scroll-fade][data-scroll-start-x] {
+  --cipher-fade-x-start: var(--cipher-size-scroll-fade);
+}
+.cipher [data-scroll-fade][data-scroll-end-x] {
+  --cipher-fade-x-end: var(--cipher-size-scroll-fade);
+}
+.cipher
+  [data-scroll-fade]:is(
+    [data-scroll-start-y],
+    [data-scroll-end-y],
+    [data-scroll-start-x],
+    [data-scroll-end-x]
+  ):not([data-scroll-edge="border"]) {
+  mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black var(--cipher-fade-y-start),
+      black calc(100% - var(--cipher-fade-y-end)),
+      transparent
+    ),
+    linear-gradient(
+      to right,
+      transparent,
+      black var(--cipher-fade-x-start),
+      black calc(100% - var(--cipher-fade-x-end)),
+      transparent
+    );
+  mask-composite: intersect;
+}
+.cipher [data-scroll-fade][data-scroll-edge="border"][data-scroll-start-y] {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.cipher [data-scroll-fade][data-scroll-edge="border"][data-scroll-end-y] {
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+
+/* Keyboard focus on a selected option sits 1px further in, so selection plus focus never reads as a heavy box. */
+.cipher [role="option"]:is([aria-selected="true"], [data-selected]):focus-visible {
+  outline-offset: calc(-1 * var(--cipher-size-focus-ring) - var(--cipher-size-control-border));
+}
+
+/* Declared on each scope element, not once on .cipher: a custom property holding var() resolves where it
+   is declared, so colors built on .cipher would never see a nested --cipher-hue. */
+.cipher {
+  --cipher-hue-icon: currentColor;
+  --cipher-hue-tint: var(--cipher-faint);
+  --cipher-hue-soft: var(--cipher-tint);
+  --cipher-hue-fill: currentColor;
+}
+.cipher[data-hue],
+.cipher [data-hue] {
+  --cipher-hue-icon: oklch(var(--cipher-hue-subtle-icon) var(--cipher-hue));
+  --cipher-hue-tint: oklch(var(--cipher-hue-subtle-tint) var(--cipher-hue));
+  --cipher-hue-soft: oklch(var(--cipher-hue-subtle-soft) var(--cipher-hue));
+  --cipher-hue-fill: oklch(var(--cipher-hue-subtle-fill) var(--cipher-hue));
+}
+.cipher[data-hue="pop"],
+.cipher [data-hue="pop"] {
+  --cipher-hue-icon: oklch(var(--cipher-hue-pop-icon) var(--cipher-hue));
+  --cipher-hue-tint: oklch(var(--cipher-hue-pop-tint) var(--cipher-hue));
+  --cipher-hue-soft: oklch(var(--cipher-hue-pop-soft) var(--cipher-hue));
+  --cipher-hue-fill: oklch(var(--cipher-hue-pop-fill) var(--cipher-hue));
+}
+
+.cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > * {
+  stroke-dasharray: 1;
+  animation: cipher-icon-draw 480ms var(--cipher-ease-standard) backwards;
+}
+.cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(2) {
+  animation-delay: 70ms;
+}
+.cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(3) {
+  animation-delay: 140ms;
+}
+.cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > :nth-child(n + 4) {
+  animation-delay: 210ms;
+}
+@keyframes cipher-icon-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cipher [data-slot="card"]:is(:hover, :focus-within) [data-icon-motion="draw"] > * {
+    animation: none;
+  }
+}
