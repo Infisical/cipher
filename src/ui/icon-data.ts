@@ -369,6 +369,20 @@ export const iconShapes = {
       }
     }
   ],
+  "book-open": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 7c-1.6-1.6-4-2.5-8-2.5v13c4 0 6.4.9 8 2.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 7c1.6-1.6 4-2.5 8-2.5v13c-4 0-6.4.9-8 2.5V7z"
+      }
+    }
+  ],
   external: [
     {
       tag: "path",
