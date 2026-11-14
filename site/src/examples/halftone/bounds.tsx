@@ -15,13 +15,11 @@ export default function Example() {
           }
           description="Store, sync, and rotate secrets across environments."
           footer="52 secrets"
-          backdrop={
-            <Halftone bounds="header" size={20} seed="secret-manager" />
-          }
+          backdrop={<Halftone bounds="header" ambient seed="secret-manager" />}
         />
         <figcaption className="text-muted-foreground text-xs">
           {
-            "bounds header, size 20: stays in the header corner, clear of the footer"
+            "bounds header, ambient: fills the header, clear of the footer, and grows outward on hover"
           }
         </figcaption>
       </figure>
@@ -37,7 +35,9 @@ export default function Example() {
           backdrop={<Halftone reveal="hover" size={16} seed="synced" />}
         />
         <figcaption className="text-muted-foreground text-xs">
-          {"reveal hover: nothing at rest, the corner on hover"}
+          {
+            "reveal hover, size 16: nothing at rest, the corner grows out on hover"
+          }
         </figcaption>
       </figure>
     </div>

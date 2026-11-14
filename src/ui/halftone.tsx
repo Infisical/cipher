@@ -24,8 +24,10 @@ export type HalftoneProps = Omit<
   bounds?: "surface" | "header";
   /** Caps the corner at this many halftone cells across and down, at rest and on hover. */
   size?: number;
-  /** hover draws nothing at rest and shows the corner while the card is hovered or focused. */
+  /** hover draws nothing at rest and grows the corner out while the card is hovered or focused. */
   reveal?: "always" | "hover";
+  /** Cells shimmer in a slow wave travelling out from the anchor. Off under reduced motion. */
+  ambient?: boolean;
 };
 
 const bayer = (size: number): number[][] => {
@@ -45,6 +47,8 @@ const thresholds = bayer(8).map((row) =>
 );
 const alphaSteps = 12;
 const hoverScale = 1.5;
+const phases = 6;
+const overshoot = 1.35;
 
 const perlin = (seed: string | number) => {
   let state = [...String(seed)].reduce(
@@ -111,7 +115,10 @@ const cellPaths = (
   const rows = Math.ceil(Math.min(height, reachY) / cell);
   const fromRight = anchor.endsWith("right");
   const fromBottom = anchor.startsWith("bottom");
-  const steps = new Map<number, string[]>();
+  const steps = new Map<
+    string,
+    { opacity: number; phase: number; d: string[] }
+  >();
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
       const warp = noise ? 0.3 * noise(column / 5, row / 5) : 0;
@@ -133,14 +140,24 @@ const cellPaths = (
       if (!step) continue;
       const x = fromRight ? width - (column + 1) * cell : column * cell;
       const y = fromBottom ? height - (row + 1) * cell : row * cell;
-      const path = steps.get(step) ?? [];
-      path.push(`M${x} ${y}h${cell}v${cell}h-${cell}z`);
-      steps.set(step, path);
+      const wave =
+        (column + row) / 3 +
+        (noise ? 2 * noise(column / 4 + 7.1, row / 4 + 3.9) : 0);
+      const phase = ((Math.floor(wave) % phases) + phases) % phases;
+      const key = `${step}-${phase}`;
+      const path = steps.get(key) ?? {
+        opacity: step / alphaSteps,
+        phase,
+        d: [],
+      };
+      path.d.push(`M${x} ${y}h${cell}v${cell}h-${cell}z`);
+      steps.set(key, path);
     }
   }
-  return [...steps].map(([step, path]) => ({
-    opacity: step / alphaSteps,
-    d: path.join(""),
+  return [...steps].map(([key, path]) => ({
+    ...path,
+    key,
+    d: path.d.join(""),
   }));
 };
 
@@ -151,7 +168,7 @@ const readNumber = (element: Element, property: string, fallback: number) => {
   return Number.isFinite(value) ? value : fallback;
 };
 
-/** Ordered-dither corner wash. Place it as the first child of the surface it decorates; it sizes itself to that parent and sits under its content. Inside a Card, hovering the card spreads it into larger cells and raises its strength. */
+/** Ordered-dither corner wash. Place it as the first child of the surface it decorates; it sizes itself to that parent and sits under its content. Inside a Card, hovering the card grows the wash outward from its anchor at the same cell size and raises its strength. */
 export function Halftone({
   anchor = "top-right",
   reach = 216,
@@ -163,6 +180,7 @@ export function Halftone({
   bounds = "surface",
   size,
   reveal = "always",
+  ambient = false,
   className,
   style,
   ref,
@@ -248,17 +266,19 @@ export function Halftone({
         reach: reach * hoverScale,
         depth: depth * hoverScale,
         density: density * 1.25,
-        cell: box.cell * hoverScale,
+        cell: box.cell,
       }),
     };
   }, [box, anchor, reach, depth, density, seed]);
-  const origin = box
-    ? `${anchor.endsWith("right") ? box.width : 0}px ${anchor.startsWith("bottom") ? box.height : 0}px`
-    : undefined;
-  const clip = box && {
-    x: anchor.endsWith("right") ? box.width - box.limitWidth : 0,
-    y: anchor.startsWith("bottom") ? box.height - box.limitHeight : 0,
-  };
+  const extent = (scale: number) =>
+    box && {
+      x: Math.min(reach * scale, box.limitWidth) * overshoot + box.cell,
+      y:
+        Math.min(box.height * depth * scale, box.limitHeight) * overshoot +
+        box.cell,
+    };
+  const rest = reveal === "hover" ? { x: 0, y: 0 } : extent(1);
+  const grown = extent(hoverScale);
   return (
     <span
       ref={own}
@@ -274,36 +294,44 @@ export function Halftone({
         marginTop: box ? -box.top : undefined,
         marginLeft: box ? -box.left : undefined,
         ["--halftone-intensity" as string]: intensity,
+        ...(box &&
+          rest &&
+          grown && {
+            ["--halftone-at" as string]: `${anchor.endsWith("right") ? box.width : 0}px ${anchor.startsWith("bottom") ? box.height : 0}px`,
+            ["--halftone-rest" as string]: `${rest.x}px ${rest.y}px`,
+            ["--halftone-grown" as string]: `${grown.x}px ${grown.y}px`,
+          }),
       }}
       {...props}
     >
-      {box && layers && clip && (
-        <svg
-          width={box.width}
-          height={box.height}
-          shapeRendering="crispEdges"
-          focusable="false"
-          style={{
-            clipPath: `inset(${clip.y}px ${box.width - clip.x - box.limitWidth}px ${box.height - clip.y - box.limitHeight}px ${clip.x}px)`,
-          }}
-        >
-          {(["rest", "hover"] as const).map((layer) => (
-            <g
-              key={layer}
-              className={styles[layer]}
-              style={{ transformOrigin: origin }}
-            >
-              {layers[layer].map((path) => (
-                <path
-                  key={path.opacity}
-                  d={path.d}
-                  fillOpacity={path.opacity}
-                />
-              ))}
-            </g>
-          ))}
-        </svg>
-      )}
+      {box &&
+        layers &&
+        (["rest", "hover"] as const).map((layer) => (
+          <svg
+            key={layer}
+            width={box.width}
+            height={box.height}
+            shapeRendering="crispEdges"
+            focusable="false"
+            className={styles[layer]}
+          >
+            {layers[layer].map((path) => (
+              <path
+                key={path.key}
+                d={path.d}
+                fillOpacity={path.opacity}
+                className={ambient ? styles.ambient : undefined}
+                style={
+                  ambient
+                    ? {
+                        animationDelay: `calc(var(--halftone-wave) * ${-path.phase / phases})`,
+                      }
+                    : undefined
+                }
+              />
+            ))}
+          </svg>
+        ))}
     </span>
   );
 }
