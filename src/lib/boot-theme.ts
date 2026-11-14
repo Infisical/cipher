@@ -15,27 +15,30 @@ const read = (storage: () => Storage, key: string) => {
 /**
  * The theme from storage alone, for UI that renders before CipherScope and the React theme
  * provider: a ?theme= or session preview when `allowPreview` is set, else the person's named theme
- * for the scheme their shared preference resolves to.
+ * for the scheme their shared preference resolves to. With no stored preference it follows the OS
+ * scheme. A single key is read as the shared light, dark or system preference.
  */
 export const readBootTheme = ({
-  keys = themeStorage,
+  keys: keysOption = themeStorage,
   allowPreview = true,
   search = window.location.search
-}: { keys?: ThemeStorageKeys; allowPreview?: boolean; search?: string } = {}): string => {
+}: { keys?: ThemeStorageKeys | string; allowPreview?: boolean; search?: string } = {}): string => {
+  const keys: Partial<ThemeStorageKeys> & { shared: string } =
+    typeof keysOption === "string" ? { shared: keysOption } : keysOption;
   if (allowPreview) {
     const preview =
       toTheme(new URLSearchParams(search).get("theme")) ??
-      toTheme(read(() => window.sessionStorage, keys.override));
+      (keys.override ? toTheme(read(() => window.sessionStorage, keys.override)) : undefined);
     if (preview) return preview;
   }
   const shared = read(() => window.localStorage, keys.shared);
-  const choice = shared === "light" || shared === "dark" || shared === "system" ? shared : "dark";
+  const choice = shared === "light" || shared === "dark" ? shared : "system";
   const systemLight =
     choice === "system" && window.matchMedia("(prefers-color-scheme: light)").matches;
   const scheme: Scheme = choice === "light" || systemLight ? "light" : "dark";
   let preferred: Partial<Record<Scheme, unknown>> = {};
   try {
-    preferred = JSON.parse(read(() => window.localStorage, keys.preferred) || "{}");
+    preferred = JSON.parse((keys.preferred && read(() => window.localStorage, keys.preferred)) || "{}");
   } catch {
     preferred = {};
   }

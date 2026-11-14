@@ -1,5 +1,5 @@
 import { CipherLink, type CipherLinkProps } from "../lib/link";
-import { useStretchedLink } from "../lib/stretched-link";
+import { useCellLink, useStretchedLink } from "../lib/stretched-link";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
 
@@ -56,4 +56,44 @@ function RowLink({
   );
 }
 
-export { RowLink };
+/** A link that covers its own table cell rather than the row, such as one plan's price in a matrix. Other cells and a RowLink keep working around it. */
+function CellLink({
+  className,
+  disabled,
+  title,
+  children,
+  ref,
+  ...props
+}: CipherLinkProps & {
+  disabled?: boolean;
+}) {
+  const off = disabled ?? (props.link as { disabled?: boolean }).disabled;
+  useCellLink(!off);
+  if (off)
+    return (
+      <span
+        role="link"
+        aria-disabled="true"
+        title={title}
+        data-slot="cell-link"
+        data-disabled=""
+        className={cn(styles.rowLink, className)}
+      >
+        {children}
+      </span>
+    );
+  return (
+    <CipherLink
+      ref={ref}
+      title={title}
+      data-slot="cell-link"
+      data-cell-link=""
+      className={cn(styles.rowLink, styles.cellLink, className)}
+      {...props}
+    >
+      {children}
+    </CipherLink>
+  );
+}
+
+export { CellLink, RowLink };

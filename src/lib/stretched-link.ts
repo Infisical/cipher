@@ -16,4 +16,15 @@ export function useStretchedLink(active: boolean) {
   useReportPresence(React.useContext(StretchedLinkContext), active);
 }
 
-export { StretchedLinkContext };
+const CellLinkContext = React.createContext<PresenceReport | null>(null);
+
+/** A table cell whose own CellLink covers it, without making the row clickable. */
+export function useCellLinkHost() {
+  return usePresenceCount();
+}
+
+export function useCellLink(active: boolean) {
+  useReportPresence(React.useContext(CellLinkContext), active);
+}
+
+export { CellLinkContext, StretchedLinkContext };

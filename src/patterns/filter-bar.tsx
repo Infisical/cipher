@@ -40,10 +40,18 @@ export type FilterBarFilter = {
 };
 export type FilterBarProps = {
   label: string;
-  fields: readonly FilterBarField[];
-  value: readonly FilterBarFilter[];
-  onChange: (value: FilterBarFilter[]) => void;
+  /** Leave out for a bar that is only a search box. */
+  fields?: readonly FilterBarField[];
+  /** Applied filters. Only filters with values arrive here: one just added stays in the bar until its picker closes, and leaves without a change if none was picked. */
+  value?: readonly FilterBarFilter[];
+  onChange?: (value: FilterBarFilter[]) => void;
+  /** Your own search control. Leave out and pass searchValue and onSearchChange for the built-in one. */
   search?: React.ReactNode;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  /** The built-in search's accessible name, and its placeholder unless searchPlaceholder is set. */
+  searchLabel?: string;
+  searchPlaceholder?: string;
   /** The search stops at size-search-max; fill stretches it across the row up to the filters and actions. */
   width?: "fill";
   actions?: React.ReactNode;
@@ -121,15 +129,38 @@ const DateRangeFilter = ({
   );
 };
 
+type Draft = { filter: FilterBarFilter; index: number };
+const withDraft = (list: readonly FilterBarFilter[], draft: Draft | null) => {
+  if (!draft) return list;
+  if (list.some((filter) => filter.field === draft.filter.field))
+    return list.map((filter) => (filter.field === draft.filter.field ? draft.filter : filter));
+  const next = [...list];
+  next.splice(Math.min(draft.index, next.length), 0, draft.filter);
+  return next;
+};
+
 export const FilterBar = ({
   label,
-  fields,
-  value,
+  fields = [],
+  value: valueProp,
   onChange,
   search,
+  searchValue,
+  onSearchChange,
+  searchLabel = "Search",
+  searchPlaceholder,
   width,
   actions
 }: FilterBarProps) => {
+  const [uncontrolled, setUncontrolled] = React.useState<readonly FilterBarFilter[]>([]);
+  const value = valueProp ?? uncontrolled;
+  const [draft, setDraftState] = React.useState<Draft | null>(null);
+  const draftRef = React.useRef(draft);
+  const setDraft = (next: Draft | null) => {
+    draftRef.current = next;
+    setDraftState(next);
+  };
+  const shown = withDraft(value, draft);
   const [open, setOpen] = React.useState<string | null>(null);
   const [focusTarget, setFocusTarget] = React.useState<string | null>(null);
   const picked = React.useRef<string | null>(null);
@@ -148,37 +179,77 @@ export const FilterBar = ({
   }, [value]);
   const commit = (next: FilterBarFilter[]) => {
     latest.current = next;
-    onChange(next);
+    if (valueProp === undefined) setUncontrolled(next);
+    onChange?.(next);
   };
-  const update = (key: string, patch: Partial<FilterBarFilter>) =>
-    commit(
-      latest.current.map((filter) => (filter.field === key ? { ...filter, ...patch } : filter))
-    );
+  const update = (key: string, patch: Partial<FilterBarFilter>) => {
+    const current = latest.current;
+    const pending = draftRef.current?.filter.field === key ? draftRef.current : null;
+    const index = current.findIndex((filter) => filter.field === key);
+    const base = index >= 0 ? current[index] : pending?.filter;
+    if (!base) return;
+    const next = { ...base, ...patch };
+    const at = index >= 0 ? index : (pending?.index ?? current.length);
+    if (pending || !next.values.length) setDraft({ filter: next, index: at });
+    if (next.values.length)
+      commit(
+        index >= 0
+          ? current.map((filter) => (filter.field === key ? next : filter))
+          : [...current.slice(0, at), next, ...current.slice(at)]
+      );
+    else if (index >= 0) commit(current.filter((filter) => filter.field !== key));
+  };
   const remove = (key: string) => {
-    const index = latest.current.findIndex((filter) => filter.field === key);
-    const next = latest.current.filter((filter) => filter.field !== key);
-    commit(next);
+    const before = withDraft(latest.current, draftRef.current);
+    const index = before.findIndex((filter) => filter.field === key);
+    const next = before.filter((filter) => filter.field !== key);
+    if (draftRef.current?.filter.field === key) setDraft(null);
+    if (latest.current.some((filter) => filter.field === key))
+      commit(latest.current.filter((filter) => filter.field !== key));
     setFocusTarget((next[index] ?? next[index - 1])?.field ?? "add");
   };
   const add = (field: FilterBarField) => {
     picked.current = field.key;
-    commit([
-      ...latest.current,
-      { field: field.key, operator: field.type === "date" ? "before" : undefined, values: [] }
-    ]);
+    setDraft({
+      filter: {
+        field: field.key,
+        operator: field.type === "date" ? "before" : undefined,
+        values: []
+      },
+      index: latest.current.length
+    });
   };
   const changeOpen = (key: string, next: boolean) => {
     setOpen(next ? key : null);
     if (next) return;
-    if (!latest.current.find((filter) => filter.field === key)?.values.length) remove(key);
+    const applied = latest.current.find((filter) => filter.field === key)?.values.length;
+    if (!applied) remove(key);
+    else if (draftRef.current?.filter.field === key) setDraft(null);
   };
+  const searchControl =
+    search ??
+    (onSearchChange || searchValue !== undefined ? (
+      <Input
+        icon="search"
+        aria-label={searchLabel}
+        placeholder={searchPlaceholder ?? searchLabel}
+        value={searchValue ?? ""}
+        onChange={(event) => onSearchChange?.(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && searchValue) {
+            event.preventDefault();
+            onSearchChange?.("");
+          }
+        }}
+      />
+    ) : null);
 
   return (
     <div className={styles.bar} data-slot="filter-bar" role="search" aria-label={label}>
       <div className={styles.top}>
-        {search && (
+        {searchControl && (
           <div className={styles.search} data-width={width}>
-            {search}
+            {searchControl}
           </div>
         )}
         {fields.length > 0 && (
@@ -199,7 +270,7 @@ export const FilterBar = ({
             >
               <DropdownMenuLabel>Filter by</DropdownMenuLabel>
               {fields.map((field) => {
-                const applied = value.some((filter) => filter.field === field.key);
+                const applied = shown.some((filter) => filter.field === field.key);
                 return (
                   <DropdownMenuItem
                     key={field.key}
@@ -216,10 +287,10 @@ export const FilterBar = ({
         )}
         {actions && <div className={styles.actions}>{actions}</div>}
       </div>
-      {value.length > 0 && (
+      {shown.length > 0 && (
         <div className={styles.applied}>
           <ul className={styles.chips} aria-label="Applied filters">
-            {value.map((filter) => {
+            {shown.map((filter) => {
               const field = fields.find((entry) => entry.key === filter.field);
               if (!field) return null;
               const text = describeFilter(field, filter);
@@ -352,6 +423,7 @@ export const FilterBar = ({
           <Button
             variant="link"
             onClick={() => {
+              setDraft(null);
               commit([]);
               setFocusTarget("add");
             }}
