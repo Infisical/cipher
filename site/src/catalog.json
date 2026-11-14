@@ -808,6 +808,30 @@
     ]
   },
   {
+    "id": "header-search",
+    "title": "Header search",
+    "summary": "An icon in a card header that opens a popover search: filters rows in memory, or runs a debounced server query. A dot marks an applied query.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Client filtering in a framed card",
+        "module": "header-search/client"
+      },
+      {
+        "title": "Server search in a framed card",
+        "module": "header-search/server"
+      },
+      {
+        "title": "Plain cards, client and server",
+        "module": "header-search/plain"
+      },
+      {
+        "title": "Inside a frame whose body scrolls",
+        "module": "header-search/scroll"
+      }
+    ]
+  },
+  {
     "id": "hover-card",
     "title": "Hover card",
     "summary": "Show supplementary information on hover or keyboard focus.",
