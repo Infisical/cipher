@@ -319,11 +319,15 @@
         "@cipher/button-group",
         "@cipher/calendar",
         "@cipher/cipher-base",
+        "@cipher/date-range-picker",
         "@cipher/dropdown-menu",
         "@cipher/input",
         "@cipher/multi-select",
         "@cipher/popover",
         "@cipher/toggle-group"
+      ],
+      "dependencies": [
+        "react-day-picker@^10.0.2"
       ],
       "files": [
         {
@@ -636,6 +640,7 @@
       "name": "card",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/badge",
         "@cipher/cipher-base",
         "@cipher/tooltip"
       ],
@@ -1021,6 +1026,36 @@
           "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/frame.module.css"
+        }
+      ]
+    },
+    {
+      "name": "date-range-picker",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/calendar",
+        "@cipher/cipher-base",
+        "@cipher/popover"
+      ],
+      "dependencies": [
+        "react-day-picker@^10.0.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/date-range-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/date-range-picker.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/controls.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/controls.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/date-range-picker.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/date-range-picker.module.css"
         }
       ]
     },
@@ -1640,9 +1675,11 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/dialog",
+        "@cipher/field",
         "@cipher/icon",
         "@cipher/progress",
-        "@cipher/sheet"
+        "@cipher/sheet",
+        "@cipher/sonner"
       ],
       "dependencies": [
         "motion@^13.2.0"
@@ -1913,7 +1950,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/input"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"
@@ -2152,6 +2190,39 @@
           "path": "src/components/cipher/ui/sonner.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/sonner.module.css"
+        }
+      ]
+    },
+    {
+      "name": "sortable-list",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base"
+      ],
+      "dependencies": [
+        "motion@^13.2.0"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/sortable-list.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/sortable-list.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/data.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/data.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/frame.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/frame.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/sortable-list.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/sortable-list.module.css"
         }
       ]
     },

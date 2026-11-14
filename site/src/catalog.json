@@ -496,6 +496,26 @@
     ]
   },
   {
+    "id": "date-range-picker",
+    "title": "Date range picker",
+    "summary": "Pick a start and end date from a calendar in a popover, with optional presets.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Empty, set and two months",
+        "module": "date-range-picker/basic"
+      },
+      {
+        "title": "With presets",
+        "module": "date-range-picker/presets"
+      },
+      {
+        "title": "Future dates disabled",
+        "module": "date-range-picker/disabled-future"
+      }
+    ]
+  },
+  {
     "id": "detail-layout",
     "title": "Detail layout",
     "summary": "Lay out a detail page as stacked content cards with a details sidecar on the right that stacks above them in narrow containers.",
@@ -716,6 +736,10 @@
       {
         "title": "Search width, capped and fill",
         "module": "filter-bar/width"
+      },
+      {
+        "title": "Date range field",
+        "module": "filter-bar/date-range"
       }
     ]
   },
@@ -840,6 +864,10 @@
       {
         "title": "Number",
         "module": "input/number"
+      },
+      {
+        "title": "Fixed widths",
+        "module": "input/widths"
       }
     ]
   },
@@ -1028,6 +1056,10 @@
       {
         "title": "Connect an integration in three containers",
         "module": "multi-step/default"
+      },
+      {
+        "title": "Pick, configure and connect in a sheet",
+        "module": "multi-step/pick"
       }
     ]
   },
@@ -1104,6 +1136,10 @@
       {
         "title": "Labels and descriptions",
         "module": "radio-group/descriptions"
+      },
+      {
+        "title": "Columns",
+        "module": "radio-group/columns"
       },
       {
         "title": "States",
@@ -1340,6 +1376,22 @@
     ]
   },
   {
+    "id": "sortable-list",
+    "title": "Sortable List",
+    "summary": "Rows a person puts in order, by dragging the grip or from the keyboard.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Basic list and a locked item",
+        "module": "sortable-list/default"
+      },
+      {
+        "title": "Inside a framed Card with row actions",
+        "module": "sortable-list/card"
+      }
+    ]
+  },
+  {
     "id": "spinner",
     "title": "Spinner",
     "summary": "Show the Infisical pixel mark while real work remains pending.",
@@ -1440,6 +1492,10 @@
       {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
+      },
+      {
+        "title": "Group selection",
+        "module": "table/group-selection"
       },
       {
         "title": "Column toggle, permission matrix",
@@ -1624,6 +1680,10 @@
       {
         "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
+      },
+      {
+        "title": "Bounds, size and reveal (hover a card)",
+        "module": "halftone/bounds"
       }
     ]
   },

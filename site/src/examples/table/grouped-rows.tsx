@@ -58,6 +58,7 @@ export default function GroupedRows() {
   const [selected, setSelected] = React.useState<string[]>([]);
   const groups: DataTableGroup<Account>[] = resources.map((resource) => ({
     id: resource.id,
+    name: resource.name,
     label: (
       <Inline gap={8} align="center" wrap={false}>
         <Icon name="machine" />

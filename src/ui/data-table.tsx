@@ -14,6 +14,7 @@ import {
   TableActionsHead,
   TableBody,
   TableCell,
+  TableGroupRow,
   TableHead,
   TableHeadButton,
   TableHeader,
@@ -75,6 +76,8 @@ export interface DataTableGroup<Row> {
   id: string;
   /** The header row's label, such as the parent resource's name or a link to it. */
   label: React.ReactNode;
+  /** Plain-text name for the group's checkbox ("Select all in name") when label is not a string. */
+  name?: string;
   rows: readonly Row[];
   /** Muted text after the label, such as the group's row count. */
   meta?: React.ReactNode;
@@ -199,7 +202,7 @@ export function DataTable<Row>({
   const sections = groups
     ? groups
         .filter((group) => group.rows.length > 0)
-        .map((group) => ({ group, entries: expand(group.rows, 1) }))
+        .map((group) => ({ group, entries: expand(group.rows, 0) }))
     : [{ group: undefined, entries: expand(flatRows ?? [], 0) }];
   const entries = sections.flatMap((section) => section.entries);
   const rows = entries.map((entry) => entry.row);
@@ -211,6 +214,25 @@ export function DataTable<Row>({
   const update = (next: string[]) => {
     if (selectedIds === undefined) setOwnSelected(next);
     onSelectionChange?.(next);
+  };
+  const groupCheckbox = (group: DataTableGroup<Row>, groupEntries: readonly { row: Row }[]) => {
+    const ids = groupEntries.map((entry) => entry.row).filter(isSelectable).map(getRowId);
+    const on = ids.filter((id) => selected.includes(id)).length;
+    const name = group.name ?? (typeof group.label === "string" ? group.label : group.id);
+    return (
+      <Checkbox
+        aria-label={`Select all in ${name}`}
+        disabled={!ids.length}
+        checked={on > 0 && on < ids.length ? "indeterminate" : ids.length > 0 && on === ids.length}
+        onCheckedChange={() =>
+          update(
+            on === ids.length
+              ? selected.filter((id) => !ids.includes(id))
+              : [...new Set([...selected, ...ids])]
+          )
+        }
+      />
+    );
   };
   const toggle = (id: string) =>
     update(selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]);
@@ -616,22 +638,16 @@ export function DataTable<Row>({
               .reduce((sum, section) => sum + section.entries.length, 0);
             return (
               <TableBody key={group?.id} data-group="">
-                <tr aria-rowindex={offset + 2} className={styles.tableGroupRow}>
-                  {selectable && <TableCell selection />}
-                  <th scope="rowgroup" colSpan={columns.length} className={styles.tableGroupHead}>
-                    <div className={styles.tableGroupLabel}>
-                      {group?.label}
-                      {group?.meta !== undefined && (
-                        <span className={styles.tableGroupMeta}>{group.meta}</span>
-                      )}
-                    </div>
-                  </th>
-                  {rowActions && (
-                    <TableActionsCell slots={slots} data-pin="true">
-                      {group?.actions}
-                    </TableActionsCell>
-                  )}
-                </tr>
+                <TableGroupRow
+                  aria-rowindex={offset + 2}
+                  label={group?.label}
+                  meta={group?.meta}
+                  actions={group?.actions}
+                  colSpan={columns.length}
+                  actionSlots={rowActions ? slots : undefined}
+                  selectable={selectable}
+                  checkbox={selectable && group ? groupCheckbox(group, groupEntries) : undefined}
+                />
                 {groupEntries.map((entry, i) => renderRow(entry, before + i, offset + i + 3))}
               </TableBody>
             );

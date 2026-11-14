@@ -17,8 +17,10 @@ Both come from the same source in [src/](src/).
 Cipher isn't on npm yet. Install a release tag from GitHub:
 
 ```bash
-$ npm install github:Infisical/cipher#v0.1.0 motion sonner
+$ npm install github:Infisical/cipher#v0.1.3 motion sonner
 ```
+
+Use the latest tag from the [releases page](https://github.com/Infisical/cipher/releases). This README is updated with each release.
 
 Each release tag points at a commit that holds the built package, so the install downloads it as is and runs no build.
 
@@ -67,11 +69,11 @@ Every module has its own entry point: `@infisical/cipher/ui/<name>`, `@infisical
 Register the `@cipher` namespace once, then add items by name:
 
 ```bash
-$ npx shadcn@latest registry add "@cipher=https://raw.githubusercontent.com/Infisical/cipher/<ref>/r/{name}.json"
+$ npx shadcn@latest registry add "@cipher=https://raw.githubusercontent.com/Infisical/cipher/v0.1.3/r/{name}.json"
 $ npx shadcn@latest add @cipher/cipher-base @cipher/button @cipher/dialog
 ```
 
-Replace `<ref>` with a release tag or commit SHA to pin a version, or `main` to follow the latest. Every item depends on `@cipher/cipher-base`, which the CLI installs for you. To see what's available, run `npx shadcn@latest search @cipher`.
+The URL pins the v0.1.3 release. Swap in the latest release tag, a commit SHA, or `main` to follow the latest. Every item depends on `@cipher/cipher-base`, which the CLI installs for you. To see what's available, run `npx shadcn@latest search @cipher`.
 
 Files land under `src/components/cipher/` and import each other by relative path, so they don't depend on your import aliases. Import the stylesheet once, after your Tailwind entry, and wrap Cipher UI in `CipherScope`:
 

@@ -8,17 +8,22 @@
 .form {
   min-width: 0;
 }
+/* The steps slide inside this clip, so it reaches --cipher-focus-clearance past the content on every
+   side and gives it back as negative margin: rings at the content edge are drawn, alignment holds. */
 .viewport {
+  position: relative;
+  box-sizing: content-box;
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
 }
 .body {
   display: flex;
   flex-direction: column;
   gap: var(--cipher-space-field-group);
   min-width: 0;
-  padding: var(--cipher-space-2);
 }
 .footer.footer {
   display: flex;

@@ -25,7 +25,7 @@ import {
   DialogTitle
 } from "./dialog";
 import { Icon } from "./icon";
-import { fieldBoxFlags, fieldBoxWatch } from "./input";
+import { type FieldWidth, fieldBoxFlags, fieldBoxWatch } from "./input";
 import { MultiSelect } from "./multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Spinner } from "./spinner";
@@ -94,6 +94,8 @@ type SharedComboboxProps = {
   onCreate?: OptionCreateHandler;
   /** Lets the person empty the value: Clear all after the chips, or Clear selection atop a single list. */
   clearable?: boolean;
+  /** A fixed token width that doesn't shrink. Unset fills the row. */
+  width?: FieldWidth;
   className?: string;
 };
 export type ComboboxProps = SharedComboboxProps &
@@ -132,6 +134,7 @@ export function Combobox({
     invalid,
     mono,
     onCreate,
+    width,
     className
   } = props;
   const onSearch = props.multiple ? undefined : props.onSearch;
@@ -252,6 +255,7 @@ export function Combobox({
     return (
       <div
         ref={fieldBoxRef}
+        data-width={width}
         className={cn(controlStyles.field, styles.multiCombobox)}
         data-size="sm"
         data-field-box=""
@@ -335,6 +339,7 @@ export function Combobox({
         type="button"
         role="combobox"
         data-size="sm"
+        data-width={width}
         data-placeholder={selected.length ? undefined : ""}
         aria-label={label}
         aria-expanded={open}
