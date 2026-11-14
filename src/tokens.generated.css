@@ -163,8 +163,8 @@
   --cipher-accent: #e3f047;
   --cipher-accent-2: #d3df29;
   --cipher-on-accent: #010101;
-  --cipher-accent-wash: #f7fbc9;
-  --cipher-accent-line: #dede88;
+  --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 28%, white);
+  --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 55%, var(--cipher-line));
   --cipher-accent-fg: var(--cipher-ink);
   --cipher-mark: #010101;
   --cipher-ok: #2b5945;
@@ -367,8 +367,8 @@
   --cipher-accent: #e3f047;
   --cipher-accent-2: #d1de23;
   --cipher-on-accent: #010101;
-  --cipher-accent-wash: #1a1c0d;
-  --cipher-accent-line: #3a401c;
+  --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 11%, black);
+  --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 25%, black);
   --cipher-accent-fg: var(--cipher-accent);
   --cipher-mark: #e3f047;
   --cipher-ok: #8fc7a4;
@@ -469,6 +469,38 @@
   --cipher-hue-pop-tint: 0.74 0.14;
   --cipher-hue-pop-soft: 0.25 0.035;
   --cipher-hue-pop-fill: 0.74 0.14;
+}
+.cipher[data-hue],
+.cipher [data-hue] {
+  --cipher-accent: oklch(var(--cipher-accent-lc, 0.917 0.183) var(--cipher-hue));
+  --cipher-accent-2: oklch(var(--cipher-accent-2-lc, 0.867 0.183) var(--cipher-hue));
+  --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 28%, white);
+  --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 55%, var(--cipher-line));
+  --cipher-accent-fg: var(--cipher-ink);
+  --cipher-chart-3: var(--cipher-accent);
+  --cipher-sw-on: var(--cipher-ink);
+  --cipher-sw-knob-on: var(--cipher-accent);
+  --cipher-slider-range: var(--cipher-ink);
+  --cipher-button-face-start: color-mix(in srgb, var(--cipher-accent) 82%, white);
+  --cipher-button-face-end: var(--cipher-accent);
+  --cipher-button-bloom: color-mix(in srgb, var(--cipher-accent) 35%, white);
+  --cipher-button-hover-start: color-mix(in srgb, var(--cipher-accent) 78%, white);
+  --cipher-button-hover-end: var(--cipher-accent);
+  --cipher-button-hover-bloom: color-mix(in srgb, var(--cipher-accent) 25%, white);
+  --cipher-button-press-start: var(--cipher-accent);
+  --cipher-button-press-end: color-mix(in srgb, var(--cipher-accent) 96%, white);
+  --cipher-button-glow: var(--cipher-accent);
+  --cipher-button-hover-glow: var(--cipher-accent);
+  --cipher-button-hover-bloom-soft: color-mix(in srgb, var(--cipher-accent) 38%, white);
+}
+.cipher[data-scheme="dark"][data-hue],
+.cipher[data-scheme="dark"] [data-hue] {
+  --cipher-accent-wash: color-mix(in srgb, var(--cipher-accent) 11%, black);
+  --cipher-accent-line: color-mix(in srgb, var(--cipher-accent) 25%, black);
+  --cipher-accent-fg: var(--cipher-accent);
+  --cipher-sw-on: var(--cipher-accent);
+  --cipher-sw-knob-on: var(--cipher-on-accent);
+  --cipher-slider-range: var(--cipher-accent);
 }
 .cipher[data-theme="dark"] {
   --cipher-inset: #121213;

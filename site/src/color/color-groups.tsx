@@ -265,7 +265,7 @@ export const colorGroups: ColorGroup[] = [
     id: "accent",
     title: "Accent",
     usage:
-      "Infisical yellow, the same in both themes. One accent per view: the primary action, a new badge, a highlighted callout. Text on it is always on-accent.",
+      "The hue of the nearest hue scope, Infisical yellow outside every scope, the same in both themes. One accent per view: the primary action, a new badge, a highlighted callout. Text on it is always on-accent.",
     sections: [
       { title: "Accent", tokens: ["accent", "accent-2", "on-accent", "accent-fg", "mark"] },
       { title: "Callouts", tokens: ["accent-wash", "accent-line"] }

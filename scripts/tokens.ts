@@ -16,12 +16,13 @@ const root = path.resolve(import.meta.dirname, "..");
 const check = process.argv.includes("--check");
 const output = path.join(root, "src/tokens.generated.css");
 const tokens: Tokens = JSON.parse(readFileSync(path.join(root, "src/tokens.json"), "utf8"));
-const themed: { name: string; value: Record<string, string> }[] = [];
+const themed: { name: string; value: Record<string, string>; scoped?: string }[] = [];
 const constant: { name: string; value: string | number }[] = [];
 Object.values(tokens).forEach((family) => {
   if (!family || typeof family !== "object" || !("tokens" in family)) return;
-  (family as { tokens: { name: string; value: TokenValue }[] }).tokens.forEach((token) => {
-    if (typeof token.value === "object") themed.push({ name: token.name, value: token.value });
+  (family as { tokens: { name: string; value: TokenValue; scoped?: string }[] }).tokens.forEach((token) => {
+    if (typeof token.value === "object")
+      themed.push({ name: token.name, value: token.value, scoped: token.scoped });
     else constant.push({ name: token.name, value: token.value });
   });
 });
@@ -60,6 +61,31 @@ css += rule(
   '.cipher[data-scheme="dark"]',
   themed.map((token) => `--cipher-${token.name}: ${cssValue(token.value.dark ?? token.value.light)};`)
 );
+const references = (value: string) => [...value.matchAll(/\{([^}]+)\}/g)].map((match) => match[1]);
+const followers = new Set(themed.filter((token) => token.scoped).map((token) => token.name));
+let grew = true;
+while (grew) {
+  grew = false;
+  themed.forEach((token) => {
+    if (followers.has(token.name)) return;
+    const values = Object.values(token.value);
+    if (values.some((value) => references(value).some((name) => followers.has(name)))) {
+      followers.add(token.name);
+      grew = true;
+    }
+  });
+}
+const scopedTokens = themed.filter((token) => followers.has(token.name));
+css += rule(
+  ".cipher[data-hue],\n.cipher [data-hue]",
+  scopedTokens.map((token) => `--cipher-${token.name}: ${cssValue(token.scoped ?? token.value.light)};`)
+);
+css += rule(
+  '.cipher[data-scheme="dark"][data-hue],\n.cipher[data-scheme="dark"] [data-hue]',
+  scopedTokens
+    .filter((token) => !token.scoped && token.value.dark && token.value.dark !== token.value.light)
+    .map((token) => `--cipher-${token.name}: ${cssValue(token.value.dark)};`)
+);
 const themedNames = new Set(themed.map((token) => token.name));
 themes.forEach((theme) => {
   if (Boolean(theme.base) === Boolean(theme.extends))
@@ -69,6 +95,8 @@ themes.forEach((theme) => {
     failures.push(`Theme ${theme.id} declares scheme ${theme.scheme} but resolves to the ${base} base`);
   Object.keys(theme.overrides).forEach((name) => {
     if (!themedNames.has(name)) failures.push(`Theme ${theme.id} overrides unknown token ${name}`);
+    if (followers.has(name))
+      failures.push(`Theme ${theme.id} overrides ${name}, which follows the hue scope`);
   });
   const changed = themed.filter(
     (token) =>
