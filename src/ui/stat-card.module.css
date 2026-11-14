@@ -1,0 +1,76 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-4);
+}
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+}
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--cipher-text2);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--cipher-ink);
+  font-family: var(--cipher-type-display-font-family);
+  font-size: var(--cipher-type-display-font-size);
+  line-height: var(--cipher-type-display-line-height);
+  font-weight: var(--cipher-type-display-font-weight);
+  letter-spacing: var(--cipher-type-display-letter-spacing);
+  font-variant-numeric: tabular-nums;
+}
+.valueSkeleton {
+  width: var(--cipher-space-48);
+  height: var(--cipher-type-display-line-height);
+}
+.error {
+  min-height: var(--cipher-type-display-line-height);
+}
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-4) var(--cipher-space-8);
+  min-width: 0;
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.delta {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-2);
+  color: var(--cipher-text2);
+  font-weight: var(--cipher-type-label-font-weight);
+  font-variant-numeric: tabular-nums;
+}
+.delta > svg {
+  width: var(--cipher-size-glyph);
+  height: var(--cipher-size-glyph);
+  stroke-width: var(--cipher-stroke-icon);
+}
+.delta[data-tone="ok"] {
+  color: var(--cipher-ok);
+}
+.delta[data-tone="bad"] {
+  color: var(--cipher-bad);
+}
+.note {
+  min-width: 0;
+  color: var(--cipher-muted);
+}

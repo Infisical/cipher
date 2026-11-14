@@ -406,6 +406,50 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .cardHeader > [data-slot="card-description"] {
   grid-column: 1;
 }
+.cardTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-4) var(--cipher-space-8);
+  min-width: 0;
+}
+.cardTitleRow > [data-slot="card-title"] {
+  flex: 0 1 auto;
+}
+.cardHeader[data-framed] .cardTitleRow {
+  flex-wrap: nowrap;
+}
+.cardBadges {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-4);
+}
+.cardChoiceCheck {
+  display: inline-grid;
+  flex: none;
+  place-content: center;
+  width: var(--cipher-size-icon);
+  height: var(--cipher-size-icon);
+}
+.cardChoiceCheck > svg {
+  width: var(--cipher-size-glyph);
+  height: var(--cipher-size-glyph);
+}
+.card[data-selected]:not([data-variant="framed"][data-has-slots]),
+.card[data-variant="framed"][data-selected]
+  > :is(.cardBody, .cardInset, .cardFooter:not([data-placement="frame"])) {
+  border-color: var(--cipher-choice-selected-border);
+  background-image: linear-gradient(
+    var(--cipher-choice-selected-surface),
+    var(--cipher-choice-selected-surface)
+  );
+}
+.card[data-selected][data-stretched-link]:not([data-variant="framed"][data-has-slots]):hover {
+  background-image:
+    linear-gradient(var(--cipher-action-ghost-hover), var(--cipher-action-ghost-hover)),
+    linear-gradient(var(--cipher-choice-selected-surface), var(--cipher-choice-selected-surface));
+}
 .cardDescription {
   color: var(--cipher-text2);
   margin-top: var(--cipher-space-4);

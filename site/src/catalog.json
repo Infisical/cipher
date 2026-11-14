@@ -308,6 +308,14 @@
       {
         "title": "Title hint",
         "module": "card/framed-hint"
+      },
+      {
+        "title": "Badges after the title",
+        "module": "card/badges"
+      },
+      {
+        "title": "Selected and choice cards",
+        "module": "card/selected"
       }
     ]
   },
@@ -1456,6 +1464,22 @@
       {
         "title": "Spinner",
         "module": "spinner/default"
+      }
+    ]
+  },
+  {
+    "id": "stat-card",
+    "title": "Stat card",
+    "summary": "One metric with its label, an optional change since the last period and a short note, optionally linking to the list behind it.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Metrics",
+        "module": "stat-card/default"
+      },
+      {
+        "title": "Loading, error and attention",
+        "module": "stat-card/states"
       }
     ]
   },

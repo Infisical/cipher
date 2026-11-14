@@ -127,6 +127,11 @@
           "target": "src/components/cipher/lib/presence-count.ts"
         },
         {
+          "path": "src/components/cipher/lib/radio-value-context.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/radio-value-context.ts"
+        },
+        {
           "path": "src/components/cipher/lib/scroll-edges.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/scroll-edges.ts"
@@ -653,7 +658,12 @@
       "registryDependencies": [
         "@cipher/badge",
         "@cipher/cipher-base",
+        "@cipher/icon",
         "@cipher/tooltip"
+      ],
+      "dependencies": [
+        "motion@^13.2.0",
+        "radix-ui@^1.6.7"
       ],
       "files": [
         {
@@ -2283,6 +2293,30 @@
           "path": "src/components/cipher/ui/runtime.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/runtime.module.css"
+        }
+      ]
+    },
+    {
+      "name": "stat-card",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/card",
+        "@cipher/cipher-base",
+        "@cipher/icon",
+        "@cipher/item",
+        "@cipher/skeleton",
+        "@cipher/text"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/stat-card.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/stat-card.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/stat-card.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/stat-card.module.css"
         }
       ]
     },
