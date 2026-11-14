@@ -329,7 +329,9 @@ export function DataTable<Row>({
     const root = document.documentElement;
     const viewportScroll = (element: HTMLElement) =>
       element === root ||
-      (element === document.body && getComputedStyle(root).overflowY === "visible");
+      (element === document.body &&
+        (getComputedStyle(root).overflowY === "visible" ||
+          element.scrollHeight <= element.clientHeight));
     let scroller = container.parentElement;
     while (
       scroller &&
