@@ -864,6 +864,10 @@
       {
         "title": "Number",
         "module": "input/number"
+      },
+      {
+        "title": "Fixed widths",
+        "module": "input/widths"
       }
     ]
   },
@@ -1052,6 +1056,10 @@
       {
         "title": "Connect an integration in three containers",
         "module": "multi-step/default"
+      },
+      {
+        "title": "Pick, configure and connect in a sheet",
+        "module": "multi-step/pick"
       }
     ]
   },
@@ -1128,6 +1136,10 @@
       {
         "title": "Labels and descriptions",
         "module": "radio-group/descriptions"
+      },
+      {
+        "title": "Columns",
+        "module": "radio-group/columns"
       },
       {
         "title": "States",
@@ -1482,6 +1494,10 @@
         "module": "table/grouped-rows"
       },
       {
+        "title": "Group selection",
+        "module": "table/group-selection"
+      },
+      {
         "title": "Column toggle, permission matrix",
         "module": "table/column-toggle"
       },
@@ -1664,6 +1680,10 @@
       {
         "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
+      },
+      {
+        "title": "Bounds, size and reveal (hover a card)",
+        "module": "halftone/bounds"
       }
     ]
   },
