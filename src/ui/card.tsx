@@ -10,6 +10,7 @@ import {
 } from "../lib/stretched-link";
 import { cn } from "../lib/utils";
 
+import { Badge } from "./badge";
 import { TooltipText } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
@@ -74,13 +75,26 @@ function Card({
   const variant = inFrame ? "plain" : requestedVariant;
   const [hasLink, reportLink] = useStretchedLinkHost();
   const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
+  const titleParts = React.Children.toArray(
+    React.isValidElement<{ children?: React.ReactNode }>(title) && title.type === React.Fragment
+      ? title.props.children
+      : title
+  );
+  const firstBadge = titleParts.findIndex(
+    (part) => React.isValidElement(part) && part.type === Badge
+  );
+  const hintText = firstBadge > 0 ? titleParts.slice(0, firstBadge) : titleParts;
+  const lastText = hintText.at(-1);
+  const trailingSpace = typeof lastText === "string" && /\s$/.test(lastText);
   const heading =
     title !== undefined &&
     (hint ? (
       <CardTitle data-hint="">
         <TooltipText content={hint} align="start" className={frameStyles.frameTitleHint}>
-          {title}
+          {trailingSpace ? [...hintText.slice(0, -1), lastText.trimEnd()] : hintText}
         </TooltipText>
+        {trailingSpace && " "}
+        {firstBadge > 0 && titleParts.slice(firstBadge)}
       </CardTitle>
     ) : (
       <CardTitle>{title}</CardTitle>

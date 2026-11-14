@@ -14,8 +14,8 @@ export type BootLoaderProps = Omit<React.ComponentPropsWithoutRef<"div">, "child
   theme?: string;
   fill?: "viewport" | "container";
   delay?: number;
-  /** Storage keys to read the theme from. Defaults to Cipher's own keys. */
-  storageKeys?: ThemeStorageKeys;
+  /** Storage keys to read the theme from, or one key holding light, dark or system. Defaults to Cipher's own keys. */
+  storageKeys?: ThemeStorageKeys | string;
   /** Honors a ?theme= or session preview. Defaults to true. */
   allowPreview?: boolean;
 };
