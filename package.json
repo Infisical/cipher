@@ -1,6 +1,6 @@
 {
   "name": "@infisical/cipher",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Cipher, Infisical's design system: React components, tokens and themes.",
   "license": "MIT",
   "repository": {
