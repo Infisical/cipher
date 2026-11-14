@@ -57,7 +57,12 @@ css += rule(".cipher", [
   ...typeValues
 ]);
 css += rule(
-  '.cipher[data-scheme="dark"]',
+  [
+    '.cipher[data-scheme="dark"]',
+    ...themes
+      .filter((theme) => theme.scheme === "dark")
+      .map((theme) => `.cipher[data-theme="${theme.id}"]`)
+  ].join(",\n"),
   themed.map((token) => `--cipher-${token.name}: ${cssValue(token.value.dark ?? token.value.light)};`)
 );
 const themedNames = new Set(themed.map((token) => token.name));
