@@ -112,7 +112,7 @@ $ npm pack        # a tarball to install in another project
 $ npm run site    # the showcase: every component and its examples, in each theme
 ```
 
-The showcase in `site/` imports Cipher from `src/` and ships in neither the package nor the registry.
+The showcase in `site/` imports Cipher from `src/` and ships in neither the package nor the registry. Each release publishes it to GitHub Pages, which infisical.com serves at [infisical.com/cipher](https://infisical.com/cipher). To publish it without a release, run the Showcase workflow by hand.
 
 After changing `src/tokens.json`, run `npm run tokens`. After changing anything in `src/`, run `npm run registry` and commit `r/` with it. CI fails if either is stale.
 
