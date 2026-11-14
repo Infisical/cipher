@@ -180,6 +180,18 @@
   padding-inline: var(--cipher-space-8);
 }
 .sheetSwitchers:empty,
+.sheetActions:empty {
+  display: none;
+}
+.sheetActions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  padding: var(--cipher-space-8) var(--cipher-space-12);
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
 .sheetAccount:empty {
   display: none;
 }

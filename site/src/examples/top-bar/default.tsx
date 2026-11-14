@@ -75,6 +75,11 @@ const Bar = ({ defaultProject = "payments" }: { defaultProject?: string }) => {
       ]}
       notifications={{ unread: 2 }}
       search={{ onClick: () => {} }}
+      actions={
+        <Button variant="link" underline="hover" asChild>
+          <a href="#classic">Open in classic</a>
+        </Button>
+      }
       account={{
         name: "Sarah Lin",
         email: "sarah@acme.dev",

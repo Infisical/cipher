@@ -614,6 +614,7 @@ const SidebarView = ({
     return {
       org: bind("org"),
       switchers: bind("switchers"),
+      actions: bind("actions"),
       account: bind("account"),
       icons: bind("icons")
     };
@@ -913,6 +914,7 @@ const SidebarView = ({
             </div>
           )}
         </nav>
+        {inSheet && narrow && <div ref={slotRefs.actions} className={styles.sheetActions} />}
         {inSheet && narrow && <div ref={slotRefs.account} className={styles.sheetAccount} />}
         {(toggle || cornerEnd || (inSheet && narrow)) && (
           <div className={styles.corner} data-has-end={Boolean(cornerEnd) || undefined}>
