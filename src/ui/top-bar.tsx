@@ -40,7 +40,7 @@ export interface ShellMenuItem {
   disabledReason?: string;
 }
 export type ShellMenuEntry = ShellMenuItem | { type: "separator" };
-export type ShellSheetSlot = "org" | "switchers" | "account" | "icons";
+export type ShellSheetSlot = "org" | "switchers" | "actions" | "account" | "icons";
 
 type ShellState = {
   mode: ShellMode;
@@ -529,6 +529,7 @@ export type TopBarProps = Omit<React.ComponentPropsWithoutRef<"header">, "childr
   notifications?: TopBarNotifications;
   account?: TopBarAccount;
   theme?: TopBarTheme;
+  /** Links and buttons on the bar's end. When the shell is narrow they move into the navigation sheet, above the account. */
   actions?: React.ReactNode;
   label?: string;
   navigationLabel?: string;
@@ -702,6 +703,7 @@ export function TopBar({
             )),
             slots.switchers
           )}
+        {slots.actions && actions && createPortal(actions, slots.actions)}
         {slots.account &&
           account &&
           createPortal(
