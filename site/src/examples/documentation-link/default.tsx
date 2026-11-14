@@ -2,7 +2,6 @@ import { Card } from "@infisical/cipher/ui/card";
 import { DocumentationLink } from "@infisical/cipher/ui/documentation-link";
 import { Field } from "@infisical/cipher/ui/field";
 import { Input } from "@infisical/cipher/ui/input";
-import { Inline } from "@infisical/cipher/ui/layout";
 import { PageHeader } from "@infisical/cipher/ui/page-header";
 
 const docs = "https://infisical.com/docs/documentation/platform/gateways/overview";
@@ -21,16 +20,20 @@ export default function Example() {
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <Card
           variant="framed"
-          title={
-            <Inline gap={6} wrap={false}>
-              Deployment
-              <DocumentationLink href={docs} subject="gateway deployment" />
-            </Inline>
-          }
+          title="Deployment"
+          badges={<DocumentationLink href={docs} subject="gateway deployment" />}
         >
           Run the gateway next to the resources it reaches.
         </Card>
         <figcaption className="text-muted-foreground text-xs">{"Framed card title"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <Card
+          title="Cross-project secret sharing"
+          badges={<DocumentationLink href={docs} subject="secret sharing" />}
+          description="Let other projects read secrets from this one."
+        />
+        <figcaption className="text-muted-foreground text-xs">{"Card title"}</figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <Field

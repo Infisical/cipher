@@ -1,0 +1,8 @@
+.inset {
+  min-width: 0;
+  padding: var(--cipher-space-surface-inset-sm);
+  border: 0;
+  border-radius: 0;
+  background: var(--cipher-tint);
+  color: var(--cipher-ink);
+}

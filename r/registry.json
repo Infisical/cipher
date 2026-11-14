@@ -1473,6 +1473,25 @@
       ]
     },
     {
+      "name": "inset",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/inset.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/inset.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/inset.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/inset.module.css"
+        }
+      ]
+    },
+    {
       "name": "item",
       "type": "registry:ui",
       "registryDependencies": [

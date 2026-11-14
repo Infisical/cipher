@@ -7,6 +7,11 @@ import { Tooltip } from "./tooltip";
 import controlStyles from "./controls.module.css";
 import styles from "./documentation-link.module.css";
 
+/**
+ * An icon-only link to a feature's documentation. The icon has no text of its own, so it always sits right after
+ * the title or label it documents: PageHeader badges, Card badges (plain and framed), or Field help. Never put it
+ * alone in an action row, a toolbar or an empty state.
+ */
 export type DocumentationLinkProps = {
   href: string;
   /** The feature the page documents; the link is announced as "Documentation for <subject>". */

@@ -137,7 +137,7 @@
   grid-template-areas: "copy actions";
   column-gap: var(--cipher-space-16);
 }
-@container cipher-item (min-width: 44rem) {
+@container cipher-item (min-width: 36rem) {
   .main[data-has-actions]:not([data-actions-below]) {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "copy actions";

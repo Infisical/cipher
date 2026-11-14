@@ -10,11 +10,7 @@ import { Separator } from "./separator";
 import { Tooltip } from "./tooltip";
 
 import { useDescendantFlags } from "../lib/descendant-flags";
-import {
-  FieldControlContext,
-  type FieldErrorMap,
-  FieldErrorsContext
-} from "../lib/field-context";
+import { FieldControlContext, type FieldErrorMap, FieldErrorsContext } from "../lib/field-context";
 import { skipAutoFocus } from "../lib/initial-focus";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
@@ -168,7 +164,7 @@ function Field({
     name?: string;
     optional?: boolean;
     wide?: boolean;
-    /** Help beside the label or legend, outside its accessible name: a string becomes a FieldHelp tooltip, a node (FieldHelp with its own label, GlobPatternHelp) renders as given. */
+    /** Help beside the label or legend, outside its accessible name: a string becomes a FieldHelp tooltip, a node (FieldHelp with its own label, GlobPatternHelp, a DocumentationLink) renders as given. */
     help?: React.ReactNode;
     /** Labels a group of controls with a fieldset and legend instead of a label. */
     group?: boolean;
@@ -278,9 +274,7 @@ function FieldErrors({ errors, children }: { errors: FieldErrorMap; children: Re
   const names = cleared.from === errors ? cleared.names : noneCleared;
   const value = React.useMemo(
     () => ({
-      errors: Object.fromEntries(
-        Object.entries(errors).filter(([name]) => !names.includes(name))
-      ),
+      errors: Object.fromEntries(Object.entries(errors).filter(([name]) => !names.includes(name))),
       clear: (name: string) => setCleared({ from: errors, names: [...names, name] })
     }),
     [errors, names]
