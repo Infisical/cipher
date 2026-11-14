@@ -53,7 +53,7 @@
   },
   {
     "id": "alert-dialog",
-    "title": "Alert Dialog",
+    "title": "Alert dialog",
     "summary": "Confirm an irreversible consequence before performing it.",
     "group": "Overlays",
     "examples": [
@@ -225,7 +225,7 @@
   },
   {
     "id": "button-group",
-    "title": "Button Group",
+    "title": "Button group",
     "summary": "Join related actions without giving each its own container.",
     "group": "Actions",
     "examples": [
@@ -477,7 +477,7 @@
   },
   {
     "id": "context-menu",
-    "title": "Context Menu",
+    "title": "Context menu",
     "summary": "Expose secondary actions from a context menu.",
     "group": "Actions",
     "examples": [
@@ -609,7 +609,7 @@
   },
   {
     "id": "dropdown-menu",
-    "title": "Dropdown Menu",
+    "title": "Dropdown menu",
     "summary": "Choose an action or setting from a trigger menu.",
     "group": "Actions",
     "examples": [
@@ -805,7 +805,7 @@
   },
   {
     "id": "hover-card",
-    "title": "Hover Card",
+    "title": "Hover card",
     "summary": "Show supplementary information on hover or keyboard focus.",
     "group": "Overlays",
     "examples": [
@@ -853,7 +853,7 @@
   },
   {
     "id": "input-group",
-    "title": "Input Group",
+    "title": "Input group",
     "summary": "Compose a text input with leading and trailing controls.",
     "group": "Forms",
     "examples": [
@@ -1181,7 +1181,7 @@
   },
   {
     "id": "radio-group",
-    "title": "Radio Group",
+    "title": "Radio group",
     "summary": "Choose one option from a visible group.",
     "group": "Forms",
     "examples": [
@@ -1229,7 +1229,7 @@
   },
   {
     "id": "scroll-area",
-    "title": "Scroll Area",
+    "title": "Scroll area",
     "summary": "Scroll constrained content with a styled scrollbar.",
     "group": "Utilities",
     "examples": [
@@ -1441,7 +1441,7 @@
   },
   {
     "id": "sortable-list",
-    "title": "Sortable List",
+    "title": "Sortable list",
     "summary": "Rows a person puts in order, by dragging the grip or from the keyboard.",
     "group": "Data display",
     "examples": [
@@ -1457,7 +1457,7 @@
   },
   {
     "id": "sortable-grid",
-    "title": "Sortable Grid",
+    "title": "Sortable grid",
     "summary": "Cards a person puts in order across rows and columns, by dragging the grip or from the keyboard.",
     "group": "Data display",
     "examples": [
@@ -1677,7 +1677,7 @@
   },
   {
     "id": "toast",
-    "title": "Sonner",
+    "title": "Toast",
     "summary": "Announce a short-lived result through themed toast notifications.",
     "group": "Feedback",
     "examples": [
@@ -1701,7 +1701,7 @@
   },
   {
     "id": "toggle-group",
-    "title": "Toggle Group",
+    "title": "Toggle group",
     "summary": "Select one or several pressed options in a compact group.",
     "group": "Actions",
     "examples": [
