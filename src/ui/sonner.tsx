@@ -133,8 +133,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const position = props.position ?? "bottom-right";
   React.useLayoutEffect(() => {
     if (!owns || !layer) return undefined;
-    layer.setAttribute("data-toast-position", position);
-    return () => layer.removeAttribute("data-toast-position");
+    const positions = () => layer.getAttribute("data-toast-position")?.split(" ") ?? [];
+    layer.setAttribute("data-toast-position", [...positions(), position].join(" "));
+    return () => {
+      const rest = positions();
+      rest.splice(rest.indexOf(position), 1);
+      if (rest.length) layer.setAttribute("data-toast-position", rest.join(" "));
+      else layer.removeAttribute("data-toast-position");
+    };
   }, [owns, layer, position]);
   if (!owns) return null;
 
