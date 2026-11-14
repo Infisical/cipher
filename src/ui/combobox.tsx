@@ -96,6 +96,8 @@ type SharedComboboxProps = {
   createLabel?: (query: string) => string;
   /** Shows a clear X in place of the chevron while the value holds something the person can remove. Locked (disabled) options stay selected. */
   clearable?: boolean;
+  /** The clear X's accessible name, for example Remove usage cap. Defaults to Clear selection, or Clear all selections with multiple. */
+  clearLabel?: string;
   /** A fixed token width that doesn't shrink. Unset fills the row. */
   width?: FieldWidth;
   className?: string;
@@ -320,7 +322,7 @@ export function Combobox({
             type="button"
             variant="ghost"
             size="icon-xs"
-            aria-label="Clear all selections"
+            aria-label={props.clearLabel ?? "Clear all selections"}
             data-slot="combobox-clear"
             onClick={() => {
               refocus.current = null;
@@ -377,7 +379,7 @@ export function Combobox({
           type="button"
           variant="ghost"
           size="icon-xs"
-          aria-label="Clear selection"
+          aria-label={props.clearLabel ?? "Clear selection"}
           data-slot="combobox-clear"
           onClick={() => {
             apply([]);
