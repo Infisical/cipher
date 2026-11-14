@@ -97,6 +97,12 @@ $ npx shadcn@latest add @cipher/cipher-base @cipher/button --overwrite
 
 `CipherScope` takes a theme id: Light (`light`) or Dark (`dark`). The retired ids `peach` and `pale` still resolve to Light. Overlays and toasts portal into the scope, so they follow its theme.
 
+## Nesting surfaces
+
+A frame never holds another frame. A block inside a framed container (a card, a sheet section or a frame) is an `Inset`: tinted fill, inset padding and no border. Use it for nested resources, templates, summary tiles and drop targets instead of a bordered `Card`. In development, a `Card variant="framed"` inside a frame logs a warning that points to `Inset`.
+
+A `DocumentationLink` is icon only, so it always sits right after the title or label it documents: `PageHeader` and `Card` `badges`, or `Field` `help`.
+
 ## Links and routing
 
 Link components (RowLink, CardLink, Breadcrumb, Sidebar and others) take a `link` prop. By default it's `{ href: string }` and renders a plain anchor, so Cipher needs no router. To route through your router, wrap the app in `CipherRouterProvider` from `lib/link` with your router's `Link` and a match hook, and augment `CipherRegister` to type `link` as your router's link options.

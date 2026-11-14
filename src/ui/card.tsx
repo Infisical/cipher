@@ -60,7 +60,7 @@ function Card({
 }: Omit<React.ComponentPropsWithoutRef<"div">, "title"> & {
   size?: "default" | "sm";
   title?: React.ReactNode;
-  /** Badges on the title's line, right after its text, such as a plan tier. */
+  /** Badges on the title's line, right after its text, such as a plan tier. A DocumentationLink for the card goes here too, so it stays paired with the title. */
   badges?: React.ReactNode;
   /** Controls on the head's end. In a framed card's band they take the 28px band tier (size-control-band) and sit space-frame-inline from the corner, so leave their size unset; badges keep their text height. */
   action?: React.ReactNode;

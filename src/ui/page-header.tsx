@@ -11,6 +11,7 @@ export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "ti
   mono?: boolean;
   breadcrumb?: readonly BreadcrumbCrumb[];
   maxItems?: number;
+  /** Right after the title: status badges, and the page's DocumentationLink so it stays paired with the title. */
   badges?: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;

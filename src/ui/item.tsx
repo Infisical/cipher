@@ -88,6 +88,7 @@ export type ItemProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> &
     badge?: React.ReactNode;
     meta?: React.ReactNode;
     error?: React.ReactNode;
+    /** Buttons at the row end. They sit beside the copy once the row is 36rem wide and stack below it under that. The width is the content box, so an outline Item needs its padding and border on top (about 39rem outside). */
     actions?: React.ReactNode;
     actionsPlacement?: "end" | "below";
     unread?: boolean;
@@ -191,9 +192,7 @@ function Item({
   const truncated = truncate ?? !hasActions;
   const [actionsIconOnly, actionsRef] = useIconOnly(hasActions);
   const metaNode = meta && (
-    <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>
-      {meta}
-    </span>
+    <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>{meta}</span>
   );
   const body = composed ? (
     <>

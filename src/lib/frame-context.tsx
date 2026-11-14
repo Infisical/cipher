@@ -19,7 +19,7 @@ export function useInFrame(component: string, requested?: string): boolean {
   React.useEffect(() => {
     if (isDev && forced)
       console.warn(
-        `${component} variant="framed" renders inside another framed container, so it drops to its frameless treatment. Remove the variant.`
+        `${component} variant="framed" renders inside another framed container, so it drops to its frameless treatment. Remove the variant, and use Inset for a block inside a frame: tinted, with no border.`
       );
   }, [component, forced]);
   return inFrame;

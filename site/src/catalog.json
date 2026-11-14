@@ -602,7 +602,7 @@
   {
     "id": "documentation-link",
     "title": "Documentation link",
-    "summary": "An icon link right after a title or label that opens its documentation in a new tab.",
+    "summary": "An icon link that always sits right after the title or label it documents, never alone in an action row or toolbar.",
     "group": "Navigation",
     "examples": [
       {
@@ -920,6 +920,18 @@
       {
         "title": "Fixed widths",
         "module": "input/widths"
+      }
+    ]
+  },
+  {
+    "id": "inset",
+    "title": "Inset",
+    "summary": "A block inside a framed card, sheet section or frame: tinted fill and no border, so frames never nest.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Inside a framed card",
+        "module": "inset/default"
       }
     ]
   },

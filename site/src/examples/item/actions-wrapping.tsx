@@ -68,7 +68,7 @@ export default function Example() {
       <Case
         id="wrap-stacked"
         width={520}
-        caption="Stacked below 44rem: timestamp at the end of the title row, buttons on their own row at the copy edge"
+        caption="Stacked below 36rem of content width: timestamp at the end of the title row, buttons on their own row at the copy edge"
       >
         <Row
           media={<Media icon="terminal" tone="bad" />}
