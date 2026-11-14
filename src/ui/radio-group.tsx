@@ -17,9 +17,14 @@ function RadioGroup({
   value,
   defaultValue,
   onValueChange,
+  columns,
+  style,
   ref,
   ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
+}: React.ComponentProps<typeof RadioGroupPrimitive.Root> & {
+  /** Lays the options out in this many columns, dropping to fewer when a column would be narrower than size-text-min. */
+  columns?: 2 | 3 | 4;
+}) {
   const [current, setCurrent] = useControllableState<string | undefined>({
     value: value ?? undefined,
     defaultValue: defaultValue ?? undefined,
@@ -30,7 +35,16 @@ function RadioGroup({
       <RadioGroupPrimitive.Root
         ref={ref}
         data-slot="radio-group"
+        data-columns={columns}
         className={cn(controlStyles.radioGroup, "grid w-full gap-2", className)}
+        style={
+          columns
+            ? {
+                gridTemplateColumns: `repeat(auto-fill, minmax(max(var(--cipher-size-text-min), (100% - ${columns - 1} * var(--cipher-space-8)) / ${columns}), 1fr))`,
+                ...style
+              }
+            : style
+        }
         value={value}
         defaultValue={defaultValue}
         onValueChange={(next) => {
