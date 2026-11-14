@@ -1362,6 +1362,10 @@
         "module": "settings-card/default"
       },
       {
+        "title": "States",
+        "module": "settings-card/states"
+      },
+      {
         "title": "Embedded table",
         "module": "settings-card/embedded-table"
       }

@@ -2136,6 +2136,7 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/button",
+        "@cipher/card",
         "@cipher/cipher-base",
         "@cipher/icon",
         "@cipher/skeleton",
