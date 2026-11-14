@@ -26,12 +26,13 @@ export default function Example() {
               layout="in-shell"
               actionLabel="Try again"
               onAction={() => {}}
-              homeHref="#error-state"
+              homeLabel="Back to licenses"
+              homeLink={{ href: "#error-state" }}
               showStack={false}
             />
           </div>
         </div>
-        <figcaption className="text-muted-foreground text-xs">{"crash, primary action runs Try again"}</figcaption>
+        <figcaption className="text-muted-foreground text-xs">{"crash, Try again runs a handler and the home link goes to Back to licenses"}</figcaption>
       </figure>
     </div>
   );

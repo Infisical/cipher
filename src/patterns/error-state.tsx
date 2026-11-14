@@ -40,11 +40,15 @@ export type ErrorStateProps = ErrorStatePrimaryTarget & {
   /** Adds the stack to Error details. Defaults to development builds only. */
   showStack?: boolean;
   homeHref?: string;
-  /** Runs on Go to organization home before the link navigates; call preventDefault to route in-app. */
+  /** Runs on the home link before it navigates; call preventDefault to route in-app. */
   onHome?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  /** The home link's label: crash's secondary action, and the primary action of the other presets. Defaults to Go to organization home. */
+  homeLabel?: string;
+  /** Makes the home link a link to this target, through the app's router, instead of homeHref. */
+  homeLink?: CipherLinkTarget;
   onBack?: () => void;
   onReload?: () => void;
-  /** The primary action's label. Defaults to Reload on crash and Go to organization home otherwise. */
+  /** The primary action's label. Defaults to Reload on crash and the home label otherwise. */
   actionLabel?: string;
   /** Called once per error when crash mounts, to send it to error reporting. */
   onReport?: (error: unknown) => void;
@@ -79,6 +83,8 @@ export function ErrorState({
   showStack = isDev,
   homeHref = "/",
   onHome,
+  homeLabel = "Go to organization home",
+  homeLink,
   onBack = () => window.history.back(),
   onReload = () => window.location.reload(),
   onReport,
@@ -109,7 +115,18 @@ export function ErrorState({
     .filter(Boolean)
     .join("\n");
 
-  const label = actionLabel ?? (crash ? "Reload" : "Go to organization home");
+  const label = actionLabel ?? (crash ? "Reload" : homeLabel);
+  const home = (variant: "accent" | "outline", text: string) => (
+    <Button variant={variant} asChild>
+      {homeLink !== undefined ? (
+        <CipherLink link={homeLink}>{text}</CipherLink>
+      ) : (
+        <a href={homeHref} onClick={onHome}>
+          {text}
+        </a>
+      )}
+    </Button>
+  );
   let primary: React.ReactNode;
   if (actionLink !== undefined)
     primary = (
@@ -123,14 +140,7 @@ export function ErrorState({
         {label}
       </Button>
     );
-  else
-    primary = (
-      <Button variant="accent" asChild>
-        <a href={homeHref} onClick={onHome}>
-          {label}
-        </a>
-      </Button>
-    );
+  else primary = home("accent", label);
 
   return (
     <div
@@ -156,11 +166,7 @@ export function ErrorState({
             <>
               {primary}
               {actions}
-              <Button variant="outline" asChild>
-                <a href={homeHref} onClick={onHome}>
-                  Go to organization home
-                </a>
-              </Button>
+              {home("outline", homeLabel)}
             </>
           ) : (
             <>

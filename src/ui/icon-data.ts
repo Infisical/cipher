@@ -1078,5 +1078,233 @@ export const iconShapes = {
         d: "M13.5 3.5v5h5M9 9h2M9 12.5h6M9 16h6"
       }
     }
+  ],
+  award: [
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "9",
+        r: "5.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.6 13.3 7 20.5l5-2.5 5 2.5-1.6-7.2"
+      }
+    }
+  ],
+  "scan-line": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.5 12h9"
+      }
+    }
+  ],
+  "scan-search": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "11.5",
+        cy: "11.5",
+        r: "3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m16.5 16.5-2.9-2.9"
+      }
+    }
+  ],
+  radar: [
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "12",
+        r: "8.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M16.5 12A4.5 4.5 0 1 1 12 7.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m12 12 5.5-5.5M12 12h.01"
+      }
+    }
+  ],
+  zap: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M13 3.5 5 13.5h6.5l-1 7 8-10H12z"
+      }
+    }
+  ],
+  vault: [
+    {
+      tag: "rect",
+      attributes: {
+        x: "3.5",
+        y: "4.5",
+        width: "17",
+        height: "14",
+        rx: "1.5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "11",
+        cy: "11.5",
+        r: "3.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M11 11.5h.01M17.5 9.5v4M7 18.5v2M17 18.5v2"
+      }
+    }
+  ],
+  "file-key": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M13.5 3.5v5h5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "10",
+        cy: "15.5",
+        r: "2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m11.4 14.1 3.6-3.6M13.8 11.7l1.2 1.2"
+      }
+    }
+  ],
+  users: [
+    {
+      tag: "circle",
+      attributes: {
+        cx: "9.5",
+        cy: "8.5",
+        r: "3.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M3 19.5c1.2-3.3 3.6-5 6.5-5s5.3 1.7 6.5 5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.7.7 2.9 2.3 3.5 4.7"
+      }
+    }
+  ],
+  "layout-grid": [
+    {
+      tag: "rect",
+      attributes: {
+        x: "4",
+        y: "4",
+        width: "6.5",
+        height: "6.5",
+        rx: "1.2"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "13.5",
+        y: "4",
+        width: "6.5",
+        height: "6.5",
+        rx: "1.2"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "4",
+        y: "13.5",
+        width: "6.5",
+        height: "6.5",
+        rx: "1.2"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "13.5",
+        y: "13.5",
+        width: "6.5",
+        height: "6.5",
+        rx: "1.2"
+      }
+    }
+  ],
+  server: [
+    {
+      tag: "rect",
+      attributes: {
+        x: "4",
+        y: "4.5",
+        width: "16",
+        height: "6",
+        rx: "1.5"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "4",
+        y: "13.5",
+        width: "16",
+        height: "6",
+        rx: "1.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.5 7.5h.01M7.5 16.5h.01"
+      }
+    }
   ]
 } as const;

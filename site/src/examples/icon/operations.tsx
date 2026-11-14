@@ -18,7 +18,17 @@ const added = [
   "receipt",
   "credit-card",
   "gift",
-  "file-text"
+  "file-text",
+  "award",
+  "zap",
+  "radar",
+  "scan-line",
+  "scan-search",
+  "vault",
+  "file-key",
+  "users",
+  "layout-grid",
+  "server"
 ] as const;
 
 export default function Example() {
