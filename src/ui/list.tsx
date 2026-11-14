@@ -15,6 +15,7 @@ interface ListContextValue {
   size: "md" | "sm";
   actionsPlacement: "end" | "below";
   toggle: (id: string) => void;
+  register: (value: string, eligible: boolean) => () => void;
 }
 const ListContext = React.createContext<ListContextValue | null>(null);
 export interface ListRowProps {
@@ -59,6 +60,9 @@ export function ListRow({
   label
 }: ListRowProps) {
   const context = React.useContext(ListContext);
+  const register = context?.register;
+  const eligible = !disabled && selectable;
+  React.useLayoutEffect(() => register?.(value, eligible), [register, value, eligible]);
   const fullTitle = typeof title === "string" ? title : undefined;
   const checked = context?.selected.includes(value);
   const anchor = Boolean(href || link);
@@ -194,13 +198,6 @@ export function ListRow({
     </li>
   );
 }
-function rowProps(children: React.ReactNode): ListRowProps[] {
-  return React.Children.toArray(children).flatMap((child) => {
-    if (!React.isValidElement<ListRowProps & { children?: React.ReactNode }>(child)) return [];
-    if (child.type === ListRow) return [child.props];
-    return rowProps(child.props.children);
-  });
-}
 export interface ListHeaderProps {
   title?: React.ReactNode;
   count?: React.ReactNode;
@@ -221,6 +218,8 @@ export interface ListProps extends ListHeaderProps {
   onSelectionChange?: (ids: string[]) => void;
   loading?: boolean;
   loadingRows?: number;
+  /** A background refetch: the current rows stay, with a thin sweep on the top edge instead of loading's skeleton rows. */
+  refreshing?: boolean;
   empty?: React.ReactNode;
   /** State that must stay visible under the rows, never an action result; those go to a toast. */
   footer?: React.ReactNode;
@@ -240,6 +239,7 @@ export function List({
   onSelectionChange,
   loading,
   loadingRows = 3,
+  refreshing = false,
   empty = "No items",
   footer: footerProp
 }: ListProps) {
@@ -295,10 +295,20 @@ export function List({
     focusedRow.current = null;
     (next ?? container).focus({ preventScroll: true });
   });
-  const rows = rowProps(children);
-  const eligible = rows
-    .filter((row) => !row.disabled && row.selectable !== false)
-    .map((row) => row.value);
+  const [rows, setRows] = React.useState<ReadonlyMap<string, boolean>>(() => new Map());
+  const register = React.useCallback((value: string, isEligible: boolean) => {
+    setRows((current) =>
+      current.get(value) === isEligible ? current : new Map(current).set(value, isEligible)
+    );
+    return () =>
+      setRows((current) => {
+        if (!current.has(value)) return current;
+        const next = new Map(current);
+        next.delete(value);
+        return next;
+      });
+  }, []);
+  const eligible = [...rows].filter(([, isEligible]) => isEligible).map(([value]) => value);
   const count = eligible.filter((id) => selected.includes(id)).length;
   const update = (next: string[]) => {
     if (selectedIds === undefined) setOwn(next);
@@ -328,7 +338,14 @@ export function List({
   return (
     <FrameScope framed={inFrame || framed}>
       <ListContext
-        value={{ selected, multiple: selection === "multiple", toggle, size, actionsPlacement }}
+        value={{
+          selected,
+          multiple: selection === "multiple",
+          toggle,
+          size,
+          actionsPlacement,
+          register
+        }}
       >
         <div
           className={cn(styles.listShell, framed && frame.frame)}
@@ -338,6 +355,9 @@ export function List({
           data-embedded={embedded || undefined}
           data-size={size}
         >
+          {refreshing && !loading && (
+            <span className={styles.refreshing} data-slot="list-refreshing" aria-hidden />
+          )}
           {(title || headerCount || action) && (
             <div
               className={framed ? frame.frameHead : styles.listHeader}
@@ -377,7 +397,7 @@ export function List({
             ref={list}
             className={cn(styles.list, framed && frame.frameInset)}
             aria-label={label}
-            aria-busy={loading}
+            aria-busy={loading || refreshing || undefined}
             tabIndex={-1}
             onKeyDown={key}
             onFocusCapture={(event) => {
@@ -415,7 +435,7 @@ export function List({
                   <span className={styles.sr}>Loading</span>
                 </li>
               ))}
-            {!rows.length && !loading && <li className={styles.empty}>{empty}</li>}
+            {!rows.size && !loading && <li className={styles.empty}>{empty}</li>}
           </ul>
           {footer && <div className={styles.status}>{footer}</div>}
           <span className={styles.sr} role="status">
