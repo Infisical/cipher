@@ -62,8 +62,10 @@ function Card({
   title?: React.ReactNode;
   /** Badges on the title's line, right after its text, such as a plan tier. */
   badges?: React.ReactNode;
+  /** Controls on the head's end. In a framed card's band they take the 28px band tier (size-control-band) and sit space-frame-inline from the corner, so leave their size unset; badges keep their text height. */
   action?: React.ReactNode;
   footer?: React.ReactNode;
+  /** "frame" draws the footer in the frame band: its text keeps the title's start inset and its controls take the 28px band tier. */
   footerPlacement?: "inset" | "frame";
   flush?: boolean;
   /** Decoration such as a Halftone, painted under the surface that holds the title and the card link: the inset of a framed card with a frame footer, otherwise the card itself. That surface becomes the stacking context, so the link overlay and the controls above it stay in one layer. */

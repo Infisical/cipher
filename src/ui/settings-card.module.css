@@ -75,6 +75,9 @@
   border-top: 1px solid var(--cipher-line-soft);
   background: var(--cipher-paper);
 }
+.header + .footer {
+  margin-top: var(--cipher-space-surface-inset);
+}
 .card[data-tone="danger"] .footer {
   border-top-color: var(--cipher-bad-line);
   background: var(--cipher-bad-wash);

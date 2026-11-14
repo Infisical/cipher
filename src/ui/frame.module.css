@@ -13,9 +13,14 @@
 .frame[data-frame-foot] {
   padding-bottom: 0;
 }
+.frameHead,
+.frameFoot.frameFoot {
+  --cipher-size-control-default: var(--cipher-size-control-band);
+}
 .frameFoot.frameFoot {
   min-height: var(--cipher-space-40);
-  padding: var(--cipher-space-8) var(--cipher-space-12);
+  padding: var(--cipher-space-6) var(--cipher-space-frame-inline);
+  padding-inline-start: calc(var(--cipher-space-frame-inline) + var(--cipher-space-frame-title-inline));
   border: 0;
   color: var(--cipher-muted);
   font-variant-numeric: tabular-nums;
@@ -31,12 +36,19 @@
   justify-content: space-between;
   gap: var(--cipher-space-4) var(--cipher-space-12);
   min-height: var(--cipher-space-40);
-  padding: var(--cipher-space-4) var(--cipher-space-12);
+  padding: var(--cipher-space-4) var(--cipher-space-frame-inline);
   min-width: 0;
+}
+.frameHead[data-select] {
+  padding-inline-start: calc(var(--cipher-space-frame-inline) + var(--cipher-space-frame-title-inline));
+}
+.frameHead[data-select] > .frameTitle {
+  margin-inline-start: 0;
 }
 .frameTitle {
   flex: 1 1 var(--cipher-size-cell-min);
   min-width: 0;
+  margin-inline-start: var(--cipher-space-frame-title-inline);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -51,6 +63,7 @@
 .frameTitle[data-hint] {
   padding: var(--cipher-focus-clearance);
   margin: calc(-1 * var(--cipher-focus-clearance));
+  margin-inline-start: calc(var(--cipher-space-frame-title-inline) - var(--cipher-focus-clearance));
 }
 .frameTitleHint {
   text-decoration-line: underline;
