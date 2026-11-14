@@ -300,6 +300,10 @@
       {
         "title": "Band actions",
         "module": "card/band-actions"
+      },
+      {
+        "title": "Title hint",
+        "module": "card/framed-hint"
       }
     ]
   },
@@ -488,6 +492,26 @@
     ]
   },
   {
+    "id": "date-range-picker",
+    "title": "Date range picker",
+    "summary": "Pick a start and end date from a calendar in a popover, with optional presets.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Empty, set and two months",
+        "module": "date-range-picker/basic"
+      },
+      {
+        "title": "With presets",
+        "module": "date-range-picker/presets"
+      },
+      {
+        "title": "Future dates disabled",
+        "module": "date-range-picker/disabled-future"
+      }
+    ]
+  },
+  {
     "id": "detail-layout",
     "title": "Detail layout",
     "summary": "Lay out a detail page as stacked content cards with a details sidecar on the right that stacks above them in narrow containers.",
@@ -536,14 +560,14 @@
     ]
   },
   {
-    "id": "documentation-link-badge",
-    "title": "Documentation link badge",
-    "summary": "An info Badge that opens a documentation page in a new tab, with a fixed label and tooltip.",
+    "id": "documentation-link",
+    "title": "Documentation link",
+    "summary": "An icon link right after a title or label that opens its documentation in a new tab.",
     "group": "Navigation",
     "examples": [
       {
-        "title": "Variants and placement",
-        "module": "documentation-link-badge/default"
+        "title": "Placement",
+        "module": "documentation-link/default"
       }
     ]
   },
@@ -704,6 +728,10 @@
       {
         "title": "Search width, capped and fill",
         "module": "filter-bar/width"
+      },
+      {
+        "title": "Date range field",
+        "module": "filter-bar/date-range"
       }
     ]
   },
@@ -820,6 +848,10 @@
       {
         "title": "Controlled editing",
         "module": "input/editing"
+      },
+      {
+        "title": "Fixed widths",
+        "module": "input/widths"
       }
     ]
   },
@@ -832,6 +864,18 @@
       {
         "title": "Unread rows, errors and a selectable provider",
         "module": "item/default"
+      },
+      {
+        "title": "Approval rows: timestamp by the title",
+        "module": "item/actions-layout"
+      },
+      {
+        "title": "Wrapping, descriptions and buttons",
+        "module": "item/actions-wrapping"
+      },
+      {
+        "title": "Clamping the title with titleLines",
+        "module": "item/title-lines"
       },
       {
         "title": "Variants, sizes and states",
@@ -1078,6 +1122,10 @@
         "module": "radio-group/descriptions"
       },
       {
+        "title": "Columns",
+        "module": "radio-group/columns"
+      },
+      {
         "title": "States",
         "module": "radio-group/states"
       },
@@ -1312,6 +1360,22 @@
     ]
   },
   {
+    "id": "sortable-list",
+    "title": "Sortable List",
+    "summary": "Rows a person puts in order, by dragging the grip or from the keyboard.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Basic list and a locked item",
+        "module": "sortable-list/default"
+      },
+      {
+        "title": "Inside a framed Card with row actions",
+        "module": "sortable-list/card"
+      }
+    ]
+  },
+  {
     "id": "spinner",
     "title": "Spinner",
     "summary": "Show the Infisical pixel mark while real work remains pending.",
@@ -1412,6 +1476,10 @@
       {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
+      },
+      {
+        "title": "Group selection",
+        "module": "table/group-selection"
       },
       {
         "title": "Column toggle, permission matrix",
@@ -1596,6 +1664,10 @@
       {
         "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
+      },
+      {
+        "title": "Bounds, size and reveal (hover a card)",
+        "module": "halftone/bounds"
       }
     ]
   },

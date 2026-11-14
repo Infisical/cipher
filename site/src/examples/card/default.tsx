@@ -58,7 +58,6 @@ export default function Example() {
               <Card
                 variant="framed"
                 title="Posture"
-                description="Rotation and drift for the payments project"
                 action={<a href="#card">View report</a>}
                 footer="Updated today"
               >

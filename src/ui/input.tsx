@@ -23,8 +23,12 @@ export const fieldBoxWatch = {
   focus: true
 };
 
-export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size"> & {
+export type FieldWidth = "xs" | "sm" | "md";
+
+export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size" | "width"> & {
   size?: number | "xs" | "sm" | "md" | "lg";
+  /** A fixed token width that doesn't shrink: xs for short numbers, sm for dates, md for short names. Unset fills the row. */
+  width?: FieldWidth;
   icon?: IconName;
   mono?: boolean;
   invalid?: boolean;
@@ -40,6 +44,7 @@ export function Input({
   invalid,
   kbd,
   trailing,
+  width,
   ref,
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
@@ -57,6 +62,7 @@ export function Input({
       data-slot="input"
       data-size={fieldSize}
       data-field-control={boxed ? "" : undefined}
+      data-width={boxed ? undefined : width}
       size={typeof size === "number" ? size : undefined}
       className={cn(
         boxed ? styles.bare : [styles.field, "w-full min-w-0"],
@@ -74,6 +80,7 @@ export function Input({
       className={cn(styles.field, styles.fieldBox)}
       data-size={fieldSize}
       data-field-box=""
+      data-width={width}
       data-trailing={Boolean(kbd || trailing) || undefined}
       onPointerDown={(event) => {
         if (event.target !== event.currentTarget) return;

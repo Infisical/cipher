@@ -1,5 +1,6 @@
 import { Button } from "@infisical/cipher/ui/button";
-import { Container, Grid, Inline, Measure, Stack } from "@infisical/cipher/ui/layout";
+import { Input } from "@infisical/cipher/ui/input";
+import { Container, Grid, Inline, InlineGrow, Measure, Stack } from "@infisical/cipher/ui/layout";
 import { Heading, SmallText } from "@infisical/cipher/ui/text";
 
 const tile = "bg-muted px-3 py-2 text-center";
@@ -40,6 +41,20 @@ export default function Example() {
             </Inline>
           </div>
           <figcaption className="text-muted-foreground text-xs">{"Inline, baseline"}</figcaption>
+        </figure>
+        <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+          <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+            <Inline gap={8}>
+              <InlineGrow>
+                <Input icon="search" placeholder="Search secrets" aria-label="Search secrets" />
+              </InlineGrow>
+              <Button variant="outline">Export</Button>
+              <Button>Add secret</Button>
+            </Inline>
+          </div>
+          <figcaption className="text-muted-foreground text-xs">
+            {"InlineGrow takes the leftover width; the buttons hug their labels"}
+          </figcaption>
         </figure>
         <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
           <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">

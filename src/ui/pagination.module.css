@@ -91,4 +91,10 @@
 
 .pageSize > [data-slot="select-trigger"] {
   width: auto;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.pageSize > [data-slot="select-trigger"]:is(:hover, [data-state="open"]) {
+  border-color: var(--cipher-line-soft);
 }

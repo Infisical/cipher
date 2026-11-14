@@ -48,6 +48,17 @@
   font-weight: var(--cipher-type-eyebrow-font-weight);
   letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
 }
+.frameTitle[data-hint] {
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
+}
+.frameTitleHint {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--cipher-faint);
+  text-decoration-thickness: var(--cipher-size-control-border);
+  text-underline-offset: var(--cipher-space-3);
+}
 .frameAction {
   flex: none;
   margin-inline-start: 0;

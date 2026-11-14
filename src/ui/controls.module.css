@@ -53,6 +53,19 @@
   --cipher-field-inline: var(--cipher-space-control-inline);
   --cipher-field-nested: var(--cipher-size-nested-lg);
 }
+.field[data-width] {
+  flex-shrink: 0;
+  max-width: 100%;
+}
+.field[data-width="xs"] {
+  width: var(--cipher-size-field-xs);
+}
+.field[data-width="sm"] {
+  width: var(--cipher-size-field-sm);
+}
+.field[data-width="md"] {
+  width: var(--cipher-size-field-md);
+}
 .field::placeholder,
 .field ::placeholder {
   color: var(--cipher-muted);
@@ -184,6 +197,7 @@
   align-items: center;
   gap: var(--cipher-space-8);
   padding-inline: calc(var(--cipher-space-menu-inset) + var(--cipher-space-8));
+  /* lint-css-allow: single-row: the one search field above a menu's options */
   border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   color: var(--cipher-muted);
   cursor: text;
