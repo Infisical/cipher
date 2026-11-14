@@ -1,8 +1,10 @@
 import { Badge } from "@infisical/cipher/ui/badge";
 import { Button } from "@infisical/cipher/ui/button";
 import { Media } from "@infisical/cipher/ui/item";
+import { Inline, Stack } from "@infisical/cipher/ui/layout";
 import { PageHeader } from "@infisical/cipher/ui/page-header";
 import { Tabs } from "@infisical/cipher/ui/tabs";
+import { Meta } from "@infisical/cipher/ui/text";
 
 export default function Example() {
   return (
@@ -58,6 +60,24 @@ export default function Example() {
           />
         </div>
         <figcaption className="text-muted-foreground text-xs">{"md"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <PageHeader
+            size="md"
+            title="Acme Corp enterprise license"
+            description={
+              <Stack gap={4}>
+                <span>Self-hosted, billed annually through Stripe.</span>
+                <Inline gap={12}>
+                  <Meta>org_8f2c41</Meta>
+                  <Meta mono={false}>Renews Mar 4, 2027</Meta>
+                </Inline>
+              </Stack>
+            }
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"Block description"}</figcaption>
       </figure>
     </div>
   );

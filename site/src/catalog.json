@@ -46,7 +46,7 @@
     "group": "Patterns",
     "examples": [
       {
-        "title": "Recent project activity",
+        "title": "Recent project activity, keyset pages and empty",
         "module": "activity-log/default"
       }
     ]
@@ -94,7 +94,7 @@
         "module": "alert/default"
       },
       {
-        "title": "Variants and actions",
+        "title": "Variants, actions, no title and node title",
         "module": "alert/variants"
       },
       {
@@ -204,6 +204,10 @@
       {
         "title": "Count",
         "module": "badge/count"
+      },
+      {
+        "title": "Icon",
+        "module": "badge/icon"
       }
     ]
   },
@@ -246,7 +250,7 @@
         "module": "button/sizes"
       },
       {
-        "title": "Loading and disabled",
+        "title": "Loading, loading label and disabled",
         "module": "button/states"
       },
       {
@@ -336,6 +340,10 @@
       {
         "title": "Six-series palette",
         "module": "chart/palette"
+      },
+      {
+        "title": "Height and aspect",
+        "module": "chart/sizes"
       }
     ]
   },
@@ -504,6 +512,18 @@
     ]
   },
   {
+    "id": "date-picker",
+    "title": "Date picker",
+    "summary": "Pick one date from a calendar in a popover, with optional presets.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Empty, and set with presets",
+        "module": "date-picker/default"
+      }
+    ]
+  },
+  {
     "id": "date-range-picker",
     "title": "Date range picker",
     "summary": "Pick a start and end date from a calendar in a popover, with optional presets.",
@@ -516,6 +536,10 @@
       {
         "title": "With presets",
         "module": "date-range-picker/presets"
+      },
+      {
+        "title": "Two months, presets, Apply and Cancel",
+        "module": "date-range-picker/apply"
       },
       {
         "title": "Future dates disabled",
@@ -708,6 +732,10 @@
       {
         "title": "Label help",
         "module": "field/help"
+      },
+      {
+        "title": "Help and actions on a group",
+        "module": "field/group-help"
       }
     ]
   },
@@ -748,6 +776,14 @@
       {
         "title": "Date range field",
         "module": "filter-bar/date-range"
+      },
+      {
+        "title": "Filters kept in the URL",
+        "module": "filter-bar/url-state"
+      },
+      {
+        "title": "Search only",
+        "module": "filter-bar/search-only"
       }
     ]
   },
@@ -808,6 +844,10 @@
       {
         "title": "New glyphs and icon components",
         "module": "icon/components"
+      },
+      {
+        "title": "Editing, billing and lifecycle glyphs at 24 and 16",
+        "module": "icon/operations"
       }
     ]
   },
@@ -872,6 +912,10 @@
       {
         "title": "Number",
         "module": "input/number"
+      },
+      {
+        "title": "Fixed widths",
+        "module": "input/widths"
       }
     ]
   },
@@ -992,6 +1036,14 @@
       {
         "title": "DataList default and compact density",
         "module": "list/density"
+      },
+      {
+        "title": "Rows inside wrapper components",
+        "module": "list/wrapped-rows"
+      },
+      {
+        "title": "Refreshing in the background",
+        "module": "list/refreshing"
       }
     ]
   },
@@ -1058,8 +1110,12 @@
     "group": "Composites",
     "examples": [
       {
-        "title": "Connect an integration in three containers",
+        "title": "Connect an integration in three containers, with a blocked final step",
         "module": "multi-step/default"
+      },
+      {
+        "title": "Pick, configure and connect in a sheet",
+        "module": "multi-step/pick"
       }
     ]
   },
@@ -1070,7 +1126,7 @@
     "group": "Navigation",
     "examples": [
       {
-        "title": "Top-level page and object page",
+        "title": "Top-level page, object page and block description",
         "module": "page-header/default"
       }
     ]
@@ -1138,6 +1194,10 @@
         "module": "radio-group/descriptions"
       },
       {
+        "title": "Columns",
+        "module": "radio-group/columns"
+      },
+      {
         "title": "States",
         "module": "radio-group/states"
       },
@@ -1160,6 +1220,10 @@
       {
         "title": "DataTable rows and a Card",
         "module": "row-link/default"
+      },
+      {
+        "title": "Cell links in a pricing matrix",
+        "module": "row-link/cell-links"
       }
     ]
   },
@@ -1204,6 +1268,10 @@
       {
         "title": "Sizes",
         "module": "select/sizes"
+      },
+      {
+        "title": "Leading icon",
+        "module": "select/icon"
       },
       {
         "title": "Long metadata and menu width",
@@ -1502,8 +1570,28 @@
         "module": "table/loading"
       },
       {
+        "title": "Refreshing in the background",
+        "module": "table/refreshing"
+      },
+      {
+        "title": "Footer totals, secondary lines and muted rows",
+        "module": "table/summary-row"
+      },
+      {
+        "title": "Row props: drop targets and reorder",
+        "module": "table/drop-targets"
+      },
+      {
+        "title": "Wrapping text and a shrinking primary column",
+        "module": "table/wrap"
+      },
+      {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
+      },
+      {
+        "title": "Group selection",
+        "module": "table/group-selection"
       },
       {
         "title": "Column toggle, permission matrix",
@@ -1538,11 +1626,11 @@
     "group": "Utilities",
     "examples": [
       {
-        "title": "Heading roles and body text",
+        "title": "Heading roles, body text and preWrap",
         "module": "text/default"
       },
       {
-        "title": "StatusText tones and loading",
+        "title": "StatusText tones, loading and size",
         "module": "text/status"
       },
       {
@@ -1688,6 +1776,10 @@
       {
         "title": "Intensity, density, reach and seed (hover a card)",
         "module": "halftone/strength"
+      },
+      {
+        "title": "Bounds, size and reveal (hover a card)",
+        "module": "halftone/bounds"
       }
     ]
   },

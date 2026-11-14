@@ -12,6 +12,7 @@ const useConnection = () => {
   const [team, setTeam] = useState("");
   const [teamError, setTeamError] = useState(false);
   const [preview, setPreview] = useState(true);
+  const [overwrite, setOverwrite] = useState(false);
   return [
     {
       title: "Team",
@@ -47,7 +48,15 @@ const useConnection = () => {
       title: "Review",
       heading: "Review the connection",
       description: `Connects ${team || "your team"} and syncs ${preview ? "2" : "1"} environments.`,
-      content: <p>Nothing is saved until you connect.</p>
+      disabledReason: overwrite ? undefined : "Confirm that Infisical may overwrite existing variables.",
+      content: (
+        <Field label="Overwrite existing Vercel variables" orientation="horizontal">
+          <Checkbox
+            checked={overwrite}
+            onCheckedChange={(value) => setOverwrite(value === true)}
+          />
+        </Field>
+      )
     }
   ];
 };

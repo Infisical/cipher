@@ -19,6 +19,7 @@ export default function Example() {
             options={options}
             value={value}
             onChange={setValue}
+            createLabel={(query) => `Create environment "${query}"`}
             onCreate={async (query, { signal }) => {
               await new Promise((resolve) => {
                 setTimeout(resolve, 300);
@@ -30,7 +31,9 @@ export default function Example() {
           />
         </Field>
       </div>
-      <figcaption className="text-muted-foreground text-xs">{"Search and create"}</figcaption>
+      <figcaption className="text-muted-foreground text-xs">
+        {"Search and create, with a custom Create label"}
+      </figcaption>
     </figure>
   );
 }

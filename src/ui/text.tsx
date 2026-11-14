@@ -6,37 +6,29 @@ import { Spinner } from "./spinner";
 
 import styles from "./text.module.css";
 
-export function Text({
-  muted = false,
-  className,
-  ref,
-  ...props
-}: React.ComponentPropsWithoutRef<"p"> & { muted?: boolean } & {
-  ref?: React.Ref<HTMLParagraphElement>;
-}) {
+type TextProps = React.ComponentPropsWithoutRef<"p"> & {
+  muted?: boolean;
+  /** Keeps the line breaks and spaces in user-entered text, such as notes, and still wraps long lines. */
+  preWrap?: boolean;
+} & { ref?: React.Ref<HTMLParagraphElement> };
+
+export function Text({ muted = false, preWrap = false, className, ref, ...props }: TextProps) {
   return (
     <p
       ref={ref}
       data-slot="text"
-      className={cn(styles.text, muted && styles.muted, className)}
+      className={cn(styles.text, muted && styles.muted, preWrap && styles.preWrap, className)}
       {...props}
     />
   );
 }
 Text.displayName = "Text";
-export function SmallText({
-  muted = false,
-  className,
-  ref,
-  ...props
-}: React.ComponentPropsWithoutRef<"p"> & { muted?: boolean } & {
-  ref?: React.Ref<HTMLParagraphElement>;
-}) {
+export function SmallText({ muted = false, preWrap = false, className, ref, ...props }: TextProps) {
   return (
     <p
       ref={ref}
       data-slot="small-text"
-      className={cn(styles.small, muted && styles.muted, className)}
+      className={cn(styles.small, muted && styles.muted, preWrap && styles.preWrap, className)}
       {...props}
     />
   );
@@ -86,6 +78,7 @@ Meta.displayName = "Meta";
 
 export function StatusText({
   tone = "neutral",
+  size,
   icon,
   loading = false,
   className,
@@ -94,6 +87,8 @@ export function StatusText({
   ...props
 }: React.ComponentPropsWithoutRef<"span"> & {
   tone?: "neutral" | "ok" | "warn" | "bad";
+  /** sm sets small text and md body text; without it the status inherits the surrounding type, so set it inside a Heading or a stat value. */
+  size?: "sm" | "md";
 } & ({ icon: IconSource; loading?: boolean } | { icon?: IconSource; loading: true }) & {
     ref?: React.Ref<HTMLSpanElement>;
   }) {
@@ -102,6 +97,7 @@ export function StatusText({
       ref={ref}
       data-slot="status-text"
       data-tone={tone}
+      data-size={size}
       data-loading={loading || undefined}
       className={cn(styles.status, className)}
       {...props}

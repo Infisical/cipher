@@ -1,5 +1,7 @@
 import { Heading, Meta, SmallText, Text } from "@infisical/cipher/ui/text";
 
+const note = "Renewal agreed on the Oct 12 call.\nSeats: 40 to 55 from March.\n\nQuote to finance.";
+
 export default function Example() {
   return (
     <div className="grid w-full min-w-0 grid-cols-1 items-start gap-x-6 gap-y-8">
@@ -24,6 +26,14 @@ export default function Example() {
           <SmallText>Changes apply to new credentials.</SmallText>
         </div>
         <figcaption className="text-muted-foreground text-xs">{"SmallText"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">
+          <Text preWrap>{note}</Text>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"Text preWrap, a user-entered note"}
+        </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">

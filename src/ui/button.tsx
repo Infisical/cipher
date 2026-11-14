@@ -73,6 +73,7 @@ function Button({
   size = "default",
   asChild = false,
   loading: loadingProp,
+  loadingLabel,
   icon,
   iconRight,
   iconOnly = false,
@@ -97,6 +98,8 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
     loading?: boolean;
+    /** Text shown beside the spinner while loading, replacing the label, so the button's name says what is happening ("Saving"). Without it the label fades into a centered spinner. */
+    loadingLabel?: string;
     icon?: IconSource;
     iconRight?: IconSource;
     iconOnly?: boolean;
@@ -164,6 +167,19 @@ function Button({
       </>
     );
     if (loadingProp === undefined) return labelGroup;
+    if (loadingLabel !== undefined)
+      return (
+        <span data-slot="button-label-group" className={styles.labelGroup}>
+          {loading ? (
+            <>
+              <Spinner />
+              {loadingLabel}
+            </>
+          ) : (
+            labelGroup
+          )}
+        </span>
+      );
     return (
       <>
         <span data-slot="button-label-group" className={styles.labelGroup}>
@@ -235,8 +251,8 @@ function Button({
         iconOnly && geometry.iconOnly,
         badge && geometry.badged,
         trigger && geometry.triggerLayout,
-        loadingProp !== undefined && !iconOnly && styles.pendable,
-        loading && styles.pending,
+        loadingProp !== undefined && !iconOnly && loadingLabel === undefined && styles.pendable,
+        loading && loadingLabel === undefined && styles.pending,
         className
       )}
       style={style}

@@ -10,7 +10,12 @@ import { Separator } from "./separator";
 import { Tooltip } from "./tooltip";
 
 import { useDescendantFlags } from "../lib/descendant-flags";
-import { FieldControlContext } from "../lib/field-context";
+import {
+  FieldControlContext,
+  type FieldErrorMap,
+  FieldErrorsContext
+} from "../lib/field-context";
+import { skipAutoFocus } from "../lib/initial-focus";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
 
@@ -33,15 +38,55 @@ const labelFlags = {
 };
 const labelWatch = { attributes: ["data-state", "disabled", "data-disabled"], focus: true };
 
-function FieldSet({ className, ref, ...props }: React.ComponentProps<"fieldset">) {
+function FieldSet({
+  className,
+  legend,
+  legendVariant = "legend",
+  description,
+  help,
+  actions,
+  children,
+  "aria-describedby": describedBy,
+  ref,
+  ...props
+}: React.ComponentProps<"fieldset"> & {
+  /** Names the group. Without it, compose FieldLegend and FieldDescription yourself. */
+  legend?: React.ReactNode;
+  legendVariant?: "legend" | "label";
+  /** A muted line under the legend, read as the group's description. */
+  description?: React.ReactNode;
+  /** Help beside the legend, outside the group's accessible name: a string becomes a FieldHelp tooltip, a node renders as given. */
+  help?: React.ReactNode;
+  /** Controls at the legend row's end, such as an Add button for the group. */
+  actions?: React.ReactNode;
+}) {
   const setRef = useDescendantFlags(setFlags, childrenOnly, ref);
+  const id = React.useId();
+  const hasDescription = description != null && description !== false && description !== "";
   return (
     <fieldset
       ref={setRef}
       data-slot="field-set"
       className={cn("flex flex-col gap-4 data-[has-choice-group]:gap-3", className)}
+      aria-labelledby={legend ? `${id}-legend` : undefined}
+      aria-describedby={
+        [describedBy, hasDescription ? `${id}-description` : undefined].filter(Boolean).join(" ") ||
+        undefined
+      }
       {...props}
-    />
+    >
+      {legend && (
+        <FieldLegend variant={legendVariant} className={helperStyles.legendRow}>
+          <span id={`${id}-legend`}>{legend}</span>
+          {typeof help === "string" ? <FieldHelp>{help}</FieldHelp> : help}
+          {actions && <span className={helperStyles.legendActions}>{actions}</span>}
+        </FieldLegend>
+      )}
+      {legend && hasDescription && (
+        <FieldDescription id={`${id}-description`}>{description}</FieldDescription>
+      )}
+      {children}
+    </fieldset>
   );
 }
 FieldSet.displayName = "FieldSet";
@@ -107,25 +152,34 @@ function Field({
   help,
   group = false,
   wide = false,
+  name,
   children,
   id,
   ref,
+  onInputCapture,
+  onChangeCapture,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> &
   VariantProps<typeof fieldVariants> & {
     label?: React.ReactNode;
     description?: React.ReactNode;
     error?: string;
+    /** Keys this field into the surrounding FieldErrors (MultiStep provides one per step), which shows that error here until the next edit. */
+    name?: string;
     optional?: boolean;
     wide?: boolean;
-  } & (
-    | {
-        /** Help beside the label, outside its accessible name: a string becomes a FieldHelp tooltip, a node (FieldHelp with its own label, GlobPatternHelp) renders as given. A group field takes none, because its legend names the group. */
-        help?: React.ReactNode;
-        group?: false;
-      }
-    | { help?: never; group: true }
-  ) & { ref?: React.Ref<React.ComponentRef<"div">> }) {
+    /** Help beside the label or legend, outside its accessible name: a string becomes a FieldHelp tooltip, a node (FieldHelp with its own label, GlobPatternHelp) renders as given. */
+    help?: React.ReactNode;
+    /** Labels a group of controls with a fieldset and legend instead of a label. */
+    group?: boolean;
+  } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
+  const form = React.useContext(FieldErrorsContext);
+  const formError = name ? form?.errors[name] : undefined;
+  error ??= formError;
+  // A sync clear re-renders the field before the edit's own update and drops the keystroke.
+  const clearFormError = () => {
+    if (name && formError) React.startTransition(() => form?.clear(name));
+  };
   const generated = React.useId();
   const child = React.isValidElement<{ id?: string }>(children) ? children : null;
   const controlId = child?.props.id ?? id ?? generated;
@@ -164,14 +218,25 @@ function Field({
         data-width={wide ? "wide" : undefined}
         data-invalid={Boolean(error) || undefined}
         className={cn(fieldVariants({ orientation }), helperStyles.field, className)}
+        onInputCapture={(event) => {
+          onInputCapture?.(event);
+          clearFormError();
+        }}
+        onChangeCapture={(event) => {
+          onChangeCapture?.(event);
+          clearFormError();
+        }}
         {...props}
       >
         {label ? (
           group ? (
-            <fieldset className={helperStyles.fieldset}>
-              <legend id={labelId}>
-                {label}
-                {optional && " (optional)"}
+            <fieldset className={helperStyles.fieldset} aria-labelledby={labelId}>
+              <legend className={helperStyles.legendRow}>
+                <span id={labelId}>
+                  {label}
+                  {optional && " (optional)"}
+                </span>
+                {typeof help === "string" ? <FieldHelp>{help}</FieldHelp> : help}
               </legend>
               <div className={helperStyles.fieldControl}>{control}</div>
               {note}
@@ -201,6 +266,27 @@ function Field({
   );
 }
 Field.displayName = "Field";
+
+const noneCleared: string[] = [];
+
+/** Shows each error on the Field with that name, until the field is next edited. */
+function FieldErrors({ errors, children }: { errors: FieldErrorMap; children: React.ReactNode }) {
+  const [cleared, setCleared] = React.useState<{ from: FieldErrorMap; names: string[] }>({
+    from: errors,
+    names: noneCleared
+  });
+  const names = cleared.from === errors ? cleared.names : noneCleared;
+  const value = React.useMemo(
+    () => ({
+      errors: Object.fromEntries(
+        Object.entries(errors).filter(([name]) => !names.includes(name))
+      ),
+      clear: (name: string) => setCleared({ from: errors, names: [...names, name] })
+    }),
+    [errors, names]
+  );
+  return <FieldErrorsContext value={value}>{children}</FieldErrorsContext>;
+}
 
 function FieldContent({ className, ref, ...props }: React.ComponentProps<"div">) {
   return (
@@ -247,6 +333,7 @@ function FieldHelp({
         size="icon-xs"
         aria-label={label}
         data-slot="field-help"
+        {...skipAutoFocus}
         className={helperStyles.fieldHelp}
       >
         <Icon name="info" />
@@ -373,6 +460,7 @@ export {
   FieldContent,
   FieldDescription,
   FieldError,
+  FieldErrors,
   FieldGroup,
   FieldHelp,
   FieldLabel,

@@ -1,7 +1,9 @@
 import * as React from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 
-import { exit, snap, spring } from "../lib/motion";
+import { type FieldErrorMap } from "../lib/field-context";
+import { formControlSelector } from "../lib/initial-focus";
+import { exit, fade, spring } from "../lib/motion";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
@@ -15,8 +17,10 @@ import {
   DialogTitle,
   DialogTrigger
 } from "./dialog";
+import { FieldErrors } from "./field";
 import { Icon } from "./icon";
 import { ProgressSteps } from "./progress";
+import { toast } from "./sonner";
 import {
   Sheet,
   SheetBody,
@@ -31,16 +35,25 @@ import {
 
 import styles from "./multi-step.module.css";
 
-type ValidateResult = boolean | string | void;
+/**
+ * false keeps the step (the step shows its own field errors). fields puts each message on the Field
+ * with that name and focuses the first. message is the footer fallback, only for an error that has
+ * no field and is not worth a toast. A thrown error is a toast.
+ */
+type ValidateResult = boolean | void | { fields?: FieldErrorMap; message?: string };
 
 export interface MultiStepStep {
   title: string;
   heading?: string;
   description?: React.ReactNode;
   summary?: React.ReactNode;
-  content: React.ReactNode;
+  content?: React.ReactNode;
+  /** Renders the step with `next`, which validates and advances once the state set beside it has rendered, so a step that is a single pick can advance on pick. Used instead of content. */
+  render?: (step: { next: () => void }) => React.ReactNode;
   validate?: () => ValidateResult | Promise<ValidateResult>;
   nextLabel?: string;
+  /** Blocks Continue (or the final action on the last step) and says why, as Button's disabledReason does: it stays focusable and shows the reason in a tooltip. */
+  disabledReason?: string;
 }
 
 export type StepsProps = {
@@ -129,8 +142,7 @@ export type MultiStepProps = {
   className?: string;
 };
 
-const fieldSelector =
-  ":is(input:not([type=hidden]), textarea, select, [role=combobox], button[role=radio], button[role=checkbox], button[role=switch]):not(:disabled, [aria-disabled=true])";
+const noErrors: FieldErrorMap = {};
 
 export const MultiStep = ({
   steps,
@@ -162,7 +174,10 @@ export const MultiStep = ({
   });
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string>();
+  const [fieldErrors, setFieldErrors] = React.useState<FieldErrorMap>(noErrors);
   const [direction, setDirection] = React.useState(1);
+  const [queued, setQueued] = React.useState(false);
+  const [height, setHeight] = React.useState<number>();
   const viewport = React.useRef<HTMLDivElement | null>(null);
   const activeStep = () =>
     viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ?? null;
@@ -171,22 +186,37 @@ export const MultiStep = ({
   const formId = React.useId();
   const entry = steps[current];
   const last = current === steps.length - 1;
+  React.useLayoutEffect(() => {
+    if (!moved.current) return;
+    viewport.current
+      ?.closest<HTMLElement>('[data-slot="sheet-scroll"], [data-slot="dialog-scroll"]')
+      ?.scrollTo({ top: 0 });
+  }, [current]);
   React.useEffect(() => {
     if (!moved.current) return;
     moved.current = false;
-    viewport.current
-      ?.querySelector<HTMLElement>(`[data-step="${current}"]`)
-      ?.querySelector<HTMLElement>(fieldSelector)
-      ?.focus();
+    const step = viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`);
+    (
+      step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
+      step?.querySelector<HTMLElement>(formControlSelector)
+    )?.focus();
   }, [current]);
+  const measure = React.useCallback((node: HTMLDivElement | null) => {
+    if (!node) return undefined;
+    const observer = new ResizeObserver(() => setHeight(node.offsetHeight));
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
   const move = (target: number) => {
     setError(undefined);
+    setFieldErrors(noErrors);
     setDirection(target > current ? 1 : -1);
     moved.current = true;
     setCurrent(target);
   };
   const reset = () => {
     setError(undefined);
+    setFieldErrors(noErrors);
     if (current !== defaultStep) setCurrent(defaultStep);
   };
   const changeOpen = (next: boolean) => {
@@ -204,7 +234,7 @@ export const MultiStep = ({
     activeStep()?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   });
   const advance = async () => {
-    if (busy || !entry) return;
+    if (busy || !entry || entry.disabledReason) return;
     setError(undefined);
     setBusy(true);
     try {
@@ -213,9 +243,15 @@ export const MultiStep = ({
         refocus.current = true;
         return;
       }
-      if (typeof result === "string") {
-        setError(result);
-        return;
+      if (result && typeof result === "object") {
+        const fields = result.fields ?? noErrors;
+        setFieldErrors(fields);
+        setError(result.message);
+        if (Object.values(fields).some(Boolean)) {
+          refocus.current = true;
+          return;
+        }
+        if (result.message) return;
       }
       if (!last) {
         move(current + 1);
@@ -227,13 +263,29 @@ export const MultiStep = ({
         setOpen(false);
       }
     } catch (failure) {
-      setError(failure instanceof Error ? failure.message : "Something went wrong. Try again.");
+      toast.error(failure instanceof Error ? failure.message : "Something went wrong. Try again.");
     } finally {
       setBusy(false);
     }
   };
+  React.useEffect(() => {
+    if (!queued) return;
+    setQueued(false);
+    advance();
+  }, [queued]);
   if (!entry) return null;
+  const axis = variant === "page" ? "y" : "x";
   const travel = reduced ? 0 : 24;
+  const at = (offset: number) => (axis === "x" ? { x: offset } : { y: offset });
+  const slide: Variants = {
+    enter: (sign: number) => ({ opacity: 0, ...at(sign * travel) }),
+    center: { opacity: 1, ...at(0), transition: reduced ? fade.enter : spring.slow },
+    leave: (sign: number) => ({
+      opacity: 0,
+      ...at(-sign * travel),
+      transition: reduced ? fade.exit : exit.moderate
+    })
+  };
   const stepHead = (
     <div className={styles.stepHead}>
       {variant === "page" && (
@@ -260,25 +312,27 @@ export const MultiStep = ({
       <fieldset disabled={busy} className={styles.fields}>
         <motion.div
           ref={viewport}
-          layout={!reduced}
-          transition={spring.moderate}
+          initial={false}
+          animate={height === undefined ? undefined : { height }}
+          transition={reduced ? { duration: 0 } : spring.moderate}
           className={styles.viewport}
         >
           <AnimatePresence mode="popLayout" initial={false} custom={direction}>
             <motion.div
               key={current}
+              ref={measure}
               data-step={current}
               className={styles.body}
-              initial={{ opacity: 0, x: direction * travel }}
-              animate={{ opacity: 1, x: 0, transition: reduced ? snap : spring.moderate }}
-              exit={{
-                opacity: 0,
-                x: -direction * travel,
-                transition: reduced ? snap : exit.moderate
-              }}
+              custom={direction}
+              variants={slide}
+              initial="enter"
+              animate="center"
+              exit="leave"
             >
               {stepHead}
-              {entry.content}
+              <FieldErrors errors={fieldErrors}>
+                {entry.render ? entry.render({ next: () => setQueued(true) }) : entry.content}
+              </FieldErrors>
             </motion.div>
           </AnimatePresence>
         </motion.div>
@@ -312,7 +366,14 @@ export const MultiStep = ({
             Back
           </Button>
         )}
-        <Button type="submit" form={formId} variant="primary" size="sm" loading={busy}>
+        <Button
+          type="submit"
+          form={formId}
+          variant="primary"
+          size="sm"
+          loading={busy}
+          disabledReason={entry.disabledReason}
+        >
           {last ? completeLabel : (entry.nextLabel ?? "Continue")}
         </Button>
       </div>
