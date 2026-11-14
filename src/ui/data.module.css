@@ -812,7 +812,6 @@ button.rowTitle::after {
   font-weight: var(--cipher-type-body-font-weight);
   letter-spacing: var(--cipher-type-body-letter-spacing);
   display: grid;
-  gap: var(--cipher-space-12);
   margin: 0;
 }
 .dataPair {
@@ -820,8 +819,11 @@ button.rowTitle::after {
   display: flex;
   gap: var(--cipher-space-12);
   justify-content: space-between;
-  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   padding: var(--cipher-space-8) 0;
+}
+.dataPair + .dataPair {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  padding-top: calc(var(--cipher-space-8) + var(--cipher-space-12));
 }
 .dataPair dt {
   color: var(--cipher-muted);
@@ -853,6 +855,9 @@ button.rowTitle::after {
   grid-column: auto;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
+}
+.dataList[data-density="compact"] .dataPair[data-span="half"]:first-child + .dataPair {
+  border-top: 0;
 }
 .dataList[data-density="compact"] dt {
   max-width: none;
