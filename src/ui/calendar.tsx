@@ -237,7 +237,7 @@ function CalendarDayButton({
         "data-[range-end=true]:border-[color:var(--cipher-selected-border)] data-[range-start=true]:border-[color:var(--cipher-selected-border)] data-[selected-single=true]:border-[color:var(--cipher-selected-border)]",
         "data-[range-end=true]:bg-[color:var(--cipher-select)] data-[range-start=true]:bg-[color:var(--cipher-select)] data-[selected-single=true]:bg-[color:var(--cipher-select)]",
         "data-[range-end=true]:font-medium data-[range-start=true]:font-medium data-[selected-single=true]:font-medium data-[range-end=true]:text-foreground data-[range-start=true]:text-foreground data-[selected-single=true]:text-foreground",
-        "data-[today=true]:after:absolute data-[today=true]:after:bottom-(--cipher-space-4) data-[today=true]:after:left-1/2 data-[today=true]:after:size-(--cipher-space-3) data-[today=true]:after:-translate-x-1/2 data-[today=true]:after:rounded-full data-[today=true]:after:bg-current",
+        "data-[today=true]:after:absolute data-[today=true]:after:bottom-(--cipher-space-4) data-[today=true]:after:left-1/2 data-[today=true]:after:size-(--cipher-space-4) data-[today=true]:after:-translate-x-1/2 data-[today=true]:after:bg-current",
         "[&>span]:text-xs [&>span]:opacity-70",
         defaultClassNames.day,
         className
