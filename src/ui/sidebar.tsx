@@ -182,6 +182,7 @@ const SidebarRow = ({
   const shared = {
     className: cn(styles.row, back && styles.back),
     "data-sidebar-back": back || undefined,
+    "data-sidebar-drill": back || drillIn || undefined,
     "data-sidebar-target": "",
     "data-current": isCurrent || undefined,
     "data-holds-current": (holdsCurrent && !isCurrent) || undefined,
@@ -591,12 +592,6 @@ const SidebarView = ({
     return () => setNavigationUnread(false);
   }, [setNavigationUnread, unread]);
   const setNavigationOpen = shell?.setNavigationOpen;
-  const openedAt = React.useRef(current);
-  React.useEffect(() => {
-    if (!sheeted || !setNavigationOpen) return;
-    if (openedAt.current !== current) setNavigationOpen(false);
-    openedAt.current = current;
-  }, [current, sheeted, setNavigationOpen]);
   const navigationToggle = shell?.navigationToggle;
   React.useEffect(() => {
     if (!navigationToggle) return undefined;
@@ -626,15 +621,18 @@ const SidebarView = ({
   useReportPresence(chrome?.sidebar, !narrow);
   useReportPresence(chrome?.sidebarOpen, !narrow && !railed);
   const view = scope?.id ?? activeSpace?.id ?? "root";
+  const openedAt = React.useRef({ current, view });
+  React.useEffect(() => {
+    if (!sheeted || !setNavigationOpen) return;
+    const opened = openedAt.current;
+    if (opened.current !== current && opened.view === view) setNavigationOpen(false);
+    openedAt.current = { current, view };
+  }, [current, view, sheeted, setNavigationOpen]);
   const navRef = React.useRef<HTMLDivElement>(null);
   const backRef = React.useRef<HTMLElement | null>(null);
   const refocus = React.useRef(false);
-  const keyed = React.useRef(false);
   const navigate = (item: SidebarLink) => {
-    if (item.level) {
-      refocus.current = keyed.current;
-      setLevelId(item.level);
-    }
+    if (item.level) setLevelId(item.level);
     onNavigate?.(item);
   };
   React.useEffect(() => {
@@ -845,12 +843,14 @@ const SidebarView = ({
           aria-label={label ?? (activeSpace ? `${activeSpace.label} navigation` : "Main")}
           className={styles.navigation}
           onKeyDown={(event) => {
-            keyed.current = event.key === "Enter" || event.key === " ";
+            refocus.current =
+              (event.key === "Enter" || event.key === " ") &&
+              Boolean((event.target as HTMLElement).closest("[data-sidebar-drill]"));
             goUp(event);
             moveFocus(event);
           }}
           onPointerDown={() => {
-            keyed.current = false;
+            refocus.current = false;
           }}
         >
           <div
