@@ -1267,6 +1267,31 @@
       ]
     },
     {
+      "name": "event-calendar",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/popover",
+        "@cipher/spinner"
+      ],
+      "dependencies": [
+        "react-day-picker@^10.0.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/event-calendar.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/event-calendar.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/event-calendar.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/event-calendar.module.css"
+        }
+      ]
+    },
+    {
       "name": "field",
       "type": "registry:ui",
       "registryDependencies": [

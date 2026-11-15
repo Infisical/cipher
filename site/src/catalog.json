@@ -560,6 +560,26 @@
     ]
   },
   {
+    "id": "event-calendar",
+    "title": "Event calendar",
+    "summary": "Dated events on a month grid, with a list for busy days.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Typical",
+        "module": "event-calendar/default"
+      },
+      {
+        "title": "Empty",
+        "module": "event-calendar/empty"
+      },
+      {
+        "title": "Busy days, long names and loading",
+        "module": "event-calendar/stressed"
+      }
+    ]
+  },
+  {
     "id": "detail-layout",
     "title": "Detail layout",
     "summary": "Lay out a detail page as stacked content cards with a details sidecar on the right that stacks above them in narrow containers.",
