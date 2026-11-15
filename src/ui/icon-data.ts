@@ -679,6 +679,20 @@ export const iconShapes = {
       }
     }
   ],
+  send: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M20.5 3.5 3.5 10l7 3.5 3.5 7z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m20.5 3.5-10 10"
+      }
+    }
+  ],
   megaphone: [
     {
       tag: "path",
