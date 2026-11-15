@@ -981,7 +981,10 @@
         "title": "Page search: / focuses it",
         "module": "input/page-search"
       },
-        { "title": "Suggested value", "module": "input/suggested-value" }
+      {
+        "title": "Suggested value",
+        "module": "input/suggested-value"
+      }
     ]
   },
   {
@@ -1301,6 +1304,26 @@
       {
         "title": "Help text, prose and a long target",
         "module": "link/default"
+      }
+    ]
+  },
+  {
+    "id": "remote-desktop",
+    "title": "Remote desktop",
+    "summary": "A live remote desktop session: a fitted frame the app draws into, input capture, connection states and a toolbar.",
+    "group": "Composites",
+    "examples": [
+      {
+        "title": "Connected",
+        "module": "remote-desktop/default"
+      },
+      {
+        "title": "Connecting and disconnected",
+        "module": "remote-desktop/empty"
+      },
+      {
+        "title": "Reconnecting and failed, long details",
+        "module": "remote-desktop/stressed"
       }
     ]
   },

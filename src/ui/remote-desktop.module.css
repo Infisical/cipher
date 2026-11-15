@@ -1,0 +1,180 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--cipher-surface);
+  border: var(--cipher-size-control-border) solid var(--cipher-line);
+}
+.root[data-fullscreen] {
+  border: 0;
+}
+.scope {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--cipher-space-surface-inset-sm);
+  overflow: hidden;
+  background: var(--cipher-inset);
+  outline: none;
+}
+.frame {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  touch-action: none;
+  background: var(--cipher-paper);
+  outline: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  transition: outline-color var(--cipher-duration-fast) var(--cipher-ease-standard);
+}
+.stage[data-captured] .frame {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
+}
+.frame > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--cipher-space-24);
+  overflow: auto;
+}
+.overlay[data-overlay="solid"] {
+  background: var(--cipher-inset);
+}
+.overlay[data-overlay="scrim"] {
+  background: var(--cipher-scrim);
+}
+.notice {
+  padding: var(--cipher-space-16) var(--cipher-space-24);
+  background: var(--cipher-surface);
+  border: var(--cipher-size-control-border) solid var(--cipher-line);
+  box-shadow: var(--cipher-shadow-pop);
+}
+.toolbar {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-4) var(--cipher-space-12);
+  min-width: 0;
+  min-height: var(--cipher-size-control-lg);
+  padding: var(--cipher-space-4) var(--cipher-space-4) var(--cipher-space-4) var(--cipher-space-12);
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line);
+  background: var(--cipher-surface);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.status {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  color: var(--cipher-text2);
+  font-weight: var(--cipher-type-label-font-weight);
+}
+.dot {
+  flex: none;
+  width: var(--cipher-space-6);
+  height: var(--cipher-space-6);
+  border-radius: 0;
+  background: var(--cipher-muted);
+}
+.dot[data-tone="ok"] {
+  background: var(--cipher-ok);
+}
+.dot[data-tone="warn"] {
+  background: var(--cipher-warn);
+}
+.dot[data-tone="bad"] {
+  background: var(--cipher-bad);
+}
+.hint {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  color: var(--cipher-ink);
+  white-space: nowrap;
+}
+.hint:not([data-captured]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.details {
+  display: flex;
+  flex: 1 1 calc(var(--cipher-space-48) * 4);
+  justify-content: flex-end;
+  gap: var(--cipher-space-16);
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+}
+.detail {
+  display: flex;
+  flex: 0 1 auto;
+  gap: var(--cipher-space-4);
+  min-width: 0;
+  white-space: nowrap;
+}
+.detail dt {
+  flex: none;
+}
+.detail dt::after {
+  content: ":";
+}
+.detail dd {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--cipher-text2);
+}
+.controls {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0;
+  gap: var(--cipher-space-2);
+  margin-left: auto;
+}
+.details + .controls {
+  margin-left: 0;
+}
+.clipboard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--cipher-space-8);
+}
+.clipboard > :not(button) {
+  align-self: stretch;
+}
