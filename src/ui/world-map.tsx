@@ -44,6 +44,8 @@ const regionNames =
   typeof Intl !== "undefined" && "DisplayNames" in Intl
     ? new Intl.DisplayNames(["en"], { type: "region", fallback: "code" })
     : null;
+const drawn = new Set(worldMapCountries.map(([code]) => code).filter(Boolean));
+const regionKey = (code: string) => `region:${code}`;
 const regionName = (code: string) => {
   try {
     return regionNames?.of(code) ?? code;
@@ -82,9 +84,11 @@ function WorldMap({
   const total = counted.reduce((sum, location) => sum + location.count, 0);
 
   const markers = React.useMemo(() => {
-    if (display === "regions") return [];
     const placed = counted.filter(
-      (location) => Number.isFinite(location.lat) && Number.isFinite(location.lng)
+      (location) =>
+        Number.isFinite(location.lat) &&
+        Number.isFinite(location.lng) &&
+        (display !== "regions" || !drawn.has(location.country?.toUpperCase() ?? ""))
     );
     const max = placed[0]?.count ?? 1;
     return placed.map((location) => {
@@ -99,7 +103,7 @@ function WorldMap({
     if (display !== "markers")
       counted.forEach((location) => {
         const code = location.country?.toUpperCase();
-        if (code) totals.set(code, (totals.get(code) ?? 0) + location.count);
+        if (code && drawn.has(code)) totals.set(code, (totals.get(code) ?? 0) + location.count);
       });
     const max = Math.max(1, ...totals.values());
     return { totals, step: (count: number) => Math.max(1, Math.ceil((count / max) * steps)) };
@@ -108,41 +112,49 @@ function WorldMap({
   const targets: Target[] = React.useMemo(
     () =>
       display === "regions"
-        ? [...regions.totals]
-            .filter(([code]) => worldMapCountries.some(([country]) => country === code))
-            .sort((a, b) => b[1] - a[1])
-            .map(([code, count]) => ({ key: code, name: regionName(code), count }))
+        ? [
+            ...[...regions.totals].map(([code, count]) => ({
+              key: regionKey(code),
+              name: regionName(code),
+              count
+            })),
+            ...markers
+          ].sort((a, b) => b.count - a.count)
         : markers,
     [display, markers, regions]
   );
-  const [focused, setFocused] = React.useState(0);
-  const active = Math.min(focused, Math.max(0, targets.length - 1));
+  const [focused, setFocused] = React.useState<string>();
+  const active = Math.max(
+    0,
+    targets.findIndex((target) => target.key === focused)
+  );
   const elements = React.useRef(new Map<string, SVGElement>());
 
   const onKeyDown = (event: React.KeyboardEvent) => {
     const last = targets.length - 1;
-    const next = {
+    const moves: Partial<Record<string, number>> = {
       ArrowRight: Math.min(active + 1, last),
       ArrowDown: Math.min(active + 1, last),
       ArrowLeft: Math.max(active - 1, 0),
       ArrowUp: Math.max(active - 1, 0),
       Home: 0,
       End: last
-    }[event.key];
+    };
+    const next = moves[event.key];
     if (next === undefined || last < 0) return;
     event.preventDefault();
-    setFocused(next);
+    setFocused(targets[next].key);
     elements.current.get(targets[next].key)?.focus();
   };
-  const targetProps = (target: Target, index: number) => ({
+  const targetProps = (target: Target) => ({
     ref: (element: SVGElement | null) => {
       if (element) elements.current.set(target.key, element);
       else elements.current.delete(target.key);
     },
     role: "img",
     "aria-label": `${target.name}: ${formatCount(target.count)}`,
-    tabIndex: index === active ? 0 : -1,
-    onFocus: () => setFocused(index)
+    tabIndex: target.key === targets[active]?.key ? 0 : -1,
+    onFocus: () => setFocused(target.key)
   });
   const tip = (target: Target) => (
     <span className={styles.tip}>
@@ -172,19 +184,14 @@ function WorldMap({
               {worldMapCountries.map(([code, d], index) => {
                 const count = code ? regions.totals.get(code) : undefined;
                 if (!count) return <path key={code || index} d={d} />;
-                const target = { key: code, name: regionName(code), count };
+                const target = { key: regionKey(code), name: regionName(code), count };
                 const region = (
                   <path
                     key={code}
                     d={d}
                     className={styles.region}
                     data-step={regions.step(count)}
-                    {...(display === "regions"
-                      ? targetProps(
-                          target,
-                          targets.findIndex((item) => item.key === code)
-                        )
-                      : {})}
+                    {...(display === "regions" ? targetProps(target) : {})}
                   />
                 );
                 return (
@@ -196,10 +203,10 @@ function WorldMap({
             </g>
             {markers.length > 0 && (
               <g className={styles.markers}>
-                {markers.map((marker, index) => (
+                {markers.map((marker) => (
                   <Tooltip key={marker.key} content={tip(marker)}>
                     <rect
-                      {...targetProps(marker, index)}
+                      {...targetProps(marker)}
                       className={styles.marker}
                       x={marker.x - marker.size / 2}
                       y={marker.y - marker.size / 2}
@@ -221,10 +228,7 @@ function WorldMap({
           <div className={styles.legend}>
             <ul className={styles.list}>
               {listed.map((location) => {
-                const placed =
-                  display !== "regions" &&
-                  Number.isFinite(location.lat) &&
-                  Number.isFinite(location.lng);
+                const placed = markers.some((marker) => marker.key === location.key);
                 return (
                   <li key={location.key} className={styles.item}>
                     <span

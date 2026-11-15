@@ -144,10 +144,8 @@
 .name {
   min-width: 0;
   max-width: var(--cipher-size-sheet-sm);
-  overflow: hidden;
   color: var(--cipher-muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .count {
   flex: none;
