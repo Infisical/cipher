@@ -36,6 +36,7 @@ export default function Example() {
   const connect = React.useCallback(() => {
     setMessage(undefined);
     setStatus("connecting");
+    line.current = "";
     terminal.current?.reset();
     const timer = window.setTimeout(() => {
       terminal.current?.write(banner + prompt);

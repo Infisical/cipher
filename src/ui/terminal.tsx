@@ -44,8 +44,10 @@ export type TerminalProps = Omit<
   actions?: React.ReactNode;
   /** Keystrokes and pasted text, to send to the remote shell. */
   onData?: (data: string) => void;
-  /** The new size after a fit, to send to the remote PTY. */
+  /** The size once xterm mounts and after every fit that changes it, to send to the remote PTY. */
   onResize?: (size: { cols: number; rows: number }) => void;
+  /** The xterm instance once it has mounted, to load addons such as xterm-readline or web links. */
+  onReady?: (terminal: XTerm) => void;
   /** Passed to xterm when it mounts. Theme and font come from the Cipher tokens. */
   options?: Omit<ITerminalOptions, "theme" | "fontFamily" | "fontSize">;
   ref?: React.Ref<TerminalHandle>;
@@ -117,6 +119,7 @@ export function Terminal({
   actions,
   onData,
   onResize,
+  onReady,
   options,
   className,
   ref,
@@ -126,9 +129,9 @@ export function Terminal({
   const retryRef = React.useRef<HTMLButtonElement>(null);
   const terminalRef = React.useRef<XTerm | null>(null);
   const fitRef = React.useRef<FitAddon | null>(null);
-  const pending = React.useRef<(string | Uint8Array)[]>([]);
-  const latest = React.useRef({ onData, onResize, options });
-  latest.current = { onData, onResize, options };
+  const pending = React.useRef<(string | Uint8Array)[] | null>([]);
+  const latest = React.useRef({ onData, onResize, onReady, options });
+  latest.current = { onData, onResize, onReady, options };
   const [load, setLoad] = React.useState<"loading" | "ready" | "failed">("loading");
   const theme = useTheme();
   const embedded = useInFrame("Terminal");
@@ -141,14 +144,14 @@ export function Terminal({
     () => ({
       write: (data) => {
         if (terminalRef.current) terminalRef.current.write(data);
-        else pending.current.push(data);
+        else pending.current?.push(data);
       },
       clear: () => {
-        pending.current = [];
+        pending.current?.splice(0);
         terminalRef.current?.clear();
       },
       reset: () => {
-        pending.current = [];
+        pending.current?.splice(0);
         terminalRef.current?.reset();
       },
       focus: () => terminalRef.current?.focus(),
@@ -174,6 +177,7 @@ export function Terminal({
         const terminal = new xterm.Terminal({
           cursorBlink: true,
           scrollback: 10000,
+          minimumContrastRatio: 4.5,
           ...latest.current.options,
           fontFamily: style.fontFamily,
           fontSize: parseFloat(style.fontSize),
@@ -181,17 +185,19 @@ export function Terminal({
         });
         const fitAddon = new fit.FitAddon();
         terminal.loadAddon(fitAddon);
-        terminal.open(host);
-        fitAddon.fit();
         const subscriptions = [
           terminal.onData((data) => latest.current.onData?.(data)),
           terminal.onResize((size) => latest.current.onResize?.(size))
         ];
+        terminal.open(host);
+        fitAddon.fit();
+        latest.current.onResize?.({ cols: terminal.cols, rows: terminal.rows });
         const observer = new ResizeObserver(() => fitAddon.fit());
         observer.observe(host);
         terminalRef.current = terminal;
         fitRef.current = fitAddon;
-        pending.current.splice(0).forEach((data) => terminal.write(data));
+        latest.current.onReady?.(terminal);
+        pending.current?.splice(0).forEach((data) => terminal.write(data));
         setLoad("ready");
         teardown = () => {
           observer.disconnect();
@@ -203,6 +209,7 @@ export function Terminal({
       },
       (error: unknown) => {
         if (disposed) return;
+        pending.current = null;
         console.error(
           "Terminal needs the optional peer dependencies @xterm/xterm and @xterm/addon-fit.",
           error
@@ -225,7 +232,7 @@ export function Terminal({
   React.useEffect(() => {
     const terminal = terminalRef.current;
     if (load !== "ready" || !terminal) return;
-    terminal.options.disableStdin = ended;
+    terminal.options.disableStdin = ended || Boolean(latest.current.options?.disableStdin);
     if (status === "connected") terminal.focus();
     else if (ended && hostRef.current?.contains(document.activeElement)) retryRef.current?.focus();
   }, [load, status, ended]);
