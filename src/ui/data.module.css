@@ -1368,11 +1368,14 @@ tbody > .nativeTableRow[data-loading] {
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
-.tableScroll[data-virtual] tbody tr:not([data-spacer]) > td {
+.tableScroll[data-virtual] tbody tr:not([data-spacer], [data-row-kind="empty"]) > td {
   padding-block: 0;
 }
 .tableScroll [data-spacer] > td {
   border: 0;
+}
+.tableScroll [data-row-kind="empty"] > td {
+  padding-block: var(--cipher-space-48);
 }
 .tableScroll[data-virtual] .tableValue,
 .tableScroll[data-virtual] .tablePrimary,
