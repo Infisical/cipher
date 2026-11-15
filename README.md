@@ -24,7 +24,7 @@ Use the latest tag from the [releases page](https://github.com/Infisical/cipher/
 
 Each release tag points at a commit that holds the built package, so the install downloads it as is and runs no build.
 
-`motion` and `sonner` are peer dependencies, so your app and Cipher share one copy. Install `recharts` too if you use the chart.
+`motion` and `sonner` are peer dependencies, so your app and Cipher share one copy. Install `recharts` too if you use the chart, and `@xterm/xterm` with `@xterm/addon-fit` if you use the terminal.
 
 Import the stylesheet once and wrap Cipher UI in `CipherScope`:
 

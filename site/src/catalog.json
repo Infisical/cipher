@@ -420,6 +420,26 @@
     ]
   },
   {
+    "id": "terminal",
+    "title": "Terminal",
+    "summary": "An interactive shell session in the browser, for SSH and database access, with its connection state in the header.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "SSH session",
+        "module": "terminal/default"
+      },
+      {
+        "title": "Connecting, disconnected and error",
+        "module": "terminal/states"
+      },
+      {
+        "title": "Long label, wide output and the ANSI palette",
+        "module": "terminal/stress"
+      }
+    ]
+  },
+  {
     "id": "collapsible",
     "title": "Collapsible",
     "summary": "Show optional details from a single trigger.",
