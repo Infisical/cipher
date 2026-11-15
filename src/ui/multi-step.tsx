@@ -287,7 +287,7 @@ export const MultiStep = ({
       transition: reduced ? fade.exit : exit.moderate
     })
   };
-  const titled = variant === "page" || !single;
+  const titled = variant === "page" || !single || !title;
   const stepHead = (titled || entry.description) && (
     <div className={styles.stepHead}>
       {variant === "page" && !single && (
