@@ -1743,7 +1743,8 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/popover"
+        "@cipher/popover",
+        "@cipher/spinner"
       ],
       "files": [
         {
