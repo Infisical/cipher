@@ -89,9 +89,10 @@ export function StatusText({
   tone?: "neutral" | "ok" | "warn" | "bad";
   /** sm sets small text and md body text; without it the status inherits the surrounding type, so set it inside a Heading or a stat value. */
   size?: "sm" | "md";
-} & ({ icon: IconSource; loading?: boolean } | { icon?: IconSource; loading: true }) & {
-    ref?: React.Ref<HTMLSpanElement>;
-  }) {
+  icon?: IconSource;
+  loading?: boolean;
+  ref?: React.Ref<HTMLSpanElement>;
+}) {
   return (
     <span
       ref={ref}
@@ -102,7 +103,7 @@ export function StatusText({
       className={cn(styles.status, className)}
       {...props}
     >
-      {loading || !icon ? <Spinner /> : <Icon icon={icon} />}
+      {loading ? <Spinner /> : icon && <Icon icon={icon} />}
       <span>{children}</span>
     </span>
   );
