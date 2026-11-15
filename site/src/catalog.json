@@ -1288,6 +1288,10 @@
       {
         "title": "Pick, configure and connect in a sheet",
         "module": "multi-step/pick"
+      },
+      {
+        "title": "Destructive final step with an icon",
+        "module": "multi-step/destructive"
       }
     ]
   },
