@@ -226,7 +226,7 @@
       "path": "src/components/cipher/lib/utils.ts",
       "type": "registry:file",
       "target": "src/components/cipher/lib/utils.ts",
-      "content": "import { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n"
+      "content": "import { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\n/** The hover title for end-truncated content: the caller's title, else the content when it is plain text. */\nexport const truncateTitle = (truncate: boolean, title: string | undefined, children: unknown) =>\n  title ??\n  (truncate && (typeof children === \"string\" || typeof children === \"number\")\n    ? String(children)\n    : undefined);\n"
     },
     {
       "path": "src/components/cipher/scope.tsx",

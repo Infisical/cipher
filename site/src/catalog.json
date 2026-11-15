@@ -961,7 +961,10 @@
         "title": "Page search: / focuses it",
         "module": "input/page-search"
       },
-        { "title": "Suggested value", "module": "input/suggested-value" }
+      {
+        "title": "Suggested value",
+        "module": "input/suggested-value"
+      }
     ]
   },
   {
@@ -1137,6 +1140,26 @@
       {
         "title": "Width and copy states",
         "module": "middle-truncate/states"
+      }
+    ]
+  },
+  {
+    "id": "inline-truncate",
+    "title": "Truncate in a row",
+    "summary": "End long values in an ellipsis while badges, icons and timestamps keep their width.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Empty and short values",
+        "module": "inline-truncate/empty"
+      },
+      {
+        "title": "Typical rows",
+        "module": "inline-truncate/default"
+      },
+      {
+        "title": "Long values, many rows and narrow widths",
+        "module": "inline-truncate/stressed"
       }
     ]
   },

@@ -51,6 +51,17 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.endTruncate {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meta.endTruncate {
+  display: inline-block;
+  vertical-align: bottom;
+}
 .measurePage {
   width: 100%;
   max-width: var(--cipher-size-measure-page);
@@ -81,6 +92,16 @@
 }
 .inlineGrow {
   flex: 1 1 var(--cipher-size-text-min);
+}
+.inlineItem {
+  display: flex;
+  align-items: center;
+}
+.inlineItem.endTruncate {
+  display: block;
+}
+.inlineFixed {
+  flex-shrink: 0;
 }
 .stack > *,
 .inline > *,
