@@ -37,6 +37,8 @@ export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size" | 
   trailing?: React.ReactNode;
   /** "/" focuses this field from anywhere on the page, for a page's main search. No hint is drawn. */
   slashShortcut?: boolean;
+  /** Shown as the placeholder. While the field is empty, Tab or the Tab key cap fills it in, such as a generated name. */
+  suggestedValue?: string;
 };
 export function Input({
   className,
@@ -49,6 +51,9 @@ export function Input({
   trailing,
   width,
   slashShortcut = false,
+  suggestedValue,
+  placeholder,
+  onKeyDown,
   ref,
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
@@ -62,9 +67,21 @@ export function Input({
       inner.current?.select();
     }
   });
+  const hintId = React.useId();
+  const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled;
+  const accept = () => {
+    const element = inner.current;
+    if (!element || !suggestedValue || element.value) return;
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(
+      element,
+      suggestedValue
+    );
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+  };
   const fieldSize = typeof size === "number" ? "sm" : size;
   const leading = icon ?? (props.readOnly ? "lock" : undefined);
-  const boxed = Boolean(leading || kbd || trailing);
+  const trailed = Boolean(kbd || trailing || suggesting);
+  const boxed = Boolean(leading || kbd || trailing || suggestedValue);
   const boxRef = useDescendantFlags<HTMLSpanElement>(fieldBoxFlags, fieldBoxWatch);
   const input = (
     <input
@@ -81,9 +98,26 @@ export function Input({
         mono && styles.mono,
         className
       )}
+      placeholder={suggestedValue || placeholder}
       {...props}
       {...field}
       aria-invalid={invalid || field["aria-invalid"] || undefined}
+      aria-describedby={
+        [field["aria-describedby"], suggesting && hintId].filter(Boolean).join(" ") || undefined
+      }
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        if (
+          !suggesting ||
+          event.currentTarget.value ||
+          event.defaultPrevented ||
+          event.key !== "Tab" ||
+          event.shiftKey
+        )
+          return;
+        event.preventDefault();
+        accept();
+      }}
     />
   );
   return boxed ? (
@@ -93,7 +127,7 @@ export function Input({
       data-size={fieldSize}
       data-field-box=""
       data-width={width}
-      data-trailing={Boolean(kbd || trailing) || undefined}
+      data-trailing={trailed || undefined}
       onPointerDown={(event) => {
         if (event.target !== event.currentTarget) return;
         event.preventDefault();
@@ -106,10 +140,30 @@ export function Input({
         </span>
       )}
       {input}
-      {(kbd || trailing) && (
+      {(trailed || suggestedValue) && (
         <span className={styles.trailing}>
           {kbd && <Kbd>{kbd}</Kbd>}
+          {suggesting && (
+            <button
+              type="button"
+              tabIndex={-1}
+              className={styles.suggestion}
+              aria-label={`Use suggested value ${suggestedValue}`}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                accept();
+                inner.current?.focus();
+              }}
+            >
+              <Kbd>Tab</Kbd>
+            </button>
+          )}
           {trailing}
+        </span>
+      )}
+      {suggesting && (
+        <span id={hintId} className="sr-only">
+          When the field is empty, press Tab to use the suggested value.
         </span>
       )}
     </span>

@@ -868,6 +868,16 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .trailing > [data-cipher-button] {
   --cipher-action-height: min(var(--cipher-action-requested-height), var(--cipher-nested-action-height));
 }
+.suggestion {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.bare:not(:placeholder-shown) ~ .trailing > .suggestion {
+  display: none;
+}
 .switch[data-size] {
   border-radius: 0;
 }

@@ -948,7 +948,8 @@
       {
         "title": "Page search: / focuses it",
         "module": "input/page-search"
-      }
+      },
+        { "title": "Suggested value", "module": "input/suggested-value" }
     ]
   },
   {
