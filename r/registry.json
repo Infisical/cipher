@@ -769,6 +769,38 @@
       ]
     },
     {
+      "name": "code-editor",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base"
+      ],
+      "dependencies": [
+        "@codemirror/commands@^6.11.1",
+        "@codemirror/lang-sql@^6.10.0",
+        "@codemirror/language@^6.13.1",
+        "@codemirror/state@^6.7.6",
+        "@codemirror/view@^6.43.15",
+        "@lezer/highlight@^1.2.5"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/code-editor.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/code-editor.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/code-editor.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/code-editor.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/controls.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/controls.module.css"
+        }
+      ]
+    },
+    {
       "name": "code",
       "type": "registry:ui",
       "registryDependencies": [

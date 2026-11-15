@@ -43,13 +43,25 @@ const importsFrom = (file: string): string[] => {
   if (!/\.tsx?$/.test(file)) return [];
   const result = parseSync(file, read(file));
   if (result.errors.length) throw new Error(file + " does not parse");
-  return result.program.body.flatMap((statement) =>
-    (statement.type === "ImportDeclaration" ||
-      statement.type === "ExportNamedDeclaration" ||
-      statement.type === "ExportAllDeclaration") &&
-    statement.source
-      ? [statement.source.value]
-      : []
+  const dynamic: string[] = [];
+  const collect = (node: unknown): void => {
+    if (Array.isArray(node)) return node.forEach(collect);
+    if (!node || typeof node !== "object") return;
+    const record = node as Record<string, unknown> & { type?: string; source?: { type?: string; value?: unknown } };
+    if (record.type === "ImportExpression" && record.source?.type === "Literal" && typeof record.source.value === "string")
+      dynamic.push(record.source.value);
+    Object.values(record).forEach(collect);
+  };
+  collect(result.program);
+  return dynamic.concat(
+    result.program.body.flatMap((statement) =>
+      (statement.type === "ImportDeclaration" ||
+        statement.type === "ExportNamedDeclaration" ||
+        statement.type === "ExportAllDeclaration") &&
+      statement.source
+        ? [statement.source.value]
+        : []
+    )
   );
 };
 const portable = (file: string) => {
