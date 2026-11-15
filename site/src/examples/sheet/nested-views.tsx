@@ -50,7 +50,15 @@ const FolderSheet = ({
     <>
       <UI.Sheet
         open={open}
-        onOpenChange={(next) => (next ? setOpen(true) : guard.requestDiscard())}
+        onOpenChange={(next) => {
+          if (!next) {
+            guard.requestDiscard();
+            return;
+          }
+          setView(initialView);
+          setDraft(initialDraft);
+          setOpen(true);
+        }}
       >
         <UI.SheetTrigger asChild>
           <Button variant="outline">{label}</Button>
@@ -106,7 +114,11 @@ const FolderSheet = ({
               id="alert"
               title="New alert"
               size="lg"
-              dirty={draft.name !== "" || draft.recipients !== ""}
+              dirty={
+                draft.name !== blank.name ||
+                draft.recipients !== blank.recipients ||
+                draft.breakGlass !== blank.breakGlass
+              }
               discardDescription="This alert hasn't been created."
             >
               <MultiStep

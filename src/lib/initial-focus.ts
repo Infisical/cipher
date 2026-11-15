@@ -9,7 +9,7 @@ export const skipAutoFocus = { "data-skip-autofocus": "" } as const;
 
 const candidate = (element: HTMLElement) =>
   element.tabIndex >= 0 &&
-  !element.closest("[data-skip-autofocus]") &&
+  !element.closest("[data-skip-autofocus], [inert]") &&
   element.getClientRects().length > 0;
 
 /**

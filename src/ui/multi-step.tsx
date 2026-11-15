@@ -229,11 +229,13 @@ export const MultiStep = ({
   };
   const view = useSheetView();
   React.useEffect(() => {
-    if (variant === "view") view?.setPending(busy);
+    if (variant !== "view" || !view || !busy) return undefined;
+    view.setPending(true);
+    return () => view.setPending(false);
   }, [variant, view, busy]);
   const changeOpen = (next: boolean) => {
     if (!next && variant === "view") {
-      if (!busy) view?.back();
+      if (!busy) view?.back(onCancel);
       return;
     }
     if (!next) {

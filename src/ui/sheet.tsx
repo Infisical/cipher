@@ -20,9 +20,13 @@ type SheetIntercept = {
   escape: () => boolean;
   close: (proceed: () => void) => boolean;
 };
+type SheetViewLabels = { title: string; description: string };
 const SheetHostContext = React.createContext<{
   setViewSize: (size: SheetSize | undefined) => void;
+  setViewPending: (pending: boolean) => void;
+  setViewLabels: (labels: SheetViewLabels | undefined) => void;
   intercept: React.RefObject<SheetIntercept | null>;
+  interceptClose: (event: { preventDefault: () => void }) => void;
 } | null>(null);
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
@@ -37,14 +41,20 @@ SheetTrigger.displayName = "SheetTrigger";
 function SheetClose({
   ref,
   disabled,
+  onClick,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Close>) {
   const pending = useOverlayPending();
+  const host = React.useContext(SheetHostContext);
   return (
     <SheetPrimitive.Close
       ref={ref}
       data-slot="sheet-close"
       disabled={disabled || pending}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) host?.interceptClose(event);
+      }}
       {...props}
     />
   );
@@ -120,27 +130,35 @@ function SheetContent({
   pending?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<typeof SheetPrimitive.Content>> }) {
   const escape = useOwnedEscape(ref, onEscapeKeyDown);
-  const guard = useDismissGuard(pending, {
+  const [viewPending, setViewPending] = React.useState(false);
+  const blocked = pending || viewPending;
+  const guard = useDismissGuard(blocked, {
     onEscapeKeyDown: escape.onEscapeKeyDown,
     onPointerDownOutside,
     onInteractOutside
   });
   const [viewSize, setViewSize] = React.useState<SheetSize>();
+  const [viewLabels, setViewLabels] = React.useState<SheetViewLabels>();
   const intercept = React.useRef<SheetIntercept | null>(null);
-  const host = React.useMemo(() => ({ setViewSize, intercept }), []);
   const closeRef = React.useRef<HTMLButtonElement>(null);
   const closing = React.useRef(false);
-  const proceed = () => {
-    closing.current = true;
-    closeRef.current?.click();
-  };
-  const interceptClose = (event: { preventDefault: () => void }) => {
-    if (closing.current) {
+  const host = React.useMemo(() => {
+    const proceed = () => {
+      closing.current = true;
+      closeRef.current?.click();
       closing.current = false;
-      return;
-    }
-    if (intercept.current?.close(proceed)) event.preventDefault();
-  };
+    };
+    return {
+      setViewSize,
+      setViewPending,
+      setViewLabels,
+      intercept,
+      interceptClose: (event: { preventDefault: () => void }) => {
+        if (closing.current) return;
+        if (intercept.current?.close(proceed)) event.preventDefault();
+      }
+    };
+  }, []);
   const sections = splitOverlaySections(
     children,
     {
@@ -168,12 +186,15 @@ function SheetContent({
           overlay.sheet,
           className
         )}
-        aria-busy={pending || undefined}
+        aria-busy={blocked || undefined}
         onOpenAutoFocus={(event) => {
           onOpenAutoFocus?.(event);
           focusFirstControl(event);
         }}
         {...props}
+        {...(viewLabels
+          ? { "aria-labelledby": viewLabels.title, "aria-describedby": viewLabels.description }
+          : {})}
         {...guard}
         onEscapeKeyDown={(event) => {
           guard.onEscapeKeyDown(event);
@@ -181,11 +202,11 @@ function SheetContent({
         }}
         onInteractOutside={(event) => {
           guard.onInteractOutside(event);
-          if (!event.defaultPrevented) interceptClose(event);
+          if (!event.defaultPrevented) host.interceptClose(event);
         }}
       >
         <SheetHostContext value={host}>
-          <OverlayPendingContext value={pending}>
+          <OverlayPendingContext value={blocked}>
             {sections
               ? renderInForm(
                   sections.form,
@@ -204,8 +225,8 @@ function SheetContent({
                   variant="ghost"
                   className={overlay.close}
                   size="icon-sm"
-                  disabled={pending}
-                  onClick={interceptClose}
+                  disabled={blocked}
+                  onClick={host.interceptClose}
                 >
                   <Icon name="x" />
                   <span className="sr-only">Close</span>
@@ -279,13 +300,14 @@ SheetView.displayName = "SheetView";
 type SheetViewSlots = {
   subheader: HTMLElement | null;
   footer: HTMLElement | null;
-  /** Leaves the view through its discard guard, as Back does. */
-  back: () => void;
+  /** Leaves the view through its discard guard, as Back does. onLeave runs once leaving is accepted. */
+  back: (onLeave?: () => void) => void;
   /** Leaves the view without asking, once its work is saved. */
   done: () => void;
   setPending: (pending: boolean) => void;
 };
 const SheetViewContext = React.createContext<SheetViewSlots | null>(null);
+const SheetViewHiddenContext = React.createContext(false);
 /** The view a component renders in, for MultiStep's view variant: its subheader and footer slots and its exits. */
 const useSheetView = () => React.useContext(SheetViewContext);
 
@@ -301,11 +323,21 @@ function SheetViewFrame({
   view: SheetViewProps;
   trail: string[];
   active: boolean;
-  onBack: () => void;
+  onBack: (onLeave?: () => void) => void;
   onDone: () => void;
   backDisabled: boolean;
   setPending: (pending: boolean) => void;
 }) {
+  const host = React.useContext(SheetHostContext);
+  const titleId = React.useId();
+  const descriptionId = React.useId();
+  const labelled = active && trail.length > 0;
+  const hasDescription = Boolean(view.description);
+  React.useLayoutEffect(() => {
+    if (!host || !labelled) return undefined;
+    host.setViewLabels({ title: titleId, description: hasDescription ? descriptionId : "" });
+    return () => host.setViewLabels(undefined);
+  }, [host, labelled, hasDescription, titleId, descriptionId]);
   const [subheader, setSubheader] = React.useState<HTMLElement | null>(null);
   const [footer, setFooter] = React.useState<HTMLElement | null>(null);
   const slots = React.useMemo(
@@ -320,11 +352,11 @@ function SheetViewFrame({
           size="icon-sm"
           aria-label={"Back to " + trail[trail.length - 1]}
           disabled={backDisabled}
-          onClick={onBack}
+          onClick={() => onBack()}
         >
           <Icon name="chev-left" />
         </Button>
-        <h2 data-slot="sheet-title" className={overlay.viewTitle}>
+        <h2 id={titleId} data-slot="sheet-title" className={overlay.viewTitle}>
           {trail.map((name) => (
             <React.Fragment key={name}>
               <span className={overlay.viewTrail}>{name}</span>
@@ -336,7 +368,11 @@ function SheetViewFrame({
           {view.title}
         </h2>
       </div>
-      {view.description && <p data-slot="sheet-description">{view.description}</p>}
+      {view.description && (
+        <p id={descriptionId} data-slot="sheet-description">
+          {view.description}
+        </p>
+      )}
     </SheetHeader>
   ) : (
     view.header
@@ -350,23 +386,25 @@ function SheetViewFrame({
       className={overlay.view}
       {...(!active ? { inert: true, "aria-hidden": true } : {})}
     >
-      <SheetViewContext value={slots}>
-        <SheetLayout
-          head={
-            <>
-              {header}
-              <div ref={setSubheader} className={overlay.viewSlot} />
-            </>
-          }
-          scroll={view.children}
-          footer={
-            <div data-slot="sheet-foot" className={overlay.viewFoot}>
-              {view.footer}
-              <div ref={setFooter} className={overlay.viewSlot} />
-            </div>
-          }
-        />
-      </SheetViewContext>
+      <SheetViewHiddenContext value={!active}>
+        <SheetViewContext value={slots}>
+          <SheetLayout
+            head={
+              <>
+                {header}
+                <div ref={setSubheader} className={overlay.viewSlot} />
+              </>
+            }
+            scroll={view.children}
+            footer={
+              <div data-slot="sheet-foot" className={overlay.viewFoot}>
+                {view.footer}
+                <div ref={setFooter} className={overlay.viewSlot} />
+              </div>
+            }
+          />
+        </SheetViewContext>
+      </SheetViewHiddenContext>
     </div>
   );
 }
@@ -419,9 +457,17 @@ function SheetViews({
     returnFocus.current = null;
     setDiscard({ proceed, title: dirty.discardTitle, description: dirty.discardDescription });
   };
-  const back = () => {
+  const askEach = (dirty: SheetViewProps[], proceed: () => void) => {
+    const [first, ...rest] = dirty;
+    if (!first) proceed();
+    else ask(first, () => askEach(rest, proceed));
+  };
+  const back = (onLeave?: () => void) => {
     if (pending || !parentOf || !current) return;
-    ask(current.dirty ? current : undefined, () => onViewChange(parentOf.id));
+    ask(current.dirty ? current : undefined, () => {
+      onLeave?.();
+      onViewChange(parentOf.id);
+    });
   };
   const done = () => {
     if (parentOf) onViewChange(parentOf.id);
@@ -430,7 +476,7 @@ function SheetViews({
   React.useLayoutEffect(() => {
     latest.current = { back, done };
   });
-  const stableBack = React.useCallback(() => latest.current.back(), []);
+  const stableBack = React.useCallback((onLeave?: () => void) => latest.current.back(onLeave), []);
   const stableDone = React.useCallback(() => latest.current.done(), []);
   React.useLayoutEffect(() => {
     if (!host) return;
@@ -441,9 +487,13 @@ function SheetViews({
         return true;
       },
       close: (proceed) => {
-        const dirty = chain.slice(1).find((entry) => entry.dirty);
-        if (!dirty) return false;
-        ask(dirty, proceed);
+        if (pending) return true;
+        const dirty = chain
+          .slice(1)
+          .filter((entry) => entry.dirty)
+          .reverse();
+        if (!dirty.length) return false;
+        askEach(dirty, proceed);
         return true;
       }
     };
@@ -459,6 +509,11 @@ function SheetViews({
     },
     [host]
   );
+  React.useLayoutEffect(() => {
+    if (!host) return undefined;
+    host.setViewPending(pending);
+    return () => host.setViewPending(false);
+  }, [host, pending]);
   const frames = React.useRef(new Map<string, HTMLDivElement>());
   const openers = React.useRef(new Map<string, HTMLElement>());
   const shown = React.useRef(current?.id);
@@ -481,7 +536,9 @@ function SheetViews({
     const target =
       frame?.querySelector<HTMLElement>('[data-slot="sheet-scroll"] ' + formControlSelector) ??
       frame?.querySelector<HTMLElement>("button, [href], [tabindex]:not([tabindex='-1'])");
-    target?.focus({ preventScroll: true });
+    if (!target) return;
+    returnFocus.current = target;
+    target.focus({ preventScroll: true });
   });
   return (
     <div data-slot="sheet-views" className={overlay.views}>
@@ -591,13 +648,24 @@ SheetTitle.displayName = "SheetTitle";
 function SheetDescription({
   className,
   ref,
+  asChild,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Description>) {
+  if (React.useContext(SheetViewHiddenContext))
+    return (
+      <p
+        ref={ref}
+        data-slot="sheet-description"
+        className={cn("text-muted-foreground", className)}
+        {...props}
+      />
+    );
   return (
     <SheetPrimitive.Description
       ref={ref}
       data-slot="sheet-description"
       className={cn("text-muted-foreground", className)}
+      asChild={asChild}
       {...props}
     />
   );
