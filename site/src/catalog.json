@@ -944,6 +944,10 @@
       {
         "title": "Fixed widths",
         "module": "input/widths"
+      },
+      {
+        "title": "Page search: / focuses it",
+        "module": "input/page-search"
       }
     ]
   },

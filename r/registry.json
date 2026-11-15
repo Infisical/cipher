@@ -137,6 +137,11 @@
           "target": "src/components/cipher/lib/scroll-edges.ts"
         },
         {
+          "path": "src/components/cipher/lib/slash-shortcut.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/slash-shortcut.ts"
+        },
+        {
           "path": "src/components/cipher/lib/sliding-indicator.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/lib/sliding-indicator.tsx"
