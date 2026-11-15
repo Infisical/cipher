@@ -22,6 +22,7 @@
 :is(.frameHead, .frameFoot.frameFoot)
   [data-cipher-button]:not(:is([data-field-box], [data-slot="input-group"]) *) {
   --cipher-action-requested-height: var(--cipher-size-control-band);
+  --cipher-button-icon-size: var(--cipher-size-icon-sm);
 }
 :is(.frameHead, .frameFoot.frameFoot)
   [data-cipher-button]:is([data-size="xs"], [data-size="md"], [data-size="lg"]):not(

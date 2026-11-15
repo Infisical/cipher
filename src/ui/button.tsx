@@ -145,11 +145,13 @@ function Button({
   if (size === "xs" || size === "icon-xs") iconSize = 12;
   else if (size === "md" || size === "lg") iconSize = 16;
   else if (size === "icon-row") iconSize = undefined;
+  const iconDimension =
+    iconSize === undefined ? undefined : `var(--cipher-button-icon-size, ${iconSize}px)`;
   const trigger = layout === "trigger";
   const content = (label: React.ReactNode) => {
     const labelGroup = trigger ? (
       <>
-        {icon && <Icon icon={icon} size={iconSize} data-button-icon="" />}
+        {icon && <Icon icon={icon} size={iconDimension} data-button-icon="" />}
         <span data-slot="button-label" className={geometry.triggerLabel}>
           {label}
         </span>
@@ -161,9 +163,9 @@ function Button({
       </>
     ) : (
       <>
-        {icon && <Icon icon={icon} size={iconSize} data-button-icon="" />}
+        {icon && <Icon icon={icon} size={iconDimension} data-button-icon="" />}
         {iconOnly && (icon || iconRight) ? <span className="sr-only">{label}</span> : label}
-        {iconRight && <Icon icon={iconRight} size={iconSize} />}
+        {iconRight && <Icon icon={iconRight} size={iconDimension} />}
       </>
     );
     if (loadingProp === undefined) return labelGroup;
