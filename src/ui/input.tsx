@@ -71,7 +71,7 @@ export function Input({
   const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled;
   const accept = () => {
     const element = inner.current;
-    if (!element || !suggestedValue) return;
+    if (!element || !suggestedValue || element.value) return;
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(
       element,
       suggestedValue

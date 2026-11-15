@@ -875,7 +875,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   color: inherit;
   cursor: pointer;
 }
-[data-slot="input"]:not(:placeholder-shown) ~ .trailing > .suggestion {
+.bare:not(:placeholder-shown) ~ .trailing > .suggestion {
   display: none;
 }
 .switch[data-size] {
