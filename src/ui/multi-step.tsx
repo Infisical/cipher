@@ -38,9 +38,10 @@ import styles from "./multi-step.module.css";
 /**
  * false keeps the step (the step shows its own field errors). fields puts each message on the Field
  * with that name and focuses the first. message is the footer fallback, only for an error that has
- * no field and is not worth a toast. A thrown error is a toast.
+ * no field and is not worth a toast. A thrown error is a toast. Returned by a step's validate and by
+ * onComplete, whose fields land on the last step.
  */
-type ValidateResult = boolean | void | { fields?: FieldErrorMap; message?: string };
+export type MultiStepResult = boolean | void | { fields?: FieldErrorMap; message?: string };
 
 export interface MultiStepStep {
   title: string;
@@ -50,7 +51,7 @@ export interface MultiStepStep {
   content?: React.ReactNode;
   /** Renders the step with `next`, which validates and advances once the state set beside it has rendered, so a step that is a single pick can advance on pick. Used instead of content. */
   render?: (step: { next: () => void }) => React.ReactNode;
-  validate?: () => ValidateResult | Promise<ValidateResult>;
+  validate?: () => MultiStepResult | Promise<MultiStepResult>;
   nextLabel?: string;
   /** Blocks Continue (or the final action on the last step) and says why, as Button's disabledReason does: it stays focusable and shows the reason in a tooltip. */
   disabledReason?: string;
@@ -133,7 +134,7 @@ export type MultiStepProps = {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   trigger?: React.ReactElement;
-  onComplete?: () => void | Promise<unknown>;
+  onComplete?: () => MultiStepResult | Promise<MultiStepResult>;
   completeLabel?: string;
   onCancel?: () => void;
   step?: number;
@@ -233,31 +234,29 @@ export const MultiStep = ({
     refocus.current = false;
     activeStep()?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   });
+  const blocks = (result: MultiStepResult) => {
+    if (result === false) {
+      refocus.current = true;
+      return true;
+    }
+    if (!result || typeof result !== "object") return false;
+    const fields = result.fields ?? noErrors;
+    setFieldErrors(fields);
+    setError(result.message);
+    if (Object.values(fields).some(Boolean)) refocus.current = true;
+    return Object.values(fields).some(Boolean) || Boolean(result.message);
+  };
   const advance = async () => {
     if (busy || !entry || entry.disabledReason) return;
     setError(undefined);
     setBusy(true);
     try {
-      const result = await entry.validate?.();
-      if (result === false) {
-        refocus.current = true;
-        return;
-      }
-      if (result && typeof result === "object") {
-        const fields = result.fields ?? noErrors;
-        setFieldErrors(fields);
-        setError(result.message);
-        if (Object.values(fields).some(Boolean)) {
-          refocus.current = true;
-          return;
-        }
-        if (result.message) return;
-      }
+      if (blocks(await entry.validate?.())) return;
       if (!last) {
         move(current + 1);
         return;
       }
-      await onComplete?.();
+      if (blocks(await onComplete?.())) return;
       if (variant !== "page") {
         reset();
         setOpen(false);

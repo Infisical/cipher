@@ -1288,6 +1288,10 @@
       {
         "title": "Pick, configure and connect in a sheet",
         "module": "multi-step/pick"
+      },
+      {
+        "title": "Save errors on the final step",
+        "module": "multi-step/save-errors"
       }
     ]
   },
