@@ -32,7 +32,7 @@ const GLOB = /[*?[\]{}]/;
 
 const GLOB_FORMS = [
   { pattern: "*", hint: "Direct subfolders" },
-  { pattern: "**", hint: "This folder and subfolders" }
+  { pattern: "**", hint: "This folder and all subfolders" }
 ];
 
 type Suggestion = { path: string; label: string; hint?: string };
