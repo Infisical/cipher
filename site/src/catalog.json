@@ -862,6 +862,10 @@
         "module": "file-tree/states"
       },
       {
+        "title": "Row actions, inline rename and a context menu",
+        "module": "file-tree/editing"
+      },
+      {
         "title": "Folder picker and selected path",
         "module": "file-tree/picker"
       }

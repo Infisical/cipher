@@ -1,7 +1,10 @@
 import * as React from "react";
 
+import { useControllableState } from "../lib/use-controllable-state";
 import { AnimatedCollapse } from "./animated-collapse";
+import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "./context-menu";
 import { Icon, type IconSource } from "./icon";
+import { Input } from "./input";
 import { MiddleTruncate } from "./middle-truncate";
 
 import styles from "./data.module.css";
@@ -31,6 +34,19 @@ export interface FileTreeProps {
   maxHeight?: number;
   truncate?: "middle" | "end";
   empty?: React.ReactNode;
+  /** Buttons at the end of a row, shown while the row is hovered, focused or selected. */
+  renderActions?: (node: FileTreeNode) => React.ReactNode;
+  /** ContextMenuItem elements for a row's right-click and Shift+F10 menu. */
+  renderContextMenu?: (node: FileTreeNode) => React.ReactNode;
+  /** The row whose name is being edited in place. F2 starts it when onRename is set. */
+  renaming?: string | null;
+  onRenamingChange?: (id: string | null) => void;
+  /** Called with a changed, non-empty name. Return a message to keep editing and show it. */
+  onRename?: (
+    id: string,
+    name: string,
+    node: FileTreeNode
+  ) => string | void | Promise<string | void>;
 }
 const folder = (node: FileTreeNode) =>
   node.type ? node.type === "folder" : node.children !== undefined;
@@ -62,8 +78,25 @@ export function FileTree({
   size = "md",
   maxHeight,
   truncate = "middle",
-  empty = "No files"
+  empty = "No files",
+  renderActions,
+  renderContextMenu,
+  renaming,
+  onRenamingChange,
+  onRename
 }: FileTreeProps) {
+  const [editing, setEditing] = useControllableState<string | null>({
+    value: renaming,
+    defaultValue: null,
+    onChange: onRenamingChange
+  });
+  const [renameError, setRenameError] = React.useState<{ id: string; message: string }>();
+  const editingRef = React.useRef(editing);
+  React.useLayoutEffect(() => {
+    editingRef.current = editing;
+  });
+  const error = renameError && renameError.id === editing ? renameError.message : undefined;
+  const [renamePending, setRenamePending] = React.useState(false);
   const [ownExpanded, setOwnExpanded] = React.useState<readonly string[]>(() => [
     ...new Set([
       ...defaultExpanded,
@@ -147,6 +180,35 @@ export function FileTree({
       onSelect?.(node.id, node);
     } else if (folder(node) && !node.disabled) expand(node.id, !open.includes(node.id));
   };
+  const startRename = (id: string) => {
+    setRenameError(undefined);
+    setEditing(id);
+  };
+  const stopRename = (id: string) => {
+    setRenameError(undefined);
+    setEditing(null);
+    requestAnimationFrame(() => focus(id));
+  };
+  const commitRename = async (node: FileTreeNode, input: HTMLInputElement) => {
+    const name = input.value.trim();
+    if (renamePending) return;
+    if (!name || name === node.name || !onRename) {
+      stopRename(node.id);
+      return;
+    }
+    setRenamePending(true);
+    let message: string | void;
+    try {
+      message = await onRename(node.id, name, node);
+    } catch (failure) {
+      message = failure instanceof Error ? failure.message : "Couldn't rename. Try again.";
+    } finally {
+      setRenamePending(false);
+    }
+    if (editingRef.current !== node.id) return;
+    if (message) setRenameError({ id: node.id, message });
+    else if (input.value.trim() === name) stopRename(node.id);
+  };
   const onKey = (event: React.KeyboardEvent<HTMLLIElement>, node: FileTreeNode) => {
     if (event.target !== event.currentTarget) return;
     const index = visible.findIndex((entry) => entry.node.id === node.id);
@@ -180,6 +242,10 @@ export function FileTree({
       case " ":
         pick(node);
         break;
+      case "F2":
+        if (onRename && !node.disabled) startRename(node.id);
+        else handled = false;
+        break;
       default:
         handled = false;
         if (
@@ -207,87 +273,172 @@ export function FileTree({
       event.stopPropagation();
     }
   };
+  const withMenu = (node: FileTreeNode, item: React.ReactElement) =>
+    renderContextMenu ? (
+      <ContextMenu key={node.id}>
+        <ContextMenuTrigger asChild disabled={editing === node.id}>
+          {item}
+        </ContextMenuTrigger>
+        <ContextMenuContent
+          aria-label={`Actions for ${node.name}`}
+          onClick={(event) => event.stopPropagation()}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            const row = targets.current.get(node.id);
+            if (editingRef.current === node.id) row?.querySelector("input")?.focus();
+            else row?.focus();
+          }}
+        >
+          {renderContextMenu(node)}
+        </ContextMenuContent>
+      </ContextMenu>
+    ) : (
+      item
+    );
   const render = (nodes: readonly FileTreeNode[], level: number): React.ReactNode =>
     nodes
       .filter((node) => !foldersOnly || folder(node))
-      .map((node, index, shown) => (
-        <li
-          key={node.id}
-          ref={(element) => {
-            if (element) targets.current.set(node.id, element);
-            else targets.current.delete(node.id);
-          }}
-          role="treeitem"
-          aria-level={level}
-          aria-setsize={shown.length}
-          aria-posinset={index + 1}
-          aria-expanded={folder(node) ? open.includes(node.id) : undefined}
-          aria-selected={current === node.id}
-          aria-disabled={node.disabled || undefined}
-          aria-label={node.label ?? node.name}
-          tabIndex={focusId === node.id ? 0 : -1}
-          onFocus={(event) => {
-            if (event.target === event.currentTarget) setFocused(node.id);
-          }}
-          onKeyDown={(event) => onKey(event, node)}
-          onClick={(event) => {
-            event.stopPropagation();
-            focus(node.id);
-            pick(node);
-          }}
-        >
-          <div
-            className={styles.treeRow}
-            data-size={size}
-            data-selected={current === node.id}
+      .map((node, index, shown) =>
+        withMenu(
+          node,
+          <li
+            key={node.id}
+            ref={(element) => {
+              if (element) targets.current.set(node.id, element);
+              else targets.current.delete(node.id);
+            }}
+            role="treeitem"
+            aria-level={level}
+            aria-setsize={shown.length}
+            aria-posinset={index + 1}
+            aria-expanded={folder(node) ? open.includes(node.id) : undefined}
+            aria-selected={current === node.id}
             aria-disabled={node.disabled || undefined}
+            aria-label={node.label ?? node.name}
+            tabIndex={focusId === node.id ? 0 : -1}
+            onFocus={(event) => {
+              if (event.target === event.currentTarget) setFocused(node.id);
+            }}
+            onKeyDown={(event) => onKey(event, node)}
+            onClick={(event) => {
+              event.stopPropagation();
+              focus(node.id);
+              pick(node);
+            }}
           >
+            <div
+              className={styles.treeRow}
+              data-size={size}
+              data-selected={current === node.id}
+              aria-disabled={node.disabled || undefined}
+            >
+              {folder(node) && (
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  disabled={node.disabled}
+                  aria-label={`${open.includes(node.id) ? "Collapse" : "Expand"} ${node.name}`}
+                  aria-expanded={open.includes(node.id)}
+                  aria-controls={`${uid}-${node.id}`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    focus(node.id);
+                    expand(node.id, !open.includes(node.id));
+                  }}
+                >
+                  {" "}
+                  {open.includes(node.id) ? "▾" : "▸"}{" "}
+                </button>
+              )}
+              <Icon
+                icon={
+                  node.icon ??
+                  (folder(node) ? (open.includes(node.id) ? "folder-open" : "folder") : "file")
+                }
+                className={
+                  (node.icon === undefined && folder(node)) ||
+                  node.icon === "folder" ||
+                  node.icon === "folder-open"
+                    ? styles.treeFolder
+                    : undefined
+                }
+              />
+              {editing === node.id ? (
+                <Input
+                  size="xs"
+                  aria-label={`Rename ${node.name}`}
+                  defaultValue={node.name}
+                  aria-busy={renamePending || undefined}
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={error ? `${uid}-${node.id}-error` : undefined}
+                  className={styles.treeRename}
+                  ref={(input: HTMLInputElement | null) => {
+                    if (!input || input.dataset.ready) return;
+                    input.dataset.ready = "true";
+                    input.focus();
+                    const dot = folder(node) ? -1 : node.name.lastIndexOf(".");
+                    input.setSelectionRange(0, dot > 0 ? dot : node.name.length);
+                  }}
+                  onClick={(event) => event.stopPropagation()}
+                  onContextMenu={(event) => event.stopPropagation()}
+                  onKeyDown={(event) => {
+                    event.stopPropagation();
+                    if (event.nativeEvent.isComposing) return;
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      commitRename(node, event.currentTarget);
+                    } else if (event.key === "Escape") {
+                      event.preventDefault();
+                      stopRename(node.id);
+                    }
+                  }}
+                  onChange={() => setRenameError(undefined)}
+                  onBlur={(event) => {
+                    if (!error) commitRename(node, event.currentTarget);
+                  }}
+                />
+              ) : (
+                <span className={styles.treeName} title={node.name}>
+                  {truncate === "middle" ? (
+                    <MiddleTruncate text={node.name} keepEnd={8} />
+                  ) : (
+                    node.name
+                  )}
+                </span>
+              )}
+              {editing === node.id && error ? (
+                <span
+                  id={`${uid}-${node.id}-error`}
+                  role="alert"
+                  title={error}
+                  className={styles.treeError}
+                >
+                  {error}
+                </span>
+              ) : (
+                node.meta && <span className={styles.treeMeta}>{node.meta}</span>
+              )}
+              {renderActions && editing !== node.id && (
+                <span
+                  className={styles.treeActions}
+                  onClick={(event) => event.stopPropagation()}
+                  onKeyDown={(event) => event.stopPropagation()}
+                >
+                  {renderActions(node)}
+                </span>
+              )}
+            </div>
             {folder(node) && (
-              <button
-                type="button"
-                tabIndex={-1}
-                disabled={node.disabled}
-                aria-label={`${open.includes(node.id) ? "Collapse" : "Expand"} ${node.name}`}
-                aria-expanded={open.includes(node.id)}
-                aria-controls={`${uid}-${node.id}`}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  focus(node.id);
-                  expand(node.id, !open.includes(node.id));
-                }}
-              >
-                {" "}
-                {open.includes(node.id) ? "▾" : "▸"}{" "}
-              </button>
+              <AnimatedCollapse open={open.includes(node.id)} lazy>
+                <ul role="group" id={`${uid}-${node.id}`}>
+                  {render(node.children ?? [], level + 1)}
+                </ul>
+              </AnimatedCollapse>
             )}
-            <Icon
-              icon={
-                node.icon ??
-                (folder(node) ? (open.includes(node.id) ? "folder-open" : "folder") : "file")
-              }
-              className={
-                (node.icon === undefined && folder(node)) ||
-                node.icon === "folder" ||
-                node.icon === "folder-open"
-                  ? styles.treeFolder
-                  : undefined
-              }
-            />
-            <span className={styles.treeName} title={node.name}>
-              {truncate === "middle" ? <MiddleTruncate text={node.name} keepEnd={8} /> : node.name}
-            </span>
-            {node.meta && <span className={styles.treeMeta}>{node.meta}</span>}
-          </div>
-          {folder(node) && (
-            <AnimatedCollapse open={open.includes(node.id)} lazy>
-              <ul role="group" id={`${uid}-${node.id}`}>
-                {render(node.children ?? [], level + 1)}
-              </ul>
-            </AnimatedCollapse>
-          )}
-        </li>
-      ));
+          </li>
+        )
+      );
   return visible.length ? (
     <ul
       ref={tree}
