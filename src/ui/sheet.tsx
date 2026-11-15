@@ -20,7 +20,7 @@ type SheetIntercept = {
   escape: () => boolean;
   close: (proceed: () => void) => boolean;
 };
-type SheetViewLabels = { title: string; description: string };
+type SheetViewLabels = { title?: string; description?: string };
 const SheetHostContext = React.createContext<{
   setViewSize: (size: SheetSize | undefined) => void;
   setViewPending: (pending: boolean) => void;
@@ -192,9 +192,8 @@ function SheetContent({
           focusFirstControl(event);
         }}
         {...props}
-        {...(viewLabels
-          ? { "aria-labelledby": viewLabels.title, "aria-describedby": viewLabels.description }
-          : {})}
+        {...(viewLabels?.title ? { "aria-labelledby": viewLabels.title } : {})}
+        {...(viewLabels ? { "aria-describedby": viewLabels.description } : {})}
         {...guard}
         onEscapeKeyDown={(event) => {
           guard.onEscapeKeyDown(event);
@@ -307,7 +306,9 @@ type SheetViewSlots = {
   setPending: (pending: boolean) => void;
 };
 const SheetViewContext = React.createContext<SheetViewSlots | null>(null);
-const SheetViewHiddenContext = React.createContext(false);
+const SheetViewDescribeContext = React.createContext<((id: string | undefined) => void) | null>(
+  null
+);
 /** The view a component renders in, for MultiStep's view variant: its subheader and footer slots and its exits. */
 const useSheetView = () => React.useContext(SheetViewContext);
 
@@ -332,12 +333,16 @@ function SheetViewFrame({
   const titleId = React.useId();
   const descriptionId = React.useId();
   const labelled = active && trail.length > 0;
-  const hasDescription = Boolean(view.description);
+  const [describedBy, setDescribedBy] = React.useState<string>();
+  const ownDescription = labelled && view.description ? descriptionId : undefined;
   React.useLayoutEffect(() => {
-    if (!host || !labelled) return undefined;
-    host.setViewLabels({ title: titleId, description: hasDescription ? descriptionId : "" });
+    if (!host || !active) return undefined;
+    host.setViewLabels({
+      title: labelled ? titleId : undefined,
+      description: ownDescription ?? describedBy
+    });
     return () => host.setViewLabels(undefined);
-  }, [host, labelled, hasDescription, titleId, descriptionId]);
+  }, [host, active, labelled, titleId, ownDescription, describedBy]);
   const [subheader, setSubheader] = React.useState<HTMLElement | null>(null);
   const [footer, setFooter] = React.useState<HTMLElement | null>(null);
   const slots = React.useMemo(
@@ -386,7 +391,7 @@ function SheetViewFrame({
       className={overlay.view}
       {...(!active ? { inert: true, "aria-hidden": true } : {})}
     >
-      <SheetViewHiddenContext value={!active}>
+      <SheetViewDescribeContext value={setDescribedBy}>
         <SheetViewContext value={slots}>
           <SheetLayout
             head={
@@ -404,7 +409,7 @@ function SheetViewFrame({
             }
           />
         </SheetViewContext>
-      </SheetViewHiddenContext>
+      </SheetViewDescribeContext>
     </div>
   );
 }
@@ -649,12 +654,22 @@ function SheetDescription({
   className,
   ref,
   asChild,
+  id,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Description>) {
-  if (React.useContext(SheetViewHiddenContext))
+  const describe = React.useContext(SheetViewDescribeContext);
+  const ownId = React.useId();
+  const viewId = id ?? ownId;
+  React.useLayoutEffect(() => {
+    if (!describe) return undefined;
+    describe(viewId);
+    return () => describe(undefined);
+  }, [describe, viewId]);
+  if (describe)
     return (
       <p
         ref={ref}
+        id={viewId}
         data-slot="sheet-description"
         className={cn("text-muted-foreground", className)}
         {...props}
@@ -666,6 +681,7 @@ function SheetDescription({
       data-slot="sheet-description"
       className={cn("text-muted-foreground", className)}
       asChild={asChild}
+      id={id}
       {...props}
     />
   );
