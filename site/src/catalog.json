@@ -490,6 +490,10 @@
         "module": "combobox/creation"
       },
       {
+        "title": "Create through your own MultiStep dialog",
+        "module": "combobox/create-flow"
+      },
+      {
         "title": "Async search",
         "module": "combobox/async"
       },
@@ -856,6 +860,10 @@
       {
         "title": "Selection, empty and controlled expansion",
         "module": "file-tree/states"
+      },
+      {
+        "title": "Row actions, inline rename and a context menu",
+        "module": "file-tree/editing"
       },
       {
         "title": "Folder picker and selected path",
@@ -1288,6 +1296,10 @@
       {
         "title": "Pick, configure and connect in a sheet",
         "module": "multi-step/pick"
+      },
+      {
+        "title": "Destructive final step with an icon",
+        "module": "multi-step/destructive"
       },
       {
         "title": "Save errors on the final step",

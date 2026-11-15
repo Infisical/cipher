@@ -18,7 +18,7 @@ import {
   DialogTrigger
 } from "./dialog";
 import { FieldErrors } from "./field";
-import { Icon } from "./icon";
+import { Icon, type IconName } from "./icon";
 import { ProgressSteps } from "./progress";
 import { toast } from "./sonner";
 import {
@@ -55,6 +55,9 @@ export interface MultiStepStep {
   nextLabel?: string;
   /** Blocks Continue (or the final action on the last step) and says why, as Button's disabledReason does: it stays focusable and shows the reason in a tooltip. */
   disabledReason?: string;
+  /** The final action's look when this is the last step: destructive for an irreversible submit, such as a break-glass request. */
+  completeVariant?: "primary" | "destructive";
+  completeIcon?: IconName;
 }
 
 export type StepsProps = {
@@ -371,7 +374,8 @@ export const MultiStep = ({
         <Button
           type="submit"
           form={formId}
-          variant="primary"
+          variant={last ? (entry.completeVariant ?? "primary") : "primary"}
+          icon={last ? entry.completeIcon : undefined}
           size="sm"
           loading={busy}
           disabledReason={entry.disabledReason}

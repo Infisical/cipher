@@ -1350,7 +1350,9 @@
       "registryDependencies": [
         "@cipher/animated-collapse",
         "@cipher/cipher-base",
+        "@cipher/context-menu",
         "@cipher/icon",
+        "@cipher/input",
         "@cipher/middle-truncate"
       ],
       "files": [

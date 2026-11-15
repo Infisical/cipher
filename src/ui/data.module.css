@@ -526,6 +526,41 @@
   flex: 1;
   min-width: 0;
 }
+.treeRename {
+  flex: 1;
+  min-width: 96px;
+}
+.treeError {
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  color: var(--cipher-bad);
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.treeActions {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-4);
+  opacity: 0;
+}
+.treeRow:hover .treeActions,
+.treeRow:focus-within .treeActions,
+.tree [role="treeitem"]:focus-visible > .treeRow .treeActions,
+.treeRow[data-selected="true"] .treeActions,
+.treeActions:has([data-state="open"]),
+.treeActions:has([aria-expanded="true"]) {
+  opacity: 1;
+}
+@media (hover: none) {
+  .treeActions {
+    opacity: 1;
+  }
+}
 .treeMeta {
   font-family: var(--cipher-type-mono-sm-font-family);
   font-size: var(--cipher-type-mono-sm-font-size);
