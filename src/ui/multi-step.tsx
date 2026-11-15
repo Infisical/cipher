@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "./dialog";
-import { FieldErrors } from "./field";
+import { Field, FieldErrors } from "./field";
 import { Icon, type IconName } from "./icon";
 import { ProgressSteps } from "./progress";
 import { toast } from "./sonner";
@@ -155,7 +155,8 @@ const holdsField = (node: React.ReactNode, name: string): boolean =>
   React.Children.toArray(node).some(
     (child) =>
       React.isValidElement<{ name?: unknown; children?: React.ReactNode }>(child) &&
-      (child.props.name === name || holdsField(child.props.children, name))
+      ((child.type === Field && child.props.name === name) ||
+        holdsField(child.props.children, name))
   );
 
 export const MultiStep = ({
@@ -224,15 +225,22 @@ export const MultiStep = ({
   }, []);
   const routed = React.useRef(new Map<number, FieldErrorMap>());
   const move = (target: number) => {
-    const waiting = routed.current.get(target);
-    routed.current.delete(target);
     setError(undefined);
-    setFieldErrors(waiting ?? noErrors);
-    if (waiting) refocus.current = true;
+    setFieldErrors(noErrors);
     setDirection(target > current ? 1 : -1);
     moved.current = true;
     setCurrent(target);
   };
+  React.useLayoutEffect(() => {
+    if (!routed.current.size) return;
+    const waiting = routed.current.get(current);
+    routed.current.delete(current);
+    setFieldErrors(waiting ?? noErrors);
+    if (waiting) refocus.current = true;
+  }, [current]);
+  React.useEffect(() => {
+    if (!isOpen) routed.current.clear();
+  }, [isOpen]);
   const reset = () => {
     routed.current.clear();
     setError(undefined);
@@ -289,7 +297,7 @@ export const MultiStep = ({
           byStep.set(target, { ...byStep.get(target), [name]: message });
         });
         const earliest = byStep.size ? Math.min(...byStep.keys()) : (override ?? current);
-        if (earliest < current) {
+        if ((byStep.size || result.message) && earliest < current) {
           routed.current = byStep;
           move(earliest);
           setError(result.message);
