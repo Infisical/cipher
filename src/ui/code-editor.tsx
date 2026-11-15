@@ -41,6 +41,8 @@ export type CodeEditorProps = Omit<
 
 type Loaded = Awaited<ReturnType<typeof loadEditor>>;
 
+const lineFeeds = (text: string) => text.replace(/\r\n?/g, "\n");
+
 let editorModules: Promise<Loaded> | undefined;
 
 async function loadEditor() {
@@ -144,7 +146,7 @@ export function CodeEditor({
   latest.current = { value, onChange, onRun, onSelectionChange };
   const [load, setLoad] = React.useState<"loading" | "ready" | "failed">("loading");
   const [, rerender] = React.useReducer((count: number) => count + 1, 0);
-  const handoff = React.useRef<{ anchor: number; head: number } | null>(null);
+  const handoff = React.useRef<{ anchor: number; head: number; focus: boolean } | null>(null);
   const fallbackSelection = React.useRef("");
   const ariaInvalid = field["aria-invalid"];
   const invalidValue = invalid
@@ -214,17 +216,20 @@ export function CodeEditor({
       (modules) => {
         const host = hostRef.current;
         if (disposed || !host) return;
-        const { view, state, commands, language, highlightStyle, theme } = modules;
+        const { view, state, commands, language, highlightStyle, theme, external } = modules;
         const compartment = new state.Compartment();
         const selected = (editorState: EditorState) => {
           const range = editorState.selection.main;
           return range.empty ? "" : editorState.sliceDoc(range.from, range.to);
         };
         const fallback = fallbackRef.current;
-        handoff.current =
-          fallback && document.activeElement === fallback
-            ? { anchor: fallback.selectionStart, head: fallback.selectionEnd }
-            : null;
+        handoff.current = fallback
+          ? {
+              anchor: fallback.selectionStart,
+              head: fallback.selectionEnd,
+              focus: document.activeElement === fallback
+            }
+          : null;
         const editor = new view.EditorView({
           parent: host,
           state: state.EditorState.create({
@@ -252,9 +257,12 @@ export function CodeEditor({
               theme,
               compartment.of(configureRef.current(modules)),
               view.EditorView.updateListener.of((update) => {
-                if (update.docChanged) {
+                const fromValue = update.transactions.some((transaction) =>
+                  transaction.annotation(external)
+                );
+                if (update.docChanged && !fromValue) {
                   const next = update.state.doc.toString();
-                  if (next !== latest.current.value) {
+                  if (next !== lineFeeds(latest.current.value)) {
                     latest.current.onChange?.(next);
                     rerender();
                   }
@@ -309,7 +317,7 @@ export function CodeEditor({
         head: Math.min(selection.head, length)
       }
     });
-    editor.focus();
+    if (selection.focus) editor.focus();
   }, [load]);
 
   React.useEffect(() => {
@@ -317,7 +325,7 @@ export function CodeEditor({
     const modules = modulesRef.current;
     if (load !== "ready" || !editor || !modules) return;
     const current = editor.state.doc.toString();
-    if (current === value) return;
+    if (current === lineFeeds(value)) return;
     editor.dispatch({
       changes: { from: 0, to: current.length, insert: value },
       annotations: modules.external.of(true)
