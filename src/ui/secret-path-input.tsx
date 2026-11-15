@@ -24,9 +24,18 @@ export type SecretPathInputProps = Omit<
   folders?: readonly string[];
   /** Called on mount and whenever the typed path enters another folder, with that folder's path ("/" or "/app/api"), so the host loads its children into folders. */
   onParentPathChange?: (parentPath: string) => void;
+  /** Also suggests the glob forms of the current folder: "<folder>/*" for its direct subfolders and "<folder>/**" for the folder itself and every folder under it. Shown after the folders while folders is not empty. */
+  globSuggestions?: boolean;
 };
 
 const GLOB = /[*?[\]{}]/;
+
+const GLOB_FORMS = [
+  { pattern: "*", hint: "Direct subfolders" },
+  { pattern: "**", hint: "This folder and all subfolders" }
+];
+
+type Suggestion = { path: string; label: string; hint?: string };
 
 const splitPath = (path: string) => {
   const cut = path.lastIndexOf("/");
@@ -42,6 +51,7 @@ export function SecretPathInput({
   onChange,
   folders = [],
   onParentPathChange,
+  globSuggestions = false,
   mono = true,
   disabled,
   readOnly,
@@ -70,11 +80,20 @@ export function SecretPathInput({
   const listId = React.useId();
   const optionId = (index: number) => `${listId}-${index}`;
   const typed = segment.toLowerCase();
-  const suggestions = GLOB.test(value)
+  const base = parent === "/" ? "" : parent;
+  const folderSuggestions: Suggestion[] = GLOB.test(value)
     ? []
     : [...new Set(folders)]
         .filter((name) => name.toLowerCase().startsWith(typed))
-        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
+        .map((name) => ({ path: `${base}/${name}/`, label: name }));
+  const globRows: Suggestion[] =
+    globSuggestions && folders.length > 0 && !GLOB.test(parent)
+      ? GLOB_FORMS.filter(({ pattern }) => pattern !== segment && pattern.startsWith(segment)).map(
+          ({ pattern, hint }) => ({ path: `${base}/${pattern}`, label: pattern, hint })
+        )
+      : [];
+  const suggestions = [...folderSuggestions, ...globRows];
   const open = focused && !dismissed && !disabled && !readOnly && suggestions.length > 0;
   const current = open && active < suggestions.length ? active : -1;
 
@@ -88,7 +107,10 @@ export function SecretPathInput({
     setDismissed(false);
     setActive(-1);
   };
-  const choose = (name: string) => change(`${parent === "/" ? "" : parent}/${name}/`);
+  const choose = ({ path, hint }: Suggestion) => {
+    change(path);
+    if (hint) setDismissed(true);
+  };
 
   return (
     <Popover
@@ -169,22 +191,29 @@ export function SecretPathInput({
           data-scroll-fade="y"
           className={cn(menu.list, menu.inset)}
         >
-          {suggestions.map((name, index) => (
-            <div
-              key={name}
-              id={optionId(index)}
-              role="option"
-              tabIndex={-1}
-              aria-selected={index === current}
-              data-active={index === current || undefined}
-              className={cn(menu.row, styles.option)}
-              onPointerMove={() => setActive(index)}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => choose(name)}
-            >
-              <Icon name="folder" />
-              <span className={styles.optionLabel}>{name}</span>
-            </div>
+          {suggestions.map((suggestion, index) => (
+            <React.Fragment key={suggestion.path}>
+              {suggestion.hint && index === folderSuggestions.length && index > 0 && (
+                <div aria-hidden className={menu.separator} />
+              )}
+              <div
+                id={optionId(index)}
+                role="option"
+                tabIndex={-1}
+                aria-selected={index === current}
+                data-active={index === current || undefined}
+                className={cn(menu.row, styles.option)}
+                onPointerMove={() => setActive(index)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => choose(suggestion)}
+              >
+                <Icon name={suggestion.hint ? "folder-open" : "folder"} />
+                <span className={cn(styles.optionLabel, suggestion.hint && styles.optionGlob)}>
+                  {suggestion.label}
+                </span>
+                {suggestion.hint && <span className={styles.optionMeta}>{suggestion.hint}</span>}
+              </div>
+            </React.Fragment>
           ))}
           <ListHighlight />
         </div>
