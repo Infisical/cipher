@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../lib/utils";
+import { cn, truncateTitle } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
 
@@ -10,25 +10,57 @@ type TextProps = React.ComponentPropsWithoutRef<"p"> & {
   muted?: boolean;
   /** Keeps the line breaks and spaces in user-entered text, such as notes, and still wraps long lines. */
   preWrap?: boolean;
+  /** Keeps the text on one line and ends it in an ellipsis, with a string child as its title. */
+  truncate?: boolean;
 } & { ref?: React.Ref<HTMLParagraphElement> };
 
-export function Text({ muted = false, preWrap = false, className, ref, ...props }: TextProps) {
+export function Text({
+  muted = false,
+  preWrap = false,
+  truncate = false,
+  title,
+  className,
+  ref,
+  ...props
+}: TextProps) {
   return (
     <p
       ref={ref}
       data-slot="text"
-      className={cn(styles.text, muted && styles.muted, preWrap && styles.preWrap, className)}
+      title={truncateTitle(truncate, title, props.children)}
+      className={cn(
+        styles.text,
+        muted && styles.muted,
+        preWrap && styles.preWrap,
+        truncate && styles.endTruncate,
+        className
+      )}
       {...props}
     />
   );
 }
 Text.displayName = "Text";
-export function SmallText({ muted = false, preWrap = false, className, ref, ...props }: TextProps) {
+export function SmallText({
+  muted = false,
+  preWrap = false,
+  truncate = false,
+  title,
+  className,
+  ref,
+  ...props
+}: TextProps) {
   return (
     <p
       ref={ref}
       data-slot="small-text"
-      className={cn(styles.small, muted && styles.muted, preWrap && styles.preWrap, className)}
+      title={truncateTitle(truncate, title, props.children)}
+      className={cn(
+        styles.small,
+        muted && styles.muted,
+        preWrap && styles.preWrap,
+        truncate && styles.endTruncate,
+        className
+      )}
       {...props}
     />
   );
@@ -59,17 +91,20 @@ export function Heading({
 Heading.displayName = "Heading";
 export function Meta({
   mono = true,
+  truncate = false,
+  title,
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"span"> & { mono?: boolean } & {
+}: React.ComponentPropsWithoutRef<"span"> & { mono?: boolean; truncate?: boolean } & {
   ref?: React.Ref<HTMLSpanElement>;
 }) {
   return (
     <span
       ref={ref}
       data-slot="meta"
-      className={cn(styles.meta, mono && styles.mono, className)}
+      title={truncateTitle(truncate, title, props.children)}
+      className={cn(styles.meta, mono && styles.mono, truncate && styles.endTruncate, className)}
       {...props}
     />
   );

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../lib/utils";
+import { cn, truncateTitle } from "../lib/utils";
 
 import detailStyles from "./detail-layout.module.css";
 import styles from "./text.module.css";
@@ -107,10 +107,46 @@ export function InlineGrow({
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
   return (
-    <div ref={ref} data-slot="inline-grow" className={cn(styles.inlineGrow, className)} {...props} />
+    <div
+      ref={ref}
+      data-slot="inline-grow"
+      className={cn(styles.inlineGrow, className)}
+      {...props}
+    />
   );
 }
 InlineGrow.displayName = "InlineGrow";
+/**
+ * An Inline child that sets how it sits in the row. shrink={false} keeps a badge, button or
+ * timestamp at its own width while a sibling truncates; truncate ends plain content in an ellipsis
+ * on one line. A truncating row needs Inline wrap={false}, or the long child moves to its own line.
+ */
+export function InlineItem({
+  shrink = true,
+  truncate = false,
+  title,
+  className,
+  ref,
+  ...props
+}: React.ComponentPropsWithoutRef<"div"> & { shrink?: boolean; truncate?: boolean } & {
+  ref?: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <div
+      ref={ref}
+      data-slot="inline-item"
+      title={truncateTitle(truncate, title, props.children)}
+      className={cn(
+        styles.inlineItem,
+        !shrink && styles.inlineFixed,
+        truncate && styles.endTruncate,
+        className
+      )}
+      {...props}
+    />
+  );
+}
+InlineItem.displayName = "InlineItem";
 export function Grid({
   gap = 16,
   columns,

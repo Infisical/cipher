@@ -1184,6 +1184,26 @@
     ]
   },
   {
+    "id": "inline-truncate",
+    "title": "Truncate in a row",
+    "summary": "End long values in an ellipsis while badges, icons and timestamps keep their width.",
+    "group": "Utilities",
+    "examples": [
+      {
+        "title": "Empty and short values",
+        "module": "inline-truncate/empty"
+      },
+      {
+        "title": "Typical rows",
+        "module": "inline-truncate/default"
+      },
+      {
+        "title": "Long values, many rows and narrow widths",
+        "module": "inline-truncate/stressed"
+      }
+    ]
+  },
+  {
     "id": "multi-select",
     "title": "Multi-select",
     "summary": "Choose several known options without closing after each selection.",
