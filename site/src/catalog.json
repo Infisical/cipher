@@ -284,6 +284,10 @@
       {
         "title": "Single date and date range",
         "module": "calendar/default"
+      },
+      {
+        "title": "In a popover: sized to the calendar, focus on edge days",
+        "module": "calendar/popover"
       }
     ]
   },

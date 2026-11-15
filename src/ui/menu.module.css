@@ -46,7 +46,8 @@
 .card[data-width="md"] {
   width: min(var(--cipher-size-sheet-md), var(--radix-popper-available-width, 100vw));
 }
-.card[data-width="content"] {
+.card[data-width="content"],
+.card:not([data-width]):has(> [data-slot="calendar"]) {
   width: max-content;
   max-width: min(var(--cipher-size-dialog-wide), var(--radix-popper-available-width, 100vw));
 }

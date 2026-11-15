@@ -67,7 +67,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "group/calendar max-w-full overflow-x-auto bg-background p-2 [--cell-radius:0px] [--cell-size:var(--cipher-size-control-default)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent in-data-[slot=popover-content]:p-0",
+        "group/calendar max-w-full overflow-x-auto bg-background p-2 [--cell-radius:0px] [--cell-size:var(--cipher-size-control-default)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:-m-(--cipher-focus-clearance) in-data-[slot=popover-content]:max-w-[calc(100%+2*var(--cipher-focus-clearance))] in-data-[slot=popover-content]:bg-transparent in-data-[slot=popover-content]:p-(--cipher-focus-clearance)",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
@@ -139,7 +139,7 @@ function Calendar({
         ),
         day: cn(
           controlStyles.body,
-          "group/day relative h-(--cell-size) w-full min-w-(--cell-size) rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)",
+          "group/day relative h-(--cell-size) w-full min-w-(--cell-size) rounded-(--cell-radius) p-0 text-center select-none data-[focused=true]:z-20 [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)",
           props.showWeekNumber
             ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-(--cell-radius)"
             : "[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius)",
