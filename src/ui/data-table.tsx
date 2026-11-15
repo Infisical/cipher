@@ -326,34 +326,28 @@ export function DataTable<Row>({
   React.useLayoutEffect(() => {
     const container = scroll.current;
     if (!flowing || !container) return;
-    const root = document.documentElement;
-    const viewportScroll = (element: HTMLElement) =>
-      element === root ||
-      (element === document.body &&
-        (getComputedStyle(root).overflowY === "visible" ||
-          element.scrollHeight <= element.clientHeight));
     let scroller = container.parentElement;
     while (
       scroller &&
-      !viewportScroll(scroller) &&
+      scroller !== document.documentElement &&
       !/auto|scroll/.test(getComputedStyle(scroller).overflowY)
     )
       scroller = scroller.parentElement;
-    if (scroller && viewportScroll(scroller)) scroller = null;
     const sync = () => {
-      const viewTop = scroller ? scroller.getBoundingClientRect().top : 0;
+      const box = scroller?.getBoundingClientRect();
+      const viewTop = Math.max(0, box?.top ?? 0);
+      const viewBottom = Math.min(window.innerHeight, box?.bottom ?? window.innerHeight);
       setTop(Math.max(0, viewTop - container.getBoundingClientRect().top));
-      setViewport(scroller ? scroller.clientHeight : window.innerHeight);
+      setViewport(Math.max(0, viewBottom - viewTop));
     };
     sync();
-    const target = scroller ?? window;
-    target.addEventListener("scroll", sync, { passive: true });
+    document.addEventListener("scroll", sync, { capture: true, passive: true });
     window.addEventListener("resize", sync);
     const observer = new ResizeObserver(sync);
-    observer.observe(scroller ?? document.documentElement);
     observer.observe(container);
+    if (scroller) observer.observe(scroller);
     return () => {
-      target.removeEventListener("scroll", sync);
+      document.removeEventListener("scroll", sync, { capture: true });
       window.removeEventListener("resize", sync);
       observer.disconnect();
     };
