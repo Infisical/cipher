@@ -77,7 +77,7 @@ function WorldMap({
     () =>
       locations
         .filter((location) => location.count > 0)
-        .map((location) => ({ ...location, key: location.id ?? location.label }))
+        .map((location) => ({ ...location, key: `location:${location.id ?? location.label}` }))
         .sort((a, b) => b.count - a.count),
     [locations]
   );
