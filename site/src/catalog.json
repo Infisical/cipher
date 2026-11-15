@@ -1300,6 +1300,10 @@
       {
         "title": "Destructive final step with an icon",
         "module": "multi-step/destructive"
+      },
+      {
+        "title": "Save errors on the final step",
+        "module": "multi-step/save-errors"
       }
     ]
   },
