@@ -21,6 +21,7 @@ const stressed: SelectOption[] = regions.flatMap((region) =>
     value: `${service}-${region}`,
     label: `${service} / production / ${region} / primary-postgres-read-replica-connection-string`,
     description: index === 0 ? "2,481 secrets" : undefined,
+    disabled: service.startsWith("legacy"),
     group: region
   }))
 );
