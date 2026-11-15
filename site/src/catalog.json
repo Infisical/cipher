@@ -458,6 +458,10 @@
         "module": "combobox/secret-path"
       },
       {
+        "title": "Secret path with glob suggestions",
+        "module": "combobox/secret-path-globs"
+      },
+      {
         "title": "Groups and descriptions",
         "module": "combobox/groups"
       }
