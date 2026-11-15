@@ -403,17 +403,19 @@ function DiscardChangesAlertDialog({
   onOpenChange,
   onDiscard,
   title = "Discard changes?",
-  description = "Your changes will be lost."
+  description = "Your changes will be lost.",
+  onCloseAutoFocus
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDiscard: () => void;
   title?: string;
   description?: string;
+  onCloseAutoFocus?: (event: Event) => void;
 }) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent tone="danger" icon="alert">
+      <AlertDialogContent tone="danger" icon="alert" onCloseAutoFocus={onCloseAutoFocus}>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 
 import { type FieldErrorMap } from "../lib/field-context";
@@ -30,7 +31,8 @@ import {
   SheetHeader,
   SheetSubheader,
   SheetTitle,
-  SheetTrigger
+  SheetTrigger,
+  useSheetView
 } from "./sheet";
 
 import styles from "./multi-step.module.css";
@@ -129,7 +131,8 @@ export const Steps = ({
 
 export type MultiStepProps = {
   steps: readonly MultiStepStep[];
-  variant?: "dialog" | "sheet" | "page";
+  /** view renders inside a SheetView: its meter and footer go to the view's slots, Cancel on the first step goes back, and completing returns to the parent view. */
+  variant?: "dialog" | "sheet" | "page" | "view";
   size?: React.ComponentProps<typeof SheetContent>["size"];
   title?: React.ReactNode;
   description?: React.ReactNode;
@@ -224,7 +227,15 @@ export const MultiStep = ({
     setFieldErrors(noErrors);
     if (current !== defaultStep) setCurrent(defaultStep);
   };
+  const view = useSheetView();
+  React.useEffect(() => {
+    if (variant === "view") view?.setPending(busy);
+  }, [variant, view, busy]);
   const changeOpen = (next: boolean) => {
+    if (!next && variant === "view") {
+      if (!busy) view?.back();
+      return;
+    }
     if (!next) {
       if (busy) return;
       onCancel?.();
@@ -264,7 +275,8 @@ export const MultiStep = ({
         return;
       }
       if (blocks(await onComplete?.())) return;
-      if (variant !== "page") {
+      if (variant === "view") view?.done();
+      else if (variant !== "page") {
         reset();
         setOpen(false);
       }
@@ -292,7 +304,7 @@ export const MultiStep = ({
       transition: reduced ? fade.exit : exit.moderate
     })
   };
-  const titled = variant === "page" || !single || !title;
+  const titled = variant === "page" || !single || (!title && variant !== "view");
   const stepHead = (titled || entry.description) && (
     <div className={styles.stepHead}>
       {variant === "page" && !single && (
@@ -417,6 +429,17 @@ export const MultiStep = ({
   const meter = single ? null : (
     <Steps steps={steps} current={current} label={label} showHeading={false} />
   );
+  if (variant === "view")
+    return (
+      <>
+        {meter &&
+          view?.subheader &&
+          createPortal(<SheetSubheader>{meter}</SheetSubheader>, view.subheader)}
+        <SheetBody className={className}>{fields}</SheetBody>
+        {view?.footer &&
+          createPortal(<SheetFooter className={styles.footer}>{footer}</SheetFooter>, view.footer)}
+      </>
+    );
   if (variant === "sheet")
     return (
       <Sheet open={isOpen} onOpenChange={changeOpen}>

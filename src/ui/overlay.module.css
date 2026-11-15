@@ -85,6 +85,7 @@
 .sheet[data-side="left"],
 .sheet[data-side="right"] {
   max-width: min(var(--cipher-sheet-size), 100vw);
+  transition: max-width var(--cipher-duration-moderate) var(--cipher-ease-standard);
 }
 .sheet[data-side="left"] {
   --cipher-sheet-from: -100% 0;
@@ -141,5 +142,52 @@
   .dialog[data-state="closed"],
   .sheet[data-state="closed"] {
     animation-name: fadeOut;
+  }
+}
+
+.views {
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.viewCell {
+  display: flex;
+  grid-area: 1 / 1;
+  min-width: 0;
+  min-height: 0;
+}
+.view {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.view[data-hidden] {
+  visibility: hidden;
+}
+.viewTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  margin-inline-start: calc(-1 * var(--cipher-space-6));
+}
+.viewTitle {
+  min-width: 0;
+}
+.viewTrail {
+  color: var(--cipher-muted);
+}
+.viewSlot {
+  display: contents;
+}
+.viewFoot:not(:has(> :not(.viewSlot), > .viewSlot > *)) {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet[data-side="left"],
+  .sheet[data-side="right"] {
+    transition: none;
   }
 }

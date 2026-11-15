@@ -2297,6 +2297,7 @@
       "name": "sheet",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/alert-dialog",
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/icon"
