@@ -39,9 +39,12 @@ import styles from "./multi-step.module.css";
  * false keeps the step (the step shows its own field errors). fields puts each message on the Field
  * with that name and focuses the first. message is the footer fallback, only for an error that has
  * no field and is not worth a toast. A thrown error is a toast. Returned by a step's validate and by
- * onComplete, whose fields land on the last step.
+ * onComplete. onComplete's field errors go back to the step whose content holds a Field with that
+ * name, the earliest one first, and each later step shows its own when it is reached; step names
+ * the step for all of them instead, such as for a step drawn with render.
  */
-export type MultiStepResult = boolean | void | { fields?: FieldErrorMap; message?: string };
+export type MultiStepResult =
+  boolean | void | { fields?: FieldErrorMap; message?: string; step?: number };
 
 export interface MultiStepStep {
   title: string;
@@ -148,6 +151,13 @@ export type MultiStepProps = {
 
 const noErrors: FieldErrorMap = {};
 
+const holdsField = (node: React.ReactNode, name: string): boolean =>
+  React.Children.toArray(node).some(
+    (child) =>
+      React.isValidElement<{ name?: unknown; children?: React.ReactNode }>(child) &&
+      (child.props.name === name || holdsField(child.props.children, name))
+  );
+
 export const MultiStep = ({
   steps,
   variant = "dialog",
@@ -212,14 +222,19 @@ export const MultiStep = ({
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+  const routed = React.useRef(new Map<number, FieldErrorMap>());
   const move = (target: number) => {
+    const waiting = routed.current.get(target);
+    routed.current.delete(target);
     setError(undefined);
-    setFieldErrors(noErrors);
+    setFieldErrors(waiting ?? noErrors);
+    if (waiting) refocus.current = true;
     setDirection(target > current ? 1 : -1);
     moved.current = true;
     setCurrent(target);
   };
   const reset = () => {
+    routed.current.clear();
     setError(undefined);
     setFieldErrors(noErrors);
     if (current !== defaultStep) setCurrent(defaultStep);
@@ -263,7 +278,25 @@ export const MultiStep = ({
         move(current + 1);
         return;
       }
-      if (blocks(await onComplete?.())) return;
+      const result = await onComplete?.();
+      if (result && typeof result === "object" && current > 0) {
+        const override = result.step !== undefined && steps[result.step] ? result.step : undefined;
+        const byStep = new Map<number, FieldErrorMap>();
+        Object.entries(result.fields ?? noErrors).forEach(([name, message]) => {
+          if (!message) return;
+          const found = steps.findIndex((candidate) => holdsField(candidate.content, name));
+          const target = override ?? (found === -1 ? current : found);
+          byStep.set(target, { ...byStep.get(target), [name]: message });
+        });
+        const earliest = byStep.size ? Math.min(...byStep.keys()) : (override ?? current);
+        if (earliest < current) {
+          routed.current = byStep;
+          move(earliest);
+          setError(result.message);
+          return;
+        }
+      }
+      if (blocks(result)) return;
       if (variant !== "page") {
         reset();
         setOpen(false);
