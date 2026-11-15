@@ -1329,6 +1329,18 @@
     ]
   },
   {
+    "id": "session-replay",
+    "title": "Session replay",
+    "summary": "Play back a recorded session on a timeline, with event markers and an event list kept in sync.",
+    "group": "Data display",
+    "examples": [
+      { "title": "Terminal recording", "module": "session-replay/default" },
+      { "title": "RDP recording", "module": "session-replay/rdp" },
+      { "title": "No events", "module": "session-replay/empty" },
+      { "title": "Long session with errors and a missing chunk", "module": "session-replay/stressed" }
+    ]
+  },
+  {
     "id": "select",
     "title": "Select",
     "summary": "Choose one value from a Radix listbox.",
