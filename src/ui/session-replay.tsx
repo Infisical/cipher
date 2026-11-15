@@ -80,13 +80,17 @@ export function SessionReplay<Event extends SessionReplayEvent>({
 }: SessionReplayProps<Event>) {
   const duration = Math.max(0, durationProp ?? events.at(-1)?.time ?? 0);
   const withHours = duration >= 3_600_000;
-  const [time, setTime] = React.useState(0);
+  const [clock, setClock] = React.useState(0);
+  const time = Math.min(clock, duration);
   const [playing, setPlaying] = React.useState(false);
   const [speed, setSpeed] = React.useState<SessionReplaySpeed>(defaultSpeed);
   const [announcement, setAnnouncement] = React.useState("");
   const listRef = React.useRef<HTMLOListElement>(null);
-  const timeRef = React.useRef(0);
-  timeRef.current = time;
+  const clockRef = React.useRef(0);
+  const moveTo = (next: number) => {
+    clockRef.current = next;
+    setClock(next);
+  };
 
   const times = React.useMemo(() => events.map((event) => event.time), [events]);
   const listed = React.useMemo(
@@ -115,9 +119,10 @@ export function SessionReplay<Event extends SessionReplayEvent>({
     let frame = 0;
     let previous = performance.now();
     const tick = (now: number) => {
-      const next = Math.min(duration, timeRef.current + (now - previous) * speed);
+      const next = Math.min(duration, clockRef.current + (now - previous) * speed);
       previous = now;
-      setTime(next);
+      clockRef.current = next;
+      setClock(next);
       if (next >= duration) {
         setPlaying(false);
         setAnnouncement(`Ended at ${formatTime(next, withHours)}`);
@@ -143,7 +148,8 @@ export function SessionReplay<Event extends SessionReplayEvent>({
   const seek = React.useCallback(
     (next: number, announce = false) => {
       const clamped = Math.min(duration, Math.max(0, next));
-      setTime(clamped);
+      clockRef.current = clamped;
+      setClock(clamped);
       if (announce)
         setAnnouncement(`${formatTime(clamped, withHours)} of ${formatTime(duration, withHours)}`);
     },
@@ -157,7 +163,8 @@ export function SessionReplay<Event extends SessionReplayEvent>({
       setAnnouncement(`Paused at ${formatTime(time, withHours)}`);
       return;
     }
-    if (time >= duration) setTime(0);
+    if (time >= duration) moveTo(0);
+    else clockRef.current = time;
     setPlaying(true);
     setAnnouncement("Playing");
   };

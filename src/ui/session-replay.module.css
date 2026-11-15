@@ -43,6 +43,15 @@
   padding: var(--cipher-space-8) var(--cipher-space-12);
   border-top: 1px solid var(--cipher-line);
 }
+@container (max-width: 30rem) {
+  .controls {
+    flex-wrap: wrap;
+  }
+  .timeline {
+    flex-basis: 100%;
+    order: -1;
+  }
+}
 .time {
   flex: none;
   color: var(--cipher-text2);

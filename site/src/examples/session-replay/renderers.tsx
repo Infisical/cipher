@@ -21,6 +21,16 @@ const HEIGHT = 1080;
 
 export function RdpCanvasViewport({ events }: SessionReplayViewportState<RdpReplayEvent>) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [theme, setTheme] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    const scope = canvasRef.current?.closest("[data-theme]");
+    if (!scope) return undefined;
+    const read = () => setTheme(scope.getAttribute("data-theme"));
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(scope, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
   React.useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
@@ -48,7 +58,7 @@ export function RdpCanvasViewport({ events }: SessionReplayViewportState<RdpRepl
       context.fillStyle = token("--cipher-accent");
       context.fillRect((pointer.x ?? 0) - 10, (pointer.y ?? 0) - 10, 20, 20);
     }
-  }, [events]);
+  }, [events, theme]);
   return (
     <canvas
       ref={canvasRef}
