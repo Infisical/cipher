@@ -189,8 +189,8 @@ export function FileTree({
     setEditing(null);
     requestAnimationFrame(() => focus(id));
   };
-  const commitRename = async (node: FileTreeNode, value: string) => {
-    const name = value.trim();
+  const commitRename = async (node: FileTreeNode, input: HTMLInputElement) => {
+    const name = input.value.trim();
     if (renamePending) return;
     if (!name || name === node.name || !onRename) {
       stopRename(node.id);
@@ -207,7 +207,7 @@ export function FileTree({
     }
     if (editingRef.current !== node.id) return;
     if (message) setRenameError({ id: node.id, message });
-    else stopRename(node.id);
+    else if (input.value.trim() === name) stopRename(node.id);
   };
   const onKey = (event: React.KeyboardEvent<HTMLLIElement>, node: FileTreeNode) => {
     if (event.target !== event.currentTarget) return;
@@ -387,7 +387,7 @@ export function FileTree({
                     if (event.nativeEvent.isComposing) return;
                     if (event.key === "Enter") {
                       event.preventDefault();
-                      commitRename(node, event.currentTarget.value);
+                      commitRename(node, event.currentTarget);
                     } else if (event.key === "Escape") {
                       event.preventDefault();
                       stopRename(node.id);
@@ -395,7 +395,7 @@ export function FileTree({
                   }}
                   onChange={() => setRenameError(undefined)}
                   onBlur={(event) => {
-                    if (!error) commitRename(node, event.currentTarget.value);
+                    if (!error) commitRename(node, event.currentTarget);
                   }}
                 />
               ) : (
