@@ -2294,6 +2294,25 @@
       ]
     },
     {
+      "name": "share-bar",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/share-bar.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/share-bar.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/share-bar.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/share-bar.module.css"
+        }
+      ]
+    },
+    {
       "name": "sheet",
       "type": "registry:ui",
       "registryDependencies": [
