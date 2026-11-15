@@ -8,6 +8,7 @@ import { EmptyState } from "./empty";
 import { Kbd } from "./kbd";
 import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from "./popover";
 import { Spinner } from "./spinner";
+import { StatusText } from "./text";
 import { Textarea } from "./textarea";
 import { Tooltip } from "./tooltip";
 
@@ -49,7 +50,10 @@ export interface RemoteDesktopDetail {
   value: React.ReactNode;
 }
 
-export type RemoteDesktopProps = Omit<React.ComponentPropsWithoutRef<"div">, "children"> & {
+export type RemoteDesktopProps = Omit<
+  React.ComponentPropsWithoutRef<"div">,
+  "children" | "onWheel"
+> & {
   status: RemoteDesktopStatus;
   /** Names the session for assistive technology, such as the account or host. */
   label: string;
@@ -108,13 +112,17 @@ function ClipboardControl({
   const [open, setOpen] = React.useState(false);
   const [text, setText] = React.useState("");
   const [sending, setSending] = React.useState(false);
+  const [failed, setFailed] = React.useState(false);
   const send = async (event: React.FormEvent) => {
     event.preventDefault();
     setSending(true);
+    setFailed(false);
     try {
       await onSend(text);
       setText("");
       setOpen(false);
+    } catch {
+      setFailed(true);
     } finally {
       setSending(false);
     }
@@ -147,8 +155,17 @@ function ClipboardControl({
             id={id}
             rows={4}
             value={text}
-            onChange={(event) => setText(event.target.value)}
+            readOnly={sending}
+            onChange={(event) => {
+              setText(event.target.value);
+              setFailed(false);
+            }}
           />
+          {failed && (
+            <StatusText tone="bad" icon="alert" role="alert">
+              Couldn't send to the remote clipboard. Try again.
+            </StatusText>
+          )}
           <Button type="submit" size="sm" loading={sending} disabled={!text}>
             Send
           </Button>
@@ -184,6 +201,8 @@ export function RemoteDesktop({
   const frame = React.useRef<HTMLDivElement | null>(null);
   const toolbar = React.useRef<HTMLDivElement | null>(null);
   const pressed = React.useRef(new Map<string, RemoteDesktopKeyEvent>());
+  const buttonsHeld = React.useRef(new Set<number>());
+  const lastPoint = React.useRef({ x: 0, y: 0 });
   const [fit, setFit] = React.useState<{ width: number; height: number }>();
   const [captured, setCaptured] = React.useState(false);
   const [fullscreen, setFullscreen] = React.useState(false);
@@ -239,21 +258,39 @@ export function RemoteDesktop({
     };
   };
 
-  const onWheelRef = React.useRef(onWheel);
-  const toRemoteRef = React.useRef(toRemote);
+  const latest = React.useRef({ onWheel, onKey, onPointer, toRemote });
   React.useEffect(() => {
-    onWheelRef.current = onWheel;
-    toRemoteRef.current = toRemote;
+    latest.current = { onWheel, onKey, onPointer, toRemote };
   });
+
+  const releaseKeysHeld = () => {
+    pressed.current.forEach((event) =>
+      latest.current.onKey?.({ ...event, type: "up", repeat: false })
+    );
+    pressed.current.clear();
+  };
+  const releaseButtonsHeld = () => {
+    buttonsHeld.current.forEach((button) =>
+      latest.current.onPointer?.({ type: "up", ...lastPoint.current, button, buttons: 0 })
+    );
+    buttonsHeld.current.clear();
+  };
+  // A key or button released while the session was not connected never reached the remote.
+  React.useEffect(() => {
+    if (connected) return;
+    releaseKeysHeld();
+    releaseButtonsHeld();
+  }, [connected]);
   React.useEffect(() => {
     const node = stage.current;
     if (!node || !connected) return undefined;
     // React registers wheel listeners as passive, so scrolling the page could not be stopped.
     const wheel = (event: WheelEvent) => {
-      if (!onWheelRef.current || !frame.current?.contains(event.target as Node)) return;
+      const { onWheel: handler, toRemote: map } = latest.current;
+      if (!handler || !frame.current?.contains(event.target as Node)) return;
       event.preventDefault();
-      onWheelRef.current({
-        ...toRemoteRef.current(event.clientX, event.clientY),
+      handler({
+        ...map(event.clientX, event.clientY),
         deltaX: event.deltaX,
         deltaY: event.deltaY,
         deltaMode: event.deltaMode
@@ -262,11 +299,6 @@ export function RemoteDesktop({
     node.addEventListener("wheel", wheel, { passive: false });
     return () => node.removeEventListener("wheel", wheel);
   }, [connected]);
-
-  const releaseKeysHeld = () => {
-    pressed.current.forEach((event) => onKey?.({ ...event, type: "up", repeat: false }));
-    pressed.current.clear();
-  };
 
   const keyEvent = (event: React.KeyboardEvent<HTMLDivElement>, type: "down" | "up") => {
     if (!connected || !onKey || event.target !== event.currentTarget) return;
@@ -308,12 +340,11 @@ export function RemoteDesktop({
       event.currentTarget.setPointerCapture(event.pointerId);
     }
     event.preventDefault();
-    onPointer({
-      type,
-      ...toRemote(event.clientX, event.clientY),
-      button: event.button,
-      buttons: event.buttons
-    });
+    const point = toRemote(event.clientX, event.clientY);
+    lastPoint.current = point;
+    if (type === "down") buttonsHeld.current.add(event.button);
+    else if (type === "up") buttonsHeld.current.delete(event.button);
+    onPointer({ type, ...point, button: event.button, buttons: event.buttons });
   };
 
   const toggleFullscreen = async () => {
@@ -402,10 +433,10 @@ export function RemoteDesktop({
             onPointerDown={(event) => pointerEvent(event, "down")}
             onPointerMove={(event) => pointerEvent(event, "move")}
             onPointerUp={(event) => pointerEvent(event, "up")}
+            onPointerCancel={releaseButtonsHeld}
+            onLostPointerCapture={releaseButtonsHeld}
           >
-            {surface ?? (
-              <canvas ref={canvasRef} width={width} height={height} className={styles.canvas} />
-            )}
+            {surface ?? <canvas ref={canvasRef} width={width} height={height} />}
           </div>
           {overlay}
         </div>

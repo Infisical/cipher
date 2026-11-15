@@ -44,7 +44,7 @@
   outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
   outline-offset: var(--cipher-size-focus-ring);
 }
-.canvas {
+.frame > * {
   display: block;
   width: 100%;
   height: 100%;
@@ -158,8 +158,11 @@
 }
 .controls {
   display: flex;
-  flex: none;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
+  min-width: 0;
   gap: var(--cipher-space-2);
   margin-left: auto;
 }

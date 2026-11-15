@@ -1954,6 +1954,7 @@
         "@cipher/kbd",
         "@cipher/popover",
         "@cipher/spinner",
+        "@cipher/text",
         "@cipher/textarea",
         "@cipher/tooltip"
       ],
