@@ -460,6 +460,10 @@
       {
         "title": "Groups and descriptions",
         "module": "combobox/groups"
+      },
+      {
+        "title": "Option icons",
+        "module": "combobox/icons"
       }
     ]
   },
