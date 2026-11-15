@@ -239,7 +239,10 @@ export const MultiStep = ({
       refocus.current = true;
       return true;
     }
-    if (!result || typeof result !== "object") return false;
+    if (!result || typeof result !== "object") {
+      setFieldErrors(noErrors);
+      return false;
+    }
     const fields = result.fields ?? noErrors;
     setFieldErrors(fields);
     setError(result.message);
