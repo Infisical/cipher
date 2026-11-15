@@ -519,9 +519,6 @@
 .treeRow[aria-disabled="true"] .treeFolder {
   color: inherit;
 }
-.treeRow[aria-disabled="true"] .treeFolder {
-  color: inherit;
-}
 .treeName {
   overflow: hidden;
   text-overflow: ellipsis;
