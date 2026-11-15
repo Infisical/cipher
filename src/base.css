@@ -420,6 +420,14 @@
   padding-bottom: var(--cipher-focus-clearance);
   margin-bottom: calc(-1 * var(--cipher-focus-clearance));
 }
+.cipher [data-slot="dialog-body"] {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--cipher-space-content-group);
+  overflow-wrap: anywhere;
+}
 .cipher [data-slot="dialog-head"] {
   display: flex;
   flex: none;
