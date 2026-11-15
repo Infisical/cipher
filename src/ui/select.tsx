@@ -14,6 +14,14 @@ import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
 import picker from "./picker.module.css";
 
+const SelectWrapContext = React.createContext(false);
+
+function titleIfTruncated(element: HTMLElement | null | undefined) {
+  if (!element) return;
+  if (element.scrollWidth > element.clientWidth) element.title = element.textContent ?? "";
+  else element.removeAttribute("title");
+}
+
 const SelectNameContext = React.createContext<{
   "aria-label"?: string;
   "aria-labelledby"?: string;
@@ -36,6 +44,7 @@ function Select({
   align = "start",
   menuWidth,
   icon,
+  wrap,
   onChange,
   onValueChange,
   children,
@@ -56,6 +65,8 @@ function Select({
   menuWidth?: React.CSSProperties["width"];
   /** A glyph at the trigger's start, such as the kind of value it picks. */
   icon?: IconSource;
+  /** Wrap long option labels in the list instead of truncating them. The trigger stays on one line. */
+  wrap?: boolean;
   onChange?: (value: string) => void;
   id?: string;
   "aria-describedby"?: string;
@@ -72,52 +83,54 @@ function Select({
       }}
       {...props}
     >
-      {options ? (
-        <>
-          <SelectTrigger
-            id={id}
-            size={size ?? "default"}
-            icon={icon}
-            width={width}
-            aria-label={ariaLabel ?? label}
-            aria-labelledby={labelledBy}
-            aria-describedby={describedBy}
-            aria-invalid={invalid || undefined}
-          >
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent
-            align={align}
-            style={
-              menuWidth
-                ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
-                : undefined
-            }
-          >
-            {groups.map((group) => (
-              <SelectGroup key={group}>
-                {group && <SelectLabel>{group}</SelectLabel>}
-                {options
-                  .filter((option) => (option.group ?? "") === group)
-                  .map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.disabled}
-                      description={option.description}
-                    >
-                      <span data-slot="select-option-label">{option.label}</span>
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
-            ))}
-          </SelectContent>
-        </>
-      ) : (
-        <SelectNameContext value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy }}>
-          {children}
-        </SelectNameContext>
-      )}
+      <SelectWrapContext value={wrap ?? false}>
+        {options ? (
+          <>
+            <SelectTrigger
+              id={id}
+              size={size ?? "default"}
+              icon={icon}
+              width={width}
+              aria-label={ariaLabel ?? label}
+              aria-labelledby={labelledBy}
+              aria-describedby={describedBy}
+              aria-invalid={invalid || undefined}
+            >
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent
+              align={align}
+              style={
+                menuWidth
+                  ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
+                  : undefined
+              }
+            >
+              {groups.map((group) => (
+                <SelectGroup key={group}>
+                  {group && <SelectLabel>{group}</SelectLabel>}
+                  {options
+                    .filter((option) => (option.group ?? "") === group)
+                    .map((option) => (
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.disabled}
+                        description={option.description}
+                      >
+                        <span data-slot="select-option-label">{option.label}</span>
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </>
+        ) : (
+          <SelectNameContext value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy }}>
+            {children}
+          </SelectNameContext>
+        )}
+      </SelectWrapContext>
     </SelectPrimitive.Root>
   );
 }
@@ -144,6 +157,8 @@ function SelectTrigger({
   icon,
   width,
   children,
+  onPointerEnter,
+  onFocus,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
@@ -172,6 +187,18 @@ function SelectTrigger({
         className
       )}
       aria-label={name["aria-label"]}
+      onPointerEnter={(event) => {
+        onPointerEnter?.(event);
+        titleIfTruncated(
+          event.currentTarget.querySelector<HTMLElement>('[data-slot="select-value"]')
+        );
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        titleIfTruncated(
+          event.currentTarget.querySelector<HTMLElement>('[data-slot="select-value"]')
+        );
+      }}
       {...props}
       {...fieldAttributes}
     >
@@ -196,12 +223,16 @@ function SelectContent({
   align = "start",
   sideOffset = 4,
   style,
+  wrap,
   ref,
   ...props
 }: Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>, "position"> & {
+  /** Wrap long option labels instead of truncating them. Defaults to the Select's `wrap`; items can override it. */
+  wrap?: boolean;
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Content>>;
 }) {
   const inset = useMenuInset<HTMLDivElement>();
+  const inherited = React.useContext(SelectWrapContext);
   return (
     <SelectPrimitive.Portal container={usePortalContainer()}>
       <SelectPrimitive.Content
@@ -218,7 +249,7 @@ function SelectContent({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport ref={inset} className={menu.inset} data-scroll-fade="y">
-          {children}
+          <SelectWrapContext value={wrap ?? inherited}>{children}</SelectWrapContext>
           <ListHighlight />
         </SelectPrimitive.Viewport>
         <SelectScrollDownButton />
@@ -248,13 +279,26 @@ function SelectItem({
   className,
   children,
   description,
+  wrap,
+  onFocus,
   "aria-describedby": describedBy,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { description?: string } & {
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+  description?: string;
+  /** Wrap this label instead of truncating it. Defaults to the content's `wrap`. */
+  wrap?: boolean;
+} & {
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Item>>;
 }) {
   const descriptionId = React.useId();
+  const label = React.useRef<HTMLSpanElement>(null);
+  const inherited = React.useContext(SelectWrapContext);
+  const wrapped = wrap ?? inherited;
+  React.useLayoutEffect(() => {
+    const node = label.current;
+    if (node?.title && node.title !== node.textContent) titleIfTruncated(node);
+  });
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -263,10 +307,19 @@ function SelectItem({
         [describedBy, description ? descriptionId : undefined].filter(Boolean).join(" ") ||
         undefined
       }
+      data-wrap={wrapped || undefined}
       className={cn(menu.row, picker.option, className)}
+      onFocus={(event) => {
+        onFocus?.(event);
+        titleIfTruncated(label.current);
+      }}
       {...props}
     >
-      <span className={picker.optionLabel}>
+      <span
+        ref={label}
+        className={picker.optionLabel}
+        onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
+      >
         <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
       </span>
       {description && (

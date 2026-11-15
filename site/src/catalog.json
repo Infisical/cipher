@@ -1466,6 +1466,10 @@
         "module": "select/metadata"
       },
       {
+        "title": "Long option names",
+        "module": "select/long-labels"
+      },
+      {
         "title": "Placeholder, disabled and invalid",
         "module": "select/states"
       },
