@@ -119,7 +119,15 @@ export function FileInput({
   const zone = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(ref, () => input.current!, []);
   const [dragging, setDragging] = React.useState(false);
-  const [rejections, setRejections] = React.useState<string[]>([]);
+  const [rejected, setRejected] = React.useState<{ attempt: number; messages: string[] }>({
+    attempt: 0,
+    messages: []
+  });
+  const rejections = rejected.messages;
+  const setRejections = (messages: string[]) =>
+    setRejected((current) => ({ attempt: current.attempt + 1, messages }));
+  // A disabled FieldSet disables the native input without passing disabled down.
+  const locked = () => disabled || Boolean(input.current?.matches(":disabled"));
   const tokens = acceptTokens(accept);
   const noun = multiple ? "files" : "a file";
   const sizeLabel = maxSize === undefined ? undefined : formatFileSize(maxSize);
@@ -131,7 +139,7 @@ export function FileInput({
   const messages = [...(error ? [error] : []), ...rejections];
 
   const take = (list: File[]) => {
-    if (disabled || !list.length) return;
+    if (locked() || !list.length) return;
     if (!multiple && list.length > 1) {
       setRejections(["Drop one file at a time."]);
       return;
@@ -157,7 +165,7 @@ export function FileInput({
   };
 
   const browse = () => {
-    if (!disabled) input.current?.click();
+    if (!locked()) input.current?.click();
   };
 
   const leaves = (event: React.DragEvent) =>
@@ -183,7 +191,7 @@ export function FileInput({
       <Empty
         ref={zone}
         size={size}
-        role="group"
+        role="button"
         tabIndex={disabled ? -1 : 0}
         aria-label={props["aria-label"]}
         aria-labelledby={
@@ -215,11 +223,11 @@ export function FileInput({
         }}
         onDragEnter={(event) => {
           event.preventDefault();
-          if (!disabled) setDragging(true);
+          if (!locked()) setDragging(true);
         }}
         onDragOver={(event) => {
           event.preventDefault();
-          event.dataTransfer.dropEffect = disabled ? "none" : "copy";
+          event.dataTransfer.dropEffect = locked() ? "none" : "copy";
         }}
         onDragLeave={(event) => {
           if (leaves(event)) setDragging(false);
@@ -242,19 +250,14 @@ export function FileInput({
           {hintText && <EmptyDescription id={hintId}>{hintText}</EmptyDescription>}
         </EmptyHeader>
         <EmptyContent>
-          <Button
-            type="button"
-            variant="outline"
-            size={size === "sm" ? "xs" : "default"}
-            disabled={disabled}
-          >
-            Browse
+          <Button asChild variant="outline" size={size === "sm" ? "xs" : "default"}>
+            <span aria-hidden="true">Browse</span>
           </Button>
         </EmptyContent>
       </Empty>
       <div id={messageId} aria-live="polite" className={styles.messages}>
         {messages.map((message, index) => (
-          <p key={index} className={helperStyles.fieldError}>
+          <p key={`${rejected.attempt}-${index}`} className={helperStyles.fieldError}>
             <Icon name="alert" size={14} />
             <span>{message}</span>
           </p>
@@ -267,7 +270,11 @@ export function FileInput({
               <Media icon="file" size="sm" />
               <MiddleTruncate
                 className={styles.name}
-                keepEnd={Math.max(8, file.name.length - file.name.lastIndexOf("."))}
+                keepEnd={
+                  file.name.lastIndexOf(".") > 0
+                    ? Math.max(8, file.name.length - file.name.lastIndexOf("."))
+                    : 8
+                }
               >
                 {file.name}
               </MiddleTruncate>
