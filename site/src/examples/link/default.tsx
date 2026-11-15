@@ -5,11 +5,11 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-xl min-w-0 flex-col gap-6">
       <SmallText muted>
-        Tokens expire after 30 days. <Link href="#rotation">Set a rotation policy</Link>
+        Tokens expire after 30 days. <Link href="#/components/link">Set a rotation policy</Link>
       </SmallText>
       <Text>
         Agents read secrets through a machine identity. Grant it a role on the project, then{" "}
-        <Link href="#install" underline="always">
+        <Link href="#/components/link" underline="always">
           install the agent
         </Link>{" "}
         on each host, or follow the{" "}
@@ -20,7 +20,7 @@ export default function Example() {
       </Text>
       <SmallText muted>
         Webhook deliveries go to{" "}
-        <Link href="#endpoint">
+        <Link href="#/components/link">
           https://hooks.platform-engineering.example.com/infisical/secret-rotation/eu-west-1/production-primary-replica
         </Link>{" "}
         and retry for up to 24 hours.
