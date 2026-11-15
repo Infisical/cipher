@@ -1288,6 +1288,10 @@
       {
         "title": "Pick, configure and connect in a sheet",
         "module": "multi-step/pick"
+      },
+      {
+        "title": "One step as a form shell",
+        "module": "multi-step/single"
       }
     ]
   },
