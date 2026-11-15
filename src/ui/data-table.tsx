@@ -117,7 +117,13 @@ interface DataTableBaseProps<Row> {
   sort?: { columnId: string; direction: "asc" | "desc" };
   onSortChange?: (sort: { columnId: string; direction: "asc" | "desc" }) => void;
   empty?: React.ReactNode;
+  /** Caps the table in its own scroll window. With virtual, the window is trimmed to the header plus whole rows, so no row is cut at the bottom edge. */
   height?: number;
+  /**
+   * Renders only the rows in view. With height it windows the table's own scroll; without height the
+   * table flows with the page, its header sticks to the top of the page's scroll area, and rows are
+   * windowed against that scroll. Horizontal overflow is clipped then, so size the columns to fit.
+   */
   virtual?: boolean;
   rowHeight?: number;
   loadMore?: { label: string; onClick: () => void; loading?: boolean };
@@ -274,15 +280,78 @@ export function DataTable<Row>({
   };
   const toggle = (id: string) =>
     update(selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]);
-  const windowed = Boolean(height && virtual && !groups);
+  const windowed = Boolean(virtual && !groups);
+  const flowing = windowed && !height;
+  const [viewport, setViewport] = React.useState(0);
+  const [chrome, setChrome] = React.useState({ head: 0, rest: 0 });
   const windowSize =
-    height && effectiveRowHeight ? Math.ceil(height / effectiveRowHeight) + 8 : rows.length;
+    windowed && effectiveRowHeight
+      ? Math.ceil((height ?? viewport) / effectiveRowHeight) + 8
+      : rows.length;
+  const wholeRows =
+    windowed && height && effectiveRowHeight && chrome.head
+      ? Math.floor((height - chrome.head - chrome.rest) / effectiveRowHeight)
+      : 0;
+  const frameHeight =
+    wholeRows > 0 && effectiveRowHeight
+      ? chrome.head + chrome.rest + wholeRows * effectiveRowHeight
+      : height;
   const start =
     windowed && effectiveRowHeight
       ? Math.max(0, Math.min(Math.floor(top / effectiveRowHeight) - 4, rows.length - windowSize))
       : 0;
   let stop = rows.length;
   if (windowed) stop = effectiveRowHeight ? Math.min(rows.length, start + windowSize) : 0;
+  React.useLayoutEffect(() => {
+    const container = scroll.current;
+    const head = container?.querySelector("thead");
+    if (!height || !windowed || !container || !head) return;
+    const measure = () => {
+      const band = container.querySelector<HTMLElement>("[data-slot='data-table-pagination']");
+      const next = {
+        head: head.getBoundingClientRect().height,
+        rest:
+          container.offsetHeight - container.clientHeight + (band?.getBoundingClientRect().height ?? 0)
+      };
+      setChrome((current) =>
+        current.head === next.head && current.rest === next.rest ? current : next
+      );
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(head);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [height, windowed]);
+  React.useLayoutEffect(() => {
+    const container = scroll.current;
+    if (!flowing || !container) return;
+    let scroller = container.parentElement;
+    while (
+      scroller &&
+      scroller !== document.documentElement &&
+      !/auto|scroll/.test(getComputedStyle(scroller).overflowY)
+    )
+      scroller = scroller.parentElement;
+    const sync = () => {
+      const box = scroller?.getBoundingClientRect();
+      const viewTop = Math.max(0, box?.top ?? 0);
+      const viewBottom = Math.min(window.innerHeight, box?.bottom ?? window.innerHeight);
+      setTop(Math.max(0, viewTop - container.getBoundingClientRect().top));
+      setViewport(Math.max(0, viewBottom - viewTop));
+    };
+    sync();
+    document.addEventListener("scroll", sync, { capture: true, passive: true });
+    window.addEventListener("resize", sync);
+    const observer = new ResizeObserver(sync);
+    observer.observe(container);
+    if (scroller) observer.observe(scroller);
+    return () => {
+      document.removeEventListener("scroll", sync, { capture: true });
+      window.removeEventListener("resize", sync);
+      observer.disconnect();
+    };
+  }, [flowing]);
   React.useLayoutEffect(() => {
     if (rowHeight !== undefined || !scroll.current) return;
     const token = parseFloat(getComputedStyle(scroll.current).getPropertyValue("--cipher-size-row"));
@@ -317,12 +386,14 @@ export function DataTable<Row>({
       rows.length <= landing
     )
       return;
-    container.scrollTop = Math.max(0, (landing - 1) * effectiveRowHeight);
-    setTop(container.scrollTop);
+    if (!flowing) {
+      container.scrollTop = Math.max(0, (landing - 1) * effectiveRowHeight);
+      setTop(container.scrollTop);
+    }
     focusPending.current = true;
     setFocusRow(landing);
     setLanding(null);
-  }, [landing, loadMore?.loading, rows.length, effectiveRowHeight]);
+  }, [landing, loadMore?.loading, rows.length, effectiveRowHeight, flowing]);
   React.useLayoutEffect(() => {
     if (!focusPending.current || focusRow === null) return;
     const row = scroll.current?.querySelector<HTMLElement>(
@@ -385,7 +456,7 @@ export function DataTable<Row>({
     !loading && rows.length > 0 && columns.some((column) => column.footer !== undefined);
   const rowCount = rows.length + (groups ? sections.length : 0) + 1;
   const tableStyle: React.CSSProperties & { "--cipher-table-row-height"?: string } = {
-    maxHeight: height,
+    maxHeight: frameHeight,
     "--cipher-table-row-height": effectiveRowHeight ? `${effectiveRowHeight}px` : undefined
   };
   const more = loadMore ? (
@@ -613,11 +684,12 @@ export function DataTable<Row>({
       data-scroll-fade="x"
       data-has-start-pin={leading || undefined}
       data-has-end-pin={trailing || undefined}
-      data-frame-foot={Boolean((height && more) || pagination) || undefined}
+      data-frame-foot={Boolean(((height || flowing) && more) || pagination) || undefined}
       className={cn(!embedded && frame.frame, styles.tableScroll, containerClassName)}
       data-virtual={windowed || undefined}
+      data-flow={flowing || undefined}
       style={tableStyle}
-      onScroll={(event) => setTop(event.currentTarget.scrollTop)}
+      onScroll={flowing ? undefined : (event) => setTop(event.currentTarget.scrollTop)}
     >
       <Table
         aria-label={label}
@@ -820,7 +892,9 @@ export function DataTable<Row>({
           </TableFooter>
         )}
       </Table>
-      {height && more && <div className={cn(frame.frameFoot, styles.tableMore)}>{more}</div>}
+      {(height || flowing) && more && (
+        <div className={cn(frame.frameFoot, styles.tableMore)}>{more}</div>
+      )}
       {pagination && (
         <div
           className={cn(frame.frameFoot, styles.tablePagination)}
@@ -842,7 +916,7 @@ export function DataTable<Row>({
         <span className={styles.refreshing} data-slot="data-table-refreshing" aria-hidden />
       )}
       <FrameScope framed>{scrollFrame}</FrameScope>
-      {!height && more && <div className={styles.actions}>{more}</div>}
+      {!height && !flowing && more && <div className={styles.actions}>{more}</div>}
       {persistentStatus && <div className={styles.status}>{persistentStatus}</div>}
       <span className={styles.sr} role="status">
         {loading ? (
