@@ -57,6 +57,8 @@ export function ShareBar({
   className,
   ...props
 }: ShareBarProps) {
+  const id = React.useId();
+  const [open, setOpen] = React.useState(false);
   const clean = items.map((item) => ({
     ...item,
     value: Number.isFinite(item.value) && item.value > 0 ? item.value : 0
@@ -79,8 +81,7 @@ export function ShareBar({
     ...shown.map((item, index) => ({
       ...item,
       color: item.color ?? series[index % series.length],
-      other: false,
-      title: undefined as string | undefined
+      other: false
     })),
     ...(rest.length
       ? [
@@ -89,8 +90,7 @@ export function ShareBar({
             label: `${otherLabel} (${rest.length})`,
             value: rest.reduce((acc, item) => acc + item.value, 0),
             color: undefined,
-            other: true,
-            title: rest.map((item) => `${item.label}: ${format(item.value)}`).join("\n")
+            other: true
           }
         ]
       : [])
@@ -112,30 +112,56 @@ export function ShareBar({
               key={row.id}
               className={styles.segment}
               data-other={row.other || undefined}
-              style={{ flexGrow: row.value, background: row.color }}
+              style={{ flexGrow: row.value / whole, background: row.color }}
             />
           ) : null
         )}
         {whole > sum && sum > 0 && (
-          <span className={styles.remainder} style={{ flexGrow: whole - sum }} />
+          <span className={styles.remainder} style={{ flexGrow: (whole - sum) / whole }} />
         )}
       </div>
       {legend &&
         (whole > 0 ? (
           <ul className={styles.legend}>
             {rows.map((row) => (
-              <li key={row.id} className={styles.entry}>
-                <span
-                  className={styles.swatch}
-                  data-other={row.other || undefined}
-                  style={{ background: row.color }}
-                />
-                <span className={styles.name} title={row.title}>
-                  {row.label}
-                </span>
-                <span className={styles.share}>{percent(row.value, whole)}</span>
-                <span className={styles.count}>{format(row.value)}</span>
-              </li>
+              <React.Fragment key={row.id}>
+                <li className={styles.entry}>
+                  <span
+                    className={styles.swatch}
+                    data-other={row.other || undefined}
+                    style={{ background: row.color }}
+                  />
+                  {row.other ? (
+                    <button
+                      type="button"
+                      className={cn(styles.name, styles.toggle)}
+                      aria-expanded={open}
+                      aria-controls={`${id}-folded`}
+                      onClick={() => setOpen((value) => !value)}
+                    >
+                      {row.label}
+                    </button>
+                  ) : (
+                    <span className={styles.name}>{row.label}</span>
+                  )}
+                  <span className={styles.share}>{percent(row.value, whole)}</span>
+                  <span className={styles.count}>{format(row.value)}</span>
+                </li>
+                {row.other && (
+                  <li id={`${id}-folded`} hidden={!open} className={styles.foldedGroup}>
+                    <ul className={styles.folded}>
+                      {rest.map((item) => (
+                        <li key={item.id} className={styles.entry}>
+                          <span />
+                          <span className={styles.name}>{item.label}</span>
+                          <span className={styles.share}>{percent(item.value, whole)}</span>
+                          <span className={styles.count}>{format(item.value)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
+              </React.Fragment>
             ))}
             <li className={cn(styles.entry, styles.total)}>
               <span />

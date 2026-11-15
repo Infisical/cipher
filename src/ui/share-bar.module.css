@@ -58,6 +58,42 @@
   color: var(--cipher-ink);
   overflow-wrap: anywhere;
 }
+.toggle {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: start;
+  text-decoration: underline dotted;
+  text-underline-offset: var(--cipher-space-3);
+  cursor: pointer;
+}
+.toggle:focus-visible {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
+}
+.foldedGroup {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+.foldedGroup[hidden] {
+  display: none;
+}
+.folded {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  row-gap: var(--cipher-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.folded .name,
+.folded .count {
+  color: var(--cipher-muted);
+}
 .share {
   color: var(--cipher-muted);
   font-variant-numeric: tabular-nums;
