@@ -182,7 +182,7 @@ export function SecretPathInput({
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => choose(name)}
             >
-              <Icon name="folder" />
+              <Icon name="folder" className={styles.folderIcon} />
               <span className={styles.optionLabel}>{name}</span>
             </div>
           ))}

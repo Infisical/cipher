@@ -211,6 +211,9 @@
 .option[role="option"] {
   gap: var(--cipher-space-10);
 }
+.folderIcon {
+  color: var(--cipher-folder);
+}
 .optionLabel {
   flex: 1 1 auto;
   min-width: 0;
