@@ -38,6 +38,7 @@
   gap: var(--cipher-space-8);
 }
 .status {
+  flex: 1 0 100%;
+  contain: inline-size;
   color: var(--cipher-muted);
-  white-space: nowrap;
 }
