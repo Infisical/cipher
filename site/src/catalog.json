@@ -1576,6 +1576,26 @@
     ]
   },
   {
+    "id": "share-bar",
+    "title": "Share bar",
+    "summary": "Show how a total splits across a few categories in one bar, with counts and percentages.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Shares with counts",
+        "module": "share-bar/default"
+      },
+      {
+        "title": "Many items, long labels and tiny shares",
+        "module": "share-bar/stressed"
+      },
+      {
+        "title": "Empty, one item and a larger total",
+        "module": "share-bar/states"
+      }
+    ]
+  },
+  {
     "id": "sheet",
     "title": "Sheet",
     "summary": "Inspect or edit a task in a side panel.",
