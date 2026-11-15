@@ -551,6 +551,9 @@
 .footerSlot::-webkit-scrollbar {
   display: none;
 }
+.sidebar[data-collapsed] .footerSlot {
+  flex: none;
+}
 .back {
   color: var(--cipher-muted);
 }
