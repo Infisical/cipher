@@ -61,7 +61,7 @@ const Checklist = ({ title, items }: { title: string; items: Step[] }) => {
         {items.map((item) => (
           <li
             key={item.label}
-            className={`flex min-w-0 items-start gap-2 ${item.done ? "text-muted-foreground line-through" : "text-foreground"}`}
+            className={`flex min-w-0 items-start gap-2 ${item.done ? "text-muted-foreground" : "text-foreground"}`}
           >
             <span
               aria-hidden="true"
