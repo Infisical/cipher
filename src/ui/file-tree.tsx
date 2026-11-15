@@ -369,7 +369,6 @@ export function FileTree({
                   size="xs"
                   aria-label={`Rename ${node.name}`}
                   defaultValue={node.name}
-                  readOnly={renamePending}
                   aria-busy={renamePending || undefined}
                   aria-invalid={error ? true : undefined}
                   aria-describedby={error ? `${uid}-${node.id}-error` : undefined}
