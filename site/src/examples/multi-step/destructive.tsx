@@ -76,7 +76,7 @@ export default function Example() {
           <BreakGlass
             account="prod-postgres-primary-us-east-1-payments-ledger-readwrite"
             reason="Payments ledger replication is stalled and on-call approvers are unreachable during the incident bridge."
-            label="Break glass and open the session now"
+            label="Break glass and open the session"
           />
         </div>
         <figcaption className="text-muted-foreground text-xs">
