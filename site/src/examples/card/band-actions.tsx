@@ -1,6 +1,9 @@
+import { useState } from "react";
+
 import { Badge } from "@infisical/cipher/ui/badge";
 import { Button } from "@infisical/cipher/ui/button";
 import { Card } from "@infisical/cipher/ui/card";
+import { HeaderSearch } from "@infisical/cipher/ui/header-search";
 import { Input } from "@infisical/cipher/ui/input";
 import {
   Select,
@@ -18,6 +21,7 @@ const Figure = ({ caption, children }: { caption: string; children: React.ReactN
 );
 
 export default function Example() {
+  const [search, setSearch] = useState("");
   return (
     <div className="grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,24rem),1fr))] items-start gap-x-6 gap-y-8">
       <Figure caption="Title only: the title keeps its own start inset">
@@ -46,6 +50,30 @@ export default function Example() {
           }
         >
           acme.com, acme-labs.io
+        </Card>
+      </Figure>
+      <Figure caption="A size prop never skews the band: search, xs and md actions all take 28px">
+        <Card
+          variant="framed"
+          title="Projects"
+          action={
+            <>
+              <HeaderSearch
+                label="Search projects"
+                placeholder="Search projects"
+                value={search}
+                onValueChange={setSearch}
+              />
+              <Button variant="outline" size="xs">
+                Export
+              </Button>
+              <Button variant="accent" size="md" icon="plus">
+                Add to project
+              </Button>
+            </>
+          }
+        >
+          kms-keys, payments-api
         </Card>
       </Figure>
       <Figure caption="Badges keep their text height">
