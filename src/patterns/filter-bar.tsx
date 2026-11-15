@@ -52,6 +52,8 @@ export type FilterBarProps = {
   /** The built-in search's accessible name, and its placeholder unless searchPlaceholder is set. */
   searchLabel?: string;
   searchPlaceholder?: string;
+  /** "/" focuses the built-in search from anywhere on the page. Turn it off on a second FilterBar so only the main search answers "/". */
+  slashShortcut?: boolean;
   /** The search stops at size-search-max; fill stretches it across the row up to the filters and actions. */
   width?: "fill";
   actions?: React.ReactNode;
@@ -149,6 +151,7 @@ export const FilterBar = ({
   onSearchChange,
   searchLabel = "Search",
   searchPlaceholder,
+  slashShortcut = true,
   width,
   actions
 }: FilterBarProps) => {
@@ -233,6 +236,7 @@ export const FilterBar = ({
         icon="search"
         aria-label={searchLabel}
         placeholder={searchPlaceholder ?? searchLabel}
+        slashShortcut={slashShortcut}
         value={searchValue ?? ""}
         onChange={(event) => onSearchChange?.(event.target.value)}
         onKeyDown={(event) => {
