@@ -352,6 +352,26 @@
     ]
   },
   {
+    "id": "world-map",
+    "title": "World map",
+    "summary": "Where activity comes from: countries toned and square markers sized by count, with tooltips and a legend.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Typical",
+        "module": "world-map/default"
+      },
+      {
+        "title": "Empty and a single location",
+        "module": "world-map/sparse"
+      },
+      {
+        "title": "Forty locations, long names and large counts",
+        "module": "world-map/stressed"
+      }
+    ]
+  },
+  {
     "id": "checkbox",
     "title": "Checkbox",
     "summary": "Stage an independent choice, including a mixed selection state.",

@@ -1,0 +1,180 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-12);
+  min-width: 0;
+}
+.canvas {
+  position: relative;
+  min-width: 0;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.land path {
+  fill: var(--cipher-map-land);
+  stroke: var(--cipher-map-border);
+  stroke-width: var(--cipher-size-control-border);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.land .region[data-step="1"],
+.step[data-step="1"] {
+  --world-map-tone: 28%;
+}
+.land .region[data-step="2"],
+.step[data-step="2"] {
+  --world-map-tone: 50%;
+}
+.land .region[data-step="3"],
+.step[data-step="3"] {
+  --world-map-tone: 74%;
+}
+.land .region[data-step="4"],
+.step[data-step="4"] {
+  --world-map-tone: 100%;
+}
+.land .region {
+  fill: color-mix(in oklab, var(--cipher-map-region) var(--world-map-tone), var(--cipher-map-land));
+  transition: fill var(--cipher-duration-fast) var(--cipher-ease-standard);
+}
+.land .region:is(:hover, :focus-visible, [data-state$="open"]) {
+  fill: color-mix(
+    in oklab,
+    var(--cipher-map-region) var(--world-map-tone),
+    var(--cipher-map-marker) 24%
+  );
+}
+.land .region:focus-visible {
+  outline: none;
+  stroke: var(--cipher-focus-ring);
+  stroke-width: var(--cipher-size-focus-ring);
+}
+.marker {
+  fill: var(--cipher-map-marker);
+  stroke: var(--cipher-map-marker-line);
+  stroke-width: var(--cipher-size-control-border);
+  vector-effect: non-scaling-stroke;
+  cursor: default;
+  transition: fill var(--cipher-duration-fast) var(--cipher-ease-standard);
+}
+.marker:is(:hover, :focus-visible, [data-state$="open"]) {
+  fill: var(--cipher-accent);
+  stroke: var(--cipher-map-marker);
+}
+.marker:focus-visible {
+  outline: none;
+  stroke: var(--cipher-focus-ring);
+  stroke-width: var(--cipher-size-focus-ring);
+}
+.canvas[data-empty] .land {
+  opacity: var(--cipher-opacity-row-dim);
+}
+.empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.empty > span {
+  padding: var(--cipher-space-4) var(--cipher-space-8);
+  background: var(--cipher-surface);
+}
+.tip {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.tipName {
+  overflow-wrap: anywhere;
+  font-weight: var(--cipher-type-label-font-weight);
+}
+.tipCount {
+  font-variant-numeric: tabular-nums;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cipher-space-8) var(--cipher-space-24);
+  min-width: 0;
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.list {
+  display: flex;
+  flex: 1 1 0;
+  flex-wrap: wrap;
+  gap: var(--cipher-space-4) var(--cipher-space-16);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  min-width: 0;
+  max-width: 100%;
+}
+.swatch {
+  flex: none;
+  width: var(--cipher-space-8);
+  height: var(--cipher-space-8);
+  background: var(--cipher-map-marker);
+}
+.swatch[data-kind="none"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--cipher-size-control-border) var(--cipher-muted);
+}
+.name {
+  min-width: 0;
+  max-width: var(--cipher-size-sheet-sm);
+  overflow: hidden;
+  color: var(--cipher-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.count {
+  flex: none;
+  color: var(--cipher-ink);
+  font-variant-numeric: tabular-nums;
+}
+.scale {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-4);
+  color: var(--cipher-muted);
+}
+.scale > span:first-child {
+  margin-inline-end: var(--cipher-space-2);
+}
+.scale > span:last-child {
+  margin-inline-start: var(--cipher-space-2);
+}
+.step {
+  width: var(--cipher-space-10);
+  height: var(--cipher-space-10);
+  background: color-mix(in oklab, var(--cipher-map-region) var(--world-map-tone), var(--cipher-map-land));
+}
+@media (prefers-reduced-motion: reduce) {
+  .land .region,
+  .marker {
+    transition: none;
+  }
+}
