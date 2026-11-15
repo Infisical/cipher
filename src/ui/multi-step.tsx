@@ -224,15 +224,22 @@ export const MultiStep = ({
     return () => observer.disconnect();
   }, []);
   const routed = React.useRef(new Map<number, FieldErrorMap>());
+  const installed = React.useRef<number | undefined>(undefined);
   const move = (target: number) => {
+    const waiting = routed.current.get(target);
+    routed.current.delete(target);
+    installed.current = target;
     setError(undefined);
-    setFieldErrors(noErrors);
+    setFieldErrors(waiting ?? noErrors);
+    if (waiting) refocus.current = true;
     setDirection(target > current ? 1 : -1);
     moved.current = true;
     setCurrent(target);
   };
   React.useLayoutEffect(() => {
-    if (!routed.current.size) return;
+    const viaMove = installed.current === current;
+    installed.current = undefined;
+    if (viaMove || !routed.current.size) return;
     const waiting = routed.current.get(current);
     routed.current.delete(current);
     setFieldErrors(waiting ?? noErrors);
