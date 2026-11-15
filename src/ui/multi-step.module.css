@@ -67,6 +67,9 @@
   align-items: start;
   min-width: 0;
 }
+.pageGrid[data-single] {
+  grid-template-columns: minmax(0, 1fr);
+}
 .bar {
   display: none;
 }

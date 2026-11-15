@@ -190,6 +190,7 @@ export const MultiStep = ({
   const formId = React.useId();
   const entry = steps[current];
   const last = current === steps.length - 1;
+  const single = steps.length === 1;
   React.useLayoutEffect(() => {
     if (!moved.current) return;
     viewport.current
@@ -291,14 +292,15 @@ export const MultiStep = ({
       transition: reduced ? fade.exit : exit.moderate
     })
   };
-  const stepHead = (
+  const titled = variant === "page" || !single || !title;
+  const stepHead = (titled || entry.description) && (
     <div className={styles.stepHead}>
-      {variant === "page" && (
+      {variant === "page" && !single && (
         <p className={styles.eyebrow}>
           Step {current + 1} of {steps.length}
         </p>
       )}
-      <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+      {titled && <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>}
       {entry.description && <p className={styles.lede}>{entry.description}</p>}
     </div>
   );
@@ -347,7 +349,7 @@ export const MultiStep = ({
   const footer = (
     <>
       <p className={cn(styles.status, error && styles.error)} role="status">
-        {error ?? (variant === "page" ? null : `Step ${current + 1} of ${steps.length}`)}
+        {error ?? (variant === "page" || single ? null : `Step ${current + 1} of ${steps.length}`)}
       </p>
       <div className={styles.buttons}>
         {current === 0 ? (
@@ -389,18 +391,22 @@ export const MultiStep = ({
   if (variant === "page")
     return (
       <div data-slot="multi-step" data-variant="page" className={cn(styles.page, className)}>
-        <div className={styles.pageGrid}>
-          <div className={styles.rail}>
-            <Steps
-              steps={steps}
-              current={current}
-              orientation="vertical"
-              onStepClick={busy ? undefined : move}
-            />
-          </div>
-          <div className={styles.bar}>
-            <Steps steps={steps} current={current} label={label} />
-          </div>
+        <div className={styles.pageGrid} data-single={single || undefined}>
+          {!single && (
+            <>
+              <div className={styles.rail}>
+                <Steps
+                  steps={steps}
+                  current={current}
+                  orientation="vertical"
+                  onStepClick={busy ? undefined : move}
+                />
+              </div>
+              <div className={styles.bar}>
+                <Steps steps={steps} current={current} label={label} />
+              </div>
+            </>
+          )}
           <div className={styles.card}>
             {fields}
             <div className={styles.footer}>{footer}</div>
@@ -408,7 +414,9 @@ export const MultiStep = ({
         </div>
       </div>
     );
-  const meter = <Steps steps={steps} current={current} label={label} showHeading={false} />;
+  const meter = single ? null : (
+    <Steps steps={steps} current={current} label={label} showHeading={false} />
+  );
   if (variant === "sheet")
     return (
       <Sheet open={isOpen} onOpenChange={changeOpen}>
@@ -418,7 +426,7 @@ export const MultiStep = ({
             <SheetTitle>{title}</SheetTitle>
             {description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
-          <SheetSubheader>{meter}</SheetSubheader>
+          {meter && <SheetSubheader>{meter}</SheetSubheader>}
           <SheetBody>{fields}</SheetBody>
           <SheetFooter className={styles.footer}>{footer}</SheetFooter>
         </SheetContent>
@@ -432,7 +440,7 @@ export const MultiStep = ({
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <DialogSubheader>{meter}</DialogSubheader>
+        {meter && <DialogSubheader>{meter}</DialogSubheader>}
         {fields}
         <DialogFooter className={styles.footer}>{footer}</DialogFooter>
       </DialogContent>
