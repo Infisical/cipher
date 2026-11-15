@@ -757,6 +757,7 @@ const SidebarView = ({
         data-collapsed={rail || undefined}
         data-sheet={inSheet || undefined}
         data-edge={edge || undefined}
+        data-has-footer={Boolean(footer) || undefined}
         className={cn(styles.sidebar, className)}
       >
         {header}

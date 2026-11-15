@@ -536,8 +536,11 @@
   flex: none;
   padding: 0 var(--cipher-space-8);
 }
+.sidebar[data-has-footer] .navigation {
+  min-height: calc(3 * var(--cipher-size-control-md));
+}
 .footerSlot {
-  flex: none;
+  flex: 0 1 auto;
   max-height: 50%;
   min-height: 0;
   padding: 0 var(--cipher-space-8);
