@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dialog as SheetPrimitive } from "radix-ui";
+import { Dialog as SheetPrimitive, Slot } from "radix-ui";
 
 import { usePortalContainer } from "../scope";
 import { DiscardChangesAlertDialog } from "./alert-dialog";
@@ -193,7 +193,9 @@ function SheetContent({
         }}
         {...props}
         {...(viewLabels?.title ? { "aria-labelledby": viewLabels.title } : {})}
-        {...(viewLabels ? { "aria-describedby": viewLabels.description } : {})}
+        {...(viewLabels
+          ? { "aria-describedby": viewLabels.description ?? props["aria-describedby"] }
+          : {})}
         {...guard}
         onEscapeKeyDown={(event) => {
           guard.onEscapeKeyDown(event);
@@ -205,36 +207,38 @@ function SheetContent({
         }}
       >
         <SheetHostContext value={host}>
-          <OverlayPendingContext value={blocked}>
-            {sections
-              ? renderInForm(
-                  sections.form,
-                  "sheet-form",
-                  <SheetLayout
-                    head={sections.pinned.length > 0 && sections.pinned}
-                    scroll={sections.scroll.length > 0 && sections.scroll}
-                    footer={sections.footer.length > 0 && sections.footer}
-                  />
-                )
-              : children}
-            {showCloseButton ? (
-              <SheetPrimitive.Close data-slot="sheet-close" asChild>
-                <Button
-                  ref={closeRef}
-                  variant="ghost"
-                  className={overlay.close}
-                  size="icon-sm"
-                  disabled={blocked}
-                  onClick={host.interceptClose}
-                >
-                  <Icon name="x" />
-                  <span className="sr-only">Close</span>
-                </Button>
-              </SheetPrimitive.Close>
-            ) : (
-              <SheetPrimitive.Close ref={closeRef} hidden tabIndex={-1} aria-hidden />
-            )}
-          </OverlayPendingContext>
+          <SheetViewDescribeContext value={null}>
+            <OverlayPendingContext value={blocked}>
+              {sections
+                ? renderInForm(
+                    sections.form,
+                    "sheet-form",
+                    <SheetLayout
+                      head={sections.pinned.length > 0 && sections.pinned}
+                      scroll={sections.scroll.length > 0 && sections.scroll}
+                      footer={sections.footer.length > 0 && sections.footer}
+                    />
+                  )
+                : children}
+              {showCloseButton ? (
+                <SheetPrimitive.Close data-slot="sheet-close" asChild>
+                  <Button
+                    ref={closeRef}
+                    variant="ghost"
+                    className={overlay.close}
+                    size="icon-sm"
+                    disabled={blocked}
+                    onClick={host.interceptClose}
+                  >
+                    <Icon name="x" />
+                    <span className="sr-only">Close</span>
+                  </Button>
+                </SheetPrimitive.Close>
+              ) : (
+                <SheetPrimitive.Close ref={closeRef} hidden tabIndex={-1} aria-hidden />
+              )}
+            </OverlayPendingContext>
+          </SheetViewDescribeContext>
         </SheetHostContext>
       </SheetPrimitive.Content>
     </SheetPortal>
@@ -665,9 +669,10 @@ function SheetDescription({
     describe(viewId);
     return () => describe(undefined);
   }, [describe, viewId]);
-  if (describe)
+  if (describe) {
+    const Description = asChild ? Slot.Root : "p";
     return (
-      <p
+      <Description
         ref={ref}
         id={viewId}
         data-slot="sheet-description"
@@ -675,6 +680,7 @@ function SheetDescription({
         {...props}
       />
     );
+  }
   return (
     <SheetPrimitive.Description
       ref={ref}
