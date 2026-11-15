@@ -348,7 +348,9 @@ export const FilterBar = ({
                     <PopoverTrigger asChild>{trigger}</PopoverTrigger>
                     <PopoverContent
                       align="start"
-                      data-width={field.type === "date-range" ? "content" : undefined}
+                      data-width={
+                        field.type === "date-range" || field.type === "date" ? "content" : undefined
+                      }
                       aria-label={`${field.label} filter`}
                       onOpenAutoFocus={(event) => {
                         if (field.type === "date-range") event.preventDefault();
