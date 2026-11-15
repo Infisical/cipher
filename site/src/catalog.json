@@ -1256,6 +1256,18 @@
     ]
   },
   {
+    "id": "link",
+    "title": "Link",
+    "summary": "An inline text link for prose and help text; CellLink and RowLink cover tables.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Help text, prose and a long target",
+        "module": "link/default"
+      }
+    ]
+  },
+  {
     "id": "row-link",
     "title": "Row link",
     "summary": "A typed route link whose target stretches over its table row or Card, with a disabled fallback.",

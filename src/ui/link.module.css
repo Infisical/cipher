@@ -1,0 +1,19 @@
+.link {
+  color: var(--cipher-link);
+  border-radius: 0;
+  text-decoration-line: none;
+  text-decoration-thickness: var(--cipher-size-control-border);
+  text-underline-offset: var(--cipher-space-3);
+  overflow-wrap: anywhere;
+}
+.link[data-underline="always"],
+.link:focus-visible {
+  text-decoration-line: underline;
+}
+@media (hover: hover) {
+  .link:hover {
+    color: var(--cipher-text2);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--cipher-space-2);
+  }
+}
