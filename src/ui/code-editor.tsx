@@ -104,7 +104,8 @@ async function loadEditor() {
     },
     "&.cm-focused .cm-nonmatchingBracket": { backgroundColor: "transparent" }
   });
-  return { view, state, commands, language, sql, dialects, highlightStyle, theme };
+  const external = state.Annotation.define<boolean>();
+  return { view, state, commands, language, sql, dialects, highlightStyle, theme, external };
 }
 
 export function CodeEditor({
@@ -121,10 +122,19 @@ export function CodeEditor({
   className,
   style,
   ref,
+  id,
   "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
+  "aria-describedby": ariaDescribedby,
+  "aria-invalid": ariaInvalidProp,
   ...props
 }: CodeEditorProps) {
-  const field = useFieldControlAttributes(props);
+  const field = useFieldControlAttributes({
+    id,
+    "aria-labelledby": ariaLabelledby,
+    "aria-describedby": ariaDescribedby,
+    "aria-invalid": ariaInvalidProp
+  });
   const hostRef = React.useRef<HTMLDivElement>(null);
   const fallbackRef = React.useRef<HTMLTextAreaElement>(null);
   const viewRef = React.useRef<EditorView | null>(null);
@@ -133,7 +143,16 @@ export function CodeEditor({
   const latest = React.useRef({ value, onChange, onRun, onSelectionChange });
   latest.current = { value, onChange, onRun, onSelectionChange };
   const [load, setLoad] = React.useState<"loading" | "ready" | "failed">("loading");
-  const isInvalid = Boolean(invalid || field["aria-invalid"]);
+  const [, rerender] = React.useReducer((count: number) => count + 1, 0);
+  const handoff = React.useRef<{ anchor: number; head: number } | null>(null);
+  const fallbackSelection = React.useRef("");
+  const ariaInvalid = field["aria-invalid"];
+  const invalidValue = invalid
+    ? "true"
+    : ariaInvalid === undefined || ariaInvalid === false || ariaInvalid === "false"
+      ? undefined
+      : (String(ariaInvalid) as "true" | "grammar" | "spelling");
+  const isInvalid = invalidValue !== undefined;
 
   React.useImperativeHandle(
     ref,
@@ -145,13 +164,13 @@ export function CodeEditor({
 
   const configure = React.useCallback(
     (modules: Loaded) => {
-      const { view, state, sql, dialects } = modules;
+      const { view, state, sql, dialects, external } = modules;
       const attributes: Record<string, string> = { "aria-multiline": "true" };
       if (field.id) attributes.id = field.id;
       if (ariaLabel) attributes["aria-label"] = ariaLabel;
       if (field["aria-labelledby"]) attributes["aria-labelledby"] = field["aria-labelledby"];
       if (field["aria-describedby"]) attributes["aria-describedby"] = field["aria-describedby"];
-      if (isInvalid) attributes["aria-invalid"] = "true";
+      if (invalidValue) attributes["aria-invalid"] = invalidValue;
       if (readOnly) attributes["aria-readonly"] = "true";
       return [
         sql.sql({ dialect: dialects[dialect] }),
@@ -162,6 +181,7 @@ export function CodeEditor({
           ? []
           : state.EditorState.transactionFilter.of((transaction) =>
               transaction.docChanged &&
+              !transaction.annotation(external) &&
               transaction.newDoc.length > maxLength &&
               transaction.newDoc.length > transaction.startState.doc.length
                 ? []
@@ -175,7 +195,7 @@ export function CodeEditor({
       placeholder,
       maxLength,
       ariaLabel,
-      isInvalid,
+      invalidValue,
       field.id,
       field["aria-labelledby"],
       field["aria-describedby"]
@@ -186,7 +206,10 @@ export function CodeEditor({
 
   React.useEffect(() => {
     let disposed = false;
-    editorModules ??= loadEditor();
+    editorModules ??= loadEditor().catch((error: unknown) => {
+      editorModules = undefined;
+      throw error;
+    });
     editorModules.then(
       (modules) => {
         const host = hostRef.current;
@@ -197,7 +220,11 @@ export function CodeEditor({
           const range = editorState.selection.main;
           return range.empty ? "" : editorState.sliceDoc(range.from, range.to);
         };
-        const fallbackFocused = document.activeElement === fallbackRef.current;
+        const fallback = fallbackRef.current;
+        handoff.current =
+          fallback && document.activeElement === fallback
+            ? { anchor: fallback.selectionStart, head: fallback.selectionEnd }
+            : null;
         const editor = new view.EditorView({
           parent: host,
           state: state.EditorState.create({
@@ -227,7 +254,10 @@ export function CodeEditor({
               view.EditorView.updateListener.of((update) => {
                 if (update.docChanged) {
                   const next = update.state.doc.toString();
-                  if (next !== latest.current.value) latest.current.onChange?.(next);
+                  if (next !== latest.current.value) {
+                    latest.current.onChange?.(next);
+                    rerender();
+                  }
                 }
                 if (update.selectionSet || update.docChanged) {
                   const before = selected(update.startState);
@@ -242,7 +272,6 @@ export function CodeEditor({
         modulesRef.current = modules;
         compartmentRef.current = compartment;
         setLoad("ready");
-        if (fallbackFocused) editor.focus();
       },
       (error: unknown) => {
         if (disposed) return;
@@ -268,13 +297,43 @@ export function CodeEditor({
     editor.dispatch({ effects: compartment.reconfigure(configure(modules)) });
   }, [load, configure]);
 
+  React.useLayoutEffect(() => {
+    const editor = viewRef.current;
+    const selection = handoff.current;
+    if (load !== "ready" || !editor || !selection) return;
+    handoff.current = null;
+    const length = editor.state.doc.length;
+    editor.dispatch({
+      selection: {
+        anchor: Math.min(selection.anchor, length),
+        head: Math.min(selection.head, length)
+      }
+    });
+    editor.focus();
+  }, [load]);
+
   React.useEffect(() => {
     const editor = viewRef.current;
-    if (load !== "ready" || !editor) return;
+    const modules = modulesRef.current;
+    if (load !== "ready" || !editor || !modules) return;
     const current = editor.state.doc.toString();
     if (current === value) return;
-    editor.dispatch({ changes: { from: 0, to: current.length, insert: value } });
-  }, [load, value]);
+    editor.dispatch({
+      changes: { from: 0, to: current.length, insert: value },
+      annotations: modules.external.of(true)
+    });
+  });
+
+  React.useEffect(() => {
+    const controlId = field.id;
+    if (load !== "ready" || !controlId) return undefined;
+    const focusFromLabel = (event: MouseEvent) => {
+      const label = event.target instanceof Element ? event.target.closest("label") : null;
+      if (label?.htmlFor === controlId) viewRef.current?.focus();
+    };
+    document.addEventListener("click", focusFromLabel);
+    return () => document.removeEventListener("click", focusFromLabel);
+  }, [load, field.id]);
 
   return (
     <div
@@ -291,13 +350,26 @@ export function CodeEditor({
           className={styles.fallback}
           value={value}
           onChange={(event) => onChange?.(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" || !(event.metaKey || event.ctrlKey) || !onRun) return;
+            event.preventDefault();
+            const target = event.currentTarget;
+            onRun(target.value.slice(target.selectionStart, target.selectionEnd) || target.value);
+          }}
+          onSelect={(event) => {
+            const target = event.currentTarget;
+            const selected = target.value.slice(target.selectionStart, target.selectionEnd);
+            if (selected === fallbackSelection.current) return;
+            fallbackSelection.current = selected;
+            onSelectionChange?.(selected);
+          }}
           placeholder={placeholder}
           readOnly={readOnly}
           maxLength={maxLength}
           spellCheck={false}
           aria-label={ariaLabel}
           {...field}
-          aria-invalid={isInvalid || undefined}
+          aria-invalid={invalidValue}
         />
       )}
       <div ref={hostRef} className={styles.host} hidden={load !== "ready"} />
