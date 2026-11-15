@@ -90,7 +90,12 @@ export function FileTree({
     defaultValue: null,
     onChange: onRenamingChange
   });
-  const [renameError, setRenameError] = React.useState<string>();
+  const [renameError, setRenameError] = React.useState<{ id: string; message: string }>();
+  const editingRef = React.useRef(editing);
+  React.useLayoutEffect(() => {
+    editingRef.current = editing;
+  });
+  const error = renameError && renameError.id === editing ? renameError.message : undefined;
   const [renamePending, setRenamePending] = React.useState(false);
   const [ownExpanded, setOwnExpanded] = React.useState<readonly string[]>(() => [
     ...new Set([
@@ -192,13 +197,17 @@ export function FileTree({
       return;
     }
     setRenamePending(true);
+    let message: string | void;
     try {
-      const message = await onRename(node.id, name, node);
-      if (message) setRenameError(message);
-      else stopRename(node.id);
+      message = await onRename(node.id, name, node);
+    } catch (failure) {
+      message = failure instanceof Error ? failure.message : "Couldn't rename. Try again.";
     } finally {
       setRenamePending(false);
     }
+    if (editingRef.current !== node.id) return;
+    if (message) setRenameError({ id: node.id, message });
+    else stopRename(node.id);
   };
   const onKey = (event: React.KeyboardEvent<HTMLLIElement>, node: FileTreeNode) => {
     if (event.target !== event.currentTarget) return;
@@ -265,14 +274,19 @@ export function FileTree({
     }
   };
   const withMenu = (node: FileTreeNode, item: React.ReactElement) =>
-    renderContextMenu && editing !== node.id ? (
+    renderContextMenu ? (
       <ContextMenu key={node.id}>
-        <ContextMenuTrigger asChild>{item}</ContextMenuTrigger>
+        <ContextMenuTrigger asChild disabled={editing === node.id}>
+          {item}
+        </ContextMenuTrigger>
         <ContextMenuContent
           aria-label={`Actions for ${node.name}`}
+          onClick={(event) => event.stopPropagation()}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
-            if (!document.activeElement?.closest("input")) targets.current.get(node.id)?.focus();
+            const row = targets.current.get(node.id);
+            if (editingRef.current === node.id) row?.querySelector("input")?.focus();
+            else row?.focus();
           }}
         >
           {renderContextMenu(node)}
@@ -355,9 +369,10 @@ export function FileTree({
                   size="xs"
                   aria-label={`Rename ${node.name}`}
                   defaultValue={node.name}
-                  disabled={renamePending}
-                  aria-invalid={renameError ? true : undefined}
-                  aria-describedby={renameError ? `${uid}-${node.id}-error` : undefined}
+                  readOnly={renamePending}
+                  aria-busy={renamePending || undefined}
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={error ? `${uid}-${node.id}-error` : undefined}
                   className={styles.treeRename}
                   ref={(input: HTMLInputElement | null) => {
                     if (!input || input.dataset.ready) return;
@@ -370,6 +385,7 @@ export function FileTree({
                   onContextMenu={(event) => event.stopPropagation()}
                   onKeyDown={(event) => {
                     event.stopPropagation();
+                    if (event.nativeEvent.isComposing) return;
                     if (event.key === "Enter") {
                       event.preventDefault();
                       commitRename(node, event.currentTarget.value);
@@ -380,7 +396,7 @@ export function FileTree({
                   }}
                   onChange={() => setRenameError(undefined)}
                   onBlur={(event) => {
-                    if (!renameError) commitRename(node, event.currentTarget.value);
+                    if (!error) commitRename(node, event.currentTarget.value);
                   }}
                 />
               ) : (
@@ -392,9 +408,14 @@ export function FileTree({
                   )}
                 </span>
               )}
-              {editing === node.id && renameError ? (
-                <span id={`${uid}-${node.id}-error`} role="alert" className={styles.treeError}>
-                  {renameError}
+              {editing === node.id && error ? (
+                <span
+                  id={`${uid}-${node.id}-error`}
+                  role="alert"
+                  title={error}
+                  className={styles.treeError}
+                >
+                  {error}
                 </span>
               ) : (
                 node.meta && <span className={styles.treeMeta}>{node.meta}</span>
