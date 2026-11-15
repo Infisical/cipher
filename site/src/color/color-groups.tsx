@@ -163,6 +163,28 @@ const toasts = [
   { id: "failed", title: "Sync failed", description: "The provider rejected the token.", tone: "bad" as const }
 ];
 
+const folders = [
+  { name: "services", depth: 0, open: true },
+  { name: "payments", depth: 1, open: false },
+  { name: "auth", depth: 1, open: false },
+  { name: "database", depth: 0, open: false }
+];
+
+function FolderIcons() {
+  return (
+    <div className="flex flex-col gap-1 font-mono text-sm">
+      {folders.map((folder) => (
+        <span key={folder.name} className="flex items-center gap-2" style={{ paddingLeft: folder.depth * 16 }}>
+          <span className="text-(--cipher-folder)">
+            <Icon name={folder.open ? "folder-open" : "folder"} />
+          </span>
+          {folder.name}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function Toasts() {
   return <ToastStack inline items={toasts} />;
 }
@@ -322,6 +344,14 @@ export const colorGroups: ColorGroup[] = [
       { title: "Status badges", tokens: ["ok", "ok-bg", "ok-line", "warn", "warn-bg", "warn-line", "bad", "bad-bg", "bad-line", "info", "info-bg", "info-line"], Preview: StatusBadges },
       { title: "Alerts and a danger action", tokens: ["warn-bg", "warn-line", "warn", "bad-bg", "bad-line", "bad", "bad-fill", "on-bad"], Preview: StatusAlerts }
     ]
+  },
+  {
+    id: "resources",
+    title: "Resources",
+    usage:
+      "Colors that mark a kind of resource wherever it appears. Folder colors the folder icon only; the name beside it stays ink.",
+    sections: [{ tokens: ["folder"] }],
+    compositions: [{ title: "Folder icons", tokens: ["folder", "ink"], Preview: FolderIcons }]
   },
   {
     id: "toast",
