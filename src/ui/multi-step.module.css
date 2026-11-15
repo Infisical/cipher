@@ -28,6 +28,7 @@
 .footer.footer {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--cipher-space-12);
@@ -45,9 +46,15 @@
 }
 .buttons {
   display: flex;
-  flex: none;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
   gap: var(--cipher-space-12);
   margin-inline-start: auto;
+}
+.buttons > * {
+  max-width: 100%;
 }
 .page {
   container-type: inline-size;
