@@ -1,0 +1,68 @@
+.root {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+}
+.zone {
+  border: var(--cipher-size-control-border) dashed var(--cipher-line);
+  background: var(--cipher-tint);
+  cursor: pointer;
+  transition:
+    background-color var(--cipher-duration-fast) var(--cipher-ease-standard),
+    border-color var(--cipher-duration-fast) var(--cipher-ease-standard);
+}
+.zone:hover:not([data-disabled]) {
+  background: var(--cipher-hover);
+}
+.zone:focus-visible {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
+}
+.zone[data-invalid] {
+  border-color: var(--cipher-control-invalid-border);
+}
+.zone[data-dragging] {
+  border-style: solid;
+  border-color: var(--cipher-accent-line);
+  background: var(--cipher-accent-wash);
+}
+.zone[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-4);
+}
+.messages:not(:empty) {
+  margin-block-start: var(--cipher-space-8);
+}
+.list {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--cipher-space-4);
+  margin: var(--cipher-space-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.file {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+.name {
+  flex: 1;
+  min-width: 0;
+  color: var(--cipher-ink);
+}
+.size {
+  flex-shrink: 0;
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+}

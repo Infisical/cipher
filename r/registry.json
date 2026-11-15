@@ -1294,6 +1294,35 @@
       ]
     },
     {
+      "name": "file-input",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/empty",
+        "@cipher/icon",
+        "@cipher/item",
+        "@cipher/middle-truncate"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/file-input.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/file-input.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/file-input.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/file-input.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/helpers.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/helpers.module.css"
+        }
+      ]
+    },
+    {
       "name": "file-tree",
       "type": "registry:ui",
       "registryDependencies": [
