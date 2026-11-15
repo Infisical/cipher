@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { Locale } from "react-day-picker";
 
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
@@ -37,7 +36,8 @@ export type EventCalendarProps = Omit<React.ComponentPropsWithoutRef<"div">, "on
   /** Makes events clickable, in the grid and in a day's list. */
   onEventSelect?: (event: EventCalendarEvent) => void;
   loading?: boolean;
-  locale?: Partial<Locale>;
+  /** Only its code is read, so a react-day-picker or date-fns Locale works. */
+  locale?: { code?: string };
   ref?: React.Ref<HTMLDivElement>;
 };
 
@@ -96,10 +96,6 @@ export function EventCalendar({
   const interactedOutside = React.useRef(false);
   const id = React.useId();
 
-  const focusedDay = sameMonth(focused, month) ? focused : month;
-  const focusedKey = dayKey(focusedDay);
-  const openKey = openDay ? dayKey(openDay) : null;
-
   const monthTime = month.getTime();
   const weeks = React.useMemo(() => {
     const first = new Date(monthTime);
@@ -109,6 +105,11 @@ export function EventCalendar({
       Array.from({ length: 7 }, (_, day) => addDays(first, week * 7 + day - leading))
     );
   }, [monthTime, weekStartsOn]);
+  const visibleKeys = React.useMemo(() => new Set(weeks.flat().map(dayKey)), [weeks]);
+
+  const focusedDay = visibleKeys.has(dayKey(focused)) ? focused : month;
+  const focusedKey = dayKey(focusedDay);
+  const openKey = openDay ? dayKey(openDay) : null;
 
   const byDay = React.useMemo(() => {
     const map = new Map<string, EventCalendarEvent[]>();
@@ -204,9 +205,11 @@ export function EventCalendar({
             if (!move) return;
             event.preventDefault();
             const next = move(focusedDay, weekStartsOn);
+            if (dayKey(next) === focusedKey) return;
             moveFocus.current = true;
             setFocused(next);
-            if (!sameMonth(next, month)) setMonth(startOfMonth(next));
+            const paging = event.key === "PageUp" || event.key === "PageDown";
+            if (paging || !visibleKeys.has(dayKey(next))) setMonth(startOfMonth(next));
           }}
         >
           <div role="row" className={styles.row}>
@@ -263,7 +266,7 @@ export function EventCalendar({
                       {day.getDate()}
                     </span>
                     {dayEvents.length ? (
-                      <div aria-hidden className={styles.events}>
+                      <div className={styles.events}>
                         {visible.map((item) =>
                           onEventSelect ? (
                             <button
@@ -292,7 +295,7 @@ export function EventCalendar({
                           )
                         )}
                         {overflow ? (
-                          <span className={styles.more}>
+                          <span aria-hidden className={styles.more}>
                             +{dayEvents.length - visible.length} more
                           </span>
                         ) : null}

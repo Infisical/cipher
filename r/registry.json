@@ -1275,9 +1275,6 @@
         "@cipher/popover",
         "@cipher/spinner"
       ],
-      "dependencies": [
-        "react-day-picker@^10.0.2"
-      ],
       "files": [
         {
           "path": "src/components/cipher/ui/event-calendar.tsx",
