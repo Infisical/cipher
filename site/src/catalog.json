@@ -816,6 +816,30 @@
     ]
   },
   {
+    "id": "file-input",
+    "title": "File input",
+    "summary": "Pick or drop files, checked against the accepted types and size.",
+    "group": "Forms",
+    "examples": [
+      {
+        "title": "Single file",
+        "module": "file-input/default"
+      },
+      {
+        "title": "Multiple files",
+        "module": "file-input/multiple"
+      },
+      {
+        "title": "Long names, many files and errors",
+        "module": "file-input/stressed"
+      },
+      {
+        "title": "Sizes and states",
+        "module": "file-input/states"
+      }
+    ]
+  },
+  {
     "id": "file-tree",
     "title": "File tree",
     "summary": "A named hierarchical file and folder picker with one keyboard tab stop.",
