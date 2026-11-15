@@ -1153,6 +1153,10 @@
       {
         "title": "Quick actions",
         "module": "multi-select/environments"
+      },
+      {
+        "title": "Server search",
+        "module": "multi-select/server-search"
       }
     ]
   },
