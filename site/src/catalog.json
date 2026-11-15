@@ -594,6 +594,10 @@
         "module": "dialog/content"
       },
       {
+        "title": "Body slot: short, fields and long",
+        "module": "dialog/body"
+      },
+      {
         "title": "Pending save and unsaved changes",
         "module": "dialog/pending"
       }
