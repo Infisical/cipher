@@ -1945,6 +1945,35 @@
       ]
     },
     {
+      "name": "remote-desktop",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/empty",
+        "@cipher/kbd",
+        "@cipher/popover",
+        "@cipher/spinner",
+        "@cipher/textarea",
+        "@cipher/tooltip"
+      ],
+      "dependencies": [
+        "lucide-react@^0.544.0"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/remote-desktop.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/remote-desktop.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/remote-desktop.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/remote-desktop.module.css"
+        }
+      ]
+    },
+    {
       "name": "route-progress",
       "type": "registry:ui",
       "registryDependencies": [
