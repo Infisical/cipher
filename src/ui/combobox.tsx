@@ -266,6 +266,10 @@ export function Combobox({
     apply([option.value]);
     closeDialog();
   };
+  const latestApply = React.useRef(apply);
+  React.useLayoutEffect(() => {
+    latestApply.current = apply;
+  });
   const canClear = Boolean(props.clearable) && selected.some((value) => !isLocked(value));
   if (props.multiple)
     return (
@@ -524,7 +528,7 @@ export function Combobox({
                         query: query.trim(),
                         complete: (option) => {
                           setPicked(option);
-                          apply([option.value]);
+                          latestApply.current([option.value]);
                         }
                       });
                     }}

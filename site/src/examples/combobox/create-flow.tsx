@@ -47,7 +47,12 @@ const IdentityPicker = ({ initial }: { initial: ComboboxOption[] }) => {
           {
             title: "Name",
             summary: name || undefined,
-            validate: () => (name.trim() ? true : { fields: { name: "Enter a name." } }),
+            validate: () => {
+              if (!name.trim()) return { fields: { name: "Enter a name." } };
+              if (options.some((option) => option.value === name.trim()))
+                return { fields: { name: `${name.trim()} already exists.` } };
+              return true;
+            },
             content: (
               <Field label="Name" name="name">
                 <Input value={name} onChange={(event) => setName(event.target.value)} />
