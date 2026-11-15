@@ -490,6 +490,10 @@
         "module": "combobox/creation"
       },
       {
+        "title": "Create through your own MultiStep dialog",
+        "module": "combobox/create-flow"
+      },
+      {
         "title": "Async search",
         "module": "combobox/async"
       },

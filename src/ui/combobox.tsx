@@ -80,6 +80,14 @@ export type ComboboxCreation =
       disabledReason?: string;
       discardTitle?: string;
       discardDescription?: string;
+    }
+  | {
+      /** Shows the Create row and hands over to your own flow, such as a MultiStep dialog. */
+      mode: "action";
+      label: string;
+      /** query is the trimmed search text; complete selects the created option. */
+      onSelect: (props: { query: string; complete: (option: ComboboxOption) => void }) => void;
+      disabledReason?: string;
     };
 type SharedComboboxProps = {
   options: readonly ComboboxOption[];
@@ -147,6 +155,7 @@ export function Combobox({
   const loading = !props.multiple && Boolean(props.loading);
   const creationConfig = props.multiple ? undefined : props.creation;
   const dialogCreation = creationConfig?.mode === "dialog" ? creationConfig : undefined;
+  const rowCreation = creationConfig?.mode === "inline" ? undefined : creationConfig;
   const inlineCreate = creationConfig?.mode === "inline" ? creationConfig.onCreate : onCreate;
   const creationBlocked = creationConfig?.disabledReason || undefined;
   const field = useFieldControlAttributes(props);
@@ -437,8 +446,8 @@ export function Combobox({
             trailing={loading ? <Spinner /> : undefined}
           />
           <CommandList aria-busy={loading || undefined}>
-            {!onSearch && !dialogCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
-            {(onSearch || dialogCreation) && !filtered.length && (
+            {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
+            {(onSearch || rowCreation) && !filtered.length && (
               <p role="status" data-slot="combobox-status" className={menu.empty}>
                 {loading ? "Searching…" : emptyText}
               </p>
@@ -497,7 +506,7 @@ export function Combobox({
                 </CommandItem>
               </CommandGroup>
             )}
-            {dialogCreation && (
+            {rowCreation && (
               <>
                 {filtered.length > 0 && <CommandSeparator />}
                 <CommandGroup>
@@ -505,10 +514,23 @@ export function Combobox({
                     value="combobox-create-dialog"
                     data-slot="combobox-create"
                     disabled={disabled || Boolean(creationBlocked)}
-                    onSelect={openDialog}
+                    onSelect={() => {
+                      if (rowCreation.mode === "dialog") {
+                        openDialog();
+                        return;
+                      }
+                      changeOpen(false);
+                      rowCreation.onSelect({
+                        query: query.trim(),
+                        complete: (option) => {
+                          setPicked(option);
+                          apply([option.value]);
+                        }
+                      });
+                    }}
                   >
                     <Icon name="plus" />
-                    <span className={menu.title}>{dialogCreation.label}</span>
+                    <span className={menu.title}>{rowCreation.label}</span>
                     {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
                   </CommandItem>
                 </CommandGroup>
