@@ -266,6 +266,13 @@ export function FileTree({
                 node.icon ??
                 (folder(node) ? (open.includes(node.id) ? "folder-open" : "folder") : "file")
               }
+              className={
+                (node.icon === undefined && folder(node)) ||
+                node.icon === "folder" ||
+                node.icon === "folder-open"
+                  ? styles.treeFolder
+                  : undefined
+              }
             />
             <span className={styles.treeName} title={node.name}>
               {truncate === "middle" ? <MiddleTruncate text={node.name} keepEnd={8} /> : node.name}

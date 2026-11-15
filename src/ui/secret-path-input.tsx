@@ -207,7 +207,10 @@ export function SecretPathInput({
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => choose(suggestion)}
               >
-                <Icon name={suggestion.hint ? "folder-open" : "folder"} />
+                <Icon
+                  name={suggestion.hint ? "folder-open" : "folder"}
+                  className={styles.folderIcon}
+                />
                 <span className={cn(styles.optionLabel, suggestion.hint && styles.optionGlob)}>
                   {suggestion.label}
                 </span>

@@ -513,6 +513,12 @@
   color: var(--cipher-faint);
   cursor: not-allowed;
 }
+.treeFolder {
+  color: var(--cipher-folder);
+}
+.treeRow[aria-disabled="true"] .treeFolder {
+  color: inherit;
+}
 .treeName {
   overflow: hidden;
   text-overflow: ellipsis;

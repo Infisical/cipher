@@ -201,6 +201,7 @@
   --cipher-info-bg: #dfe7ef;
   --cipher-info-wash: #eef3f8;
   --cipher-info-line: #c3d1df;
+  --cipher-folder: #80661f;
   --cipher-chart-1: var(--cipher-ink);
   --cipher-chart-2: var(--cipher-muted);
   --cipher-chart-3: var(--cipher-accent);
@@ -416,6 +417,7 @@
   --cipher-info-bg: #121e2b;
   --cipher-info-wash: #0e1620;
   --cipher-info-line: #243a52;
+  --cipher-folder: #a4873e;
   --cipher-chart-1: var(--cipher-ink);
   --cipher-chart-2: var(--cipher-muted);
   --cipher-chart-3: var(--cipher-accent);
