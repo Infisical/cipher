@@ -1302,6 +1302,10 @@
         "module": "multi-step/destructive"
       },
       {
+        "title": "Save errors on the final step",
+        "module": "multi-step/save-errors"
+      },
+      {
         "title": "One step as a form shell",
         "module": "multi-step/single"
       }
