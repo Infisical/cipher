@@ -2209,6 +2209,36 @@
       ]
     },
     {
+      "name": "session-replay",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/toggle-group"
+      ],
+      "dependencies": [
+        "lucide-react@^0.544.0",
+        "radix-ui@^1.6.7"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/session-replay.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/session-replay.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/controls.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/controls.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/session-replay.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/session-replay.module.css"
+        }
+      ]
+    },
+    {
       "name": "settings-card",
       "type": "registry:ui",
       "registryDependencies": [

@@ -1,0 +1,239 @@
+.replay {
+  container-type: inline-size;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--cipher-line);
+  background: var(--cipher-surface);
+  color: var(--cipher-ink);
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+/* Container conditions cannot read custom properties, so this repeats size-sidecar-collapse (896px). */
+@container (min-width: 896px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) var(--cipher-size-sidecar);
+  }
+  .events {
+    border-inline-start: 1px solid var(--cipher-line);
+  }
+  .eventsBody {
+    position: absolute;
+    inset: 0;
+  }
+}
+.stage {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.viewport {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--cipher-inset);
+  cursor: pointer;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  padding: var(--cipher-space-8) var(--cipher-space-12);
+  border-top: 1px solid var(--cipher-line);
+}
+@container (max-width: 30rem) {
+  .controls {
+    flex-wrap: wrap;
+  }
+  .timeline {
+    flex-basis: 100%;
+    order: -1;
+  }
+}
+.time {
+  flex: none;
+  color: var(--cipher-text2);
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-weight: var(--cipher-type-mono-sm-font-weight);
+  letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
+  font-variant-numeric: tabular-nums;
+}
+.timeline {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: var(--cipher-space-48);
+  height: var(--cipher-size-control-sm);
+  touch-action: none;
+  user-select: none;
+}
+.timeline[data-disabled] {
+  opacity: 0.5;
+}
+.track {
+  position: relative;
+  flex-grow: 1;
+  height: var(--cipher-space-4);
+  overflow: hidden;
+}
+.range {
+  position: absolute;
+  height: 100%;
+}
+.markers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.marker {
+  position: absolute;
+  top: 50%;
+  width: var(--cipher-space-2);
+  height: var(--cipher-space-8);
+  background: var(--cipher-faint);
+  transform: translate(-50%, -50%);
+}
+.marker[data-tone] {
+  height: var(--cipher-space-14);
+}
+.marker[data-tone="warn"] {
+  background: var(--cipher-warn);
+}
+.marker[data-tone="bad"] {
+  background: var(--cipher-bad);
+}
+.thumb {
+  position: relative;
+  display: block;
+  z-index: 1;
+}
+.events {
+  position: relative;
+  min-width: 0;
+  min-height: var(--cipher-size-sheet-sm);
+  border-top: 1px solid var(--cipher-line);
+}
+@container (min-width: 896px) {
+  .events {
+    border-top: 0;
+  }
+}
+.eventsBody {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.eventsHead {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cipher-space-8);
+  padding: var(--cipher-space-8) var(--cipher-space-12);
+  border-bottom: 1px solid var(--cipher-line-soft);
+  font-family: var(--cipher-type-label-font-family);
+  font-size: var(--cipher-type-label-font-size);
+  line-height: var(--cipher-type-label-line-height);
+  font-weight: var(--cipher-type-label-font-weight);
+  letter-spacing: var(--cipher-type-label-letter-spacing);
+}
+.count {
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-variant-numeric: tabular-nums;
+}
+.list {
+  flex: 1;
+  min-height: 0;
+  max-height: var(--cipher-size-sheet-sm);
+  margin: 0;
+  padding: var(--cipher-space-4) 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-color: var(--cipher-scroll-thumb) transparent;
+}
+@container (min-width: 896px) {
+  .list {
+    max-height: none;
+  }
+}
+.entry {
+  min-width: 0;
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--cipher-space-8);
+  width: 100%;
+  min-width: 0;
+  padding: var(--cipher-space-4) var(--cipher-space-12);
+  border: 0;
+  background: transparent;
+  color: var(--cipher-ink);
+  text-align: start;
+  cursor: pointer;
+  font-family: var(--cipher-type-mono-sm-font-family);
+  font-size: var(--cipher-type-mono-sm-font-size);
+  line-height: var(--cipher-type-mono-sm-line-height);
+  font-weight: var(--cipher-type-mono-sm-font-weight);
+  letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
+  transition: background-color var(--cipher-duration-fast) var(--cipher-ease-standard);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: var(--cipher-hover);
+  }
+}
+.row[aria-current="true"] {
+  background: var(--cipher-selected-surface);
+  box-shadow: inset var(--cipher-space-2) 0 0 var(--cipher-accent);
+}
+.rowTime {
+  flex: none;
+  color: var(--cipher-muted);
+  font-variant-numeric: tabular-nums;
+}
+.kind {
+  flex: none;
+  max-width: var(--cipher-space-48);
+  overflow: hidden;
+  color: var(--cipher-text2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dot {
+  flex: none;
+  align-self: center;
+  width: var(--cipher-space-6);
+  height: var(--cipher-space-6);
+  background: var(--cipher-warn);
+}
+.row[data-tone="bad"] .dot {
+  background: var(--cipher-bad);
+}
+.row[data-tone="bad"] .label {
+  color: var(--cipher-bad);
+}
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.empty {
+  margin: 0;
+  padding: var(--cipher-space-surface-inset);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+}
