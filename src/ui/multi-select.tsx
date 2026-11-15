@@ -121,6 +121,7 @@ export function MultiSelect({
   const creation = useOptionCreation(props.onCreate, () => {
     setQuery("");
     onSearch?.("");
+    search.current?.focus();
   });
   const { creating, error: createError } = creation;
   const changeQuery = (next: string) => {
