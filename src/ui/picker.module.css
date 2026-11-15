@@ -221,6 +221,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.optionGlob {
+  font-family: var(--cipher-font-mono);
+}
 .optionMeta {
   flex: 0 1 auto;
   min-width: 0;

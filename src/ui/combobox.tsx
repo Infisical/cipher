@@ -24,7 +24,7 @@ import {
   DialogHeader,
   DialogTitle
 } from "./dialog";
-import { Icon } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { type FieldWidth, fieldBoxFlags, fieldBoxWatch } from "./input";
 import { MultiSelect } from "./multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -38,6 +38,8 @@ import styles from "./picker.module.css";
 export type ComboboxOption = {
   value: string;
   label: string;
+  /** A glyph at the row's start, also shown in the trigger while this option is selected. Single selection only. */
+  icon?: IconSource;
   /** A muted line under the label. Search matches it as well as the label. */
   description?: string;
   meta?: string;
@@ -363,6 +365,11 @@ export function Combobox({
         }}
         className={cn(controlStyles.field, controlStyles.trigger, mono && styles.mono, className)}
       >
+        {selectedOption?.icon && (
+          <span className={controlStyles.leading} data-slot="combobox-icon">
+            <Icon icon={selectedOption.icon} />
+          </span>
+        )}
         <span>{selectedOption?.label ?? (selected[0] || placeholder)}</span>
         <Icon name="chev-down" className={controlStyles.chevron} data-chevron="" />
       </button>
@@ -413,8 +420,7 @@ export function Combobox({
         }}
         onInteractOutside={(event) => {
           const clear =
-            event.target instanceof Element &&
-            event.target.closest('[data-slot="combobox-clear"]');
+            event.target instanceof Element && event.target.closest('[data-slot="combobox-clear"]');
           if (clear && (!clear.isConnected || triggerRef.current?.parentElement?.contains(clear)))
             event.preventDefault();
         }}
@@ -453,6 +459,7 @@ export function Combobox({
                         changeOpen(false);
                       }}
                     >
+                      {option.icon && <Icon icon={option.icon} />}
                       {option.description ? (
                         <span className={menu.text}>
                           <span className={menu.title}>

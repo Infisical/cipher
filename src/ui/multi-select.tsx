@@ -9,6 +9,7 @@ import { Button } from "./button";
 import { Icon } from "./icon";
 import { useMenuInset } from "./menu-inset";
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./popover";
+import { Spinner } from "./spinner";
 
 import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
@@ -38,6 +39,10 @@ type Shared = {
   disabled?: boolean;
   invalid?: boolean;
   searchable?: boolean;
+  /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. It turns on the search field. Include the selected options in options on first render so their labels show. */
+  onSearch?: (query: string) => void;
+  /** While onSearch is in flight: a spinner in the search field, and Searching… in place of No options found. */
+  loading?: boolean;
   anchorRef?: React.RefObject<HTMLElement | null>;
   open?: boolean;
   defaultOpen?: boolean;
@@ -78,7 +83,9 @@ export function MultiSelect({
     allLabel,
     disabled,
     invalid,
-    searchable = false,
+    searchable: searchableProp = false,
+    onSearch,
+    loading = false,
     anchorRef,
     renderValue,
     trigger,
@@ -96,6 +103,7 @@ export function MultiSelect({
       throw new Error("MultiSelect option values must be unique.");
     optionValues.add(option.value);
   });
+  const searchable = searchableProp || Boolean(onSearch);
   const field = useFieldControlAttributes(props);
   const generated = React.useId();
   const listId = `${generated}-list`;
@@ -110,18 +118,25 @@ export function MultiSelect({
     onChange: props.onOpenChange
   });
   const [query, setQuery] = React.useState("");
-  const creation = useOptionCreation(props.onCreate, () => setQuery(""));
+  const creation = useOptionCreation(props.onCreate, () => {
+    setQuery("");
+    onSearch?.("");
+  });
   const { creating, error: createError } = creation;
   const changeQuery = (next: string) => {
     creation.cancel();
     setQuery(next);
+    onSearch?.(next);
   };
   const changeOpen = (next: boolean) => {
     if (disabled && next) return;
     creation.cancel();
     setOpen(next);
-    if (!next) setQuery("");
+    if (next || !query) return;
+    setQuery("");
+    onSearch?.("");
   };
+  const [remembered, setRemembered] = React.useState<readonly MultiSelectOption[]>([]);
   React.useLayoutEffect(() => {
     creation.cancel();
   }, [open, disabled, creation.cancel]);
@@ -146,14 +161,27 @@ export function MultiSelect({
       props.onChange?.(next);
     } else {
       const included = new Set(values);
-      const ordered = options
-        .filter((option) => included.has(option.value))
-        .map((option) => option.value);
+      const ordered = onSearch
+        ? [...included]
+        : options.filter((option) => included.has(option.value)).map((option) => option.value);
       if (props.value === undefined) setInternal(ordered);
       props.onChange?.(ordered);
     }
   };
-  const chosen = options.filter((option) => selected.includes(option.value));
+  const shown = options.filter((option) => selected.includes(option.value));
+  if (onSearch && shown.some((option) => !remembered.includes(option)))
+    setRemembered((known) => [
+      ...known.filter((item) => !shown.some((option) => option.value === item.value)),
+      ...shown
+    ]);
+  const chosen = onSearch
+    ? selected.flatMap(
+        (value) =>
+          options.find((option) => option.value === value) ??
+          remembered.find((option) => option.value === value) ??
+          []
+      )
+    : shown;
   const firstChosen = chosen[0];
   const eligible = options.filter((option) => !option.disabled);
   const allSelected =
@@ -164,7 +192,7 @@ export function MultiSelect({
   if (renderValue) summary = renderValue(chosen);
   else if (firstChosen) {
     summary =
-      props.multiple !== false && allLabel && allSelected ? (
+      props.multiple !== false && allLabel && allSelected && !onSearch ? (
         allLabel
       ) : (
         <span className={styles.summary}>
@@ -177,11 +205,13 @@ export function MultiSelect({
         </span>
       );
   }
-  const filtered = options.filter((option) =>
-    `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
-      .toLowerCase()
-      .includes(query.toLowerCase())
-  );
+  const filtered = onSearch
+    ? options
+    : options.filter((option) =>
+        `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
+          .toLowerCase()
+          .includes(query.toLowerCase())
+      );
   const enabled = filtered.filter((option) => !option.disabled && !disabled);
   const currentActive = enabled.find((option) => option.value === active) ?? enabled[0];
   const optionId = (value: string) =>
@@ -191,16 +221,13 @@ export function MultiSelect({
       document.getElementById(optionId(currentActive.value))?.scrollIntoView({ block: "nearest" });
   }, [open, currentActive?.value]);
   const groups = [...new Set(filtered.map((option) => option.group ?? ""))];
-  const all = () =>
-    apply(
-      options
-        .filter((option) => !option.disabled || selected.includes(option.value))
-        .map((option) => option.value)
-    );
+  const all = () => apply([...selected, ...eligible.map((option) => option.value)]);
   const none = () =>
     apply(selected.filter((value) => !eligible.some((option) => option.value === value)));
   const toggle = (option: MultiSelectOption) => {
     if (option.disabled || disabled) return;
+    if (onSearch)
+      setRemembered((known) => [...known.filter((item) => item.value !== option.value), option]);
     if (props.multiple === false) {
       apply([option.value]);
       changeOpen(false);
@@ -378,12 +405,15 @@ export function MultiSelect({
               onChange={(event) => changeQuery(event.target.value)}
               placeholder="Search options"
             />
+            {loading && <Spinner />}
           </div>
         )}
         {multiple && quickActions ? (
           <div className={styles.quickBar} data-slot="multi-select-actions">
             <span role="status" aria-live="polite" className={styles.quickStatus}>
-              {chosen.length} of {options.length} selected
+              {onSearch
+                ? `${selected.length} selected`
+                : `${chosen.length} of ${options.length} selected`}
             </span>
             {[
               { text: "Select all", disabled: allSelected, run: all },
@@ -415,6 +445,7 @@ export function MultiSelect({
           id={listId}
           role="listbox"
           aria-label={label}
+          aria-busy={loading || undefined}
           aria-multiselectable={multiple || undefined}
           tabIndex={0}
           aria-activedescendant={currentActive ? optionId(currentActive.value) : undefined}
@@ -473,7 +504,11 @@ export function MultiSelect({
           ))}
           <ListHighlight />
         </div>
-        {!filtered.length && <p className={menu.empty}>No options found</p>}
+        {!filtered.length && (
+          <p role={onSearch ? "status" : undefined} className={menu.empty}>
+            {loading ? "Searching…" : "No options found"}
+          </p>
+        )}
         {canCreate && (
           <div className={menu.footer} data-slot="multi-select-footer">
             {canCreate && (

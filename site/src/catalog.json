@@ -458,8 +458,16 @@
         "module": "combobox/secret-path"
       },
       {
+        "title": "Secret path with glob suggestions",
+        "module": "combobox/secret-path-globs"
+      },
+      {
         "title": "Groups and descriptions",
         "module": "combobox/groups"
+      },
+      {
+        "title": "Option icons",
+        "module": "combobox/icons"
       }
     ]
   },
@@ -592,6 +600,10 @@
       {
         "title": "Constrained history",
         "module": "dialog/content"
+      },
+      {
+        "title": "Body slot: short, fields and long",
+        "module": "dialog/body"
       },
       {
         "title": "Pending save and unsaved changes",
@@ -948,7 +960,8 @@
       {
         "title": "Page search: / focuses it",
         "module": "input/page-search"
-      }
+      },
+        { "title": "Suggested value", "module": "input/suggested-value" }
     ]
   },
   {
@@ -1144,6 +1157,10 @@
       {
         "title": "Quick actions",
         "module": "multi-select/environments"
+      },
+      {
+        "title": "Server search",
+        "module": "multi-select/server-search"
       }
     ]
   },
@@ -1252,6 +1269,18 @@
       {
         "title": "Choice cards",
         "module": "radio-group/cards"
+      }
+    ]
+  },
+  {
+    "id": "link",
+    "title": "Link",
+    "summary": "An inline text link for prose and help text; CellLink and RowLink cover tables.",
+    "group": "Navigation",
+    "examples": [
+      {
+        "title": "Help text, prose and a long target",
+        "module": "link/default"
       }
     ]
   },
@@ -1422,7 +1451,7 @@
   {
     "id": "sidebar",
     "title": "Sidebar",
-    "summary": "The app's navigation below the TopBar band and beside the content card: sections of rows (a back row first inside a scope), footer rows, and a bottom-left corner with the collapse toggle, help and announcements.",
+    "summary": "The app's navigation below the TopBar band and beside the content card: sections of rows (a back row first inside a scope), footer rows, a footer slot for a corner object such as a setup checklist, and a bottom-left corner with the collapse toggle, help and announcements.",
     "group": "Navigation",
     "examples": [
       {
@@ -1436,6 +1465,10 @@
       {
         "title": "Routed levels",
         "module": "sidebar/routes"
+      },
+      {
+        "title": "Footer slot",
+        "module": "sidebar/footer"
       }
     ]
   },

@@ -1652,6 +1652,25 @@
       ]
     },
     {
+      "name": "link",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/link.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/link.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/link.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/link.module.css"
+        }
+      ]
+    },
+    {
       "name": "list",
       "type": "registry:ui",
       "registryDependencies": [
@@ -1743,7 +1762,8 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/popover"
+        "@cipher/popover",
+        "@cipher/spinner"
       ],
       "files": [
         {
@@ -2189,9 +2209,11 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/badge",
+        "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/dropdown-menu",
         "@cipher/icon",
+        "@cipher/popover",
         "@cipher/sheet",
         "@cipher/tabs",
         "@cipher/tooltip",

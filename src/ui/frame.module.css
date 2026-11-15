@@ -17,6 +17,26 @@
 .frameFoot.frameFoot {
   --cipher-size-control-default: var(--cipher-size-control-band);
 }
+/* A band holds one control height: an explicit size on a band action only skews it against its
+   neighbours, so every action takes the band tier. Slot buttons inside a field keep their own size. */
+:is(.frameHead, .frameFoot.frameFoot)
+  [data-cipher-button]:not(:is([data-field-box], [data-slot="input-group"]) *) {
+  --cipher-action-requested-height: var(--cipher-size-control-band);
+  --cipher-button-icon-size: var(--cipher-size-icon-sm);
+}
+:is(.frameHead, .frameFoot.frameFoot)
+  [data-cipher-button]:is([data-size="xs"], [data-size="md"], [data-size="lg"]):not(
+    :is([data-field-box], [data-slot="input-group"]) *
+  ) {
+  --cipher-action-font-size: var(--cipher-type-label-font-size);
+  --cipher-action-line-height: var(--cipher-type-label-line-height);
+  --cipher-action-inset: var(--cipher-space-control-inline-sm);
+  --cipher-action-icon-size: var(--cipher-size-icon-sm);
+}
+:is(.frameHead, .frameFoot.frameFoot)
+  [data-cipher-button][data-size="icon-xs"]:not(:is([data-field-box], [data-slot="input-group"]) *) {
+  --cipher-action-icon-size: var(--cipher-size-icon-sm);
+}
 .frameFoot.frameFoot {
   min-height: var(--cipher-space-40);
   padding: var(--cipher-space-6) var(--cipher-space-frame-inline);

@@ -631,6 +631,20 @@ export const iconShapes = {
       }
     }
   ],
+  "list-checks": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M3.5 4.5h5v5h-5zM3.5 14.5h5v5h-5zM12 7h8.5M12 17h8.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M5 7.25l1 1 1.75-2"
+      }
+    }
+  ],
   sidebar: [
     {
       tag: "rect",

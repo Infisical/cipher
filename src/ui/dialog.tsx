@@ -91,6 +91,7 @@ function DialogContent({
     {
       header: DialogHeader,
       subheader: DialogSubheader,
+      body: DialogBody,
       footer: DialogFooter
     },
     { pinHeader: true, lookThroughForm: true }
@@ -167,6 +168,12 @@ function DialogSubheader({ className, ref, ...props }: React.ComponentProps<"div
 }
 DialogSubheader.displayName = "DialogSubheader";
 
+/** The scrolling body between the pinned header and footer; the dialog pad and the content gap come from the dialog, so add no padding of your own. */
+function DialogBody({ className, ref, ...props }: React.ComponentProps<"div">) {
+  return <div ref={ref} data-slot="dialog-body" className={cn(className)} {...props} />;
+}
+DialogBody.displayName = "DialogBody";
+
 function DialogFooter({
   className,
   showCloseButton = false,
@@ -231,6 +238,7 @@ DialogDescription.displayName = "DialogDescription";
 
 export {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,

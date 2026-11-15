@@ -7,6 +7,7 @@ import { useReportPresence } from "../lib/presence-count";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
 import { Count } from "./badge";
+import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,7 @@ import {
   DropdownMenuTrigger
 } from "./dropdown-menu";
 import { Icon, type IconSource } from "./icon";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Sheet, SheetContent, SheetTitle } from "./sheet";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 import { Tooltip, TooltipProvider } from "./tooltip";
@@ -96,6 +98,9 @@ export interface SidebarProps {
   help?: SidebarHelp;
   announcements?: SidebarAnnouncements;
   footerItems?: readonly SidebarItem[];
+  footer?: React.ReactNode;
+  footerIcon?: IconSource;
+  footerLabel?: string;
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
@@ -522,6 +527,9 @@ const SidebarView = ({
   help,
   announcements,
   footerItems,
+  footer,
+  footerIcon = "more",
+  footerLabel = "More",
   collapsed,
   defaultCollapsed = false,
   onCollapsedChange,
@@ -751,6 +759,7 @@ const SidebarView = ({
         data-collapsed={rail || undefined}
         data-sheet={inSheet || undefined}
         data-edge={edge || undefined}
+        data-has-footer={Boolean(footer) || undefined}
         className={cn(styles.sidebar, className)}
       >
         {header}
@@ -916,6 +925,31 @@ const SidebarView = ({
         </nav>
         {inSheet && narrow && <div ref={slotRefs.actions} className={styles.sheetActions} />}
         {inSheet && narrow && <div ref={slotRefs.account} className={styles.sheetAccount} />}
+        {footer &&
+          (rail ? (
+            <div className={styles.footerSlot}>
+              <Popover>
+                <Tooltip content={footerLabel} side="right">
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="md"
+                      icon={footerIcon}
+                      iconOnly
+                      aria-label={footerLabel}
+                    />
+                  </PopoverTrigger>
+                </Tooltip>
+                <PopoverContent side="right" align="end" aria-label={footerLabel}>
+                  {footer}
+                </PopoverContent>
+              </Popover>
+            </div>
+          ) : (
+            <div className={styles.footerSlot} data-scroll-fade="y">
+              {footer}
+            </div>
+          ))}
         {(toggle || cornerEnd || (inSheet && narrow)) && (
           <div className={styles.corner} data-has-end={Boolean(cornerEnd) || undefined}>
             {toggle}
