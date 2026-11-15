@@ -130,6 +130,18 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const resolvedTheme = useScheme();
   const layer = useToastLayer();
   const owns = useOwnsToaster(props.id ?? TOASTER_ID);
+  const position = props.position ?? "bottom-right";
+  React.useLayoutEffect(() => {
+    if (!owns || !layer) return undefined;
+    const positions = () => layer.getAttribute("data-toast-position")?.split(" ") ?? [];
+    layer.setAttribute("data-toast-position", [...positions(), position].join(" "));
+    return () => {
+      const rest = positions();
+      rest.splice(rest.indexOf(position), 1);
+      if (rest.length) layer.setAttribute("data-toast-position", rest.join(" "));
+      else layer.removeAttribute("data-toast-position");
+    };
+  }, [owns, layer, position]);
   if (!owns) return null;
 
   const toasterId = props.id ?? TOASTER_ID;

@@ -68,10 +68,10 @@ const ShellChromeContext = React.createContext<ShellChrome | null>(null);
 export const useShellChrome = () => React.useContext(ShellChromeContext);
 
 const InsetReserveContext = React.createContext<PresenceReport | null>(null);
-/** Pads AppInset by the floating action bar's height, and lifts the scope's toasts above it, while active holds. */
-export const useActionBarReserve = (active: boolean) => {
+/** Pads AppInset by the floating action bar's height while active holds, and lifts the scope's toasts above it while liftToasts holds. */
+export const useActionBarReserve = (active: boolean, liftToasts = active) => {
   useReportPresence(React.useContext(InsetReserveContext), active);
-  useReportPresence(useActionBarReport(), active);
+  useReportPresence(useActionBarReport(), liftToasts);
 };
 
 const sizeOf = (element: HTMLElement, token: string) =>
