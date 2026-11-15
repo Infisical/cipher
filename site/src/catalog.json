@@ -424,6 +424,26 @@
     ]
   },
   {
+    "id": "code-editor",
+    "title": "Code editor",
+    "summary": "A SQL editor with per-engine highlighting and Mod+Enter to run, for the data explorer.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "Query with an engine picker and Run",
+        "module": "code-editor/default"
+      },
+      {
+        "title": "Empty, read-only and invalid",
+        "module": "code-editor/states"
+      },
+      {
+        "title": "Long lines and many rows",
+        "module": "code-editor/stress"
+      }
+    ]
+  },
+  {
     "id": "terminal",
     "title": "Terminal",
     "summary": "An interactive shell session in the browser, for SSH and database access, with its connection state in the header.",
@@ -1576,6 +1596,26 @@
     ]
   },
   {
+    "id": "share-bar",
+    "title": "Share bar",
+    "summary": "Show how a total splits across a few categories in one bar, with counts and percentages.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Shares with counts",
+        "module": "share-bar/default"
+      },
+      {
+        "title": "Many items, long labels and tiny shares",
+        "module": "share-bar/stressed"
+      },
+      {
+        "title": "Empty, one item and a larger total",
+        "module": "share-bar/states"
+      }
+    ]
+  },
+  {
     "id": "sheet",
     "title": "Sheet",
     "summary": "Inspect or edit a task in a side panel.",
@@ -1612,6 +1652,10 @@
       {
         "title": "Header and footer inside a view component",
         "module": "sheet/wrapped-sections"
+      },
+      {
+        "title": "Nested views: a MultiStep inside the sheet",
+        "module": "sheet/nested-views"
       }
     ]
   },
