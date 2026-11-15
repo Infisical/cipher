@@ -208,6 +208,11 @@
   --cipher-chart-4: var(--cipher-ok);
   --cipher-chart-5: var(--cipher-bad);
   --cipher-chart-6: #2563c9;
+  --cipher-map-land: var(--cipher-line-soft);
+  --cipher-map-border: var(--cipher-surface);
+  --cipher-map-region: var(--cipher-chart-6);
+  --cipher-map-marker: var(--cipher-ink);
+  --cipher-map-marker-line: var(--cipher-surface);
   --cipher-link: var(--cipher-ink);
   --cipher-sw-on: var(--cipher-ink);
   --cipher-sw-knob-on: var(--cipher-accent);
@@ -424,6 +429,11 @@
   --cipher-chart-4: var(--cipher-ok);
   --cipher-chart-5: var(--cipher-bad);
   --cipher-chart-6: #5b9bf0;
+  --cipher-map-land: var(--cipher-neutral-900);
+  --cipher-map-border: var(--cipher-surface);
+  --cipher-map-region: var(--cipher-chart-6);
+  --cipher-map-marker: var(--cipher-ink);
+  --cipher-map-marker-line: var(--cipher-surface);
   --cipher-link: var(--cipher-ink);
   --cipher-sw-on: var(--cipher-accent);
   --cipher-sw-knob-on: var(--cipher-on-accent);

@@ -2727,6 +2727,36 @@
           "target": "src/components/cipher/ui/top-bar.module.css"
         }
       ]
+    },
+    {
+      "name": "world-map",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base",
+        "@cipher/tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/world-map.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/world-map.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/world-map-geometry.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/world-map-geometry.ts"
+        },
+        {
+          "path": "src/components/cipher/ui/world-map-projection.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/world-map-projection.ts"
+        },
+        {
+          "path": "src/components/cipher/ui/world-map.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/world-map.module.css"
+        }
+      ]
     }
   ]
 }
