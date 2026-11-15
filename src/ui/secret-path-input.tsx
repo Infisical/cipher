@@ -24,7 +24,7 @@ export type SecretPathInputProps = Omit<
   folders?: readonly string[];
   /** Called on mount and whenever the typed path enters another folder, with that folder's path ("/" or "/app/api"), so the host loads its children into folders. */
   onParentPathChange?: (parentPath: string) => void;
-  /** Also suggests the glob forms of the current folder: "<folder>/*" for its direct subfolders and "<folder>/**" for every folder under it. Shown after the folders while folders is not empty. */
+  /** Also suggests the glob forms of the current folder: "<folder>/*" for its direct subfolders and "<folder>/**" for the folder itself and every folder under it. Shown after the folders while folders is not empty. */
   globSuggestions?: boolean;
 };
 
@@ -32,7 +32,7 @@ const GLOB = /[*?[\]{}]/;
 
 const GLOB_FORMS = [
   { pattern: "*", hint: "Direct subfolders" },
-  { pattern: "**", hint: "All subfolders" }
+  { pattern: "**", hint: "This folder and subfolders" }
 ];
 
 type Suggestion = { path: string; label: string; hint?: string };
