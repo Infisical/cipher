@@ -99,6 +99,7 @@ export interface SidebarProps {
   announcements?: SidebarAnnouncements;
   footerItems?: readonly SidebarItem[];
   footer?: React.ReactNode;
+  footerIcon?: IconSource;
   footerLabel?: string;
   collapsed?: boolean;
   defaultCollapsed?: boolean;
@@ -527,6 +528,7 @@ const SidebarView = ({
   announcements,
   footerItems,
   footer,
+  footerIcon = "more",
   footerLabel = "More",
   collapsed,
   defaultCollapsed = false,
@@ -929,7 +931,13 @@ const SidebarView = ({
               <Popover>
                 <Tooltip content={footerLabel} side="right">
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="md" icon="more" iconOnly aria-label={footerLabel} />
+                    <Button
+                      variant="ghost"
+                      size="md"
+                      icon={footerIcon}
+                      iconOnly
+                      aria-label={footerLabel}
+                    />
                   </PopoverTrigger>
                 </Tooltip>
                 <PopoverContent side="right" align="end" aria-label={footerLabel}>

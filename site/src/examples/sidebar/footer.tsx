@@ -102,6 +102,7 @@ const Shell = ({
       defaultCollapsed={defaultCollapsed}
       help={{ items: [{ label: "Read Docs", href: "#sidebar", external: true }] }}
       footer={<Checklist title={title} items={items} />}
+      footerIcon="list-checks"
       footerLabel={`${title}, ${done} of ${items.length} done`}
     />
   );
