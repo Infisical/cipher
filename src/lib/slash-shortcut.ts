@@ -17,6 +17,7 @@ const editing = [
   "[role='combobox']",
   "[role='listbox']",
   "[role='menu']",
+  "[role='grid']",
   ".cm-editor",
   ".monaco-editor",
   ".xterm"
@@ -27,14 +28,16 @@ const overlays = "[role='dialog'], [role='alertdialog'], [data-radix-popper-cont
 const isEditing = (node: EventTarget | Element | null) =>
   node instanceof Element && Boolean(node.closest(editing));
 
+const isOpenOverlay = (overlay: HTMLElement) =>
+  overlay.getClientRects().length > 0 && !overlay.querySelector("[role='tooltip']");
+
 const isAvailable = (element: HTMLElement) => {
   if (!element.isConnected || element.getClientRects().length === 0) return false;
+  if (getComputedStyle(element).visibility !== "visible") return false;
   if (element.closest("[inert], [aria-hidden='true']")) return false;
-  if (element instanceof HTMLInputElement && (element.disabled || element.readOnly)) return false;
-  if (element instanceof HTMLButtonElement && element.disabled) return false;
-  const open = Array.from(document.querySelectorAll<HTMLElement>(overlays)).filter(
-    (overlay) => overlay.getClientRects().length > 0
-  );
+  if (element.matches(":disabled")) return false;
+  if (element instanceof HTMLInputElement && element.readOnly) return false;
+  const open = Array.from(document.querySelectorAll<HTMLElement>(overlays)).filter(isOpenOverlay);
   return open.every((overlay) => overlay.contains(element));
 };
 
@@ -59,6 +62,14 @@ const onKeyDown = (event: KeyboardEvent) => {
     })
     .sort((a, b) => {
       if (a.entry.scope !== b.entry.scope) return a.entry.scope === "card" ? -1 : 1;
+      if (a.entry.scope === "card") {
+        const cardA = a.element.closest('[data-slot="card"]');
+        const cardB = b.element.closest('[data-slot="card"]');
+        if (cardA && cardB && cardA !== cardB) {
+          if (cardA.contains(cardB)) return 1;
+          if (cardB.contains(cardA)) return -1;
+        }
+      }
       return inDocumentOrder(a.element, b.element);
     });
   const winner = candidates[0];
@@ -69,8 +80,8 @@ const onKeyDown = (event: KeyboardEvent) => {
 
 /**
  * Registers an element that "/" acts on. One document listener serves every registration, so
- * searches never compete: a card-scoped one wins while focus is inside its card, otherwise the first
- * visible page-scoped one in document order. "/" is ignored while typing in a field or editor, and
+ * searches never compete: a card-scoped one wins while focus is inside its card (the innermost card when cards nest), otherwise the first
+ * visible page-scoped one in document order. "/" is ignored while typing in a field, editor or grid, and
  * while a dialog or popover is open that doesn't contain the element.
  */
 export function useSlashShortcut(
