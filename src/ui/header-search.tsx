@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { useSlashShortcut } from "../lib/slash-shortcut";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -28,8 +29,6 @@ export type HeaderSearchProps = {
   shortcut?: "card" | "page" | false;
   className?: string;
 };
-
-const editable = "input, textarea, select, [contenteditable=''], [contenteditable='true']";
 
 /**
  * An icon trigger for a Card's action slot that opens a popover search. It takes the control height of
@@ -59,24 +58,11 @@ export function HeaderSearch({
 
   React.useEffect(() => () => clearTimeout(timer.current), []);
 
-  React.useEffect(() => {
-    if (!shortcut) return undefined;
-    const host = shortcut === "page" ? document : trigger.current?.closest('[data-slot="card"]');
-    if (!host) return undefined;
-    const onKeyDown = (event: Event) => {
-      const key = event as KeyboardEvent;
-      if (key.key !== "/" || key.metaKey || key.ctrlKey || key.altKey || key.defaultPrevented)
-        return;
-      const target = key.target instanceof HTMLElement ? key.target : null;
-      if (target?.isContentEditable || target?.closest(editable)) return;
-      const dialog = target?.closest('[role="dialog"], [role="alertdialog"]');
-      if (dialog && !dialog.contains(trigger.current)) return;
-      key.preventDefault();
-      setOpen(true);
-    };
-    host.addEventListener("keydown", onKeyDown);
-    return () => host.removeEventListener("keydown", onKeyDown);
-  }, [shortcut]);
+  useSlashShortcut(trigger, {
+    enabled: Boolean(shortcut),
+    scope: shortcut === "page" ? "page" : "card",
+    onTrigger: () => setOpen(true)
+  });
 
   const apply = (next: string) => {
     clearTimeout(timer.current);

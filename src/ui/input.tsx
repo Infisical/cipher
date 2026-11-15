@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { useFieldControlAttributes } from "../lib/field-context";
+import { useSlashShortcut } from "../lib/slash-shortcut";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Kbd } from "./kbd";
@@ -34,6 +35,8 @@ export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size" | 
   invalid?: boolean;
   kbd?: string;
   trailing?: React.ReactNode;
+  /** "/" focuses this field from anywhere on the page, for a page's main search. No hint is drawn. */
+  slashShortcut?: boolean;
 };
 export function Input({
   className,
@@ -45,12 +48,20 @@ export function Input({
   kbd,
   trailing,
   width,
+  slashShortcut = false,
   ref,
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
   const field = useFieldControlAttributes(props);
   const inner = React.useRef<HTMLInputElement>(null);
   React.useImperativeHandle(ref, () => inner.current as HTMLInputElement);
+  useSlashShortcut(inner, {
+    enabled: slashShortcut,
+    onTrigger: () => {
+      inner.current?.focus();
+      inner.current?.select();
+    }
+  });
   const fieldSize = typeof size === "number" ? "sm" : size;
   const leading = icon ?? (props.readOnly ? "lock" : undefined);
   const boxed = Boolean(leading || kbd || trailing);
@@ -64,6 +75,7 @@ export function Input({
       data-field-control={boxed ? "" : undefined}
       data-width={boxed ? undefined : width}
       size={typeof size === "number" ? size : undefined}
+      aria-keyshortcuts={slashShortcut ? "/" : undefined}
       className={cn(
         boxed ? styles.bare : [styles.field, "w-full min-w-0"],
         mono && styles.mono,
