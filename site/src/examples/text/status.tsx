@@ -1,5 +1,6 @@
 import { Inline } from "@infisical/cipher/ui/layout";
 import { Heading, StatusText } from "@infisical/cipher/ui/text";
+import { TooltipText } from "@infisical/cipher/ui/tooltip";
 
 export default function Status() {
   return (
@@ -55,6 +56,24 @@ export default function Status() {
         </div>
         <figcaption className="text-muted-foreground text-xs">
           {"size sm inside a display Heading"}
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">
+          <TooltipText asChild content="Expires on Dec 1, 2026 at 09:00 UTC">
+            <StatusText tone="warn">Expires in 3 days</StatusText>
+          </TooltipText>
+          <TooltipText
+            asChild
+            content="Rotation for DATABASE_CONNECTION_STRING_FOR_THE_PRIMARY_EU_WEST_1_REPLICA failed twice"
+          >
+            <StatusText tone="bad">
+              Rotation failed for the primary EU West 1 replica connection string
+            </StatusText>
+          </TooltipText>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"no icon, focusable for a tooltip"}
         </figcaption>
       </figure>
     </div>
