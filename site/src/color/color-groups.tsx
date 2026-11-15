@@ -383,5 +383,16 @@ export const colorGroups: ColorGroup[] = [
     compositions: [
       { title: "Bar chart", tokens: ["chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6", "line"], Preview: ChartBars }
     ]
+  },
+  {
+    id: "terminal",
+    title: "Terminal",
+    usage:
+      "The ANSI palette of the Terminal. Most colors alias a status, so red output reads like an error elsewhere; magenta and cyan exist only here. Bright colors take a step more contrast against the surface.",
+    sections: [
+      { title: "Normal", tokens: ["ansi-black", "ansi-red", "ansi-green", "ansi-yellow", "ansi-blue", "ansi-magenta", "ansi-cyan", "ansi-white"] },
+      { title: "Bright", tokens: ["ansi-bright-black", "ansi-bright-red", "ansi-bright-green", "ansi-bright-yellow", "ansi-bright-blue", "ansi-bright-magenta", "ansi-bright-cyan", "ansi-bright-white"] }
+    ],
+    compositions: []
   }
 ];
