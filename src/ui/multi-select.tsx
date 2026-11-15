@@ -118,7 +118,10 @@ export function MultiSelect({
     onChange: props.onOpenChange
   });
   const [query, setQuery] = React.useState("");
-  const creation = useOptionCreation(props.onCreate, () => setQuery(""));
+  const creation = useOptionCreation(props.onCreate, () => {
+    setQuery("");
+    onSearch?.("");
+  });
   const { creating, error: createError } = creation;
   const changeQuery = (next: string) => {
     creation.cancel();
@@ -171,12 +174,14 @@ export function MultiSelect({
       ...known.filter((item) => !shown.some((option) => option.value === item.value)),
       ...shown
     ]);
-  const chosen = selected.flatMap(
-    (value) =>
-      options.find((option) => option.value === value) ??
-      remembered.find((option) => option.value === value) ??
-      []
-  );
+  const chosen = onSearch
+    ? selected.flatMap(
+        (value) =>
+          options.find((option) => option.value === value) ??
+          remembered.find((option) => option.value === value) ??
+          []
+      )
+    : shown;
   const firstChosen = chosen[0];
   const eligible = options.filter((option) => !option.disabled);
   const allSelected =
@@ -187,7 +192,7 @@ export function MultiSelect({
   if (renderValue) summary = renderValue(chosen);
   else if (firstChosen) {
     summary =
-      props.multiple !== false && allLabel && allSelected ? (
+      props.multiple !== false && allLabel && allSelected && !onSearch ? (
         allLabel
       ) : (
         <span className={styles.summary}>
@@ -221,6 +226,8 @@ export function MultiSelect({
     apply(selected.filter((value) => !eligible.some((option) => option.value === value)));
   const toggle = (option: MultiSelectOption) => {
     if (option.disabled || disabled) return;
+    if (onSearch)
+      setRemembered((known) => [...known.filter((item) => item.value !== option.value), option]);
     if (props.multiple === false) {
       apply([option.value]);
       changeOpen(false);
