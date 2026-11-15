@@ -43,13 +43,16 @@ const importsFrom = (file: string): string[] => {
   if (!/\.tsx?$/.test(file)) return [];
   const result = parseSync(file, read(file));
   if (result.errors.length) throw new Error(file + " does not parse");
-  return result.program.body.flatMap((statement) =>
-    (statement.type === "ImportDeclaration" ||
-      statement.type === "ExportNamedDeclaration" ||
-      statement.type === "ExportAllDeclaration") &&
-    statement.source
-      ? [statement.source.value]
-      : []
+  const dynamic = [...read(file).matchAll(/\bimport\(\s*["']([^"']+)["']\s*\)/g)].map((match) => match[1]);
+  return dynamic.concat(
+    result.program.body.flatMap((statement) =>
+      (statement.type === "ImportDeclaration" ||
+        statement.type === "ExportNamedDeclaration" ||
+        statement.type === "ExportAllDeclaration") &&
+      statement.source
+        ? [statement.source.value]
+        : []
+    )
   );
 };
 const portable = (file: string) => {

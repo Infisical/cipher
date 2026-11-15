@@ -1,0 +1,67 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(
+    var(--cipher-code-editor-rows) * var(--cipher-type-mono-line-height) + 2 * var(--cipher-space-control-inline-sm)
+  );
+  padding: var(--cipher-space-control-inline-sm);
+  cursor: text;
+  font-family: var(--cipher-type-mono-font-family);
+  font-size: var(--cipher-type-mono-font-size);
+  line-height: var(--cipher-type-mono-line-height);
+  font-weight: var(--cipher-type-mono-font-weight);
+  letter-spacing: var(--cipher-type-mono-letter-spacing);
+  tab-size: 2;
+}
+.editor:focus-within {
+  border-color: var(--cipher-ink);
+  box-shadow: 0 0 0 var(--cipher-size-focus-glow) var(--cipher-focus-ring);
+}
+.editor[data-invalid]:focus-within {
+  border-color: var(--cipher-bad);
+  box-shadow: 0 0 0 var(--cipher-size-focus-glow) var(--cipher-focus-ring-bad);
+}
+.editor[data-readonly] {
+  background-color: var(--cipher-paper);
+}
+.host {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.host[hidden] {
+  display: none;
+}
+.fallback {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  resize: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  outline: none;
+}
+.fallback::placeholder {
+  color: var(--cipher-muted);
+}
+.comment {
+  color: var(--cipher-muted);
+  font-style: italic;
+}
+.string {
+  color: var(--cipher-text2);
+}
+.keyword,
+.literal {
+  color: var(--cipher-ink);
+  font-weight: 500;
+}
+.invalid {
+  color: var(--cipher-bad);
+}

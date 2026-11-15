@@ -424,6 +424,26 @@
     ]
   },
   {
+    "id": "code-editor",
+    "title": "Code editor",
+    "summary": "A SQL editor with per-engine highlighting and Mod+Enter to run, for the data explorer.",
+    "group": "Code",
+    "examples": [
+      {
+        "title": "Query with an engine picker and Run",
+        "module": "code-editor/default"
+      },
+      {
+        "title": "Empty, read-only and invalid",
+        "module": "code-editor/states"
+      },
+      {
+        "title": "Long lines and many rows",
+        "module": "code-editor/stress"
+      }
+    ]
+  },
+  {
     "id": "terminal",
     "title": "Terminal",
     "summary": "An interactive shell session in the browser, for SSH and database access, with its connection state in the header.",
