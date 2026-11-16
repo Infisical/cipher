@@ -191,3 +191,20 @@
     transition: none;
   }
 }
+.titleLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+}
+.titleLine > :first-child {
+  min-width: 0;
+}
+.titleBadges {
+  display: inline-flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  min-height: var(--cipher-type-title-line-height);
+}

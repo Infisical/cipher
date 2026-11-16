@@ -138,6 +138,8 @@ export type MultiStepProps = {
   variant?: "dialog" | "sheet" | "page" | "view";
   size?: React.ComponentProps<typeof SheetContent>["size"];
   title?: React.ReactNode;
+  /** Right after the dialog or sheet title, such as its DocumentationLink. In a view, set badges on the SheetView. */
+  badges?: React.ReactNode;
   description?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -167,6 +169,7 @@ export const MultiStep = ({
   variant = "dialog",
   size,
   title,
+  badges,
   description,
   open,
   defaultOpen = false,
@@ -496,7 +499,7 @@ export const MultiStep = ({
         {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
         <SheetContent size={size} className={className}>
           <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
+            <SheetTitle badges={badges}>{title}</SheetTitle>
             {description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
           {meter && <SheetSubheader>{meter}</SheetSubheader>}
@@ -510,7 +513,7 @@ export const MultiStep = ({
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className={className}>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle badges={badges}>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         {meter && <DialogSubheader>{meter}</DialogSubheader>}

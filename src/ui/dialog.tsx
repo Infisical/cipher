@@ -204,15 +204,28 @@ DialogFooter.displayName = "DialogFooter";
 function DialogTitle({
   className,
   ref,
+  badges,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Title>) {
-  return (
+}: React.ComponentProps<typeof DialogPrimitive.Title> & {
+  /** Right after the title: status badges, and the DocumentationLink so it stays paired with the title. */
+  badges?: React.ReactNode;
+}) {
+  const title = (
     <DialogPrimitive.Title
       ref={ref}
       data-slot="dialog-title"
       className={cn("", className)}
       {...props}
     />
+  );
+  if (!badges) return title;
+  return (
+    <div data-slot="dialog-title-line" className={overlay.titleLine}>
+      {title}
+      <span data-slot="overlay-title-badges" className={overlay.titleBadges}>
+        {badges}
+      </span>
+    </div>
   );
 }
 DialogTitle.displayName = "DialogTitle";

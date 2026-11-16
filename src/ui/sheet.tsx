@@ -291,6 +291,8 @@ type SheetViewProps = {
   dirty?: boolean;
   discardTitle?: string;
   discardDescription?: string;
+  /** Right after a child view's breadcrumb title, such as its DocumentationLink. The first view sets them on its own SheetTitle. */
+  badges?: React.ReactNode;
   children?: React.ReactNode;
 };
 
@@ -376,6 +378,11 @@ function SheetViewFrame({
           ))}
           {view.title}
         </h2>
+        {view.badges && (
+          <span data-slot="overlay-title-badges" className={overlay.titleBadges}>
+            {view.badges}
+          </span>
+        )}
       </div>
       {view.description && (
         <p id={descriptionId} data-slot="sheet-description">
@@ -641,15 +648,28 @@ SheetFooter.displayName = "SheetFooter";
 function SheetTitle({
   className,
   ref,
+  badges,
   ...props
-}: React.ComponentProps<typeof SheetPrimitive.Title>) {
-  return (
+}: React.ComponentProps<typeof SheetPrimitive.Title> & {
+  /** Right after the title: status badges, and the DocumentationLink so it stays paired with the title. */
+  badges?: React.ReactNode;
+}) {
+  const title = (
     <SheetPrimitive.Title
       ref={ref}
       data-slot="sheet-title"
       className={cn("text-foreground", className)}
       {...props}
     />
+  );
+  if (!badges) return title;
+  return (
+    <div data-slot="sheet-title-line" className={overlay.titleLine}>
+      {title}
+      <span data-slot="overlay-title-badges" className={overlay.titleBadges}>
+        {badges}
+      </span>
+    </div>
   );
 }
 SheetTitle.displayName = "SheetTitle";
