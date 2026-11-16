@@ -318,6 +318,10 @@
         "module": "card/badges"
       },
       {
+        "title": "Long title and action in a framed header",
+        "module": "card/header-overflow"
+      },
+      {
         "title": "Selected and choice cards",
         "module": "card/selected"
       },
@@ -1220,6 +1224,10 @@
       {
         "title": "Rows inside wrapper components",
         "module": "list/wrapped-rows"
+      },
+      {
+        "title": "A long value",
+        "module": "list/long-values"
       },
       {
         "title": "Refreshing in the background",
