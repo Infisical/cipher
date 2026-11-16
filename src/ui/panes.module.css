@@ -84,55 +84,6 @@
 .root[data-narrow] > .columns > .main {
   flex: 1 1 auto;
 }
-.entry {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: var(--cipher-space-8);
-  width: 100%;
-  min-height: var(--cipher-size-control-default);
-  padding: var(--cipher-space-8) var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
-  border: 0;
-  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
-  background: transparent;
-  color: var(--cipher-ink);
-  text-align: start;
-  font: inherit;
-  cursor: pointer;
-}
-.entry > :first-child {
-  flex: 1 1 auto;
-}
-.entry > svg {
-  flex: none;
-  color: var(--cipher-muted);
-}
-@media (hover: hover) {
-  .entry:hover {
-    background: color-mix(in oklab, var(--cipher-mix-ink) var(--cipher-hover-mix), transparent);
-  }
-}
-.entry:focus-visible {
-  outline: var(--cipher-size-focus-ring) solid var(--cipher-focus-ring);
-  outline-offset: calc(-1 * var(--cipher-size-focus-ring));
-}
-.pageHead {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: var(--cipher-space-8);
-  padding: var(--cipher-space-8) var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
-  padding-inline-start: calc(var(--cipher-pane-pad, var(--cipher-space-overlay-inset)) - var(--cipher-space-6));
-  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
-}
-.pageTitle {
-  margin: 0;
-  font-family: var(--cipher-type-title-sm-font-family);
-  font-size: var(--cipher-type-title-sm-font-size);
-  line-height: var(--cipher-type-title-sm-line-height);
-  font-weight: var(--cipher-type-title-sm-font-weight);
-  letter-spacing: var(--cipher-type-title-sm-letter-spacing);
-}
 .page {
   display: flex;
   flex: 1 1 auto;
@@ -143,6 +94,10 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   overflow-wrap: anywhere;
+}
+.tabs {
+  flex: none;
+  padding-inline: var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
 }
 .hidden {
   display: none;

@@ -50,7 +50,7 @@ const AccountSheet = ({
       </UI.SheetTrigger>
       <UI.SheetContent size="xl">
         <UI.SheetAside
-          label="Account details"
+          mainLabel="Configuration"
           media={<Media icon="machine" />}
           title={account.name}
           description={account.folder}

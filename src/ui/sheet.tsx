@@ -5,7 +5,7 @@ import { usePortalContainer } from "../scope";
 import { DiscardChangesAlertDialog } from "./alert-dialog";
 import { Button } from "./button";
 import { Icon } from "./icon";
-import { Panes, PanesDetailsEntry, type PanesState } from "./layout";
+import { Panes, type PanesState } from "./layout";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 
 import { FrameScope } from "../lib/frame-context";
@@ -167,7 +167,6 @@ function SheetContent({
       React.isValidElement(child) && child.type === SheetAside
   );
   const rest = aside ? top.filter((child) => child !== aside) : children;
-  const detailsBack = React.useRef<(() => void) | null>(null);
   const detailsTabId = React.useId();
   const detailsPanelId = React.useId();
   const sections = splitOverlaySections(
@@ -222,11 +221,6 @@ function SheetContent({
         {...guard}
         onEscapeKeyDown={(event) => {
           guard.onEscapeKeyDown(event);
-          if (!event.defaultPrevented && detailsBack.current) {
-            event.preventDefault();
-            detailsBack.current();
-            return;
-          }
           if (!event.defaultPrevented && intercept.current?.escape()) event.preventDefault();
         }}
         onInteractOutside={(event) => {
@@ -250,7 +244,6 @@ function SheetContent({
                   aside={aside.props.children}
                   asideLabel={aside.props.label}
                   asideClassName={aside.props.className}
-                  detailsLabel={aside.props.detailsLabel}
                 >
                   {(panes) => (
                     <div data-slot="sheet-main" data-sections="">
@@ -259,7 +252,6 @@ function SheetContent({
                         aside: aside.props,
                         sections,
                         rest,
-                        detailsBack,
                         detailsTabId,
                         detailsPanelId
                       })}
@@ -325,16 +317,20 @@ function SheetSections({
 SheetSections.displayName = "SheetSections";
 
 type SheetAsideProps = {
-  /** Names the aside landmark, such as "Account details". */
+  /** Names the aside landmark and, in the narrow layout, its tab. Defaults to Details. */
   label?: string;
+  /**
+   * Names the main pane's tab in the narrow layout when the sheet's header has no tabs of its own,
+   * such as Configuration. Required because SheetAside cannot see the header; a header with tabs
+   * keeps its own labels and this goes unused.
+   */
+  mainLabel: string;
   className?: string;
   media?: React.ReactNode;
   /** The sheet's title, rendered as its SheetTitle. */
   title: React.ReactNode;
   description?: React.ReactNode;
   badges?: React.ReactNode;
-  /** Names the details page and its tab or entry in the narrow layout. Defaults to Details. */
-  detailsLabel?: string;
   /** The aside body, such as a summary DataList. */
   children?: React.ReactNode;
 };
@@ -344,8 +340,9 @@ type SheetAsideProps = {
  * badges) and, as children, the body such as a summary DataList. As a direct child of SheetContent
  * (outside any form) it splits the sheet, and the header, tabs, body, footer or SheetViews beside
  * it form the main pane. Use it with size="xl". Below size-pane-collapse the identity becomes the
- * fixed header and the body becomes a Details page: the first header tab when the header has
- * controlled Tabs with a TabsList, otherwise an entry that opens it with a back control.
+ * fixed header and the body becomes the first header tab (label). A header with controlled Tabs
+ * and a TabsList keeps its tabs after it; otherwise a second tab, mainLabel, holds the main pane.
+ * The sheet opens on the main pane's tab either way.
  */
 function SheetAside(_: SheetAsideProps): React.ReactNode {
   return null;
@@ -353,6 +350,7 @@ function SheetAside(_: SheetAsideProps): React.ReactNode {
 SheetAside.displayName = "SheetAside";
 
 const DETAILS_TAB = "cipher-sheet-aside-details";
+const MAIN_TAB = "cipher-sheet-aside-main";
 
 type TabsElement = React.ReactElement<React.ComponentProps<typeof Tabs>>;
 
@@ -406,15 +404,14 @@ const hide = (node: React.ReactNode, hidden: boolean) =>
     : node;
 
 /**
- * The main pane beside a SheetAside, with the aside body as a Details page while narrow. Both
- * widths render the same tree so the main pane's state survives a resize.
+ * The main pane beside a SheetAside, with the aside body as the first header tab while narrow.
+ * Both widths render the same tree so the main pane's state survives a resize.
  */
 function renderAsideMain({
   panes,
   aside,
   sections,
   rest,
-  detailsBack,
   detailsTabId,
   detailsPanelId
 }: {
@@ -422,14 +419,11 @@ function renderAsideMain({
   aside: SheetAsideProps;
   sections: Sections;
   rest: React.ReactNode;
-  detailsBack: React.RefObject<(() => void) | null>;
   detailsTabId: string;
   detailsPanelId: string;
 }) {
   const { narrow, detailsOpen: open, setDetailsOpen } = panes;
-  const label = aside.detailsLabel ?? "Details";
-  detailsBack.current = null;
-  const back = () => setDetailsOpen(false);
+  const label = aside.label ?? "Details";
   const pinned = sections?.pinned ?? [];
   const tabbedIndex = pinned.findIndex(
     (child) =>
@@ -440,7 +434,7 @@ function renderAsideMain({
   const tabbedHeader = pinned[tabbedIndex] as
     React.ReactElement<{ tabs?: React.ReactNode }> | undefined;
   const tabs =
-    narrow && sections && tabbedHeader
+    narrow && tabbedHeader
       ? withDetailsTab(
           tabbedHeader.props.tabs,
           label,
@@ -450,22 +444,35 @@ function renderAsideMain({
           detailsPanelId
         )
       : null;
-  if (!tabs) detailsBack.current = open ? back : null;
+  const ownTabs = narrow && !tabs && (
+    <SheetHeader
+      tabs={
+        <Tabs
+          value={open ? DETAILS_TAB : MAIN_TAB}
+          onValueChange={(value) => setDetailsOpen(value === DETAILS_TAB)}
+        >
+          <TabsList>
+            <TabsTrigger value={DETAILS_TAB} id={detailsTabId} aria-controls={detailsPanelId}>
+              {label}
+            </TabsTrigger>
+            <TabsTrigger value={MAIN_TAB}>{aside.mainLabel}</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      }
+    />
+  );
+  const details = open && (
+    <div data-slot="sheet-scroll" data-scroll-fade="y">
+      <SheetBody role="tabpanel" id={detailsPanelId} aria-labelledby={detailsTabId}>
+        {aside.children}
+      </SheetBody>
+    </div>
+  );
   if (!sections)
     return (
       <>
-        {open ? (
-          <>
-            <div data-slot="sheet-head">
-              <DetailsPageHeader label={label} onBack={back} />
-            </div>
-            <div data-slot="sheet-scroll" data-scroll-fade="y">
-              <SheetBody>{aside.children}</SheetBody>
-            </div>
-          </>
-        ) : (
-          narrow && <PanesDetailsEntry label={label} onOpen={() => setDetailsOpen(true)} />
-        )}
+        {ownTabs && <div data-slot="sheet-head">{ownTabs}</div>}
+        {details}
         <div data-slot="sheet-sections" data-sections="" data-hidden={open || undefined}>
           {rest}
         </div>
@@ -481,37 +488,20 @@ function renderAsideMain({
     sections.form,
     "sheet-form",
     <>
-      {open && !tabs && (
+      {(head.length > 0 || ownTabs) && (
         <div data-slot="sheet-head">
-          <DetailsPageHeader label={label} onBack={back} />
-        </div>
-      )}
-      {head.length > 0 && (
-        <div data-slot="sheet-head" data-hidden={(open && !tabs) || undefined}>
           {head}
+          {ownTabs}
         </div>
       )}
-      {open && (
-        <div data-slot="sheet-scroll" data-scroll-fade="y">
-          <SheetBody
-            {...(tabs
-              ? { role: "tabpanel", id: detailsPanelId, "aria-labelledby": detailsTabId }
-              : {})}
-          >
-            {aside.children}
-          </SheetBody>
-        </div>
-      )}
-      {(sections.scroll.length > 0 || narrow) && (
+      {details}
+      {sections.scroll.length > 0 && (
         <div
           data-slot="sheet-scroll"
           data-scroll-fade="y"
           data-before-footer={footer.length > 0 || undefined}
           data-hidden={open || undefined}
         >
-          {narrow && !tabs && (
-            <PanesDetailsEntry label={label} onOpen={() => setDetailsOpen(true)} />
-          )}
           {sections.scroll}
         </div>
       )}
@@ -519,23 +509,6 @@ function renderAsideMain({
     </>
   );
 }
-
-const DetailsPageHeader = ({ label, onBack }: { label: string; onBack: () => void }) => (
-  <SheetHeader>
-    <div className={overlay.viewTitleRow}>
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        aria-label="Back"
-        data-panes-details-back=""
-        onClick={onBack}
-      >
-        <Icon name="chev-left" />
-      </Button>
-      <h2 className={overlay.viewTitle}>{label}</h2>
-    </div>
-  </SheetHeader>
-);
 
 type SheetViewProps = {
   id: string;

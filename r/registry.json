@@ -1717,9 +1717,8 @@
       "name": "layout",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/button",
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/tabs"
       ],
       "files": [
         {

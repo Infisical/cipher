@@ -409,9 +409,6 @@
   > [data-slot="sheet-body"]:first-child {
   padding-top: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
 }
-.cipher [data-slot="panes-details-entry"] + [data-slot="sheet-body"] {
-  padding-top: var(--cipher-space-overlay-inset);
-}
 .cipher [data-slot="dialog-content"][data-has-close] [data-slot="dialog-header"],
 .cipher [data-slot="sheet-content"][data-has-close] [data-slot="sheet-header"] {
   padding-inline-end: calc(
