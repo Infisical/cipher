@@ -1222,6 +1222,10 @@
         "module": "list/segmented-divided"
       },
       {
+        "title": "Icon media on the first line",
+        "module": "list/icon-media"
+      },
+      {
         "title": "DataList default and compact density",
         "module": "list/density"
       },
@@ -1344,6 +1348,10 @@
       {
         "title": "One step as a form shell",
         "module": "multi-step/single"
+      },
+      {
+        "title": "Delete at the start of the footer",
+        "module": "multi-step/footer-start"
       }
     ]
   },

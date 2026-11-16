@@ -322,7 +322,12 @@
   font-weight: var(--cipher-type-body-font-weight);
 }
 .cipher .cipher-switcher-description {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: normal;
   color: var(--cipher-muted);
   font-size: var(--cipher-type-small-font-size);
 }

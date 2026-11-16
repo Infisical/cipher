@@ -238,6 +238,15 @@
   height: var(--cipher-size-icon);
   pointer-events: none;
 }
+/* With a description line the lead icon stays on the title's first line instead of centering on both. */
+.row:has(
+    > .text:not(:global([data-command-label])) > .description,
+    :global(.cipher-switcher-description)
+  )
+  > :is(svg, img, [data-menu-icon]):not(.trail) {
+  align-self: flex-start;
+  margin-block-start: calc((var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2);
+}
 :global(.cipher) {
   --overlay-hover: var(--cipher-hover-mix);
 }
@@ -303,15 +312,23 @@
 }
 .description {
   min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: normal;
   color: var(--cipher-muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-family: var(--cipher-type-small-font-family);
   font-size: var(--cipher-type-small-font-size);
   line-height: var(--cipher-type-small-line-height);
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+:global([data-command-label]) > .description {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .shortcut,
 .meta {

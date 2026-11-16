@@ -690,6 +690,8 @@
   position: relative;
   display: inline-flex;
   flex: none;
+  align-items: center;
+  min-height: var(--cipher-type-row-title-line-height);
 }
 .rowMedia > .unread {
   position: absolute;
