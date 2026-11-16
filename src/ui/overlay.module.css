@@ -212,6 +212,9 @@
   align-items: center;
   gap: var(--cipher-space-6);
 }
+.titleBadges > * {
+  max-width: 100%;
+}
 .titleBadges::before {
   content: "";
   height: var(--cipher-type-title-line-height);
