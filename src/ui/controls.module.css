@@ -391,15 +391,25 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex: 0 1 auto;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > *,
-.card[data-variant="framed"] > .cardHeader > .cardAction [data-cipher-button] > [data-press] {
+.card[data-variant="framed"] > .cardHeader > .cardAction > * {
   flex-shrink: 1;
   min-width: 0;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]),
+.card[data-variant="framed"]
+  > .cardHeader
+  > .cardAction
+  [data-cipher-button]:not([data-layout="trigger"])
+  > [data-press] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction [data-cipher-button] > [data-press] {
+.card[data-variant="framed"]
+  > .cardHeader
+  > .cardAction
+  [data-cipher-button]:not([data-layout="trigger"])
+  > [data-press] {
   display: block;
 }
 .card[data-variant="framed"] > .cardHeader > [data-slot="card-description"] {

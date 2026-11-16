@@ -254,40 +254,44 @@ function CardDescription({ className, ref, ...props }: React.ComponentProps<"div
 }
 CardDescription.displayName = "CardDescription";
 
-function CardAction({ className, ref, title, ...props }: React.ComponentProps<"div">) {
+function CardAction({
+  className,
+  title,
+  children,
+  onPointerEnter,
+  onFocus,
+  ref,
+  ...props
+}: React.ComponentProps<"div">) {
   const framed = React.useContext(FramedContext);
-  const node = React.useRef<HTMLDivElement | null>(null);
   const [clipped, setClipped] = React.useState<string>();
-  const attach = React.useCallback(
-    (element: HTMLDivElement | null) => {
-      node.current = element;
-      if (typeof ref === "function") ref(element);
-      else if (ref) ref.current = element;
-    },
-    [ref]
-  );
-  React.useLayoutEffect(() => {
-    const element = node.current;
-    if (!element || title !== undefined || typeof ResizeObserver === "undefined") return undefined;
-    const check = () => {
-      const truncated = [element, ...element.querySelectorAll<HTMLElement>("*")].some(
-        (part) => part.scrollWidth > part.clientWidth
-      );
-      setClipped(truncated ? element.textContent?.trim() || undefined : undefined);
-    };
-    const observer = new ResizeObserver(check);
-    observer.observe(element);
-    check();
-    return () => observer.disconnect();
-  }, [title]);
+  const measure = (element: HTMLElement) => {
+    if (title !== undefined) return;
+    const truncated = [element, ...element.querySelectorAll<HTMLElement>("*")].some(
+      (part) => part.scrollWidth > part.clientWidth
+    );
+    setClipped(truncated ? element.textContent?.trim() || undefined : undefined);
+  };
   return (
     <div
-      ref={attach}
+      ref={ref}
       title={title ?? clipped}
       data-slot="card-action"
       className={cn(controlStyles.cardAction, framed && frameStyles.frameAction, className)}
+      onPointerEnter={(event) => {
+        measure(event.currentTarget);
+        onPointerEnter?.(event);
+      }}
+      onFocus={(event) => {
+        measure(event.currentTarget);
+        onFocus?.(event);
+      }}
       {...props}
-    />
+    >
+      {React.Children.map(children, (child) =>
+        typeof child === "string" || typeof child === "number" ? <span>{child}</span> : child
+      )}
+    </div>
   );
 }
 CardAction.displayName = "CardAction";

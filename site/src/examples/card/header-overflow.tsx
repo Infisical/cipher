@@ -13,6 +13,12 @@ const cases = [
     action: "View 1,284 inherited secrets in production-databases"
   },
   {
+    caption: "Text action",
+    title: "Inherited",
+    action: "Last synced from production-databases 3 minutes ago",
+    text: true
+  },
+  {
     caption: "Both long",
     title: "Inherited secrets from production-databases",
     action: "View 1,284 inherited secrets in production-databases"
@@ -28,9 +34,13 @@ export default function Example() {
             variant="framed"
             title={item.title}
             action={
-              <Button variant="outline" size="xs">
-                {item.action}
-              </Button>
+              "text" in item ? (
+                item.action
+              ) : (
+                <Button variant="outline" size="xs">
+                  {item.action}
+                </Button>
+              )
             }
           >
             12 secrets.
