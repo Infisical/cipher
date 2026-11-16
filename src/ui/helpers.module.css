@@ -673,9 +673,9 @@
   gap: var(--cipher-space-field-label);
 }
 .field:not([data-orientation="horizontal"]),
-.field[data-orientation="horizontal"]:is(
-    :global([data-slot="field"]) ~ *,
-    :has(~ :global([data-slot="field"]))
+.field[data-orientation="horizontal"]:not([data-width="wide"]):is(
+    :global([data-slot="field"]:not([data-orientation="horizontal"])) ~ *,
+    :has(~ :global([data-slot="field"]:not([data-orientation="horizontal"])))
   ) {
   max-width: var(--cipher-size-measure-field);
 }

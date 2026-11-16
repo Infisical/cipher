@@ -593,6 +593,11 @@
   flex-direction: column;
   min-height: 0;
 }
+/* Pinned sections never overflow the main pane; free-form content beside a SheetAside scrolls here. */
+.cipher [data-slot="sheet-main"] {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 .cipher [data-slot="sheet-foot"] {
   display: flex;
   flex: none;

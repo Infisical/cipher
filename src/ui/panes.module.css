@@ -32,6 +32,9 @@
   align-items: flex-start;
   gap: var(--cipher-space-2);
 }
+.aside :global([data-slot="data-list"][data-density="compact"]) > * {
+  grid-template-columns: minmax(0, 1fr);
+}
 .aside :global([data-slot="data-list"]) dt {
   max-width: none;
 }
