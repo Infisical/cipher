@@ -605,7 +605,7 @@ function SheetHeader({
   ref,
   ...props
 }: React.ComponentProps<"div"> & {
-  /** Underline Tabs that sit on the header's bottom rule, so the active underline lands on it. Pass a controlled Tabs without content and render the panel in the body. */
+  /** Underline Tabs that sit on the header's bottom rule, so the active underline lands on it. Pass a controlled Tabs without content and render the panel in the body, giving it role="tabpanel" and linking it to the active trigger. */
   tabs?: React.ReactNode;
 }) {
   const titled = React.Children.toArray(children).length > 0;

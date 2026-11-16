@@ -543,13 +543,19 @@
   flex-direction: column;
   border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
-/* Header tabs drop their own rule and sit on the head's, so the active underline lands on it. */
-.cipher [data-slot="sheet-header"][data-tabs] {
-  padding-bottom: 0;
-}
+/* Header tabs drop their own rule and sit on the head's, so the active underline lands on it. A
+   subheader below them keeps the head's rule away, so then they keep their own. */
 .cipher [data-slot="sheet-header-tabs"] {
   position: relative;
   min-width: 0;
+}
+.cipher [data-slot="sheet-head"] > [data-slot="sheet-header"][data-tabs]:last-child {
+  padding-bottom: 0;
+}
+.cipher
+  [data-slot="sheet-head"]
+  > [data-slot="sheet-header"][data-tabs]:last-child
+  > [data-slot="sheet-header-tabs"] {
   margin-bottom: calc(-1 * var(--cipher-size-control-border));
 }
 .cipher [data-slot="sheet-header"][data-tabs=""] > [data-slot="sheet-header-tabs"] {

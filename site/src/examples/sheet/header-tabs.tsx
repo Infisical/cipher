@@ -4,7 +4,7 @@ import { Button } from "@infisical/cipher/ui/button";
 import { Field } from "@infisical/cipher/ui/field";
 import { Input } from "@infisical/cipher/ui/input";
 import * as UI from "@infisical/cipher/ui/sheet";
-import { Tabs } from "@infisical/cipher/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@infisical/cipher/ui/tabs";
 import { Textarea } from "@infisical/cipher/ui/textarea";
 
 const panels: Record<string, React.ReactNode> = {
@@ -27,9 +27,10 @@ const TabbedSheet = ({
 }: {
   label: string;
   title?: string;
-  tabs: { value: string; label: string; count?: number }[];
+  tabs: { value: string; label: string }[];
 }) => {
   const [tab, setTab] = React.useState(tabs[0].value);
+  const id = React.useId();
   return (
     <UI.Sheet>
       <UI.SheetTrigger asChild>
@@ -37,11 +38,28 @@ const TabbedSheet = ({
       </UI.SheetTrigger>
       <UI.SheetContent aria-label={title ? undefined : label}>
         <UI.SheetHeader
-          tabs={<Tabs label={label} tabs={tabs} value={tab} onValueChange={setTab} />}
+          tabs={
+            <Tabs value={tab} onValueChange={setTab}>
+              <TabsList aria-label={label}>
+                {tabs.map((item) => (
+                  <TabsTrigger
+                    key={item.value}
+                    value={item.value}
+                    id={id + item.value}
+                    aria-controls={id + "panel"}
+                  >
+                    {item.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          }
         >
           {title && <UI.SheetTitle>{title}</UI.SheetTitle>}
         </UI.SheetHeader>
-        <UI.SheetBody>{panels[tab] ?? panels.paste}</UI.SheetBody>
+        <UI.SheetBody role="tabpanel" id={id + "panel"} aria-labelledby={id + tab}>
+          {panels[tab] ?? panels.paste}
+        </UI.SheetBody>
         <UI.SheetFooter>
           <UI.SheetClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -77,9 +95,9 @@ export default function Example() {
         tabs={[
           { value: "upload", label: "Upload a dotenv or JSON file" },
           { value: "paste", label: "Paste secrets as KEY=value" },
-          { value: "vault", label: "HashiCorp Vault", count: 128 },
-          { value: "aws", label: "AWS Secrets Manager", count: 42 },
-          { value: "gcp", label: "GCP Secret Manager", count: 7 }
+          { value: "vault", label: "HashiCorp Vault" },
+          { value: "aws", label: "AWS Secrets Manager" },
+          { value: "gcp", label: "GCP Secret Manager" }
         ]}
       />
     </div>
