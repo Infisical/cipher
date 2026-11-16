@@ -65,8 +65,15 @@
   min-width: 0;
   min-height: 0;
 }
-.root[data-narrow] > .identity {
-  flex: none;
+.root[data-narrow] > .columns {
+  display: flex;
+  flex-direction: column;
+}
+.root[data-narrow] > .columns > .identity {
+  flex: 0 1 auto;
+  max-height: 40%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   flex-direction: row;
   align-items: flex-start;
   gap: var(--cipher-space-12);
@@ -74,7 +81,7 @@
   padding-inline-end: var(--cipher-pane-head-end, var(--cipher-pane-pad, var(--cipher-space-overlay-inset)));
   border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
-.root[data-narrow] > .main {
+.root[data-narrow] > .columns > .main {
   flex: 1 1 auto;
 }
 .entry {

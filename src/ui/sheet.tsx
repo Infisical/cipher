@@ -259,7 +259,6 @@ function SheetContent({
                         aside: aside.props,
                         sections,
                         rest,
-                        content,
                         detailsBack,
                         detailsTabId,
                         detailsPanelId
@@ -387,9 +386,12 @@ const withDetailsTab = (
     element,
     {
       value: open ? DETAILS_TAB : element.props.value,
+      onChange: undefined,
       onValueChange: (value: string) => {
         setOpen(value === DETAILS_TAB);
-        if (value !== DETAILS_TAB) element.props.onValueChange?.(value);
+        if (value === DETAILS_TAB) return;
+        element.props.onValueChange?.(value);
+        element.props.onChange?.(value);
       }
     },
     children
@@ -403,13 +405,15 @@ const hide = (node: React.ReactNode, hidden: boolean) =>
     ? React.cloneElement(node, { "data-hidden": hidden || undefined })
     : node;
 
-/** The main pane beside a SheetAside: as given while wide, with the aside body as a Details page while narrow. */
+/**
+ * The main pane beside a SheetAside, with the aside body as a Details page while narrow. Both
+ * widths render the same tree so the main pane's state survives a resize.
+ */
 function renderAsideMain({
   panes,
   aside,
   sections,
   rest,
-  content,
   detailsBack,
   detailsTabId,
   detailsPanelId
@@ -418,7 +422,6 @@ function renderAsideMain({
   aside: SheetAsideProps;
   sections: Sections;
   rest: React.ReactNode;
-  content: React.ReactNode;
   detailsBack: React.RefObject<(() => void) | null>;
   detailsTabId: string;
   detailsPanelId: string;
@@ -426,7 +429,6 @@ function renderAsideMain({
   const { narrow, detailsOpen: open, setDetailsOpen } = panes;
   const label = aside.detailsLabel ?? "Details";
   detailsBack.current = null;
-  if (!narrow) return content;
   const back = () => setDetailsOpen(false);
   const pinned = sections?.pinned ?? [];
   const tabbedIndex = pinned.findIndex(
@@ -438,7 +440,7 @@ function renderAsideMain({
   const tabbedHeader = pinned[tabbedIndex] as
     React.ReactElement<{ tabs?: React.ReactNode }> | undefined;
   const tabs =
-    sections && tabbedHeader
+    narrow && sections && tabbedHeader
       ? withDetailsTab(
           tabbedHeader.props.tabs,
           label,
@@ -462,7 +464,7 @@ function renderAsideMain({
             </div>
           </>
         ) : (
-          <PanesDetailsEntry label={label} onOpen={() => setDetailsOpen(true)} />
+          narrow && <PanesDetailsEntry label={label} onOpen={() => setDetailsOpen(true)} />
         )}
         <div data-slot="sheet-sections" data-sections="" data-hidden={open || undefined}>
           {rest}
@@ -500,15 +502,19 @@ function renderAsideMain({
           </SheetBody>
         </div>
       )}
-      <div
-        data-slot="sheet-scroll"
-        data-scroll-fade="y"
-        data-before-footer={footer.length > 0 || undefined}
-        data-hidden={open || undefined}
-      >
-        {!tabs && <PanesDetailsEntry label={label} onOpen={() => setDetailsOpen(true)} />}
-        {sections.scroll}
-      </div>
+      {(sections.scroll.length > 0 || narrow) && (
+        <div
+          data-slot="sheet-scroll"
+          data-scroll-fade="y"
+          data-before-footer={footer.length > 0 || undefined}
+          data-hidden={open || undefined}
+        >
+          {narrow && !tabs && (
+            <PanesDetailsEntry label={label} onOpen={() => setDetailsOpen(true)} />
+          )}
+          {sections.scroll}
+        </div>
+      )}
       {footer}
     </>
   );

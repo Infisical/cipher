@@ -374,6 +374,23 @@
 .cipher [data-slot="sheet-content"][data-has-close] [data-slot="panes"] {
   --cipher-pane-head-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
 }
+/* Narrow header tabs join the identity as one header band, on its single bottom rule. */
+.cipher
+  [data-slot="panes"][data-narrow]
+  [data-slot="panes-identity"]:has(
+    + [data-slot="panes-main"]
+      [data-slot="sheet-head"]:not([data-hidden])
+      > [data-slot="sheet-header"][data-tabs="only"]
+  ) {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.cipher
+  [data-slot="panes"][data-narrow]
+  [data-slot="sheet-head"]:not([data-hidden])
+  > [data-slot="sheet-header"][data-tabs="only"] {
+  padding-top: var(--cipher-space-4);
+}
 /* A narrow two-pane sheet keeps the main pane mounted while its Details page shows. */
 .cipher
   :is(

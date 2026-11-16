@@ -443,17 +443,16 @@ export function Panes({
   const main =
     typeof children === "function" ? (
       children(state)
-    ) : !narrow ? (
-      children
     ) : (
       <>
-        {open ? (
-          <PanesDetailsPage label={detailsLabel} onBack={() => setDetailsOpen(false)}>
-            {aside}
-          </PanesDetailsPage>
-        ) : (
-          <PanesDetailsEntry label={detailsLabel} onOpen={() => setDetailsOpen(true)} />
-        )}
+        {narrow &&
+          (open ? (
+            <PanesDetailsPage label={detailsLabel} onBack={() => setDetailsOpen(false)}>
+              {aside}
+            </PanesDetailsPage>
+          ) : (
+            <PanesDetailsEntry label={detailsLabel} onOpen={() => setDetailsOpen(true)} />
+          ))}
         <div className={cn(paneStyles.main, open && paneStyles.hidden)}>{children}</div>
       </>
     );
@@ -465,15 +464,10 @@ export function Panes({
       className={cn(paneStyles.root, className)}
       {...props}
     >
-      {narrow ? (
-        <>
-          {identityBlock}
-          <div data-slot="panes-main" className={paneStyles.main}>
-            {main}
-          </div>
-        </>
-      ) : (
-        <div className={paneStyles.columns}>
+      <div className={paneStyles.columns}>
+        {narrow ? (
+          identityBlock
+        ) : (
           <aside
             data-slot="panes-aside"
             aria-label={asideLabel}
@@ -482,11 +476,11 @@ export function Panes({
             {identityBlock}
             {aside}
           </aside>
-          <div data-slot="panes-main" className={paneStyles.main}>
-            {main}
-          </div>
+        )}
+        <div data-slot="panes-main" className={paneStyles.main}>
+          {main}
         </div>
-      )}
+      </div>
     </div>
   );
 }
