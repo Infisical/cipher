@@ -8,7 +8,7 @@ import {
 } from "motion/react";
 
 import { type FieldErrorMap } from "../lib/field-context";
-import { formControlSelector } from "../lib/initial-focus";
+import { formControlSelector, skipAutoFocus } from "../lib/initial-focus";
 import { exit, fade, spring } from "../lib/motion";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
@@ -453,7 +453,11 @@ export const MultiStep = ({
   );
   const footer = (
     <>
-      {footerStart && <div className={styles.start}>{footerStart}</div>}
+      {footerStart && (
+        <div className={styles.start} {...skipAutoFocus}>
+          {footerStart}
+        </div>
+      )}
       <p className={cn(styles.status, error && styles.error)} role="status">
         {error ??
           (variant === "page" || single
