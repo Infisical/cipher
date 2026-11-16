@@ -370,9 +370,30 @@
 .cipher :is([data-slot="dialog-header"], [data-slot="alert-dialog-header"]) {
   gap: var(--cipher-space-6);
 }
-/* A stacked aside sits under the close button, so it clears it as a header does. */
-.cipher [data-slot="sheet-content"][data-has-close] [data-slot="panes-aside"] {
-  --cipher-pane-aside-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+/* The narrow identity header sits under the close button, so it clears it as a header does. */
+.cipher [data-slot="sheet-content"][data-has-close] [data-slot="panes"] {
+  --cipher-pane-head-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+}
+/* A narrow two-pane sheet keeps the main pane mounted while its Details page shows. */
+.cipher
+  :is(
+    [data-slot="sheet-head"],
+    [data-slot="sheet-scroll"],
+    [data-slot="sheet-footer"],
+    [data-slot="sheet-sections"]
+  )[data-hidden] {
+  display: none;
+}
+.cipher
+  [data-slot="sheet-content"]
+  [data-slot="panes-main"]
+  > [data-slot="sheet-main"]
+  > [data-slot="sheet-scroll"]:first-child
+  > [data-slot="sheet-body"]:first-child {
+  padding-top: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+}
+.cipher [data-slot="panes-details-entry"] + [data-slot="sheet-body"] {
+  padding-top: var(--cipher-space-overlay-inset);
 }
 .cipher [data-slot="dialog-content"][data-has-close] [data-slot="dialog-header"],
 .cipher [data-slot="sheet-content"][data-has-close] [data-slot="sheet-header"] {

@@ -1717,7 +1717,9 @@
       "name": "layout",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/cipher-base"
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/icon"
       ],
       "files": [
         {
@@ -2358,7 +2360,8 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/layout"
+        "@cipher/layout",
+        "@cipher/tabs"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"

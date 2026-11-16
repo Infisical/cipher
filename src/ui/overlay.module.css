@@ -74,7 +74,7 @@
 }
 .sheet:has(
     [data-slot="sheet-header"][data-tabs="only"]:not([data-slot="sheet-view"][data-hidden] *)
-  )
+  ):not(:has([data-slot="panes"][data-narrow]))
   > .close[data-slot] {
   top: calc(
     var(--cipher-space-overlay-inset) + var(--cipher-space-4) +

@@ -1,5 +1,4 @@
 .root {
-  container: panes / inline-size;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -9,8 +8,8 @@
 .columns {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: fit-content(40%) minmax(0, 1fr);
+  grid-template-columns: var(--cipher-size-pane-aside) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   min-height: 0;
 }
 .aside {
@@ -20,12 +19,11 @@
   min-width: 0;
   min-height: 0;
   padding: var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
-  padding-inline-end: var(--cipher-pane-aside-end, var(--cipher-pane-pad, var(--cipher-space-overlay-inset)));
   overflow-y: auto;
   overscroll-behavior: contain;
   overflow-wrap: anywhere;
   scroll-padding-block: var(--cipher-focus-clearance);
-  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .aside :global([data-slot="data-list"]) > * {
   flex-direction: column;
@@ -41,6 +39,25 @@
 .aside :global([data-slot="data-list"]) dd {
   text-align: start;
 }
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-4);
+  min-width: 0;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cipher-space-6);
+  min-width: 0;
+}
 .main {
   --cipher-size-measure-field: 100%;
   display: flex;
@@ -48,15 +65,78 @@
   min-width: 0;
   min-height: 0;
 }
-/* Container conditions cannot read custom properties, so this repeats size-pane-collapse (720px). */
-@container panes (min-width: 720px) {
-  .columns {
-    grid-template-columns: var(--cipher-size-pane-aside) minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr);
+.root[data-narrow] > .identity {
+  flex: none;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--cipher-space-12);
+  padding: var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
+  padding-inline-end: var(--cipher-pane-head-end, var(--cipher-pane-pad, var(--cipher-space-overlay-inset)));
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.root[data-narrow] > .main {
+  flex: 1 1 auto;
+}
+.entry {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  width: 100%;
+  min-height: var(--cipher-size-control-default);
+  padding: var(--cipher-space-8) var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
+  border: 0;
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  background: transparent;
+  color: var(--cipher-ink);
+  text-align: start;
+  font: inherit;
+  cursor: pointer;
+}
+.entry > :first-child {
+  flex: 1 1 auto;
+}
+.entry > svg {
+  flex: none;
+  color: var(--cipher-muted);
+}
+@media (hover: hover) {
+  .entry:hover {
+    background: color-mix(in oklab, var(--cipher-mix-ink) var(--cipher-hover-mix), transparent);
   }
-  .aside {
-    padding-inline-end: var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
-    border-bottom: 0;
-    border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
-  }
+}
+.entry:focus-visible {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-focus-ring);
+  outline-offset: calc(-1 * var(--cipher-size-focus-ring));
+}
+.pageHead {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  padding: var(--cipher-space-8) var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
+  padding-inline-start: calc(var(--cipher-pane-pad, var(--cipher-space-overlay-inset)) - var(--cipher-space-6));
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.pageTitle {
+  margin: 0;
+  font-family: var(--cipher-type-title-sm-font-family);
+  font-size: var(--cipher-type-title-sm-font-size);
+  line-height: var(--cipher-type-title-sm-line-height);
+  font-weight: var(--cipher-type-title-sm-font-weight);
+  letter-spacing: var(--cipher-type-title-sm-letter-spacing);
+}
+.page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--cipher-space-content-group);
+  min-height: 0;
+  padding: var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+.hidden {
+  display: none;
 }

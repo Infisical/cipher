@@ -30,7 +30,15 @@ const tabs = [
 
 const mono = (value: string) => <span className="font-mono">{value}</span>;
 
-const AccountSheet = ({ label, account }: { label: string; account: Account }) => {
+const AccountSheet = ({
+  label,
+  account,
+  tabbed = true
+}: {
+  label: string;
+  account: Account;
+  tabbed?: boolean;
+}) => {
   const [tab, setTab] = React.useState("configuration");
   const [ssl, setSsl] = React.useState(true);
   const [reject, setReject] = React.useState(true);
@@ -41,15 +49,13 @@ const AccountSheet = ({ label, account }: { label: string; account: Account }) =
         <Button variant="outline">{label}</Button>
       </UI.SheetTrigger>
       <UI.SheetContent size="xl">
-        <UI.SheetAside label="Account details">
-          <Stack gap={8}>
-            <Media icon="machine" />
-            <UI.SheetTitle>{account.name}</UI.SheetTitle>
-            <UI.SheetDescription>{account.folder}</UI.SheetDescription>
-            <div>
-              <Badge tone="outline">PostgreSQL</Badge>
-            </div>
-          </Stack>
+        <UI.SheetAside
+          label="Account details"
+          media={<Media icon="machine" />}
+          title={account.name}
+          description={account.folder}
+          badges={<Badge tone="outline">PostgreSQL</Badge>}
+        >
           <DataList
             variant="props"
             items={[
@@ -64,26 +70,30 @@ const AccountSheet = ({ label, account }: { label: string; account: Account }) =
             ]}
           />
         </UI.SheetAside>
-        <UI.SheetHeader
-          tabs={
-            <Tabs value={tab} onValueChange={setTab}>
-              <TabsList aria-label="Account sections">
-                {tabs.map((item) => (
-                  <TabsTrigger
-                    key={item.value}
-                    value={item.value}
-                    id={id + item.value}
-                    aria-controls={id + "panel"}
-                  >
-                    {item.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          }
-        />
-        <UI.SheetBody role="tabpanel" id={id + "panel"} aria-labelledby={id + tab}>
-          {tab === "configuration" ? (
+        {tabbed && (
+          <UI.SheetHeader
+            tabs={
+              <Tabs value={tab} onValueChange={setTab}>
+                <TabsList aria-label="Account sections">
+                  {tabs.map((item) => (
+                    <TabsTrigger
+                      key={item.value}
+                      value={item.value}
+                      id={id + item.value}
+                      aria-controls={id + "panel"}
+                    >
+                      {item.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            }
+          />
+        )}
+        <UI.SheetBody
+          {...(tabbed ? { role: "tabpanel", id: id + "panel", "aria-labelledby": id + tab } : {})}
+        >
+          {!tabbed || tab === "configuration" ? (
             <Stack gap={16}>
               <Field label="Name">
                 <Input defaultValue={account.name} />
@@ -150,6 +160,18 @@ export default function Example() {
           port: "5432",
           database: "orders_ledger_reconciliation_archive_2026",
           username: "svc_orders_primary_reconciliation_readonly_rotation_managed"
+        }}
+      />
+      <AccountSheet
+        label="Without tabs"
+        tabbed={false}
+        account={{
+          name: "orders-primary",
+          folder: "production-databases",
+          host: "orders-primary.internal.acme.dev",
+          port: "5432",
+          database: "orders",
+          username: "svc_orders_primary"
         }}
       />
     </div>

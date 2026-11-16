@@ -2,6 +2,9 @@ import * as React from "react";
 
 import { cn, truncateTitle } from "../lib/utils";
 
+import { Button } from "./button";
+import { Icon } from "./icon";
+
 import detailStyles from "./detail-layout.module.css";
 import paneStyles from "./panes.module.css";
 import styles from "./text.module.css";
@@ -289,40 +292,201 @@ export function DetailLayout({
 }
 DetailLayout.displayName = "DetailLayout";
 
+export type PanesIdentity = {
+  media?: React.ReactNode;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  badges?: React.ReactNode;
+};
+
+export type PanesState = {
+  /** Below size-pane-collapse: the identity is a fixed header and the aside body is a page of its own. */
+  narrow: boolean;
+  detailsOpen: boolean;
+  setDetailsOpen: (open: boolean) => void;
+};
+
+const PanesIdentityBlock = ({ identity }: { identity: PanesIdentity }) => (
+  <div data-slot="panes-identity" className={paneStyles.identity}>
+    {identity.media}
+    <div className={paneStyles.identityText}>
+      {identity.title}
+      {identity.description}
+      {identity.badges && <div className={paneStyles.badges}>{identity.badges}</div>}
+    </div>
+  </div>
+);
+
+/** The narrow-layout entry to the aside body's page, for a pane with no tabs to hold it. */
+export function PanesDetailsEntry({ label, onOpen }: { label: string; onOpen: () => void }) {
+  return (
+    <button
+      type="button"
+      data-slot="panes-details-entry"
+      data-panes-details-entry=""
+      className={paneStyles.entry}
+      onClick={onOpen}
+    >
+      <span>{label}</span>
+      <Icon name="chev-right" />
+    </button>
+  );
+}
+
+/** The aside body as a page in the narrow layout, with a back control to the main pane. */
+export function PanesDetailsPage({
+  label,
+  onBack,
+  head,
+  children
+}: {
+  label: string;
+  onBack: () => void;
+  /** Replaces the default back row, such as a sheet header in the same place. */
+  head?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      {head ?? (
+        <div data-slot="panes-details-head" className={paneStyles.pageHead}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Back"
+            data-panes-details-back=""
+            onClick={onBack}
+          >
+            <Icon name="chev-left" />
+          </Button>
+          <h2 className={paneStyles.pageTitle}>{label}</h2>
+        </div>
+      )}
+      <div data-slot="panes-details" className={paneStyles.page}>
+        {children}
+      </div>
+    </>
+  );
+}
+
+const usePanesNarrow = (node: HTMLElement | null) => {
+  const [narrow, setNarrow] = React.useState(false);
+  React.useLayoutEffect(() => {
+    if (!node) return undefined;
+    const measure = () => {
+      const collapse = parseFloat(
+        getComputedStyle(node).getPropertyValue("--cipher-size-pane-collapse")
+      );
+      setNarrow(node.clientWidth < (collapse || 0));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [node]);
+  return narrow;
+};
+
 /**
- * A fixed-width aside beside a main pane inside a bounded height, such as a sheet or a dialog. Each
- * pane scrolls on its own and the main pane's fields run its full width. Below size-pane-collapse
- * the aside stacks above the main pane, capped at 40% of the height. A page with a sidecar uses
+ * A fixed-width aside beside a main pane inside a bounded height, such as a sheet or a dialog. The
+ * aside holds the identity (media, title, description, badges) above its body, each pane scrolls
+ * on its own, and the main pane's fields run its full width. Below size-pane-collapse the identity
+ * becomes a fixed header and the aside body becomes its own page: by default a Details entry above
+ * the main pane opens it with a back control. Pass children as a function of PanesState to place
+ * that entry and page yourself, as SheetContent does with header tabs. A page with a sidecar uses
  * DetailLayout, which scrolls with the page instead.
  */
 export function Panes({
+  identity,
   aside,
   asideLabel,
   asideClassName,
+  detailsLabel = "Details",
   children,
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & {
+}: Omit<React.ComponentPropsWithoutRef<"div">, "children"> & {
+  identity?: PanesIdentity;
   aside: React.ReactNode;
   asideLabel?: string;
   asideClassName?: string;
+  /** Names the aside body's page and its entry in the narrow layout. */
+  detailsLabel?: string;
+  children: React.ReactNode | ((state: PanesState) => React.ReactNode);
   ref?: React.Ref<HTMLDivElement>;
 }) {
+  const [node, setNode] = React.useState<HTMLDivElement | null>(null);
+  const narrow = usePanesNarrow(node);
+  const [detailsOpen, setDetailsOpen] = React.useState(false);
+  const open = narrow && detailsOpen;
+  const opened = React.useRef(open);
+  React.useEffect(() => {
+    if (opened.current === open || !node) return;
+    opened.current = open;
+    const target = node.querySelector<HTMLElement>(
+      open ? "[data-panes-details-back]" : "[data-panes-details-entry]"
+    );
+    target?.focus();
+  }, [open, node]);
+  const setRef = React.useCallback(
+    (element: HTMLDivElement | null) => {
+      setNode(element);
+      if (typeof ref === "function") ref(element);
+      else if (ref) ref.current = element;
+    },
+    [ref]
+  );
+  const state = { narrow, detailsOpen: open, setDetailsOpen };
+  const identityBlock = identity && <PanesIdentityBlock identity={identity} />;
+  const main =
+    typeof children === "function" ? (
+      children(state)
+    ) : !narrow ? (
+      children
+    ) : (
+      <>
+        {open ? (
+          <PanesDetailsPage label={detailsLabel} onBack={() => setDetailsOpen(false)}>
+            {aside}
+          </PanesDetailsPage>
+        ) : (
+          <PanesDetailsEntry label={detailsLabel} onOpen={() => setDetailsOpen(true)} />
+        )}
+        <div className={cn(paneStyles.main, open && paneStyles.hidden)}>{children}</div>
+      </>
+    );
   return (
-    <div ref={ref} data-slot="panes" className={cn(paneStyles.root, className)} {...props}>
-      <div className={paneStyles.columns}>
-        <aside
-          data-slot="panes-aside"
-          aria-label={asideLabel}
-          className={cn(paneStyles.aside, asideClassName)}
-        >
-          {aside}
-        </aside>
-        <div data-slot="panes-main" className={paneStyles.main}>
-          {children}
+    <div
+      ref={setRef}
+      data-slot="panes"
+      data-narrow={narrow || undefined}
+      className={cn(paneStyles.root, className)}
+      {...props}
+    >
+      {narrow ? (
+        <>
+          {identityBlock}
+          <div data-slot="panes-main" className={paneStyles.main}>
+            {main}
+          </div>
+        </>
+      ) : (
+        <div className={paneStyles.columns}>
+          <aside
+            data-slot="panes-aside"
+            aria-label={asideLabel}
+            className={cn(paneStyles.aside, asideClassName)}
+          >
+            {identityBlock}
+            {aside}
+          </aside>
+          <div data-slot="panes-main" className={paneStyles.main}>
+            {main}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
