@@ -152,7 +152,13 @@ const markRow = (row: HTMLTableRowElement): Record<PinKind, boolean> => {
   const cells = [...row.children];
   const only = cells.length === 1 ? cells[0] : undefined;
   setFlag(row, "data-full-width", only?.tagName === "TD" && only.hasAttribute("colspan"));
-  setFlag(row, "data-expanded-within", row.querySelector('[aria-expanded="true"]') !== null);
+  setFlag(
+    row,
+    "data-expanded-within",
+    row.querySelector(
+      ':is([aria-haspopup]:not([aria-haspopup="false"]), [role="combobox"])[aria-expanded="true"]'
+    ) !== null
+  );
   const starts = cells.filter((cell) => cell.getAttribute("data-pin") === "start");
   const edge = starts.at(-1);
   cells.forEach((cell) => {
