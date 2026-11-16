@@ -265,6 +265,20 @@ function CardAction({
 }: React.ComponentProps<"div">) {
   const framed = React.useContext(FramedContext);
   const [clipped, setClipped] = React.useState<string>();
+  const parts: React.ReactNode[] = [];
+  let text: (string | number)[] = [];
+  const flush = () => {
+    if (text.length) parts.push(<span key={"text-" + parts.length}>{text.join("")}</span>);
+    text = [];
+  };
+  for (const child of React.Children.toArray(children)) {
+    if (typeof child === "string" || typeof child === "number") text.push(child);
+    else {
+      flush();
+      parts.push(child);
+    }
+  }
+  flush();
   const measure = (element: HTMLElement) => {
     if (title !== undefined) return;
     const truncated = [element, ...element.querySelectorAll<HTMLElement>("*")].some(
@@ -288,9 +302,7 @@ function CardAction({
       }}
       {...props}
     >
-      {React.Children.map(children, (child) =>
-        typeof child === "string" || typeof child === "number" ? <span>{child}</span> : child
-      )}
+      {parts}
     </div>
   );
 }
