@@ -1,6 +1,11 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "motion/react";
 
 import { type FieldErrorMap } from "../lib/field-context";
 import { formControlSelector } from "../lib/initial-focus";
@@ -16,7 +21,7 @@ import {
   DialogHeader,
   DialogSubheader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "./dialog";
 import { Field, FieldErrors } from "./field";
 import { Icon, type IconName } from "./icon";
@@ -32,7 +37,7 @@ import {
   SheetSubheader,
   SheetTitle,
   SheetTrigger,
-  useSheetView
+  useSheetView,
 } from "./sheet";
 
 import styles from "./multi-step.module.css";
@@ -81,7 +86,7 @@ export const Steps = ({
   orientation = "horizontal",
   onStepClick,
   label = "Steps",
-  showHeading
+  showHeading,
 }: StepsProps) => {
   if (orientation === "horizontal")
     return (
@@ -95,7 +100,8 @@ export const Steps = ({
   return (
     <ol data-slot="steps" aria-label={label} className={styles.steps}>
       {steps.map((entry, index) => {
-        const state = index < current ? "done" : index === current ? "current" : "upcoming";
+        const state =
+          index < current ? "done" : index === current ? "current" : "upcoming";
         const marker = (
           <>
             <span className={styles.marker} aria-hidden="true">
@@ -103,7 +109,9 @@ export const Steps = ({
             </span>
             <span className={styles.stepText}>
               <span className={styles.stepTitle}>{entry.title}</span>
-              {entry.summary && <span className={styles.stepSummary}>{entry.summary}</span>}
+              {entry.summary && (
+                <span className={styles.stepSummary}>{entry.summary}</span>
+              )}
             </span>
           </>
         );
@@ -147,6 +155,7 @@ export type MultiStepProps = {
   trigger?: React.ReactElement;
   onComplete?: () => MultiStepResult | Promise<MultiStepResult>;
   completeLabel?: string;
+  cancelLabel?: string;
   onCancel?: () => void;
   step?: number;
   defaultStep?: number;
@@ -159,9 +168,11 @@ const noErrors: FieldErrorMap = {};
 const holdsField = (node: React.ReactNode, name: string): boolean =>
   React.Children.toArray(node).some(
     (child) =>
-      React.isValidElement<{ name?: unknown; children?: React.ReactNode }>(child) &&
+      React.isValidElement<{ name?: unknown; children?: React.ReactNode }>(
+        child,
+      ) &&
       ((child.type === Field && child.props.name === name) ||
-        holdsField(child.props.children, name))
+        holdsField(child.props.children, name)),
   );
 
 export const MultiStep = ({
@@ -177,21 +188,22 @@ export const MultiStep = ({
   trigger,
   onComplete,
   completeLabel = "Finish",
+  cancelLabel = "Cancel",
   onCancel,
   step,
   defaultStep = 0,
   onStepChange,
-  className
+  className,
 }: MultiStepProps) => {
   const [isOpen, setOpen] = useControllableState({
     value: open,
     defaultValue: defaultOpen,
-    onChange: onOpenChange
+    onChange: onOpenChange,
   });
   const [current, setCurrent] = useControllableState({
     value: step,
     defaultValue: defaultStep,
-    onChange: onStepChange
+    onChange: onStepChange,
   });
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string>();
@@ -201,7 +213,8 @@ export const MultiStep = ({
   const [height, setHeight] = React.useState<number>();
   const viewport = React.useRef<HTMLDivElement | null>(null);
   const activeStep = () =>
-    viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ?? null;
+    viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ??
+    null;
   const moved = React.useRef(false);
   const reduced = useReducedMotion();
   const formId = React.useId();
@@ -211,13 +224,17 @@ export const MultiStep = ({
   React.useLayoutEffect(() => {
     if (!moved.current) return;
     viewport.current
-      ?.closest<HTMLElement>('[data-slot="sheet-scroll"], [data-slot="dialog-scroll"]')
+      ?.closest<HTMLElement>(
+        '[data-slot="sheet-scroll"], [data-slot="dialog-scroll"]',
+      )
       ?.scrollTo({ top: 0 });
   }, [current]);
   React.useEffect(() => {
     if (!moved.current) return;
     moved.current = false;
-    const step = viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`);
+    const step = viewport.current?.querySelector<HTMLElement>(
+      `[data-step="${current}"]`,
+    );
     (
       step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
       step?.querySelector<HTMLElement>(formControlSelector)
@@ -311,15 +328,22 @@ export const MultiStep = ({
       }
       const result = await onComplete?.();
       if (result && typeof result === "object" && current > 0) {
-        const override = result.step !== undefined && steps[result.step] ? result.step : undefined;
+        const override =
+          result.step !== undefined && steps[result.step]
+            ? result.step
+            : undefined;
         const byStep = new Map<number, FieldErrorMap>();
         Object.entries(result.fields ?? noErrors).forEach(([name, message]) => {
           if (!message) return;
-          const found = steps.findIndex((candidate) => holdsField(candidate.content, name));
+          const found = steps.findIndex((candidate) =>
+            holdsField(candidate.content, name),
+          );
           const target = override ?? (found === -1 ? current : found);
           byStep.set(target, { ...byStep.get(target), [name]: message });
         });
-        const earliest = byStep.size ? Math.min(...byStep.keys()) : (override ?? current);
+        const earliest = byStep.size
+          ? Math.min(...byStep.keys())
+          : (override ?? current);
         if ((byStep.size || result.message) && earliest < current) {
           routed.current = byStep;
           move(earliest);
@@ -334,7 +358,11 @@ export const MultiStep = ({
         setOpen(false);
       }
     } catch (failure) {
-      toast.error(failure instanceof Error ? failure.message : "Something went wrong. Try again.");
+      toast.error(
+        failure instanceof Error
+          ? failure.message
+          : "Something went wrong. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -350,14 +378,19 @@ export const MultiStep = ({
   const at = (offset: number) => (axis === "x" ? { x: offset } : { y: offset });
   const slide: Variants = {
     enter: (sign: number) => ({ opacity: 0, ...at(sign * travel) }),
-    center: { opacity: 1, ...at(0), transition: reduced ? fade.enter : spring.slow },
+    center: {
+      opacity: 1,
+      ...at(0),
+      transition: reduced ? fade.enter : spring.slow,
+    },
     leave: (sign: number) => ({
       opacity: 0,
       ...at(-sign * travel),
-      transition: reduced ? fade.exit : exit.moderate
-    })
+      transition: reduced ? fade.exit : exit.moderate,
+    }),
   };
-  const titled = variant === "page" || !single || (!title && variant !== "view");
+  const titled =
+    variant === "page" || !single || (!title && variant !== "view");
   const stepHead = (titled || entry.description) && (
     <div className={styles.stepHead}>
       {variant === "page" && !single && (
@@ -365,7 +398,9 @@ export const MultiStep = ({
           Step {current + 1} of {steps.length}
         </p>
       )}
-      {titled && <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>}
+      {titled && (
+        <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+      )}
       {entry.description && <p className={styles.lede}>{entry.description}</p>}
     </div>
   );
@@ -403,7 +438,9 @@ export const MultiStep = ({
             >
               {stepHead}
               <FieldErrors errors={fieldErrors}>
-                {entry.render ? entry.render({ next: () => setQueued(true) }) : entry.content}
+                {entry.render
+                  ? entry.render({ next: () => setQueued(true) })
+                  : entry.content}
               </FieldErrors>
             </motion.div>
           </AnimatePresence>
@@ -414,7 +451,10 @@ export const MultiStep = ({
   const footer = (
     <>
       <p className={cn(styles.status, error && styles.error)} role="status">
-        {error ?? (variant === "page" || single ? null : `Step ${current + 1} of ${steps.length}`)}
+        {error ??
+          (variant === "page" || single
+            ? null
+            : `Step ${current + 1} of ${steps.length}`)}
       </p>
       <div className={styles.buttons}>
         {current === 0 ? (
@@ -425,7 +465,7 @@ export const MultiStep = ({
             onClick={() => changeOpen(false)}
             disabled={busy}
           >
-            Cancel
+            {cancelLabel}
           </Button>
         ) : (
           <Button
@@ -455,7 +495,11 @@ export const MultiStep = ({
   const label = typeof title === "string" ? `${title} steps` : "Steps";
   if (variant === "page")
     return (
-      <div data-slot="multi-step" data-variant="page" className={cn(styles.page, className)}>
+      <div
+        data-slot="multi-step"
+        data-variant="page"
+        className={cn(styles.page, className)}
+      >
         <div className={styles.pageGrid} data-single={single || undefined}>
           {!single && (
             <>
@@ -487,10 +531,16 @@ export const MultiStep = ({
       <>
         {meter &&
           view?.subheader &&
-          createPortal(<SheetSubheader>{meter}</SheetSubheader>, view.subheader)}
+          createPortal(
+            <SheetSubheader>{meter}</SheetSubheader>,
+            view.subheader,
+          )}
         <SheetBody className={className}>{fields}</SheetBody>
         {view?.footer &&
-          createPortal(<SheetFooter className={styles.footer}>{footer}</SheetFooter>, view.footer)}
+          createPortal(
+            <SheetFooter className={styles.footer}>{footer}</SheetFooter>,
+            view.footer,
+          )}
       </>
     );
   if (variant === "sheet")
