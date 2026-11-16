@@ -238,6 +238,15 @@
   height: var(--cipher-size-icon);
   pointer-events: none;
 }
+/* With a description line the lead icon stays on the title's first line instead of centering on both. */
+.row:has(
+    > .text:not(:global([data-command-label])) > .description,
+    :global(.cipher-switcher-description)
+  )
+  > :is(svg, img, [data-menu-icon]):not(.trail) {
+  align-self: flex-start;
+  margin-block-start: calc((var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2);
+}
 :global(.cipher) {
   --overlay-hover: var(--cipher-hover-mix);
 }

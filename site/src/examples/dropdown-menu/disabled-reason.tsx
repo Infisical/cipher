@@ -23,6 +23,10 @@ export default function Example() {
                 <Icon name="copy" />
                 Copy value
               </UI.DropdownMenuItem>
+              <UI.DropdownMenuItem description="Last rotated 3 days ago">
+                <Icon name="sync" />
+                Rotate now
+              </UI.DropdownMenuItem>
               <UI.DropdownMenuItem disabledReason="Versioning is off for this project">
                 <Icon name="history" />
                 Version history
@@ -40,6 +44,10 @@ export default function Example() {
               <UI.DropdownMenuItem>
                 <img src={logo("#1F6FEB")} alt="" data-menu-icon="" />
                 Import from GitHub
+              </UI.DropdownMenuItem>
+              <UI.DropdownMenuItem description="Every secret in the default environment">
+                <img src={logo("#7C3AED")} alt="" data-menu-icon="" />
+                Import from Doppler
               </UI.DropdownMenuItem>
               <UI.DropdownMenuItem disabledReason="Connect AWS first">
                 <img src={logo("#FF9900")} alt="" data-menu-icon="" />
