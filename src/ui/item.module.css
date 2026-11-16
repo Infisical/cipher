@@ -169,7 +169,7 @@
 .wrap .description {
   -webkit-line-clamp: none;
 }
-.layout[data-truncate] .description {
+.layout[data-truncate] > .main > .copy > .description {
   -webkit-line-clamp: 1;
 }
 .body {
