@@ -72,6 +72,15 @@
       (var(--cipher-size-nested-md) - var(--cipher-size-icon)) / 2
   );
 }
+.sheet:has(
+    [data-slot="sheet-header"][data-tabs="only"]:not([data-slot="sheet-view"][data-hidden] *)
+  )
+  > .close[data-slot] {
+  top: calc(
+    var(--cipher-space-overlay-inset) + var(--cipher-space-4) +
+      (var(--cipher-size-control-default) - var(--cipher-size-nested-md)) / 2
+  );
+}
 .sheet {
   --cipher-sheet-from: 100% 0;
   --cipher-sheet-size: var(--cipher-size-sheet-sm);

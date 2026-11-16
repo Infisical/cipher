@@ -1664,6 +1664,10 @@
       {
         "title": "Badges and a docs link beside the title",
         "module": "sheet/title-badges"
+      },
+      {
+        "title": "Tabs on the header",
+        "module": "sheet/header-tabs"
       }
     ]
   },

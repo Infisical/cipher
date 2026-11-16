@@ -18,6 +18,9 @@
 .tabsTrack[data-rule-spans] {
   width: 100%;
 }
+:global([data-slot="sheet-head"] > [data-slot="sheet-header"]:not(:has(~ :not([data-slot="sheet-view-subheader"]:empty))) > [data-slot="sheet-header-tabs"]) .tabsTrack {
+  border-bottom: 0;
+}
 .tabsList {
   position: relative;
   display: flex;
