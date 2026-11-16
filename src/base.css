@@ -410,7 +410,10 @@
   [data-slot="sheet-content"]
   [data-slot="panes-main"]
   > [data-slot="sheet-main"]
-  > [data-slot="sheet-scroll"]:first-child
+  > :is(
+    [data-slot="sheet-scroll"]:first-child,
+    [data-slot="sheet-form"]:first-child > [data-slot="sheet-scroll"]:first-child
+  )
   > [data-slot="sheet-body"]:first-child {
   padding-top: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
 }
