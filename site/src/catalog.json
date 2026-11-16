@@ -220,6 +220,10 @@
       {
         "title": "Collapsed ancestry and project switching",
         "module": "breadcrumb/default"
+      },
+      {
+        "title": "Folder path",
+        "module": "breadcrumb/folder-path"
       }
     ]
   },

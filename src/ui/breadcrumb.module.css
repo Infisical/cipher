@@ -1,7 +1,21 @@
 .root {
+  position: relative;
   container-type: inline-size;
   width: 100%;
   min-width: 0;
+}
+.measure {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.measure > .trail {
+  width: max-content;
+}
+.hiddenMenu {
+  max-width: min(calc(20 * var(--cipher-space-16)), 90vw);
 }
 .trail {
   --crumb-target: var(--cipher-size-nested-sm);
@@ -14,6 +28,7 @@
   display: flex;
   align-items: center;
   min-width: 0;
+  min-height: var(--crumb-target);
   margin: 0;
   padding: 0;
   list-style: none;
