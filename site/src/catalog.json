@@ -1344,6 +1344,10 @@
       {
         "title": "One step as a form shell",
         "module": "multi-step/single"
+      },
+      {
+        "title": "Delete at the start of the footer",
+        "module": "multi-step/footer-start"
       }
     ]
   },
