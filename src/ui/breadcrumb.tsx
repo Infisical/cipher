@@ -236,19 +236,25 @@ const RulerCrumb = ({ crumb, current }: { crumb: BreadcrumbCrumb; current: boole
   );
 };
 
-const hiddenCrumbs = (
+const lastHiddenCrumb = (
   entries: number[],
   ellipsis: number,
   container: number,
-  maxItems: number | undefined
+  maxItems: number | undefined,
+  head: number
 ) => {
   const count = entries.length;
-  const cap = maxItems === undefined ? count : Math.max(2, maxItems);
+  const cap = maxItems === undefined ? count : Math.max(head + 1, maxItems);
   const total = entries.reduce((sum, width) => sum + width, 0);
-  if (count <= cap && total <= container) return 0;
+  if (count - 2 < head || (count <= cap && total <= container)) return -1;
   let first = count - 1;
-  let used = entries[0] + entries[count - 1] + ellipsis;
-  while (first - 1 > 1 && count - first + 1 < cap && used + entries[first - 1] <= container) {
+  let used =
+    entries.slice(0, head).reduce((sum, width) => sum + width, 0) + entries[count - 1] + ellipsis;
+  while (
+    first - 1 > head &&
+    head + count - first + 1 <= cap &&
+    used + entries[first - 1] <= container
+  ) {
     first -= 1;
     used += entries[first];
   }
@@ -258,7 +264,7 @@ const hiddenCrumbs = (
 export type BreadcrumbProps = React.ComponentPropsWithoutRef<"nav"> & {
   items?: readonly BreadcrumbCrumb[];
   variant?: "default" | "product";
-  /** At most this many crumbs show; the rest join the ones width hides in the ellipsis menu. Crumbs with a switcher never collapse. */
+  /** At most this many crumbs show; the rest join the ones width hides in the ellipsis menu. Crumbs up to the last switcher stay visible, so a switcher never collapses. */
   maxItems?: number;
   lastIsCurrent?: boolean;
   /** Draws a divider after a lone root crumb, so a root-only path reads "Root /". */
@@ -278,9 +284,15 @@ function Breadcrumb({
   const nameId = React.useId();
   const nav = React.useRef<HTMLElement | null>(null);
   const measure = React.useRef<HTMLOListElement | null>(null);
-  const [hidden, setHidden] = React.useState(0);
+  const [lastHidden, setLastHidden] = React.useState(-1);
   const count = items?.length ?? 0;
   const measured = variant === "default" && count > 2;
+  const head =
+    1 +
+    (items ?? []).reduce(
+      (last, crumb, index) => (crumb.switcher && index < count - 1 ? index : last),
+      0
+    );
   const attach = React.useCallback(
     (node: HTMLElement | null) => {
       nav.current = node;
@@ -294,7 +306,7 @@ function Breadcrumb({
     const root = nav.current;
     const list = measure.current;
     if (!measured || !root || !list) {
-      setHidden(0);
+      setLastHidden(-1);
       return undefined;
     }
     let active = true;
@@ -306,7 +318,7 @@ function Breadcrumb({
       const ellipsis =
         list.querySelector<HTMLElement>('[data-measure="ellipsis"]')?.getBoundingClientRect()
           .width ?? 0;
-      setHidden(hiddenCrumbs(entries, ellipsis, root.clientWidth, maxItems));
+      setLastHidden(lastHiddenCrumb(entries, ellipsis, root.clientWidth, maxItems, head));
     };
     read();
     const observer = new ResizeObserver(read);
@@ -317,14 +329,13 @@ function Breadcrumb({
       active = false;
       observer.disconnect();
     };
-  }, [measured, count, maxItems]);
-  const capped =
-    !measured && maxItems !== undefined && count > Math.max(3, maxItems) ? count - 2 : 0;
-  const firstSwitcher = items?.findIndex((crumb, index) => index > 0 && crumb.switcher) ?? -1;
-  const collapsed = Math.min(
-    measured ? hidden : capped,
-    firstSwitcher === -1 ? count : firstSwitcher - 1
-  );
+  }, [measured, count, maxItems, head]);
+  const hiddenTo = measured
+    ? lastHidden
+    : maxItems !== undefined && count > Math.max(3, maxItems) && count - 2 >= head
+      ? count - 2
+      : -1;
+  const hiddenCount = hiddenTo < 0 ? 0 : hiddenTo - head + 1;
   const ids = (index: number) => ({
     label: nameId + "-" + index + "-label",
     purpose: nameId + "-" + index + "-purpose"
@@ -413,8 +424,8 @@ function Breadcrumb({
         <>
           <ol className={trailClass}>
             {items.map((crumb, index) => {
-              if (index < 1 || index > collapsed) return renderCrumb(crumb, index);
-              if (index > 1) return null;
+              if (index < head || index > hiddenTo) return renderCrumb(crumb, index);
+              if (index > head) return null;
               return (
                 <li key="hidden" className={breadcrumbStyles.entry}>
                   <BandDivider />
@@ -424,13 +435,13 @@ function Breadcrumb({
                         type="button"
                         data-slot="breadcrumb-ellipsis"
                         className={breadcrumbStyles.chevron}
-                        aria-label={"Show " + collapsed + " hidden levels"}
+                        aria-label={"Show " + hiddenCount + " hidden levels"}
                       >
                         <Icon name="more" size={16} />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className={breadcrumbStyles.hiddenMenu}>
-                      {items.slice(1, collapsed + 1).map((hiddenCrumb, offset) => (
+                      {items.slice(head, hiddenTo + 1).map((hiddenCrumb, offset) => (
                         <CrumbNavigation key={offset} crumb={hiddenCrumb}>
                           {hiddenCrumb.media ?? <Icon name="folder" />}
                           <span className={breadcrumbStyles.label}>{hiddenCrumb.label}</span>
