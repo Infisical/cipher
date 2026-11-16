@@ -206,6 +206,36 @@ const CrumbNavigation = ({
   return <DropdownMenuItem onClick={crumb.onNavigate}>{children}</DropdownMenuItem>;
 };
 
+const RulerCrumb = ({ crumb, current }: { crumb: BreadcrumbCrumb; current: boolean }) => {
+  const content = (
+    <>
+      {crumb.media && <span className={breadcrumbStyles.media}>{crumb.media}</span>}
+      <span className={cn(breadcrumbStyles.label, crumb.mono && breadcrumbStyles.mono)}>
+        {crumb.label}
+      </span>
+    </>
+  );
+  if (crumb.switcher && !current && hasPage(crumb))
+    return (
+      <span className={breadcrumbStyles.segment} data-name-target="page">
+        <span className={breadcrumbStyles.name}>{content}</span>
+        <span className={breadcrumbStyles.chevron} />
+      </span>
+    );
+  if (crumb.switcher || (current && crumb.menu))
+    return (
+      <span className={breadcrumbStyles.segment} data-name-target="switcher">
+        {content}
+        <span className={breadcrumbStyles.chevron} />
+      </span>
+    );
+  return (
+    <span className={cn(breadcrumbStyles.link, current && breadcrumbStyles.current)}>
+      {content}
+    </span>
+  );
+};
+
 const hiddenCrumbs = (
   entries: number[],
   ellipsis: number,
@@ -228,7 +258,7 @@ const hiddenCrumbs = (
 export type BreadcrumbProps = React.ComponentPropsWithoutRef<"nav"> & {
   items?: readonly BreadcrumbCrumb[];
   variant?: "default" | "product";
-  /** At most this many crumbs show; the rest join the ones width hides in the ellipsis menu. */
+  /** At most this many crumbs show; the rest join the ones width hides in the ellipsis menu. Crumbs with a switcher never collapse. */
   maxItems?: number;
   lastIsCurrent?: boolean;
   /** Draws a divider after a lone root crumb, so a root-only path reads "Root /". */
@@ -249,7 +279,8 @@ function Breadcrumb({
   const nav = React.useRef<HTMLElement | null>(null);
   const measure = React.useRef<HTMLOListElement | null>(null);
   const [hidden, setHidden] = React.useState(0);
-  const collapses = variant === "default" && (items?.length ?? 0) > 2;
+  const count = items?.length ?? 0;
+  const measured = variant === "default" && count > 2;
   const attach = React.useCallback(
     (node: HTMLElement | null) => {
       nav.current = node;
@@ -262,11 +293,13 @@ function Breadcrumb({
   React.useLayoutEffect(() => {
     const root = nav.current;
     const list = measure.current;
-    if (!collapses || !root || !list) {
+    if (!measured || !root || !list) {
       setHidden(0);
       return undefined;
     }
+    let active = true;
     const read = () => {
+      if (!active) return;
       const entries = [...list.querySelectorAll<HTMLElement>('[data-measure="entry"]')].map(
         (entry) => entry.getBoundingClientRect().width
       );
@@ -278,11 +311,20 @@ function Breadcrumb({
     read();
     const observer = new ResizeObserver(read);
     observer.observe(root);
-    observer.observe(list);
+    list.querySelectorAll("[data-measure]").forEach((entry) => observer.observe(entry));
     document.fonts?.ready.then(read).catch(() => {});
-    return () => observer.disconnect();
-  }, [collapses, items?.length, maxItems]);
-  const count = items?.length ?? 0;
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
+  }, [measured, count, maxItems]);
+  const capped =
+    !measured && maxItems !== undefined && count > Math.max(3, maxItems) ? count - 2 : 0;
+  const firstSwitcher = items?.findIndex((crumb, index) => index > 0 && crumb.switcher) ?? -1;
+  const collapsed = Math.min(
+    measured ? hidden : capped,
+    firstSwitcher === -1 ? count : firstSwitcher - 1
+  );
   const ids = (index: number) => ({
     label: nameId + "-" + index + "-label",
     purpose: nameId + "-" + index + "-purpose"
@@ -371,7 +413,7 @@ function Breadcrumb({
         <>
           <ol className={trailClass}>
             {items.map((crumb, index) => {
-              if (index < 1 || index > hidden) return renderCrumb(crumb, index);
+              if (index < 1 || index > collapsed) return renderCrumb(crumb, index);
               if (index > 1) return null;
               return (
                 <li key="hidden" className={breadcrumbStyles.entry}>
@@ -382,13 +424,13 @@ function Breadcrumb({
                         type="button"
                         data-slot="breadcrumb-ellipsis"
                         className={breadcrumbStyles.chevron}
-                        aria-label={"Show " + hidden + " hidden levels"}
+                        aria-label={"Show " + collapsed + " hidden levels"}
                       >
                         <Icon name="more" size={16} />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className={breadcrumbStyles.hiddenMenu}>
-                      {items.slice(1, hidden + 1).map((hiddenCrumb, offset) => (
+                      {items.slice(1, collapsed + 1).map((hiddenCrumb, offset) => (
                         <CrumbNavigation key={offset} crumb={hiddenCrumb}>
                           {hiddenCrumb.media ?? <Icon name="folder" />}
                           <span className={breadcrumbStyles.label}>{hiddenCrumb.label}</span>
@@ -400,28 +442,13 @@ function Breadcrumb({
               );
             })}
           </ol>
-          {collapses && (
+          {measured && (
             <div className={breadcrumbStyles.measure} aria-hidden="true">
               <ol ref={measure} className={trailClass}>
                 {items.map((crumb, index) => (
                   <li key={index} className={breadcrumbStyles.entry} data-measure="entry">
                     {index > 0 && <BandDivider />}
-                    <span
-                      className={cn(
-                        breadcrumbStyles.link,
-                        lastIsCurrent && index === count - 1 && breadcrumbStyles.current
-                      )}
-                    >
-                      {crumb.media && <span className={breadcrumbStyles.media}>{crumb.media}</span>}
-                      <span
-                        className={cn(breadcrumbStyles.label, crumb.mono && breadcrumbStyles.mono)}
-                      >
-                        {crumb.label}
-                      </span>
-                      {(crumb.switcher || (index === count - 1 && crumb.menu)) && (
-                        <span className={breadcrumbStyles.chevron} />
-                      )}
-                    </span>
+                    <RulerCrumb crumb={crumb} current={lastIsCurrent && index === count - 1} />
                   </li>
                 ))}
                 <li className={breadcrumbStyles.entry} data-measure="ellipsis">
