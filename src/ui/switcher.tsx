@@ -2,6 +2,7 @@ import { type ReactElement, type ReactNode, useCallback, useEffect, useRef, useS
 
 import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { useControllableState } from "../lib/use-controllable-state";
+import { titleIfClamped } from "../lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -271,7 +272,12 @@ export const Switcher = ({
                       <span className={option.mono ? "font-mono" : undefined}>
                         {option.label}
                         {option.description && (
-                          <span className="cipher-switcher-description">{option.description}</span>
+                          <span
+                            className="cipher-switcher-description"
+                            onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+                          >
+                            {option.description}
+                          </span>
                         )}
                       </span>
                       {option.meta && (
