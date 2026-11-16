@@ -25,18 +25,12 @@ const tabs = [
   { value: "permissions", label: "Permissions" },
   { value: "configuration", label: "Configuration" },
   { value: "rotation", label: "Rotation" },
-  { value: "advanced", label: "Advanced" },
+  { value: "advanced", label: "Advanced" }
 ];
 
 const mono = (value: string) => <span className="font-mono">{value}</span>;
 
-const AccountSheet = ({
-  label,
-  account,
-}: {
-  label: string;
-  account: Account;
-}) => {
+const AccountSheet = ({ label, account }: { label: string; account: Account }) => {
   const [tab, setTab] = React.useState("configuration");
   const [ssl, setSsl] = React.useState(true);
   const [reject, setReject] = React.useState(true);
@@ -66,7 +60,7 @@ const AccountSheet = ({
               ["Database", mono(account.database)],
               ["SSL", ssl ? "Enabled" : "Disabled"],
               ["Username", mono(account.username)],
-              ["Created", "November 16th, 2026"],
+              ["Created", "November 16th, 2026"]
             ]}
           />
         </UI.SheetAside>
@@ -88,21 +82,14 @@ const AccountSheet = ({
             </Tabs>
           }
         />
-        <UI.SheetBody
-          role="tabpanel"
-          id={id + "panel"}
-          aria-labelledby={id + tab}
-        >
+        <UI.SheetBody role="tabpanel" id={id + "panel"} aria-labelledby={id + tab}>
           {tab === "configuration" ? (
             <Stack gap={16}>
               <Field label="Name">
                 <Input defaultValue={account.name} />
               </Field>
               <Field label="Description" optional>
-                <Textarea
-                  defaultValue="Writer endpoint for the orders service"
-                  rows={2}
-                />
+                <Textarea defaultValue="Writer endpoint for the orders service" rows={2} />
               </Field>
               <Field label="Host">
                 <Input defaultValue={account.host} />
@@ -113,12 +100,7 @@ const AccountSheet = ({
               <Field label="Database">
                 <Input defaultValue={account.database} />
               </Field>
-              <Switch
-                layout="row"
-                label="SSL enabled"
-                checked={ssl}
-                onCheckedChange={setSsl}
-              />
+              <Switch layout="row" label="SSL enabled" checked={ssl} onCheckedChange={setSsl} />
               <Switch
                 layout="row"
                 label="Reject unauthorized"
@@ -131,9 +113,7 @@ const AccountSheet = ({
               </Field>
             </Stack>
           ) : (
-            <p className="text-muted-foreground">
-              Nothing to configure here yet.
-            </p>
+            <p className="text-muted-foreground">Nothing to configure here yet.</p>
           )}
         </UI.SheetBody>
         <UI.SheetFooter>
@@ -158,20 +138,18 @@ export default function Example() {
           host: "orders-primary.internal.acme.dev",
           port: "5432",
           database: "orders",
-          username: "svc_orders_primary",
+          username: "svc_orders_primary"
         }}
       />
       <AccountSheet
         label="Long values"
         account={{
           name: "orders-primary-replica-us-east-1-failover-standby-02",
-          folder:
-            "production-databases / us-east-1 / payments-and-orders-cluster",
+          folder: "production-databases / us-east-1 / payments-and-orders-cluster",
           host: "orders-primary-replica-02.us-east-1.rds.internal.payments.acme-corporation.dev",
           port: "5432",
           database: "orders_ledger_reconciliation_archive_2026",
-          username:
-            "svc_orders_primary_reconciliation_readonly_rotation_managed",
+          username: "svc_orders_primary_reconciliation_readonly_rotation_managed"
         }}
       />
     </div>

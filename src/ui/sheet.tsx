@@ -9,16 +9,8 @@ import { Panes } from "./layout";
 
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl, formControlSelector } from "../lib/initial-focus";
-import {
-  OverlayPendingContext,
-  useDismissGuard,
-  useOverlayPending,
-} from "../lib/overlay-pending";
-import {
-  flattenFragments,
-  renderInForm,
-  splitOverlaySections,
-} from "../lib/overlay-sections";
+import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
+import { flattenFragments, renderInForm, splitOverlaySections } from "../lib/overlay-sections";
 import { useOwnedEscape } from "../lib/use-owned-escape";
 import { cn } from "../lib/utils";
 
@@ -42,13 +34,8 @@ function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
-function SheetTrigger({
-  ref,
-  ...props
-}: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
-  return (
-    <SheetPrimitive.Trigger ref={ref} data-slot="sheet-trigger" {...props} />
-  );
+function SheetTrigger({ ref, ...props }: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
+  return <SheetPrimitive.Trigger ref={ref} data-slot="sheet-trigger" {...props} />;
 }
 SheetTrigger.displayName = "SheetTrigger";
 
@@ -75,16 +62,9 @@ function SheetClose({
 }
 SheetClose.displayName = "SheetClose";
 
-function SheetPortal({
-  children,
-  ...props
-}: React.ComponentProps<typeof SheetPrimitive.Portal>) {
+function SheetPortal({ children, ...props }: React.ComponentProps<typeof SheetPrimitive.Portal>) {
   return (
-    <SheetPrimitive.Portal
-      container={usePortalContainer()}
-      data-slot="sheet-portal"
-      {...props}
-    >
+    <SheetPrimitive.Portal container={usePortalContainer()} data-slot="sheet-portal" {...props}>
       <FrameScope framed={false}>{children}</FrameScope>
     </SheetPrimitive.Portal>
   );
@@ -109,7 +89,7 @@ SheetOverlay.displayName = "SheetOverlay";
 const SheetLayout = ({
   head,
   scroll,
-  footer,
+  footer
 }: {
   head: React.ReactNode;
   scroll: React.ReactNode;
@@ -156,7 +136,7 @@ function SheetContent({
   const guard = useDismissGuard(blocked, {
     onEscapeKeyDown: escape.onEscapeKeyDown,
     onPointerDownOutside,
-    onInteractOutside,
+    onInteractOutside
   });
   const [viewSize, setViewSize] = React.useState<SheetSize>();
   const [viewLabels, setViewLabels] = React.useState<SheetViewLabels>();
@@ -177,13 +157,13 @@ function SheetContent({
       interceptClose: (event: { preventDefault: () => void }) => {
         if (closing.current) return;
         if (intercept.current?.close(proceed)) event.preventDefault();
-      },
+      }
     };
   }, []);
   const top = flattenFragments(children);
   const aside = top.find(
     (child): child is React.ReactElement<SheetAsideProps> =>
-      React.isValidElement(child) && child.type === SheetAside,
+      React.isValidElement(child) && child.type === SheetAside
   );
   const rest = aside ? top.filter((child) => child !== aside) : children;
   const sections = splitOverlaySections(
@@ -192,9 +172,9 @@ function SheetContent({
       header: SheetHeader,
       subheader: SheetSubheader,
       body: SheetBody,
-      footer: SheetFooter,
+      footer: SheetFooter
     },
-    { pinHeader: true, lookThroughForm: true },
+    { pinHeader: true, lookThroughForm: true }
   );
   const content = sections
     ? renderInForm(
@@ -204,7 +184,7 @@ function SheetContent({
           head={sections.pinned.length > 0 && sections.pinned}
           scroll={sections.scroll.length > 0 && sections.scroll}
           footer={sections.footer.length > 0 && sections.footer}
-        />,
+        />
       )
     : rest;
   return (
@@ -223,7 +203,7 @@ function SheetContent({
           "fixed z-50 flex flex-col gap-4 data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto",
           overlay.pop,
           overlay.sheet,
-          className,
+          className
         )}
         aria-busy={blocked || undefined}
         onOpenAutoFocus={(event) => {
@@ -233,16 +213,12 @@ function SheetContent({
         {...props}
         {...(viewLabels?.title ? { "aria-labelledby": viewLabels.title } : {})}
         {...(viewLabels
-          ? {
-              "aria-describedby":
-                viewLabels.description ?? props["aria-describedby"],
-            }
+          ? { "aria-describedby": viewLabels.description ?? props["aria-describedby"] }
           : {})}
         {...guard}
         onEscapeKeyDown={(event) => {
           guard.onEscapeKeyDown(event);
-          if (!event.defaultPrevented && intercept.current?.escape())
-            event.preventDefault();
+          if (!event.defaultPrevented && intercept.current?.escape()) event.preventDefault();
         }}
         onInteractOutside={(event) => {
           guard.onInteractOutside(event);
@@ -280,12 +256,7 @@ function SheetContent({
                   </Button>
                 </SheetPrimitive.Close>
               ) : (
-                <SheetPrimitive.Close
-                  ref={closeRef}
-                  hidden
-                  tabIndex={-1}
-                  aria-hidden
-                />
+                <SheetPrimitive.Close ref={closeRef} hidden tabIndex={-1} aria-hidden />
               )}
             </OverlayPendingContext>
           </SheetViewDescribeContext>
@@ -314,13 +285,7 @@ function SheetSections({
   children?: React.ReactNode;
 } & { ref?: React.Ref<HTMLDivElement> }) {
   return (
-    <div
-      ref={ref}
-      data-slot="sheet-sections"
-      data-sections=""
-      className={cn(className)}
-      {...props}
-    >
+    <div ref={ref} data-slot="sheet-sections" data-sections="" className={cn(className)} {...props}>
       <SheetLayout
         head={header}
         scroll={children}
@@ -388,9 +353,9 @@ type SheetViewSlots = {
   setPending: (pending: boolean) => void;
 };
 const SheetViewContext = React.createContext<SheetViewSlots | null>(null);
-const SheetViewDescribeContext = React.createContext<
-  ((id: string | undefined) => void) | null
->(null);
+const SheetViewDescribeContext = React.createContext<((id: string | undefined) => void) | null>(
+  null
+);
 /** The view a component renders in, for MultiStep's view variant: its subheader and footer slots and its exits. */
 const useSheetView = () => React.useContext(SheetViewContext);
 
@@ -401,7 +366,7 @@ function SheetViewFrame({
   onBack,
   onDone,
   backDisabled,
-  setPending,
+  setPending
 }: {
   view: SheetViewProps;
   trail: string[];
@@ -416,13 +381,12 @@ function SheetViewFrame({
   const descriptionId = React.useId();
   const labelled = active && trail.length > 0;
   const [describedBy, setDescribedBy] = React.useState<string>();
-  const ownDescription =
-    labelled && view.description ? descriptionId : undefined;
+  const ownDescription = labelled && view.description ? descriptionId : undefined;
   React.useLayoutEffect(() => {
     if (!host || !active) return undefined;
     host.setViewLabels({
       title: labelled ? titleId : undefined,
-      description: ownDescription ?? describedBy,
+      description: ownDescription ?? describedBy
     });
     return () => host.setViewLabels(undefined);
   }, [host, active, labelled, titleId, ownDescription, describedBy]);
@@ -430,7 +394,7 @@ function SheetViewFrame({
   const [footer, setFooter] = React.useState<HTMLElement | null>(null);
   const slots = React.useMemo(
     () => ({ subheader, footer, back: onBack, done: onDone, setPending }),
-    [subheader, footer, onBack, onDone, setPending],
+    [subheader, footer, onBack, onDone, setPending]
   );
   const header = trail.length ? (
     <SheetHeader tabs={view.tabs}>
@@ -456,10 +420,7 @@ function SheetViewFrame({
           {view.title}
         </h2>
         {view.badges && (
-          <span
-            data-slot="overlay-title-badges"
-            className={overlay.titleBadges}
-          >
+          <span data-slot="overlay-title-badges" className={overlay.titleBadges}>
             {view.badges}
           </span>
         )}
@@ -519,7 +480,7 @@ function SheetViewFrame({
 function SheetViews({
   view,
   onViewChange,
-  children,
+  children
 }: {
   view: string;
   onViewChange: (view: string) => void;
@@ -529,7 +490,7 @@ function SheetViews({
   const views = React.Children.toArray(children)
     .filter(
       (child): child is React.ReactElement<SheetViewProps> =>
-        React.isValidElement(child) && child.type === SheetView,
+        React.isValidElement(child) && child.type === SheetView
     )
     .map((child) => child.props);
   const base = views[0];
@@ -538,10 +499,7 @@ function SheetViews({
   let entry: SheetViewProps | undefined = byId.get(view) ?? base;
   while (entry && !chain.includes(entry)) {
     chain.unshift(entry);
-    entry =
-      entry.id === base?.id
-        ? undefined
-        : byId.get(entry.parent ?? base?.id ?? "");
+    entry = entry.id === base?.id ? undefined : byId.get(entry.parent ?? base?.id ?? "");
   }
   const current = chain[chain.length - 1];
   const parentOf = chain[chain.length - 2];
@@ -558,11 +516,7 @@ function SheetViews({
       return;
     }
     returnFocus.current = null;
-    setDiscard({
-      proceed,
-      title: dirty.discardTitle,
-      description: dirty.discardDescription,
-    });
+    setDiscard({ proceed, title: dirty.discardTitle, description: dirty.discardDescription });
   };
   const askEach = (dirty: SheetViewProps[], proceed: () => void) => {
     const [first, ...rest] = dirty;
@@ -583,10 +537,7 @@ function SheetViews({
   React.useLayoutEffect(() => {
     latest.current = { back, done };
   });
-  const stableBack = React.useCallback(
-    (onLeave?: () => void) => latest.current.back(onLeave),
-    [],
-  );
+  const stableBack = React.useCallback((onLeave?: () => void) => latest.current.back(onLeave), []);
   const stableDone = React.useCallback(() => latest.current.done(), []);
   React.useLayoutEffect(() => {
     if (!host) return;
@@ -605,7 +556,7 @@ function SheetViews({
         if (!dirty.length) return false;
         askEach(dirty, proceed);
         return true;
-      },
+      }
     };
   });
   React.useLayoutEffect(() => {
@@ -617,7 +568,7 @@ function SheetViews({
     () => () => {
       if (host) host.intercept.current = null;
     },
-    [host],
+    [host]
   );
   React.useLayoutEffect(() => {
     if (!host) return undefined;
@@ -631,10 +582,7 @@ function SheetViews({
     const previous = shown.current;
     shown.current = current?.id;
     if (!current || previous === current.id) return;
-    if (
-      previous !== undefined &&
-      !chain.some((entry) => entry.id === previous)
-    ) {
+    if (previous !== undefined && !chain.some((entry) => entry.id === previous)) {
       const opener = openers.current.get(previous);
       openers.current.delete(previous);
       if (opener?.isConnected) {
@@ -647,12 +595,8 @@ function SheetViews({
     }
     const frame = frames.current.get(current.id);
     const target =
-      frame?.querySelector<HTMLElement>(
-        '[data-slot="sheet-scroll"] ' + formControlSelector,
-      ) ??
-      frame?.querySelector<HTMLElement>(
-        "button, [href], [tabindex]:not([tabindex='-1'])",
-      );
+      frame?.querySelector<HTMLElement>('[data-slot="sheet-scroll"] ' + formControlSelector) ??
+      frame?.querySelector<HTMLElement>("button, [href], [tabindex]:not([tabindex='-1'])");
     if (!target) return;
     returnFocus.current = target;
     target.focus({ preventScroll: true });
@@ -734,17 +678,8 @@ function SheetSubheader({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & {
-  ref?: React.Ref<HTMLDivElement>;
-}) {
-  return (
-    <div
-      ref={ref}
-      data-slot="sheet-subheader"
-      className={cn(className)}
-      {...props}
-    />
-  );
+}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+  return <div ref={ref} data-slot="sheet-subheader" className={cn(className)} {...props} />;
 }
 SheetSubheader.displayName = "SheetSubheader";
 
@@ -752,33 +687,17 @@ function SheetBody({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & {
-  ref?: React.Ref<HTMLDivElement>;
-}) {
-  return (
-    <div
-      ref={ref}
-      data-slot="sheet-body"
-      className={cn(className)}
-      {...props}
-    />
-  );
+}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+  return <div ref={ref} data-slot="sheet-body" className={cn(className)} {...props} />;
 }
 SheetBody.displayName = "SheetBody";
 
-function SheetFooter({
-  className,
-  ref,
-  ...props
-}: React.ComponentProps<"div">) {
+function SheetFooter({ className, ref, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       ref={ref}
       data-slot="sheet-footer"
-      className={cn(
-        "mt-auto flex flex-wrap items-center justify-end gap-2 p-4",
-        className,
-      )}
+      className={cn("mt-auto flex flex-wrap items-center justify-end gap-2 p-4", className)}
       {...props}
     />
   );
@@ -869,5 +788,5 @@ export {
   SheetTrigger,
   SheetView,
   SheetViews,
-  useSheetView,
+  useSheetView
 };
