@@ -169,6 +169,9 @@
 .wrap .description {
   -webkit-line-clamp: none;
 }
+.layout[data-truncate] .description {
+  -webkit-line-clamp: 1;
+}
 .body {
   margin-top: var(--cipher-space-8);
   min-width: 0;

@@ -95,9 +95,10 @@ export type ItemProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> &
     resolved?: boolean;
     /**
      * Keeps the title and description on one line with an ellipsis, and puts the full text in a
-     * native tooltip. Defaults to true, except on a row with actions at the default or md size,
-     * where the title wraps beside its timestamp. titleLines takes over the title when set, so
-     * truncate then governs only the description.
+     * native tooltip. Unset, the title still truncates and the description wraps to two lines
+     * before its ellipsis, except on a row with actions at the default or md size, where both
+     * wrap. titleLines takes over the title when set, so truncate then governs only the
+     * description.
      */
     truncate?: boolean;
     /**
@@ -281,6 +282,7 @@ function Item({
       data-unread={unread || undefined}
       data-resolved={resolved || undefined}
       data-has-actions={(composed && hasActions) || undefined}
+      data-truncate={truncate || undefined}
       className={cn(
         itemVariants({ variant, size }),
         composed ? itemStyles.layout : "items-center",
