@@ -284,6 +284,8 @@ type SheetViewProps = {
   /** The first view's own header, usually a SheetHeader with the SheetTitle. Child views get a back control and a breadcrumb title instead. */
   header?: React.ReactNode;
   description?: React.ReactNode;
+  /** A child view's header tabs, as SheetHeader `tabs`. The first view sets them on its own header. */
+  tabs?: React.ReactNode;
   footer?: React.ReactNode;
   /** Widens the sheet while this view is shown. */
   size?: SheetSize;
@@ -354,7 +356,7 @@ function SheetViewFrame({
     [subheader, footer, onBack, onDone, setPending]
   );
   const header = trail.length ? (
-    <SheetHeader>
+    <SheetHeader tabs={view.tabs}>
       <div className={overlay.viewTitleRow}>
         <Button
           variant="ghost"
@@ -596,14 +598,28 @@ function SheetViews({
 }
 SheetViews.displayName = "SheetViews";
 
-function SheetHeader({ className, ref, ...props }: React.ComponentProps<"div">) {
+function SheetHeader({
+  className,
+  tabs,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<"div"> & {
+  /** Underline Tabs that sit on the header's bottom rule, so the active underline lands on it. Pass a controlled Tabs without content and render the panel in the body. */
+  tabs?: React.ReactNode;
+}) {
+  const titled = React.Children.toArray(children).length > 0;
   return (
     <div
       ref={ref}
       data-slot="sheet-header"
+      data-tabs={tabs ? (titled ? "" : "only") : undefined}
       className={cn("flex flex-col gap-0.5 p-4", className)}
       {...props}
-    />
+    >
+      {children}
+      {tabs && <div data-slot="sheet-header-tabs">{tabs}</div>}
+    </div>
   );
 }
 SheetHeader.displayName = "SheetHeader";

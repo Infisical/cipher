@@ -1656,6 +1656,10 @@
       {
         "title": "Nested views: a MultiStep inside the sheet",
         "module": "sheet/nested-views"
+      },
+      {
+        "title": "Tabs on the header",
+        "module": "sheet/header-tabs"
       }
     ]
   },

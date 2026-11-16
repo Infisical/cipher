@@ -543,6 +543,18 @@
   flex-direction: column;
   border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
+/* Header tabs drop their own rule and sit on the head's, so the active underline lands on it. */
+.cipher [data-slot="sheet-header"][data-tabs] {
+  padding-bottom: 0;
+}
+.cipher [data-slot="sheet-header-tabs"] {
+  position: relative;
+  min-width: 0;
+  margin-bottom: calc(-1 * var(--cipher-size-control-border));
+}
+.cipher [data-slot="sheet-header"][data-tabs=""] > [data-slot="sheet-header-tabs"] {
+  margin-top: var(--cipher-space-4);
+}
 .cipher [data-sections] > [data-slot="sheet-footer"],
 .cipher [data-sections] > [data-slot="sheet-form"] > [data-slot="sheet-footer"] {
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);

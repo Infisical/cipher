@@ -18,6 +18,9 @@
 .tabsTrack[data-rule-spans] {
   width: 100%;
 }
+[data-slot="sheet-header-tabs"] .tabsTrack {
+  border-bottom: 0;
+}
 .tabsList {
   position: relative;
   display: flex;
