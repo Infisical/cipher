@@ -14,6 +14,11 @@
   --documentation-link-context-pad-y: calc((var(--cipher-type-title-lg-line-height) - var(--cipher-size-icon-lg)) / 2);
   --documentation-link-context-pad-x: 0px;
 }
+:global([data-slot="overlay-title-badges"]) {
+  --documentation-link-context: var(--cipher-size-icon);
+  --documentation-link-context-pad-y: calc((var(--cipher-type-title-line-height) - var(--cipher-size-icon)) / 2);
+  --documentation-link-context-pad-x: 0px;
+}
 .link {
   --documentation-link-glyph: var(--documentation-link-size, var(--documentation-link-context, var(--cipher-size-icon)));
   --documentation-link-hit-y: var(--documentation-link-pad-y, var(--documentation-link-context-pad-y, var(--cipher-size-focus-ring)));
