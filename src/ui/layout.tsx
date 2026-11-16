@@ -407,11 +407,15 @@ export function Panes({
               <TabsTrigger
                 value={ASIDE_TAB}
                 id={tabsId + ASIDE_TAB}
-                aria-controls={tabsId + "panel"}
+                aria-controls={tabsId + "asidepanel"}
               >
                 {asideLabel}
               </TabsTrigger>
-              <TabsTrigger value={MAIN_TAB} id={tabsId + MAIN_TAB} aria-controls={tabsId + "panel"}>
+              <TabsTrigger
+                value={MAIN_TAB}
+                id={tabsId + MAIN_TAB}
+                aria-controls={tabsId + "mainpanel"}
+              >
                 {mainLabel}
               </TabsTrigger>
             </TabsList>
@@ -421,7 +425,7 @@ export function Panes({
           <div
             data-slot="panes-details"
             role="tabpanel"
-            id={tabsId + "panel"}
+            id={tabsId + "asidepanel"}
             aria-labelledby={tabsId + ASIDE_TAB}
             className={paneStyles.page}
           >
@@ -431,7 +435,7 @@ export function Panes({
         <div
           className={cn(paneStyles.main, open && paneStyles.hidden)}
           {...(narrow
-            ? { role: "tabpanel", id: tabsId + "panel", "aria-labelledby": tabsId + MAIN_TAB }
+            ? { role: "tabpanel", id: tabsId + "mainpanel", "aria-labelledby": tabsId + MAIN_TAB }
             : {})}
         >
           {children}

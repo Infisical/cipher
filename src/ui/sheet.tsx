@@ -424,6 +424,8 @@ function renderAsideMain({
 }) {
   const { narrow, detailsOpen: open, setDetailsOpen } = panes;
   const label = aside.label ?? "Details";
+  const mainTabId = detailsTabId + "main";
+  const mainPanelId = detailsPanelId + "main";
   const pinned = sections?.pinned ?? [];
   const tabbedIndex = pinned.findIndex(
     (child) =>
@@ -455,12 +457,17 @@ function renderAsideMain({
             <TabsTrigger value={DETAILS_TAB} id={detailsTabId} aria-controls={detailsPanelId}>
               {label}
             </TabsTrigger>
-            <TabsTrigger value={MAIN_TAB}>{aside.mainLabel}</TabsTrigger>
+            <TabsTrigger value={MAIN_TAB} id={mainTabId} aria-controls={mainPanelId}>
+              {aside.mainLabel}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       }
     />
   );
+  const mainPanel = ownTabs
+    ? { role: "tabpanel", id: mainPanelId, "aria-labelledby": mainTabId }
+    : {};
   const details = open && (
     <div data-slot="sheet-scroll" data-scroll-fade="y">
       <SheetBody role="tabpanel" id={detailsPanelId} aria-labelledby={detailsTabId}>
@@ -473,7 +480,12 @@ function renderAsideMain({
       <>
         {ownTabs && <div data-slot="sheet-head">{ownTabs}</div>}
         {details}
-        <div data-slot="sheet-sections" data-sections="" data-hidden={open || undefined}>
+        <div
+          data-slot="sheet-sections"
+          data-sections=""
+          data-hidden={open || undefined}
+          {...mainPanel}
+        >
           {rest}
         </div>
       </>
@@ -501,6 +513,7 @@ function renderAsideMain({
           data-scroll-fade="y"
           data-before-footer={footer.length > 0 || undefined}
           data-hidden={open || undefined}
+          {...mainPanel}
         >
           {sections.scroll}
         </div>
