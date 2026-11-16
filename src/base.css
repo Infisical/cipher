@@ -370,6 +370,10 @@
 .cipher :is([data-slot="dialog-header"], [data-slot="alert-dialog-header"]) {
   gap: var(--cipher-space-6);
 }
+/* A stacked aside sits under the close button, so it clears it as a header does. */
+.cipher [data-slot="sheet-content"][data-has-close] [data-slot="panes-aside"] {
+  --cipher-pane-aside-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+}
 .cipher [data-slot="dialog-content"][data-has-close] [data-slot="dialog-header"],
 .cipher [data-slot="sheet-content"][data-has-close] [data-slot="sheet-header"] {
   padding-inline-end: calc(
@@ -583,7 +587,7 @@
   overflow: hidden;
   gap: 0;
 }
-.cipher [data-slot="sheet-sections"] {
+.cipher :is([data-slot="sheet-sections"], [data-slot="sheet-main"]) {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;

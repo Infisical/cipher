@@ -3,13 +3,16 @@ import * as React from "react";
 import { cn, truncateTitle } from "../lib/utils";
 
 import detailStyles from "./detail-layout.module.css";
+import paneStyles from "./panes.module.css";
 import styles from "./text.module.css";
 
 export function PageMeasure({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
     <div
       ref={ref}
@@ -24,7 +27,9 @@ export function FormMeasure({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
     <div
       ref={ref}
@@ -42,7 +47,8 @@ type LayoutProps = React.ComponentPropsWithoutRef<"div"> & {
   align?: "start" | "center" | "end" | "stretch";
   justify?: "start" | "center" | "end" | "between";
 };
-const spacing = (gap: LayoutGap) => (gap === 0 ? 0 : `var(--cipher-space-${gap})`);
+const spacing = (gap: LayoutGap) =>
+  gap === 0 ? 0 : `var(--cipher-space-${gap})`;
 const alignment = (align: LayoutProps["align"] | "baseline") =>
   align === "start" ? "flex-start" : align === "end" ? "flex-end" : align;
 export function Stack({
@@ -62,8 +68,9 @@ export function Stack({
       style={{
         gap: spacing(gap),
         alignItems: alignment(align),
-        justifyContent: justify === "between" ? "space-between" : alignment(justify),
-        ...style
+        justifyContent:
+          justify === "between" ? "space-between" : alignment(justify),
+        ...style,
       }}
       {...props}
     />
@@ -91,9 +98,10 @@ export function Inline({
       style={{
         gap: spacing(gap),
         alignItems: alignment(align),
-        justifyContent: justify === "between" ? "space-between" : alignment(justify),
+        justifyContent:
+          justify === "between" ? "space-between" : alignment(justify),
         flexWrap: wrap ? "wrap" : "nowrap",
-        ...style
+        ...style,
       }}
       {...props}
     />
@@ -105,7 +113,9 @@ export function InlineGrow({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
     <div
       ref={ref}
@@ -128,7 +138,10 @@ export function InlineItem({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { shrink?: boolean; truncate?: boolean } & {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  shrink?: boolean;
+  truncate?: boolean;
+} & {
   ref?: React.Ref<HTMLDivElement>;
 }) {
   return (
@@ -140,7 +153,7 @@ export function InlineItem({
         styles.inlineItem,
         !shrink && styles.inlineFixed,
         truncate && styles.endTruncate,
-        className
+        className,
       )}
       {...props}
     />
@@ -169,11 +182,15 @@ export function Grid({
       ref={ref}
       data-slot="grid"
       data-columns={columns}
-      className={cn(styles.grid, columns === "1:2" && styles.gridSplit, className)}
+      className={cn(
+        styles.grid,
+        columns === "1:2" && styles.gridSplit,
+        className,
+      )}
       style={{
         gap: spacing(gap),
         gridTemplateColumns,
-        ...style
+        ...style,
       }}
       {...props}
     />
@@ -184,9 +201,16 @@ export function Container({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
-    <div ref={ref} data-slot="container" className={cn(styles.container, className)} {...props} />
+    <div
+      ref={ref}
+      data-slot="container"
+      className={cn(styles.container, className)}
+      {...props}
+    />
   );
 }
 Container.displayName = "Container";
@@ -195,7 +219,9 @@ export function Measure({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { size?: "page" | "form" | "prose" } & {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  size?: "page" | "form" | "prose";
+} & {
   ref?: React.Ref<HTMLDivElement>;
 }) {
   return (
@@ -209,7 +235,7 @@ export function Measure({
           : size === "form"
             ? styles.measureForm
             : styles.measureProse,
-        className
+        className,
       )}
       {...props}
     />
@@ -219,7 +245,8 @@ Measure.displayName = "Measure";
 
 const scrollParent = (node: HTMLElement) => {
   for (let parent = node.parentElement; parent; parent = parent.parentElement) {
-    if (/(auto|scroll|overlay)/.test(getComputedStyle(parent).overflowY)) return parent;
+    if (/(auto|scroll|overlay)/.test(getComputedStyle(parent).overflowY))
+      return parent;
   }
   return null;
 };
@@ -287,3 +314,47 @@ export function DetailLayout({
   );
 }
 DetailLayout.displayName = "DetailLayout";
+
+/**
+ * A fixed-width aside beside a main pane inside a bounded height, such as a sheet or a dialog. Each
+ * pane scrolls on its own and the main pane's fields run its full width. Below size-pane-collapse
+ * the aside stacks above the main pane, capped at 40% of the height. A page with a sidecar uses
+ * DetailLayout, which scrolls with the page instead.
+ */
+export function Panes({
+  aside,
+  asideLabel,
+  asideClassName,
+  children,
+  className,
+  ref,
+  ...props
+}: React.ComponentPropsWithoutRef<"div"> & {
+  aside: React.ReactNode;
+  asideLabel?: string;
+  asideClassName?: string;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <div
+      ref={ref}
+      data-slot="panes"
+      className={cn(paneStyles.root, className)}
+      {...props}
+    >
+      <div className={paneStyles.columns}>
+        <aside
+          data-slot="panes-aside"
+          aria-label={asideLabel}
+          className={cn(paneStyles.aside, asideClassName)}
+        >
+          {aside}
+        </aside>
+        <div data-slot="panes-main" className={paneStyles.main}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+Panes.displayName = "Panes";

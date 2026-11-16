@@ -672,10 +672,14 @@
 .field {
   gap: var(--cipher-space-field-label);
 }
-.field:not([data-orientation="horizontal"]) {
+.field:not([data-orientation="horizontal"]),
+.field[data-orientation="horizontal"]:is(
+    :global([data-slot="field"]) ~ *,
+    :has(~ :global([data-slot="field"]))
+  ) {
   max-width: var(--cipher-size-measure-field);
 }
-.field[data-width="wide"]:not([data-orientation="horizontal"]) {
+.field[data-width="wide"] {
   max-width: var(--cipher-size-measure-field-wide);
 }
 .field[data-orientation="horizontal"] {

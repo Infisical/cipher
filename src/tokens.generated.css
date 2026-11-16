@@ -81,6 +81,7 @@
   --cipher-size-sheet-sm: 384px;
   --cipher-size-sheet-md: 512px;
   --cipher-size-sheet-lg: 672px;
+  --cipher-size-sheet-xl: 1024px;
   --cipher-size-overlay-margin: var(--cipher-space-16);
   --cipher-size-control-xs: var(--cipher-size-nested-sm);
   --cipher-size-control-border: 1px;
@@ -103,6 +104,8 @@
   --cipher-size-measure-field-wide: 100%;
   --cipher-size-measure-prose: 65ch;
   --cipher-size-sidecar: 384px;
+  --cipher-size-pane-aside: 320px;
+  --cipher-size-pane-collapse: 720px;
   --cipher-size-sidecar-collapse: 896px;
   --cipher-size-data-list-term: 128px;
   --cipher-size-data-list-row: var(--cipher-size-control-sm);

@@ -91,6 +91,9 @@
 .sheet[data-size="lg"] {
   --cipher-sheet-size: var(--cipher-size-sheet-lg);
 }
+.sheet[data-size="xl"] {
+  --cipher-sheet-size: var(--cipher-size-sheet-xl);
+}
 .sheet[data-side="left"],
 .sheet[data-side="right"] {
   max-width: min(var(--cipher-sheet-size), 100vw);

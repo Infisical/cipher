@@ -1,6 +1,8 @@
 import * as React from "react";
 
-type OverlayForm = React.ReactElement<React.ComponentProps<"form"> & { "data-slot"?: string }>;
+type OverlayForm = React.ReactElement<
+  React.ComponentProps<"form"> & { "data-slot"?: string }
+>;
 
 type SectionTypes = {
   header: React.ElementType;
@@ -9,12 +11,15 @@ type SectionTypes = {
   footer: React.ElementType;
 };
 
-const flattenFragments = (children: React.ReactNode, prefix = ""): React.ReactNode[] =>
+export const flattenFragments = (
+  children: React.ReactNode,
+  prefix = "",
+): React.ReactNode[] =>
   React.Children.toArray(children).flatMap((child) => {
     if (React.isValidElement(child) && child.type === React.Fragment)
       return flattenFragments(
         (child.props as { children?: React.ReactNode }).children,
-        `${prefix}${child.key}`
+        `${prefix}${child.key}`,
       );
     return React.isValidElement(child) && prefix
       ? [React.cloneElement(child, { key: `${prefix}${child.key}` })]
@@ -35,8 +40,8 @@ export const splitOverlaySections = (
   types: SectionTypes,
   {
     pinHeader = false,
-    lookThroughForm = false
-  }: { pinHeader?: boolean; lookThroughForm?: boolean } = {}
+    lookThroughForm = false,
+  }: { pinHeader?: boolean; lookThroughForm?: boolean } = {},
 ) => {
   const top = flattenFragments(children);
   const [only] = top;
@@ -51,23 +56,26 @@ export const splitOverlaySections = (
   const is = (child: React.ReactNode, type?: React.ElementType) =>
     type !== undefined && React.isValidElement(child) && child.type === type;
   const slots = [types.header, types.subheader, types.body, types.footer];
-  if (!parts.some((child) => slots.some((type) => is(child, type)))) return null;
+  if (!parts.some((child) => slots.some((type) => is(child, type))))
+    return null;
   const rest = parts.filter((child) => !is(child, types.footer));
   const pinnedCount = rest.reduce<number>(
     (count, child, index) =>
-      is(child, types.subheader) || (pinHeader && is(child, types.header)) ? index + 1 : count,
-    0
+      is(child, types.subheader) || (pinHeader && is(child, types.header))
+        ? index + 1
+        : count,
+    0,
   );
   return {
     pinned: rest.slice(0, pinnedCount),
     scroll: rest.slice(pinnedCount),
     footer: parts.filter((child) => is(child, types.footer)),
-    form
+    form,
   };
 };
 
 export const renderInForm = (
   form: OverlayForm | undefined,
   slot: string,
-  layout: React.ReactNode
+  layout: React.ReactNode,
 ) => (form ? React.cloneElement(form, { "data-slot": slot }, layout) : layout);

@@ -1731,6 +1731,11 @@
           "target": "src/components/cipher/ui/detail-layout.module.css"
         },
         {
+          "path": "src/components/cipher/ui/panes.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/panes.module.css"
+        },
+        {
           "path": "src/components/cipher/ui/text.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/text.module.css"
@@ -2352,7 +2357,8 @@
         "@cipher/alert-dialog",
         "@cipher/button",
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/layout"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"
