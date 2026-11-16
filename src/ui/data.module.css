@@ -905,6 +905,7 @@ button.rowTitle::after {
   font-weight: var(--cipher-type-body-font-weight);
   letter-spacing: var(--cipher-type-body-letter-spacing);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   margin: 0;
 }
 .dataPair {

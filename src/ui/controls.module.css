@@ -374,6 +374,34 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex: 1 1 var(--cipher-size-cell-min);
   align-items: center;
 }
+/* A framed header keeps one 28px band: the title takes its full text first, leaving the action at
+   least --cipher-card-action-min, and the action truncates into whatever is left. */
+.card[data-variant="framed"]
+  > .cardHeader:has(> .cardAction):not(:has(> [data-slot="card-description"])) {
+  --cipher-card-action-min: calc(1.5 * var(--cipher-size-cell-min));
+  flex-wrap: nowrap;
+}
+.card[data-variant="framed"]
+  > .cardHeader:has(> .cardAction):not(:has(> [data-slot="card-description"]))
+  > :is(.cardTitleGroup, [data-slot="card-title"]) {
+  flex: 0 0 auto;
+  max-width: calc(100% - var(--cipher-card-action-min) - var(--cipher-space-12));
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction > *,
+.card[data-variant="framed"] > .cardHeader > .cardAction [data-cipher-button] > [data-press] {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction [data-cipher-button] > [data-press] {
+  display: block;
+}
 .card[data-variant="framed"] > .cardHeader > [data-slot="card-description"] {
   flex-basis: 100%;
   order: 1;
