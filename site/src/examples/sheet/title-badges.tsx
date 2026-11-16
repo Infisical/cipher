@@ -67,6 +67,19 @@ export default function Example() {
           </>
         }
       />
+      <TitledSheet
+        label="Many badges"
+        title="Edit release-signer"
+        badges={
+          <>
+            <DocumentationLink href={docs} subject="code signing" />
+            <Badge tone="warn">Production</Badge>
+            <Badge tone="outline">HSM</Badge>
+            <Badge tone="outline">FIPS 140-3</Badge>
+            <Badge tone="outline">Rotates every 90 days</Badge>
+          </>
+        }
+      />
     </div>
   );
 }
