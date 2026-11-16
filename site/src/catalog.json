@@ -696,6 +696,10 @@
       {
         "title": "Pending save and unsaved changes",
         "module": "dialog/pending"
+      },
+      {
+        "title": "Docs link beside the title",
+        "module": "dialog/title-badges"
       }
     ]
   },
@@ -1656,6 +1660,10 @@
       {
         "title": "Nested views: a MultiStep inside the sheet",
         "module": "sheet/nested-views"
+      },
+      {
+        "title": "Badges and a docs link beside the title",
+        "module": "sheet/title-badges"
       }
     ]
   },

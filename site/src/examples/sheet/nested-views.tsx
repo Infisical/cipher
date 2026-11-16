@@ -7,6 +7,7 @@ import { Checkbox } from "@infisical/cipher/ui/checkbox";
 import { EmptyState } from "@infisical/cipher/ui/empty";
 import { Field } from "@infisical/cipher/ui/field";
 import { Input } from "@infisical/cipher/ui/input";
+import { DocumentationLink } from "@infisical/cipher/ui/documentation-link";
 import { DataList } from "@infisical/cipher/ui/list";
 import { MultiStep } from "@infisical/cipher/ui/multi-step";
 import * as UI from "@infisical/cipher/ui/sheet";
@@ -113,6 +114,12 @@ const FolderSheet = ({
             <UI.SheetView
               id="alert"
               title="New alert"
+              badges={
+                <DocumentationLink
+                  href="https://infisical.com/docs/documentation/platform/pam/alerts"
+                  subject="PAM alerts"
+                />
+              }
               size="lg"
               dirty={
                 draft.name !== blank.name ||

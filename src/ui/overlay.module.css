@@ -168,10 +168,13 @@
 }
 .viewTitleRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--cipher-space-8);
   min-width: 0;
   margin-inline-start: calc(-1 * var(--cipher-space-6));
+}
+.viewTitleRow > [data-slot="button"] {
+  margin-block: calc((var(--cipher-type-title-line-height) - var(--cipher-size-nested-md)) / 2);
 }
 .viewTitle {
   min-width: 0;
@@ -190,4 +193,30 @@
   .sheet[data-side="right"] {
     transition: none;
   }
+}
+.titleLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+}
+.titleLine > :first-child {
+  min-width: 0;
+}
+.titleBadges {
+  display: inline-flex;
+  flex: none;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 50%;
+  align-items: center;
+  gap: var(--cipher-space-6);
+}
+.titleBadges > * {
+  max-width: 100%;
+}
+.titleBadges::before {
+  content: "";
+  height: var(--cipher-type-title-line-height);
+  margin-inline-end: calc(-1 * var(--cipher-space-6));
 }
