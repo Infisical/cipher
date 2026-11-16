@@ -403,7 +403,11 @@ function SheetViewFrame({
             head={
               <>
                 {header}
-                <div ref={setSubheader} className={overlay.viewSlot} />
+                <div
+                  ref={setSubheader}
+                  data-slot="sheet-view-subheader"
+                  className={overlay.viewSlot}
+                />
               </>
             }
             scroll={view.children}

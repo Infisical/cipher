@@ -71,6 +71,65 @@ const TabbedSheet = ({
   );
 };
 
+const ViewTabsSheet = () => {
+  const [view, setView] = React.useState("import");
+  const [tab, setTab] = React.useState("upload");
+  const id = React.useId();
+  const tabs = [
+    { value: "upload", label: "Upload file" },
+    { value: "paste", label: "Paste secrets" }
+  ];
+  return (
+    <UI.Sheet onOpenChange={() => setView("import")}>
+      <UI.SheetTrigger asChild>
+        <Button variant="outline">Tabs in a nested view</Button>
+      </UI.SheetTrigger>
+      <UI.SheetContent>
+        <UI.SheetViews view={view} onViewChange={setView}>
+          <UI.SheetView
+            id="folder"
+            title="production"
+            header={
+              <UI.SheetHeader>
+                <UI.SheetTitle>production</UI.SheetTitle>
+              </UI.SheetHeader>
+            }
+          >
+            <UI.SheetBody>
+              <Button onClick={() => setView("import")}>Import secrets</Button>
+            </UI.SheetBody>
+          </UI.SheetView>
+          <UI.SheetView
+            id="import"
+            title="Import secrets"
+            parent="folder"
+            tabs={
+              <Tabs value={tab} onValueChange={setTab}>
+                <TabsList aria-label="Import source">
+                  {tabs.map((item) => (
+                    <TabsTrigger
+                      key={item.value}
+                      value={item.value}
+                      id={id + item.value}
+                      aria-controls={id + "panel"}
+                    >
+                      {item.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            }
+          >
+            <UI.SheetBody role="tabpanel" id={id + "panel"} aria-labelledby={id + tab}>
+              {panels[tab]}
+            </UI.SheetBody>
+          </UI.SheetView>
+        </UI.SheetViews>
+      </UI.SheetContent>
+    </UI.Sheet>
+  );
+};
+
 export default function Example() {
   return (
     <div className="flex w-full min-w-0 flex-wrap items-start gap-3">
@@ -100,6 +159,7 @@ export default function Example() {
           { value: "gcp", label: "GCP Secret Manager" }
         ]}
       />
+      <ViewTabsSheet />
     </div>
   );
 }
