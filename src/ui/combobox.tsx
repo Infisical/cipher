@@ -4,7 +4,7 @@ import { useDiscardChangesGuard } from "../hooks/use-discard-changes-guard";
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { type OptionCreateHandler, useOptionCreation } from "../lib/use-option-creation";
-import { cn } from "../lib/utils";
+import { cn, titleIfClamped } from "../lib/utils";
 import { DiscardChangesAlertDialog } from "./alert-dialog";
 import { Button } from "./button";
 import {
@@ -478,7 +478,10 @@ export function Combobox({
                           <span className={menu.title}>
                             <Highlight text={option.label} query={query} />
                           </span>
-                          <span className={menu.description}>
+                          <span
+                            className={menu.description}
+                            onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+                          >
                             <Highlight text={option.description} query={query} />
                           </span>
                         </span>

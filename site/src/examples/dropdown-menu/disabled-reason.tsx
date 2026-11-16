@@ -27,6 +27,10 @@ export default function Example() {
                 <Icon name="sync" />
                 Rotate now
               </UI.DropdownMenuItem>
+              <UI.DropdownMenuItem description="Moves every secret in this folder, including imported references and their version history, to another environment and rewrites the references that point here so nothing breaks">
+                <Icon name="folder" />
+                Move folder
+              </UI.DropdownMenuItem>
               <UI.DropdownMenuItem disabledReason="Versioning is off for this project">
                 <Icon name="history" />
                 Version history

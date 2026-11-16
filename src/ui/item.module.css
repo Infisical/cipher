@@ -53,12 +53,16 @@
   letter-spacing: var(--cipher-type-small-letter-spacing);
   margin-top: var(--cipher-space-4);
   color: var(--cipher-text2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 .tileDescription {
   display: block;
+  -webkit-line-clamp: none;
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -161,6 +165,9 @@
 .wrap .description {
   white-space: normal;
   overflow-wrap: anywhere;
+}
+.wrap .description {
+  -webkit-line-clamp: none;
 }
 .body {
   margin-top: var(--cipher-space-8);

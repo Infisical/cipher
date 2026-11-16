@@ -312,15 +312,23 @@
 }
 .description {
   min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: normal;
   color: var(--cipher-muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-family: var(--cipher-type-small-font-family);
   font-size: var(--cipher-type-small-font-size);
   line-height: var(--cipher-type-small-line-height);
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+:global([data-command-label]) > .description {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .shortcut,
 .meta {

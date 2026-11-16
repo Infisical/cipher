@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { titleIfClamped } from "../lib/utils";
 import { Kbd } from "./kbd";
 
 import menu from "./menu.module.css";
@@ -7,7 +8,12 @@ import menu from "./menu.module.css";
 const withDescription = (label: React.ReactNode, description: React.ReactNode) => (
   <span className={menu.text}>
     <span className={menu.title}>{label}</span>
-    <span className={menu.description}>{description}</span>
+    <span
+      className={menu.description}
+      onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+    >
+      {description}
+    </span>
   </span>
 );
 

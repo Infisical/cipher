@@ -4,7 +4,7 @@ import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
 import { useControllableState } from "../lib/use-controllable-state";
 import { type OptionCreateHandler, useOptionCreation } from "../lib/use-option-creation";
-import { cn } from "../lib/utils";
+import { cn, titleIfClamped } from "../lib/utils";
 import { Button } from "./button";
 import { Icon } from "./icon";
 import { useMenuInset } from "./menu-inset";
@@ -488,7 +488,12 @@ export function MultiSelect({
                     {option.description ? (
                       <span className={cn(menu.text, styles.optionLabel)}>
                         <span className={menu.title}>{option.label}</span>
-                        <span className={menu.description}>{option.description}</span>
+                        <span
+                          className={menu.description}
+                          onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+                        >
+                          {option.description}
+                        </span>
                       </span>
                     ) : (
                       <span className={styles.optionLabel}>{option.label}</span>
