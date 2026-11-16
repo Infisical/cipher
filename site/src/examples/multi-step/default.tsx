@@ -24,7 +24,10 @@ const useConnection = () => {
         return Boolean(team.trim());
       },
       content: (
-        <Field label="Team slug" error={teamError ? "Enter the team slug." : undefined}>
+        <Field
+          label="Team slug"
+          error={teamError ? "Enter the team slug." : undefined}
+        >
           <Input
             value={team}
             aria-invalid={teamError || undefined}
@@ -32,7 +35,7 @@ const useConnection = () => {
             placeholder="acme"
           />
         </Field>
-      )
+      ),
     },
     {
       title: "Environments",
@@ -40,31 +43,39 @@ const useConnection = () => {
       description: "Production always syncs.",
       content: (
         <Field label="Also sync preview deployments" orientation="horizontal">
-          <Checkbox checked={preview} onCheckedChange={(value) => setPreview(value === true)} />
+          <Checkbox
+            checked={preview}
+            onCheckedChange={(value) => setPreview(value === true)}
+          />
         </Field>
-      )
+      ),
     },
     {
       title: "Review",
       heading: "Review the connection",
       description: `Connects ${team || "your team"} and syncs ${preview ? "2" : "1"} environments.`,
-      disabledReason: overwrite ? undefined : "Confirm that Infisical may overwrite existing variables.",
+      disabledReason: overwrite
+        ? undefined
+        : "Confirm that Infisical may overwrite existing variables.",
       content: (
-        <Field label="Overwrite existing Vercel variables" orientation="horizontal">
+        <Field
+          label="Overwrite existing Vercel variables"
+          orientation="horizontal"
+        >
           <Checkbox
             checked={overwrite}
             onCheckedChange={(value) => setOverwrite(value === true)}
           />
         </Field>
-      )
-    }
+      ),
+    },
   ];
 };
 
 const Connect = ({
   variant,
   trigger,
-  onDone
+  onDone,
 }: {
   variant: "dialog" | "sheet" | "page";
   trigger?: React.ReactElement;
@@ -75,6 +86,7 @@ const Connect = ({
     title="Connect Vercel"
     steps={useConnection()}
     completeLabel="Connect"
+    cancelLabel="Maybe later"
     onComplete={onDone}
     trigger={trigger}
   />
@@ -91,7 +103,9 @@ export default function Example() {
             trigger={<Button variant="outline">Connect Vercel</Button>}
           />
         </div>
-        <figcaption className="text-muted-foreground text-xs">{"dialog"}</figcaption>
+        <figcaption className="text-muted-foreground text-xs">
+          {"dialog"}
+        </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">
@@ -101,13 +115,20 @@ export default function Example() {
             trigger={<Button variant="outline">Open in a sheet</Button>}
           />
         </div>
-        <figcaption className="text-muted-foreground text-xs">{"sheet"}</figcaption>
+        <figcaption className="text-muted-foreground text-xs">
+          {"sheet"}
+        </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
-          <Connect variant="page" onDone={() => toast("Vercel connected from the page.")} />
+          <Connect
+            variant="page"
+            onDone={() => toast("Vercel connected from the page.")}
+          />
         </div>
-        <figcaption className="text-muted-foreground text-xs">{"page"}</figcaption>
+        <figcaption className="text-muted-foreground text-xs">
+          {"page"}
+        </figcaption>
       </figure>
     </div>
   );

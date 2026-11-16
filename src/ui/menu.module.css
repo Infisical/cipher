@@ -265,6 +265,9 @@
   background-color: transparent;
   pointer-events: none;
 }
+.row:is([data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) > :is(img, [data-menu-icon]) {
+  opacity: var(--cipher-opacity-row-dim);
+}
 .indicator {
   order: 1;
   display: flex;
