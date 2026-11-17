@@ -9,10 +9,15 @@ function Textarea({
   className,
   mono = false,
   rows,
+  maxRows,
   style,
   ref,
   ...props
-}: React.ComponentProps<"textarea"> & { mono?: boolean }) {
+}: React.ComponentProps<"textarea"> & {
+  mono?: boolean;
+  /** The field grows with its content up to this many lines, then scrolls. */
+  maxRows?: number;
+}) {
   const fieldAttributes = useFieldControlAttributes(props);
   return (
     <textarea
@@ -21,11 +26,16 @@ function Textarea({
       data-size="sm"
       data-mono={mono || undefined}
       data-rows={rows === undefined ? undefined : ""}
+      data-max-rows={maxRows === undefined ? undefined : ""}
       rows={rows}
       style={
-        rows === undefined
+        rows === undefined && maxRows === undefined
           ? style
-          : ({ ...style, "--cipher-textarea-rows": rows } as React.CSSProperties)
+          : ({
+              ...style,
+              ...(rows === undefined ? {} : { "--cipher-textarea-rows": rows }),
+              ...(maxRows === undefined ? {} : { "--cipher-textarea-max-rows": maxRows })
+            } as React.CSSProperties)
       }
       className={cn(controlStyles.field, controlStyles.textarea, "flex w-full", className)}
       {...props}

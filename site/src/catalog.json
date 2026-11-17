@@ -2024,6 +2024,10 @@
       {
         "title": "Starting height from rows",
         "module": "textarea/rows"
+      },
+      {
+        "title": "Growing up to maxRows, then scrolling",
+        "module": "textarea/max-rows"
       }
     ]
   },
