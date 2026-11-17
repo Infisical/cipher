@@ -1421,6 +1421,9 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll [data-row-kind="empty"] > td {
   padding-block: var(--cipher-space-48);
 }
+.tableScroll [data-row-kind="empty"] > td:has(> [data-ghost]) {
+  padding: 0;
+}
 .tableScroll[data-virtual] .tableValue,
 .tableScroll[data-virtual] .tablePrimary,
 .tableScroll[data-virtual] .tableRowActions,

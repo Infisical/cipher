@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn, truncateTitle } from "../lib/utils";
+import { type EmptyGhost, EmptyGhostScope } from "./empty";
 
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 
@@ -154,13 +155,23 @@ export function Grid({
   gap = 16,
   columns,
   min = "tile",
+  empty,
+  ghost,
+  filtered = false,
   style,
   className,
+  children,
   ref,
   ...props
 }: Omit<LayoutProps, "align" | "justify"> & {
   columns?: 2 | 3 | 4 | "1:2";
   min?: "tile" | "card";
+  /** Shown across every column when the grid has no children, such as an EmptyState. */
+  empty?: React.ReactNode;
+  /** The ghost behind an Empty in the empty slot. Defaults to cards, and to none while filtered. */
+  ghost?: EmptyGhost;
+  /** The items are narrowed by a search or filters, so an empty grid means no matches and draws no ghost. */
+  filtered?: boolean;
 } & {
   ref?: React.Ref<HTMLDivElement>;
 }) {
@@ -179,7 +190,15 @@ export function Grid({
         ...style
       }}
       {...props}
-    />
+    >
+      {empty !== undefined && React.Children.count(children) === 0 ? (
+        <div style={{ gridColumn: "1 / -1" }}>
+          <EmptyGhostScope ghost={ghost ?? (filtered ? false : "cards")}>{empty}</EmptyGhostScope>
+        </div>
+      ) : (
+        children
+      )}
+    </div>
   );
 }
 Grid.displayName = "Grid";

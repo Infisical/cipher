@@ -5,6 +5,7 @@ import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
+import { type EmptyGhost, EmptyGhostScope } from "./empty";
 import { Icon, type IconSource } from "./icon";
 import { SortableAnnouncer, SortableHandle } from "./sortable-list";
 import {
@@ -117,6 +118,10 @@ interface DataTableBaseProps<Row> {
   sort?: { columnId: string; direction: "asc" | "desc" };
   onSortChange?: (sort: { columnId: string; direction: "asc" | "desc" }) => void;
   empty?: React.ReactNode;
+  /** The ghost behind an Empty in the empty slot. Defaults to rows, and to none while filtered or when the table sits flush in a framed Card. */
+  ghost?: EmptyGhost;
+  /** The rows are narrowed by a search or filters, so an empty table means no matches and draws no ghost. */
+  filtered?: boolean;
   /** Caps the table in its own scroll window. With virtual, the window is trimmed to the header plus whole rows, so no row is cut at the bottom edge. */
   height?: number;
   /**
@@ -194,6 +199,8 @@ export function DataTable<Row>({
   sort,
   onSortChange,
   empty = "No rows",
+  ghost,
+  filtered = false,
   height,
   virtual = false,
   rowHeight,
@@ -832,7 +839,11 @@ export function DataTable<Row>({
             )}
             {!loading && !rows.length && (
               <TableRow data-row-kind="empty">
-                <TableCell colSpan={span}>{empty}</TableCell>
+                <TableCell colSpan={span}>
+                  <EmptyGhostScope ghost={ghost ?? (embedded || filtered ? false : "rows")}>
+                    {empty}
+                  </EmptyGhostScope>
+                </TableCell>
               </TableRow>
             )}
           </TableBody>

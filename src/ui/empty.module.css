@@ -81,3 +81,41 @@
 .description > a:hover {
   color: var(--cipher-ink);
 }
+.root[data-ghost] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: calc(6 * var(--cipher-size-row));
+}
+.root[data-ghost="cards"] {
+  min-height: calc(2 * var(--cipher-size-ghost-card) + var(--cipher-space-16));
+}
+.ghosts {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  pointer-events: none;
+  mask-image:
+    radial-gradient(
+      ellipse calc(var(--cipher-size-measure-field) / 2 + 2 * var(--cipher-space-48)) 50% at center,
+      transparent 72%,
+      var(--cipher-ink) 100%
+    ),
+    linear-gradient(to bottom, var(--cipher-ink) 0%, transparent 92%);
+  mask-composite: intersect;
+}
+.ghost {
+  height: var(--cipher-size-row);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line);
+}
+.root[data-ghost="cards"] .ghosts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cipher-space-16);
+}
+.root[data-ghost="cards"] .ghost {
+  height: var(--cipher-size-ghost-card);
+  border: var(--cipher-size-control-border) dashed var(--cipher-line);
+}
