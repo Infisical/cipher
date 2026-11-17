@@ -1120,6 +1120,10 @@
       {
         "title": "Suggested value",
         "module": "input/suggested-value"
+      },
+      {
+        "title": "Disabled with a reason, beside read only",
+        "module": "input/disabled-reason"
       }
     ]
   },
