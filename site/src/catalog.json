@@ -962,6 +962,10 @@
         "module": "tile-picker/few"
       },
       {
+        "title": "Pinned items: Custom HTTP and MCP stay listed under any search",
+        "module": "tile-picker/pinned"
+      },
+      {
         "title": "Links: items with an href navigate, external ones open a new tab",
         "module": "tile-picker/links"
       },

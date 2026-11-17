@@ -24,6 +24,8 @@ export type TilePickerItem = {
   disabledReason?: string;
   /** Extra words the search matches, such as a vendor's other product names. */
   keywords?: readonly string[];
+  /** Always listed, after any matches, even when a search doesn't match it. For catch-alls such as a custom integration. */
+  pinned?: boolean;
   /** Makes the tile a link that navigates instead of calling onSelect. */
   href?: string;
   /** Opens href in a new tab and marks the tile as external. */
@@ -56,9 +58,9 @@ const matches = (item: TilePickerItem, query: string) =>
 
 /**
  * Search plus a responsive grid of stacked Tiles. With an empty search, popular items come first
- * under their own label and every item follows; a search lists its matches flat, and finding
- * nothing offers to clear it. The grid adds columns as the container widens, so it fits a sheet
- * or a page without a frame of its own.
+ * under their own label and every item follows; a search lists its matches flat, then any
+ * pinned items, and finding nothing offers to clear it above the pinned items. The grid adds
+ * columns as the container widens, so it fits a sheet or a page without a frame of its own.
  */
 export function TilePicker({
   items,
@@ -107,6 +109,7 @@ export function TilePicker({
     </section>
   );
   const found = query ? items.filter((item) => matches(item, query)) : items;
+  const pinned = query ? items.filter((item) => item.pinned && !matches(item, query)) : [];
   let body: React.ReactNode;
   if (!query && items.length === 0 && empty !== undefined)
     body = (
@@ -114,24 +117,27 @@ export function TilePicker({
     );
   else if (query && found.length === 0)
     body = (
-      <EmptyState
-        ghost={false}
-        size="sm"
-        media="bare"
-        icon="search"
-        title={`No ${noun} match "${search.trim()}"`}
-        actions={
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSearch("");
-              inputRef.current?.focus();
-            }}
-          >
-            Clear search
-          </Button>
-        }
-      />
+      <>
+        <EmptyState
+          ghost={false}
+          size="sm"
+          media="bare"
+          icon="search"
+          title={`No ${noun} match "${search.trim()}"`}
+          actions={
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearch("");
+                inputRef.current?.focus();
+              }}
+            >
+              Clear search
+            </Button>
+          }
+        />
+        {pinned.length > 0 && grid(pinned)}
+      </>
     );
   else if (popular.length > 0)
     body = (
@@ -140,7 +146,7 @@ export function TilePicker({
         {section(allLabel, items)}
       </>
     );
-  else body = grid(found);
+  else body = grid([...found, ...pinned]);
   return (
     <div ref={ref} data-slot="tile-picker" className={cn(styles.picker, className)} {...props}>
       <Input
