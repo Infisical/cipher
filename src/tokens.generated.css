@@ -21,6 +21,7 @@
   --cipher-space-control-gap: var(--cipher-space-6);
   --cipher-space-field-label: var(--cipher-space-6);
   --cipher-space-field-group: var(--cipher-space-16);
+  --cipher-space-field-legend: var(--cipher-space-20);
   --cipher-space-content-group: var(--cipher-space-16);
   --cipher-space-actions-gap: var(--cipher-space-12);
   --cipher-space-content-section: var(--cipher-space-32);
@@ -71,6 +72,7 @@
   --cipher-size-tile-min: 208px;
   --cipher-size-search-max: 720px;
   --cipher-size-tile-stacked-min: 280px;
+  --cipher-size-ghost-card: 132px;
   --cipher-size-card-min: 320px;
   --cipher-size-tooltip-max: 320px;
   --cipher-size-menu-min: 160px;
