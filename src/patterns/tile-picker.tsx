@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "../lib/utils";
 import { Button } from "../ui/button";
-import { EmptyState } from "../ui/empty";
+import { type EmptyGhost, EmptyGhostScope, EmptyState } from "../ui/empty";
 import type { IconSource } from "../ui/icon";
 import { Input } from "../ui/input";
 import { Media, Tile } from "../ui/item";
@@ -35,6 +35,10 @@ export type TilePickerProps = Omit<React.ComponentPropsWithoutRef<"div">, "onSel
   allLabel?: string;
   /** Names what the search found nothing of, as in No items match. */
   noun?: string;
+  /** Shown in place of the grid when there are no items at all, such as an EmptyState. */
+  empty?: React.ReactNode;
+  /** The ghost behind an Empty in the empty slot. Defaults to cards; a search that finds nothing never draws one. */
+  ghost?: EmptyGhost;
 };
 
 const matches = (item: TilePickerItem, query: string) =>
@@ -56,6 +60,8 @@ export function TilePicker({
   popularLabel = "Popular",
   allLabel = "All",
   noun = "items",
+  empty,
+  ghost,
   className,
   ref,
   ...props
@@ -88,9 +94,12 @@ export function TilePicker({
   );
   const found = query ? items.filter((item) => matches(item, query)) : items;
   let body: React.ReactNode;
-  if (query && found.length === 0)
+  if (items.length === 0 && empty !== undefined)
+    body = <EmptyGhostScope ghost={ghost ?? "cards"}>{empty}</EmptyGhostScope>;
+  else if (query && found.length === 0)
     body = (
       <EmptyState
+        ghost={false}
         size="sm"
         media="bare"
         icon="search"

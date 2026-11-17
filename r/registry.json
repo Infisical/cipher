@@ -1095,6 +1095,7 @@
         "@cipher/button",
         "@cipher/checkbox",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/sortable-list",
         "@cipher/table",
@@ -1741,7 +1742,8 @@
       "name": "layout",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/empty"
       ],
       "files": [
         {

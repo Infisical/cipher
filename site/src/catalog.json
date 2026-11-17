@@ -784,6 +784,10 @@
       {
         "title": "Composed from parts: the same result as Default",
         "module": "empty-state/parts"
+      },
+      {
+        "title": "Ghost: DataTable draws rows and Grid draws cards, with none when filtered or flush in a framed Card",
+        "module": "empty-state/ghost"
       }
     ]
   },
