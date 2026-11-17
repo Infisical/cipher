@@ -44,11 +44,12 @@ export function ColorPicker({
   presets,
   disabled,
   readOnly,
+  disabledReason,
   placeholder = "#000000",
   ...props
 }: ColorPickerProps) {
   const [open, setOpen] = React.useState(false);
-  const locked = Boolean(disabled || readOnly);
+  const locked = Boolean(disabled || readOnly || disabledReason);
   const preset = presets?.find((entry) => entry.value.toLowerCase() === value.toLowerCase());
   const swatch = (
     <span
@@ -69,6 +70,7 @@ export function ColorPicker({
       placeholder={placeholder}
       disabled={disabled}
       readOnly={readOnly}
+      disabledReason={disabledReason}
       onChange={(event) => onChange(event.target.value)}
       trailing={
         presets?.length ? (
