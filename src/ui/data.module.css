@@ -1055,14 +1055,17 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll [data-depth="2"] {
   padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
 }
-.tableGroupRow {
-  --cipher-table-row-ground: var(--cipher-paper);
-  --cipher-table-row-layers: none;
-  background-color: var(--cipher-paper);
+/* Set on every scope, not matched by descendant, so a Light scope nested in a Dark one keeps paper. */
+:global(.cipher) {
+  --cipher-table-group-ground: var(--cipher-paper);
 }
-:global(.cipher[data-scheme="dark"]) .tableGroupRow {
-  --cipher-table-row-ground: var(--cipher-tint);
-  background-color: var(--cipher-tint);
+:global(.cipher[data-scheme="dark"]) {
+  --cipher-table-group-ground: var(--cipher-tint);
+}
+.tableGroupRow {
+  --cipher-table-row-ground: var(--cipher-table-group-ground);
+  --cipher-table-row-layers: none;
+  background-color: var(--cipher-table-group-ground);
 }
 .tableScroll th.tableGroupHead {
   height: var(--cipher-table-row-height, var(--cipher-size-row));
