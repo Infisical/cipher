@@ -140,6 +140,8 @@ Both run in the pinned Playwright image through Docker, so local screenshots mat
 
 Before a release, run the release candidate check. It renders the previous tag, main, and main plus each PR in order, and reports every example that changed at each step with before, after and diff images. A change is explained when that step's PR updated the example's baseline, or when the explanations file names it. Any other change fails the check and blocks the release.
 
+The check also reads source, because some changes no example shows. A merge commit on a PR that edits lines in neither parent, or a PR that edits or removes an existing stylesheet line while no existing example changes, blocks the release until the explanations file names it as `merge:<sha>` or `css:<path>`.
+
 ```bash
 $ scripts/visual-rc.sh --base v0.1.12 --version 0.1.13 --explain explanations.json 95 99 103
 ```

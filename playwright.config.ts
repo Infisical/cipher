@@ -22,7 +22,7 @@ export default defineConfig({
       stylePath: "visual/screenshot.css",
       scale: "device",
       threshold: 0.1,
-      maxDiffPixelRatio: 0.0005
+      maxDiffPixels: 0
     }
   },
   use: {

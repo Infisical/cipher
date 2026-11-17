@@ -8,6 +8,9 @@
 # A PR given as N=<ref> merges that ref instead of the PR's head, for a conflict resolved by hand.
 # The explanations file maps a step ("main" or a PR number) to globs over snapshot names:
 #   { "113": { "card-band-actions--*": "Framed card actions keep their own display" } }
+# Two source checks block too, explained by key: "merge:<sha7>" for a merge commit on the PR that
+# edits lines in neither parent, and "css:<path>" for a stylesheet the PR changes when none of its
+# existing examples change.
 # Output goes to visual/rc/<version>/: report.md, report.json and the images it links.
 set -euo pipefail
 cd "$(dirname "$0")/.."

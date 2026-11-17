@@ -49,6 +49,64 @@ const baselineUpdates = (pr) => {
     return new Set();
   }
 };
+const git = (args) => {
+  try {
+    return execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+  } catch {
+    return "";
+  }
+};
+// A merge commit can carry edits that are in neither parent. They never show in the PR's own commits,
+// so re-run each merge and flag every changed line outside a conflict region. Generated files are
+// skipped: r/ is checked against src/ by `npm run check`, and versions move with every release.
+const mergeEdits = (pr) =>
+  git(["rev-list", "--merges", `origin/main..refs/visual-rc/pr-${pr}`])
+    .split("\n")
+    .filter(Boolean)
+    .flatMap((sha) => {
+      const files = new Set();
+      let file = null;
+      let conflict = false;
+      const text = git([
+        "show",
+        "--remerge-diff",
+        "--format=",
+        sha,
+        "--",
+        ".",
+        ":!r",
+        ":!package.json",
+        ":!package-lock.json",
+        ":!dist"
+      ]);
+      for (const line of text.split("\n")) {
+        if (line.startsWith("diff --git ")) {
+          file = line.split(" b/").pop();
+          conflict = false;
+        } else if (/^-<{7}( |$)/.test(line)) conflict = true;
+        else if (/^->{7}( |$)/.test(line)) conflict = false;
+        else if (!conflict && /^[-+]/.test(line) && !/^(\+\+\+|---) /.test(line)) files.add(file);
+      }
+      return files.size ? [{ sha: sha.slice(0, 7), files: [...files] }] : [];
+    });
+// New rules can serve the PR's new examples, but an edited or removed stylesheet line that moves no
+// existing example is either dead or reaches only consumers, so it has to be explained by name.
+const unseenStyles = (pr, changes) => {
+  if (changes.some((change) => change.kind === "changed")) return [];
+  const files = new Set();
+  let file = null;
+  for (const line of git([
+    "diff",
+    "-U0",
+    `origin/main...refs/visual-rc/pr-${pr}`,
+    "--",
+    "src/**/*.css"
+  ]).split("\n")) {
+    if (line.startsWith("diff --git ")) file = line.split(" b/").pop();
+    else if (/^-(?!--)/.test(line)) files.add(file);
+  }
+  return [...files];
+};
 const explain = (label, key) => {
   if (label !== "main" && baselineUpdates(label).has(key)) return "Baseline updated in the PR";
   const name = key.split("/").pop();
@@ -69,6 +127,22 @@ for (let i = 1; i < steps.length; i += 1) {
     ...change,
     reason: explain(label, change.key)
   }));
+  if (label !== "main") {
+    for (const merge of mergeEdits(label))
+      changes.push({
+        key: `merge:${merge.sha}`,
+        kind: `merge commit edits ${merge.files.map((file) => `\`${file}\``).join(", ")}`,
+        reason: explanations[label]?.[`merge:${merge.sha}`] ?? null,
+        source: true
+      });
+    for (const file of unseenStyles(label, changes))
+      changes.push({
+        key: `css:${file}`,
+        kind: "stylesheet change no example shows",
+        reason: explanations[label]?.[`css:${file}`] ?? null,
+        source: true
+      });
+  }
   for (const change of changes)
     if (!change.reason) report.unexplained.push({ step: label, ...change });
   report.steps.push({ step: steps[i], label, changes });

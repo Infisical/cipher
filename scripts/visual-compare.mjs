@@ -43,7 +43,9 @@ for (const key of b) {
   const x = readFileSync(path.join(before, key));
   const y = readFileSync(path.join(after, key));
   if (x.equals(y)) continue;
-  const diff = comparator(y, x, { threshold: 0.1, maxDiffPixelRatio: 0.0005 });
+  // A pixel-ratio tolerance hides low-contrast changes such as a ghost fade, so one pixel past the
+  // colour threshold counts.
+  const diff = comparator(y, x, { threshold: 0.1, maxDiffPixels: 0 });
   if (!diff) continue;
   result.changed.push(key);
   save(key, "before", path.join(before, key));
