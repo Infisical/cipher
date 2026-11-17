@@ -211,7 +211,7 @@ function SheetContent({
         aria-busy={blocked || undefined}
         onOpenAutoFocus={(event) => {
           onOpenAutoFocus?.(event);
-          focusFirstControl(event);
+          focusFirstControl(event, aside ? '[data-slot="sheet-main"]' : undefined);
         }}
         {...props}
         {...(viewLabels?.title ? { "aria-labelledby": viewLabels.title } : {})}

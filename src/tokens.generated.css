@@ -108,7 +108,7 @@
   --cipher-size-measure-prose: 65ch;
   --cipher-size-sidecar: 384px;
   --cipher-size-pane-aside: 320px;
-  --cipher-size-pane-collapse: 720px;
+  --cipher-size-pane-collapse: 880px;
   --cipher-size-sidecar-collapse: 896px;
   --cipher-size-data-list-term: 128px;
   --cipher-size-data-list-row: var(--cipher-size-control-sm);
