@@ -207,11 +207,22 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   );
 }
 .textarea[data-max-rows] {
-  max-height: calc(
+  --cipher-textarea-cap: calc(
     var(--cipher-textarea-max-rows) * 1lh + var(--cipher-field-height) -
       var(--cipher-type-body-line-height)
   );
+  min-height: min(calc(2 * var(--cipher-space-32)), var(--cipher-textarea-cap));
+  max-height: var(--cipher-textarea-cap);
   overflow-y: auto;
+}
+.textarea[data-rows][data-max-rows] {
+  min-height: min(
+    calc(
+      var(--cipher-textarea-rows) * 1lh + var(--cipher-field-height) -
+        var(--cipher-type-body-line-height)
+    ),
+    var(--cipher-textarea-cap)
+  );
 }
 .textarea[data-mono] {
   font-family: var(--cipher-type-mono-font-family);
