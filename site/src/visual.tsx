@@ -54,4 +54,8 @@ function Visual() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(<Visual />);
+// Load every font before the first layout, so measured components (charts, truncation) never size
+// themselves against a fallback font.
+void Promise.all([...document.fonts].map((font) => font.load().catch(() => undefined))).then(() =>
+  createRoot(document.getElementById("root")!).render(<Visual />)
+);

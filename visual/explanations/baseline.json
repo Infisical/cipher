@@ -1,0 +1,13 @@
+{
+  "114": {
+    "item-*": "#114 restores the v0.1.10 Item action layout: text buttons sit on their own row below 36rem."
+  },
+  "main": {
+    "card-band-actions--*": "#106 (0.1.11): a framed card-head action keeps its icon inline at 28px instead of stacking it above the label. #108 then made every non-button action child a block, and #113 gave them their own display back.",
+    "card-framed-hint--*": "#106 (0.1.11): the framed card-head action icon stays inline at 28px.",
+    "header-search-client--*": "#106 (0.1.11): the framed card-head Add domain button keeps its icon inline at 28px.",
+    "sortable-list-card--*": "#106 (0.1.11): the framed card-head Add rule button keeps its icon inline at 28px.",
+    "item-*": "#108 (0.1.12) regression: the display: contents label span made Item treat text buttons as icon-only and put them beside the copy. #114 reverts it.",
+    "chart-*": "Not a design change: under v0.1.10's lockfile the chart examples load a second copy of React through recharts and throw (Cannot read properties of null, reading useContext), so v0.1.10 renders an error block where main renders the chart."
+  }
+}

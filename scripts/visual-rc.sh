@@ -26,6 +26,7 @@ done
 
 out="visual/rc/$version"
 rm -rf "$out"
+git worktree prune
 mkdir -p "$out/snapshots" "$out/work"
 git fetch -q origin main --tags
 for spec in "${prs[@]}"; do
@@ -49,18 +50,30 @@ render() {
   fi
   (cd "$dir" && npx vite build --config site/vite.visual.config.ts --logLevel error)
   port=$((port + 1))
-  (cd "$dir" && exec npx vite preview --config site/vite.visual.config.ts --host 127.0.0.1 --port $port --strictPort) >/dev/null 2>&1 &
+  while curl -s -o /dev/null "http://127.0.0.1:$port/"; do port=$((port + 1)); done
+  setsid bash -c "cd '$dir' && exec npx vite preview --config site/vite.visual.config.ts --host 127.0.0.1 --port $port --strictPort" >/dev/null 2>&1 &
   local server=$!
   for _ in $(seq 60); do curl -sf "http://127.0.0.1:$port/visual.html" >/dev/null && break; sleep 1; done
-  VISUAL_URL="http://127.0.0.1:$port/" VISUAL_CATALOG="$dir/site/src/catalog.json" \
+  VISUAL_WORKERS=${VISUAL_WORKERS:-4} VISUAL_URL="http://127.0.0.1:$port/" VISUAL_CATALOG="$dir/site/src/catalog.json" \
     VISUAL_SNAPSHOTS="$out/snapshots/$name" bash scripts/visual.sh --update-snapshots=all --reporter=dot >"$out/work/$name.log" 2>&1 || true
-  kill $server 2>/dev/null || true
+  kill -- -$server 2>/dev/null || true
   wait $server 2>/dev/null || true
   echo "rendered $name: $(find "$out/snapshots/$name" -name '*.png' | wc -l) snapshots"
 }
 
 steps=()
-add_worktree() { git worktree add -q --detach "$1" "$2"; }
+# A release tag points at a commit that only adds dist/ and strips package.json for the package, so
+# render the source commit under it.
+source_of() {
+  local ref=$1
+  if git rev-parse -q --verify "$ref^" >/dev/null &&
+    [ -z "$(git diff --name-only "$ref^" "$ref" -- . ':!dist' ':!package.json')" ]; then
+    git rev-parse "$ref^"
+  else
+    git rev-parse "$ref^{commit}"
+  fi
+}
+add_worktree() { git worktree add -q --detach "$1" "$(source_of "$2")"; }
 cleanup() { for dir in "$out"/work/*/; do git worktree remove --force "$dir" 2>/dev/null || true; done; }
 trap cleanup EXIT
 

@@ -7,7 +7,11 @@ export default defineConfig({
   snapshotPathTemplate: `${process.env.VISUAL_SNAPSHOTS ?? "visual/baselines"}/{projectName}/{arg}{ext}`,
   outputDir: "visual/results",
   fullyParallel: true,
-  workers: process.env.CI ? 2 : undefined,
+  workers: process.env.VISUAL_WORKERS
+    ? Number(process.env.VISUAL_WORKERS)
+    : process.env.CI
+      ? 2
+      : undefined,
   retries: 0,
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
   timeout: 120_000,
@@ -15,6 +19,7 @@ export default defineConfig({
     toHaveScreenshot: {
       animations: "disabled",
       caret: "hide",
+      stylePath: "visual/screenshot.css",
       scale: "device",
       threshold: 0.1,
       maxDiffPixelRatio: 0.0005
@@ -25,7 +30,11 @@ export default defineConfig({
     timezoneId: "UTC",
     locale: "en-US",
     deviceScaleFactor: 2,
-    colorScheme: "light"
+    colorScheme: "light",
+    launchOptions: {
+      // Chrome picks subpixel or grayscale text per compositor layer, which shifts under load.
+      args: ["--disable-lcd-text", "--disable-gpu", "--font-render-hinting=none"]
+    }
   },
   projects: [
     { name: "desktop", use: { viewport: { width: 1706, height: 971 } } },

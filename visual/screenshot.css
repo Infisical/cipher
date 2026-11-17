@@ -1,0 +1,5 @@
+/* Applied only while a screenshot is taken. These parts change with real time, not with the design. */
+.xterm .scrollbar,
+.xterm-cursor {
+  visibility: hidden !important;
+}
