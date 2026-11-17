@@ -1352,6 +1352,10 @@
       {
         "title": "Server search",
         "module": "multi-select/server-search"
+      },
+      {
+        "title": "Connections with logos and a Create row",
+        "module": "multi-select/connections"
       }
     ]
   },
