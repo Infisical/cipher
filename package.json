@@ -53,7 +53,11 @@
     "check": "tsx scripts/tokens.ts --check && tsx scripts/registry.ts --check && tsx scripts/lint-css.ts",
     "build": "npm run tokens && vite build && tsc -p tsconfig.build.json && tsx scripts/finish-build.ts",
     "site": "vite --config site/vite.config.ts",
-    "site:build": "vite build --config site/vite.config.ts"
+    "site:build": "vite build --config site/vite.config.ts",
+    "visual:build": "vite build --config site/vite.visual.config.ts",
+    "visual:serve": "npm run visual:build && vite preview --config site/vite.visual.config.ts --host 127.0.0.1",
+    "visual": "bash scripts/visual.sh",
+    "visual:update": "bash scripts/visual.sh --update-snapshots=changed"
   },
   "peerDependencies": {
     "@xterm/addon-fit": "^0.10.0 || ^0.11.0",
@@ -121,6 +125,7 @@
     "@codemirror/state": "^6.7.6",
     "@codemirror/view": "^6.43.15",
     "@lezer/highlight": "^1.2.5",
+    "@playwright/test": "1.65.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/node": "^24.0.0",
     "@types/react": "^19.3.0",

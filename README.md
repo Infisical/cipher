@@ -124,7 +124,29 @@ After changing `src/tokens.json`, run `npm run tokens`. After changing anything 
 
 To try local changes in an app, run `npm run build && npm pack` here and `npm install <path to the .tgz>` in the app. A tarball keeps one copy of React; a linked checkout resolves React from its own `node_modules` and renders a second copy.
 
+## Visual tests
+
+The Visual workflow screenshots every example block on every showcase page in Light and Dark, at 1706px and 390px wide, at device scale factor 2. It fails a pull request when any screenshot differs from its baseline in `visual/baselines/`, and uploads the expected, actual and diff images as an artifact.
+
+```bash
+$ npm run visual          # compare against the baselines
+$ npm run visual:update   # rewrite the baselines that changed
+$ VISUAL_PAGES=card,button npm run visual   # only these showcase pages
+```
+
+Both run in the pinned Playwright image through Docker, so local screenshots match CI pixel for pixel. A pull request that changes how something looks commits its updated baselines, and the workflow requires the `visual-change` label on any pull request that touches `visual/baselines/`, so every visual change is reviewed as an image diff.
+
 ## Release
+
+Before a release, run the release candidate check. It renders the previous tag, main, and main plus each PR in order, and reports every example that changed at each step with before, after and diff images. A change is explained when that step's PR updated the example's baseline, or when the explanations file names it. Any other change fails the check and blocks the release.
+
+The check also reads source, because some changes no example shows. A merge commit on a PR that edits lines in neither parent, or a PR that edits or removes an existing stylesheet line while no existing example changes, blocks the release until the explanations file names it as `merge:<sha>` or `css:<path>`.
+
+```bash
+$ scripts/visual-rc.sh --base v0.1.12 --version 0.1.13 --explain explanations.json 95 99 103
+```
+
+The report is `visual/rc/<version>/report.md`.
 
 1. Bump `version` in `package.json` in a pull request and merge it.
 2. Run the Release workflow. It builds main and pushes a `vX.Y.Z` tag on a commit that adds `dist/` to it, so the tag pins both the registry URL and the package.
