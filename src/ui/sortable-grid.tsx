@@ -82,13 +82,11 @@ export function SortableGrid<T>({
   const origin = () => list.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
   const place = () => {
     const current = drag.current;
-    const lift = sort.liftRef.current;
-    if (!current || !lift) return;
-    const slot = current.slots[lift.to];
-    if (!slot) return;
-    const { left, top } = origin();
-    x.set(current.pointer.x - left - current.grab.x - slot.left);
-    y.set(current.pointer.y - top - current.grab.y - slot.top);
+    const element = list.current?.querySelector<HTMLElement>("[data-following]");
+    if (!current || !element) return;
+    const box = element.getBoundingClientRect();
+    x.set(current.pointer.x - current.grab.x - box.left);
+    y.set(current.pointer.y - current.grab.y - box.top);
   };
   const follow = (event: PointerEvent) => {
     const current = drag.current;
