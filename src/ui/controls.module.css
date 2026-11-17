@@ -206,6 +206,13 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
     var(--cipher-textarea-rows) * 1lh + var(--cipher-field-height) - var(--cipher-type-body-line-height)
   );
 }
+.textarea[data-max-rows] {
+  max-height: calc(
+    var(--cipher-textarea-max-rows) * 1lh + var(--cipher-field-height) -
+      var(--cipher-type-body-line-height)
+  );
+  overflow-y: auto;
+}
 .textarea[data-mono] {
   font-family: var(--cipher-type-mono-font-family);
   font-size: var(--cipher-type-mono-font-size);
