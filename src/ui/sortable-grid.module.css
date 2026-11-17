@@ -10,15 +10,38 @@
   list-style: none;
 }
 .item {
+  position: relative;
   display: flex;
   min-width: 0;
   flex-direction: column;
 }
-.item > * {
+.card {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+.card > * {
   flex: 1;
 }
 .item[data-dragging] {
-  position: relative;
   z-index: 1;
+}
+.item[data-dragging]:not([data-following]) > .card,
+.item[data-following] > .card {
   box-shadow: var(--cipher-shadow-pop);
+}
+.item[data-following] {
+  z-index: 2;
+}
+.item[data-following]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--cipher-size-control-border) dashed var(--cipher-line);
+  background: var(--cipher-tint);
+}
+.item[data-following] > .card {
+  position: relative;
+  cursor: grabbing;
 }
