@@ -1718,6 +1718,10 @@
         "module": "sheet/title-badges"
       },
       {
+        "title": "Two panes: an aside beside tabs",
+        "module": "sheet/two-pane"
+      },
+      {
         "title": "Tabs on the header",
         "module": "sheet/header-tabs"
       }
@@ -1876,6 +1880,10 @@
       {
         "title": "Rows in a card",
         "module": "switch/rows"
+      },
+      {
+        "title": "A row among fields",
+        "module": "switch/among-fields"
       }
     ]
   },

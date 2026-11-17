@@ -1748,7 +1748,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/empty"
+        "@cipher/empty",
+        "@cipher/tabs"
       ],
       "files": [
         {
@@ -1760,6 +1761,11 @@
           "path": "src/components/cipher/ui/detail-layout.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/detail-layout.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/panes.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/panes.module.css"
         },
         {
           "path": "src/components/cipher/ui/text.module.css",
@@ -2383,7 +2389,9 @@
         "@cipher/alert-dialog",
         "@cipher/button",
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/layout",
+        "@cipher/tabs"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"

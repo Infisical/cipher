@@ -375,6 +375,48 @@
 .cipher :is([data-slot="dialog-header"], [data-slot="alert-dialog-header"]) {
   gap: var(--cipher-space-6);
 }
+/* The narrow identity header sits under the close button, so it clears it as a header does. */
+.cipher [data-slot="sheet-content"][data-has-close] [data-slot="panes"] {
+  --cipher-pane-head-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+}
+/* Narrow header tabs join the identity as one header band, on its single bottom rule. */
+.cipher
+  [data-slot="panes"][data-narrow]
+  [data-slot="panes-identity"]:has(
+    + [data-slot="panes-main"]
+      [data-slot="sheet-head"]:not([data-hidden])
+      > [data-slot="sheet-header"][data-tabs="only"]
+  ) {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.cipher
+  [data-slot="panes"][data-narrow]
+  [data-slot="sheet-head"]:not([data-hidden])
+  > [data-slot="sheet-header"][data-tabs="only"] {
+  padding-top: var(--cipher-space-4);
+}
+/* A narrow two-pane sheet keeps the main pane mounted while its Details page shows. */
+.cipher
+  :is(
+    [data-slot="sheet-head"],
+    [data-slot="sheet-scroll"],
+    [data-slot="sheet-footer"],
+    [data-slot="sheet-sections"]
+  )[data-hidden] {
+  display: none;
+}
+.cipher
+  [data-slot="sheet-content"]
+  [data-slot="panes-main"]
+  > [data-slot="sheet-main"]
+  > :is(
+    [data-slot="sheet-scroll"]:first-child,
+    [data-slot="sheet-form"]:first-child > [data-slot="sheet-scroll"]:first-child
+  )
+  > [data-slot="sheet-body"]:first-child {
+  padding-top: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+}
 .cipher [data-slot="dialog-content"][data-has-close] [data-slot="dialog-header"],
 .cipher [data-slot="sheet-content"][data-has-close] [data-slot="sheet-header"] {
   padding-inline-end: calc(
@@ -588,11 +630,16 @@
   overflow: hidden;
   gap: 0;
 }
-.cipher [data-slot="sheet-sections"] {
+.cipher :is([data-slot="sheet-sections"], [data-slot="sheet-main"]) {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
+}
+/* Pinned sections never overflow the main pane; free-form content beside a SheetAside scrolls here. */
+.cipher [data-slot="sheet-main"] {
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .cipher [data-slot="sheet-foot"] {
   display: flex;
