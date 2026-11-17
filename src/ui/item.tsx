@@ -471,21 +471,7 @@ export function Media({
   );
 }
 Media.displayName = "Media";
-export function Tile({
-  selected,
-  title,
-  description,
-  media,
-  layout = "row",
-  eyebrow,
-  disabledReason,
-  children,
-  className,
-  onClick,
-  type = "button",
-  ref,
-  ...props
-}: Omit<React.ComponentPropsWithoutRef<"button">, "title"> & {
+type TileOwnProps = {
   selected?: boolean;
   title?: React.ReactNode;
   description?: React.ReactNode;
@@ -496,40 +482,94 @@ export function Tile({
   eyebrow?: React.ReactNode;
   /** Disables the tile and shows why in place of the description. Unlike disabled, it stays focusable so the reason can be reached. */
   disabledReason?: string;
-} & { ref?: React.Ref<HTMLButtonElement> }) {
+};
+type TileButtonProps = TileOwnProps &
+  Omit<React.ComponentPropsWithoutRef<"button">, "title"> & {
+    href?: undefined;
+    asChild?: false;
+    external?: undefined;
+    ref?: React.Ref<HTMLButtonElement>;
+  };
+type TileLinkProps = TileOwnProps &
+  Omit<React.ComponentPropsWithoutRef<"a">, "title" | "media"> & {
+    /** Opens href in a new tab and marks the tile with an external icon. With asChild, set the child's target yourself. */
+    external?: boolean;
+    /** Takes the link's destination away and dims it, so it cannot be opened. */
+    disabled?: boolean;
+    ref?: React.Ref<HTMLAnchorElement>;
+  } & (
+    | {
+        /** Renders the tile as a link, so hover shows the URL and modifier or middle clicks open it elsewhere. */
+        href: string;
+        asChild?: false;
+      }
+    | {
+        /** Renders the one child, such as a router Link, with the tile's content inside it. */
+        asChild: true;
+        href?: undefined;
+      }
+  );
+export type TileProps = TileButtonProps | TileLinkProps;
+
+export function Tile({
+  selected,
+  title,
+  description,
+  media,
+  layout = "row",
+  eyebrow,
+  disabledReason,
+  href,
+  external,
+  asChild,
+  disabled,
+  children,
+  className,
+  onClick,
+  type,
+  ref,
+  ...props
+}: TileProps) {
   const inFrame = useInFrame("Tile");
   const reason = disabledReason || undefined;
   const detail = reason ?? description;
   const stacked = layout === "stacked";
-  return (
-    <button
-      ref={ref}
-      type={type}
-      data-slot="tile"
-      data-layout={stacked ? "stacked" : undefined}
-      data-in-frame={inFrame || undefined}
-      aria-pressed={selected}
-      aria-disabled={reason ? true : undefined}
-      className={cn(helperStyles.tile, className)}
-      onClick={(event) => {
-        if (reason) {
-          event.preventDefault();
-          return;
-        }
-        onClick?.(event);
-      }}
-      {...props}
-    >
+  const link = Boolean(href || asChild);
+  const inactive = Boolean(reason || (link && disabled));
+  const Comp: React.ElementType = asChild ? Slot.Root : href ? "a" : "button";
+  const externalMark = external && <Icon name="external" label="Opens in a new tab" />;
+  const linkProps = link
+    ? {
+        ...(asChild ? {} : { href: inactive ? undefined : href }),
+        role: inactive ? "link" : undefined,
+        tabIndex: inactive && !disabled ? 0 : undefined,
+        target: external && !asChild ? "_blank" : undefined,
+        rel: external && !asChild ? "noopener noreferrer" : undefined,
+        "data-disabled": link && disabled ? "" : undefined
+      }
+    : { type: type ?? "button", disabled };
+  const child =
+    asChild && React.isValidElement<{ children?: React.ReactNode; href?: string }>(children)
+      ? children
+      : undefined;
+  const inner = child ? child.props.children : children;
+  const content = (
+    <>
       {stacked
-        ? (media || eyebrow) && (
+        ? (media || eyebrow || externalMark) && (
             <span className={helperStyles.tileTop}>
               {media && <span className={itemStyles.lead}>{media}</span>}
-              {eyebrow && (
-                <span
-                  className={helperStyles.tileEyebrow}
-                  title={typeof eyebrow === "string" ? eyebrow : undefined}
-                >
-                  {eyebrow}
+              {(eyebrow || externalMark) && (
+                <span className={helperStyles.tileAside}>
+                  {eyebrow && (
+                    <span
+                      className={helperStyles.tileEyebrow}
+                      title={typeof eyebrow === "string" ? eyebrow : undefined}
+                    >
+                      {eyebrow}
+                    </span>
+                  )}
+                  {externalMark}
                 </span>
               )}
             </span>
@@ -558,14 +598,40 @@ export function Tile({
                   {detail}
                 </span>
               ))}
-            {children}
+            {inner}
           </>
         ) : (
-          children
+          inner
         )}
       </span>
-      {!stacked && <Icon name={selected ? "check" : "chev-right"} />}
-    </button>
+      {!stacked && (externalMark || <Icon name={selected ? "check" : "chev-right"} />)}
+    </>
+  );
+  const body = child
+    ? React.cloneElement(child, inactive ? { href: undefined } : undefined, content)
+    : content;
+  return (
+    <Comp
+      ref={ref}
+      {...linkProps}
+      data-slot="tile"
+      data-layout={stacked ? "stacked" : undefined}
+      data-in-frame={inFrame || undefined}
+      aria-pressed={link ? undefined : selected}
+      aria-current={link && selected ? "page" : undefined}
+      aria-disabled={inactive || undefined}
+      className={cn(helperStyles.tile, className)}
+      onClick={(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) => {
+        if (inactive) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event);
+      }}
+      {...props}
+    >
+      {body}
+    </Comp>
   );
 }
 Tile.displayName = "Tile";

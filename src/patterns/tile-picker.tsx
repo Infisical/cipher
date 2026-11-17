@@ -25,11 +25,16 @@ export type TilePickerItem = {
   keywords?: readonly string[];
   /** Always listed, after any matches, even when a search doesn't match it. For catch-alls such as a custom integration. */
   pinned?: boolean;
+  /** Makes the tile a link that navigates instead of calling onSelect. */
+  href?: string;
+  /** Opens href in a new tab and marks the tile as external. */
+  external?: boolean;
 };
 
 export type TilePickerProps = Omit<React.ComponentPropsWithoutRef<"div">, "onSelect"> & {
   items: readonly TilePickerItem[];
-  onSelect: (value: string) => void;
+  /** Called with a picked item's value. Items with an href navigate instead. */
+  onSelect?: (value: string) => void;
   searchLabel?: string;
   searchPlaceholder?: string;
   popularLabel?: string;
@@ -74,18 +79,21 @@ export function TilePicker({
   const popular = query ? [] : items.filter((item) => item.popular);
   const grid = (list: readonly TilePickerItem[]) => (
     <div className={styles.grid}>
-      {list.map((item) => (
-        <Tile
-          key={item.value}
-          layout="stacked"
-          title={item.title}
-          description={item.description}
-          eyebrow={item.eyebrow}
-          disabledReason={item.disabledReason}
-          media={(item.icon || item.media) && <Media icon={item.icon}>{item.media}</Media>}
-          onClick={() => onSelect(item.value)}
-        />
-      ))}
+      {list.map((item) => {
+        const shared = {
+          layout: "stacked" as const,
+          title: item.title,
+          description: item.description,
+          eyebrow: item.eyebrow,
+          disabledReason: item.disabledReason,
+          media: (item.icon || item.media) && <Media icon={item.icon}>{item.media}</Media>
+        };
+        return item.href ? (
+          <Tile key={item.value} {...shared} href={item.href} external={item.external} />
+        ) : (
+          <Tile key={item.value} {...shared} onClick={() => onSelect?.(item.value)} />
+        );
+      })}
     </div>
   );
   const section = (label: string, list: readonly TilePickerItem[]) => (
