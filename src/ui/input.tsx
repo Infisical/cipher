@@ -58,6 +58,7 @@ export function Input({
   disabledReason,
   placeholder,
   onKeyDown,
+  onClick,
   ref,
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
@@ -116,6 +117,10 @@ export function Input({
           .filter(Boolean)
           .join(" ") || undefined
       }
+      onClick={(event) => {
+        onClick?.(event);
+        if (reason) event.preventDefault();
+      }}
       onKeyDown={(event) => {
         onKeyDown?.(event);
         if (

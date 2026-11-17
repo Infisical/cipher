@@ -55,6 +55,7 @@ export function SecretPathInput({
   mono = true,
   disabled,
   readOnly,
+  disabledReason,
   onFocus,
   onBlur,
   onKeyDown,
@@ -94,7 +95,8 @@ export function SecretPathInput({
         )
       : [];
   const suggestions = [...folderSuggestions, ...globRows];
-  const open = focused && !dismissed && !disabled && !readOnly && suggestions.length > 0;
+  const open =
+    focused && !dismissed && !disabled && !readOnly && !disabledReason && suggestions.length > 0;
   const current = open && active < suggestions.length ? active : -1;
 
   React.useEffect(() => {
@@ -129,6 +131,7 @@ export function SecretPathInput({
             mono={mono}
             disabled={disabled}
             readOnly={readOnly}
+            disabledReason={disabledReason}
             autoComplete="off"
             spellCheck={false}
             aria-autocomplete="list"
