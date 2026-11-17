@@ -1596,7 +1596,8 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/kbd"
+        "@cipher/kbd",
+        "@cipher/tooltip"
       ],
       "files": [
         {

@@ -6,6 +6,7 @@ import { useSlashShortcut } from "../lib/slash-shortcut";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Kbd } from "./kbd";
+import { Tooltip } from "./tooltip";
 
 import styles from "./controls.module.css";
 
@@ -16,11 +17,11 @@ export const fieldBoxFlags = {
   "data-control-invalid": `:is([data-field-control], ${field})[aria-invalid="true"]`,
   "data-control-input-focus": "[data-field-control]:focus-visible",
   "data-control-invalid-focus": `[data-field-control][aria-invalid="true"]:focus-visible, ${field}[aria-invalid="true"]:is(:focus-visible, [aria-expanded="true"])`,
-  "data-control-disabled": "[data-field-control]:disabled",
-  "data-control-readonly": "[data-field-control][readonly]"
+  "data-control-disabled": '[data-field-control]:is(:disabled, [aria-disabled="true"])',
+  "data-control-readonly": '[data-field-control][readonly]:not([aria-disabled="true"])'
 };
 export const fieldBoxWatch = {
-  attributes: ["aria-invalid", "aria-expanded", "disabled", "readonly"],
+  attributes: ["aria-invalid", "aria-expanded", "aria-disabled", "disabled", "readonly"],
   focus: true
 };
 
@@ -39,6 +40,8 @@ export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size" | 
   slashShortcut?: boolean;
   /** Shown as the placeholder. While the field is empty, Tab or the Tab key cap fills it in, such as a generated name. */
   suggestedValue?: string;
+  /** Blocks editing and says why: the field looks disabled but stays focusable and selectable, shows the reason in a tooltip on hover and focus, and exposes it as the accessible description. It replaces readOnly's lock. */
+  disabledReason?: string;
 };
 export function Input({
   className,
@@ -52,6 +55,7 @@ export function Input({
   width,
   slashShortcut = false,
   suggestedValue,
+  disabledReason,
   placeholder,
   onKeyDown,
   ref,
@@ -68,7 +72,8 @@ export function Input({
     }
   });
   const hintId = React.useId();
-  const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled;
+  const reason = disabledReason || undefined;
+  const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
     const element = inner.current;
     if (!element || !suggestedValue || element.value) return;
@@ -79,7 +84,7 @@ export function Input({
     element.dispatchEvent(new Event("input", { bubbles: true }));
   };
   const fieldSize = typeof size === "number" ? "sm" : size;
-  const leading = icon ?? (props.readOnly ? "lock" : undefined);
+  const leading = icon ?? (props.readOnly && !reason ? "lock" : undefined);
   const trailed = Boolean(kbd || trailing || suggesting);
   const boxed = Boolean(leading || kbd || trailing || suggestedValue);
   const boxRef = useDescendantFlags<HTMLSpanElement>(fieldBoxFlags, fieldBoxWatch);
@@ -101,6 +106,9 @@ export function Input({
       placeholder={suggestedValue || placeholder}
       {...props}
       {...field}
+      readOnly={reason ? true : props.readOnly}
+      aria-disabled={reason ? true : props["aria-disabled"]}
+      aria-description={reason ?? props["aria-description"]}
       aria-invalid={invalid || field["aria-invalid"] || undefined}
       aria-describedby={
         [field["aria-describedby"], suggesting && hintId].filter(Boolean).join(" ") || undefined
@@ -120,7 +128,7 @@ export function Input({
       }}
     />
   );
-  return boxed ? (
+  const control = boxed ? (
     <span
       ref={boxRef}
       className={cn(styles.field, styles.fieldBox)}
@@ -170,5 +178,6 @@ export function Input({
   ) : (
     input
   );
+  return reason ? <Tooltip content={reason}>{control}</Tooltip> : control;
 }
 Input.displayName = "Input";

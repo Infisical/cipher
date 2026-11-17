@@ -98,7 +98,7 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
-.field:is([readonly], [data-field-box][data-control-readonly]) {
+.field:is([readonly]:not([aria-disabled="true"]), [data-field-box][data-control-readonly]) {
   background-color: var(--cipher-paper);
 }
 .fieldBox {
