@@ -139,13 +139,13 @@ export function ListHighlight() {
     const over = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
       inside = true;
-      const item = own(
-        event.target instanceof Element ? event.target.closest(LIST_HIGHLIGHT_ITEM) : null
-      );
+      const candidate =
+        event.target instanceof Element ? event.target.closest(LIST_HIGHLIGHT_ITEM) : null;
+      const item = own(candidate);
       if (item && !blocked(item)) {
         hovered = item;
         keyboard = false;
-      }
+      } else if (candidate && !item) hovered = null;
       schedule();
     };
     const leave = () => {

@@ -238,6 +238,15 @@
   height: var(--cipher-size-icon);
   pointer-events: none;
 }
+.row > [data-menu-icon] {
+  display: inline-flex;
+  overflow: hidden;
+}
+.row > [data-menu-icon] > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 /* With a description line the lead icon stays on the title's first line instead of centering on both. */
 .row:has(
     > .text:not(:global([data-command-label])) > .description,
@@ -421,6 +430,9 @@
   line-height: var(--cipher-type-small-line-height);
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.actionFooter {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .footer {
   display: flex;
