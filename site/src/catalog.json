@@ -1884,6 +1884,10 @@
       {
         "title": "Loading, error and attention",
         "module": "stat-card/states"
+      },
+      {
+        "title": "Linked, framed and plain",
+        "module": "stat-card/linked"
       }
     ]
   },
