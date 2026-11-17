@@ -1,0 +1,57 @@
+name: Visual
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      options: --ipc=host
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    env:
+      CI: "1"
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright test --shard=${{ matrix.shard }}/4
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs-${{ matrix.shard }}
+          path: visual/results
+          retention-days: 14
+
+  baseline-label:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Baseline changes need the visual-change label
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          LABELED: ${{ contains(github.event.pull_request.labels.*.name, 'visual-change') }}
+        run: |
+          changed=$(git diff --name-only "$BASE"...HEAD -- visual/baselines | wc -l)
+          if [ "$changed" -gt 0 ] && [ "$LABELED" != "true" ]; then
+            echo "::error::This PR changes $changed baseline image(s). Review them, then add the visual-change label."
+            exit 1
+          fi
+          echo "$changed baseline image(s) changed; label present: $LABELED"
