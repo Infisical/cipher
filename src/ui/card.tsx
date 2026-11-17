@@ -40,6 +40,26 @@ const cardWatch = {
   }
 };
 
+const withPanelBackdrop = (children: React.ReactNode, backdrop: React.ReactNode) => {
+  let placed = false;
+  const walk = (nodes: React.ReactNode): React.ReactNode =>
+    React.Children.map(nodes, (child) => {
+      if (placed || !React.isValidElement<{ children?: React.ReactNode }>(child)) return child;
+      if (child.type === React.Fragment)
+        return React.cloneElement(child, undefined, walk(child.props.children));
+      if (child.type !== CardContent || "dangerouslySetInnerHTML" in child.props) return child;
+      placed = true;
+      return React.cloneElement(
+        child as React.ReactElement<{ children?: React.ReactNode; "data-backdrop"?: string }>,
+        { "data-backdrop": backdrop === undefined ? undefined : "" },
+        backdrop ?? null,
+        child.props.children
+      );
+    });
+  const content = walk(children);
+  return { content, placed };
+};
+
 function Card({
   className,
   size = "default",
@@ -68,7 +88,7 @@ function Card({
   /** "frame" draws the footer in the frame band: its text keeps the title's start inset and its controls take the 28px band tier. */
   footerPlacement?: "inset" | "frame";
   flush?: boolean;
-  /** Decoration such as a Halftone, painted under the surface that holds the title and the card link: the inset of a framed card with a frame footer, otherwise the card itself. That surface becomes the stacking context, so the link overlay and the controls above it stay in one layer. */
+  /** Decoration such as a Halftone, painted in the content corners and never on a frame's chrome: the inset of a framed card with a frame footer, the first CardContent of any other framed card, otherwise the card itself. That surface becomes the stacking context; on a linked card a content panel holding it rises above the link overlay and passes clicks through to it, so its controls stay clickable. */
   backdrop?: React.ReactNode;
   /** Paints the card as chosen. A CardChoice inside sets it on its own; pass it for a selection the card does not own, and give the link aria-current when a selected card is the current item. */
   selected?: boolean;
@@ -90,6 +110,9 @@ function Card({
     footer !== undefined;
   const inFrame = useInFrame("Card", requestedVariant);
   const variant = inFrame ? "plain" : requestedVariant;
+  const panelBackdrop = variant !== "plain" && backdrop !== undefined;
+  const composed =
+    !convenience && variant !== "plain" ? withPanelBackdrop(children, backdrop) : null;
   const [hasLink, reportLink] = useStretchedLinkHost();
   const [choiceChecked, reportChoice] = usePresenceCount();
   const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
@@ -181,12 +204,20 @@ function Card({
                 </>
               ) : convenience ? (
                 <>
-                  {backdrop}
+                  {!panelBackdrop && backdrop}
                   {header}
-                  <CardContent>{children}</CardContent>
+                  <CardContent data-backdrop={panelBackdrop ? "" : undefined}>
+                    {panelBackdrop && backdrop}
+                    {children}
+                  </CardContent>
                   {footer !== undefined && (
                     <CardFooter placement={footerPlacement}>{footer}</CardFooter>
                   )}
+                </>
+              ) : composed ? (
+                <>
+                  {!composed.placed && backdrop}
+                  {composed.content}
                 </>
               ) : (
                 <>
