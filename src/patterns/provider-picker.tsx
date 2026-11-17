@@ -18,14 +18,14 @@ export type ProviderTileProps = Omit<React.ComponentPropsWithoutRef<"button">, "
   icon?: IconSource;
   /** The provider's logo, framed like an icon. Ignored when icon is set. */
   media?: React.ReactNode;
-  /** Disables the tile and shows why in place of the description, wrapped in full. It stays focusable. */
+  /** Disables the tile and shows why in place of the description. It stays focusable. */
   disabledReason?: string;
   ref?: React.Ref<HTMLButtonElement>;
 };
 
 /**
  * A provider to pick: an icon tile with the category across from it, then the name and a
- * one-line description. Picking it moves on, so it has no trailing chevron.
+ * description clamped at two lines. Picking it moves on, so it has no trailing chevron.
  */
 export function ProviderTile({
   title,
@@ -78,7 +78,7 @@ export function ProviderTile({
           data-slot="provider-tile-detail"
           data-reason={reason ? "" : undefined}
           className={styles.detail}
-          title={reason ? undefined : detail}
+          title={detail}
         >
           {detail}
         </span>

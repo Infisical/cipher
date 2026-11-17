@@ -85,16 +85,20 @@
   letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
   text-transform: uppercase;
 }
-.title,
-.detail {
+.title {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.detail[data-reason] {
-  white-space: normal;
+.detail {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  min-width: 0;
+  overflow: hidden;
   overflow-wrap: anywhere;
+  white-space: normal;
 }
 .title {
   font-family: var(--cipher-type-row-title-font-family);
