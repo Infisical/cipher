@@ -470,8 +470,8 @@ function renderAsideMain({
   const mainPanel = ownTabs
     ? { role: "tabpanel", id: mainPanelId, "aria-labelledby": mainTabId }
     : {};
-  const details = open && (
-    <div data-slot="sheet-scroll" data-scroll-fade="y">
+  const details = narrow && (
+    <div data-slot="sheet-scroll" data-scroll-fade="y" data-hidden={!open || undefined}>
       <SheetBody role="tabpanel" id={detailsPanelId} aria-labelledby={detailsTabId}>
         {aside.children}
       </SheetBody>
