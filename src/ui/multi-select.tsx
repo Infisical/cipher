@@ -27,7 +27,10 @@ export type MultiSelectOption = {
   /** A logo or image at the row's start, sized like an icon, such as an app connection's logo. Ignored when icon is set. */
   media?: React.ReactNode;
   disabled?: boolean;
+  /** Search matches the group's heading too. */
   group?: string;
+  /** Extra words the search matches but never shows, such as an ID or an alias. */
+  keywords?: readonly string[];
 };
 export type MultiSelectCreateAction = {
   /** The row's text, for example Create connection. */
@@ -53,6 +56,7 @@ type Shared = {
   disabled?: boolean;
   invalid?: boolean;
   searchable?: boolean;
+  searchPlaceholder?: string;
   /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. It turns on the search field. Include the selected options in options on first render so their labels show. */
   onSearch?: (query: string) => void;
   /** While onSearch is in flight: a spinner in the search field, and Searching… in place of No options found. */
@@ -98,6 +102,7 @@ export function MultiSelect({
     disabled,
     invalid,
     searchable: searchableProp = false,
+    searchPlaceholder = "Search options",
     onSearch,
     loading = false,
     anchorRef,
@@ -225,7 +230,8 @@ export function MultiSelect({
   const filtered = onSearch
     ? options
     : options.filter((option) =>
-        `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
+        [option.label, option.description, option.meta, option.group, ...(option.keywords ?? [])]
+          .join(" ")
           .toLowerCase()
           .includes(query.toLowerCase())
       );
@@ -454,7 +460,7 @@ export function MultiSelect({
               aria-activedescendant={activeId}
               value={query}
               onChange={(event) => changeQuery(event.target.value)}
-              placeholder="Search options"
+              placeholder={searchPlaceholder}
             />
             {loading && <Spinner />}
           </div>
