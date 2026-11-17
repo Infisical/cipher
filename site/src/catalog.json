@@ -932,26 +932,26 @@
     ]
   },
   {
-    "id": "provider-picker",
-    "title": "Provider picker",
-    "summary": "Search plus a grid of provider tiles: popular first, then all; a search lists matches flat and offers to clear itself when nothing matches.",
+    "id": "tile-picker",
+    "title": "Tile picker",
+    "summary": "Search plus a grid of stacked tiles: popular first, then all; a search lists matches flat and offers to clear itself when nothing matches.",
     "group": "Patterns",
     "examples": [
       {
         "title": "Popular and all providers",
-        "module": "provider-picker/default"
+        "module": "tile-picker/default"
       },
       {
         "title": "A few providers",
-        "module": "provider-picker/few"
+        "module": "tile-picker/few"
       },
       {
         "title": "Long names and disabled providers",
-        "module": "provider-picker/stressed"
+        "module": "tile-picker/stressed"
       },
       {
         "title": "In a sheet",
-        "module": "provider-picker/in-sheet"
+        "module": "tile-picker/in-sheet"
       }
     ]
   },

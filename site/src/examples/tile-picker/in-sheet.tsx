@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ProviderPicker } from "@infisical/cipher/patterns/provider-picker";
+import { TilePicker } from "@infisical/cipher/patterns/tile-picker";
 import { Button } from "@infisical/cipher/ui/button";
 import {
   Sheet,
@@ -27,10 +27,12 @@ export default function Example() {
           <SheetDescription>Where should Infisical write these secrets?</SheetDescription>
         </SheetHeader>
         <SheetBody>
-          <ProviderPicker
+          <TilePicker
             items={providers}
             onSelect={() => setOpen(false)}
-            searchPlaceholder="Search destinations"
+            searchLabel="Search destinations"
+            allLabel="All providers"
+            noun="providers"
           />
         </SheetBody>
       </SheetContent>

@@ -368,7 +368,7 @@
       ]
     },
     {
-      "name": "provider-picker",
+      "name": "tile-picker",
       "type": "registry:block",
       "registryDependencies": [
         "@cipher/button",
@@ -380,14 +380,14 @@
       ],
       "files": [
         {
-          "path": "src/components/cipher/patterns/provider-picker.tsx",
+          "path": "src/components/cipher/patterns/tile-picker.tsx",
           "type": "registry:file",
-          "target": "src/components/cipher/patterns/provider-picker.tsx"
+          "target": "src/components/cipher/patterns/tile-picker.tsx"
         },
         {
-          "path": "src/components/cipher/patterns/provider-picker.module.css",
+          "path": "src/components/cipher/patterns/tile-picker.module.css",
           "type": "registry:file",
-          "target": "src/components/cipher/patterns/provider-picker.module.css"
+          "target": "src/components/cipher/patterns/tile-picker.module.css"
         }
       ]
     },

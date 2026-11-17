@@ -70,7 +70,7 @@
   --cipher-size-text-min: 160px;
   --cipher-size-tile-min: 208px;
   --cipher-size-search-max: 720px;
-  --cipher-size-provider-tile-min: 280px;
+  --cipher-size-tile-stacked-min: 280px;
   --cipher-size-card-min: 320px;
   --cipher-size-tooltip-max: 320px;
   --cipher-size-menu-min: 160px;

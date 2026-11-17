@@ -1,4 +1,4 @@
-import { ProviderPicker } from "@infisical/cipher/patterns/provider-picker";
+import { TilePicker } from "@infisical/cipher/patterns/tile-picker";
 
 import { providers } from "./data";
 
@@ -7,5 +7,13 @@ const few = providers
   .map((provider) => ({ ...provider, popular: false }));
 
 export default function Example() {
-  return <ProviderPicker items={few} onSelect={() => {}} searchPlaceholder="Search providers" />;
+  return (
+    <TilePicker
+      items={few}
+      onSelect={() => {}}
+      searchLabel="Search providers"
+      allLabel="All providers"
+      noun="providers"
+    />
+  );
 }
