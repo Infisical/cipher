@@ -413,7 +413,11 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]),
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .card[data-variant="framed"]
   > .cardHeader
   > .cardAction
