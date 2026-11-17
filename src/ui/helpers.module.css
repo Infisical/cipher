@@ -91,6 +91,8 @@
 }
 .tile {
   display: flex;
+  box-sizing: border-box;
+  text-decoration: none;
   align-items: center;
   gap: 12px;
   width: 100%;
@@ -111,10 +113,12 @@
 .tile[data-in-frame]:not([aria-disabled="true"]):hover {
   background: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-tint));
 }
-.tile[aria-pressed="true"] {
+.tile[aria-pressed="true"],
+.tile[aria-current="page"] {
   border-color: var(--cipher-ink, var(--foreground));
 }
-.tile:disabled {
+.tile:disabled,
+.tile[data-disabled] {
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -146,6 +150,17 @@
   min-width: 0;
   margin-bottom: var(--cipher-space-8);
 }
+.tileAside {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  margin-inline-start: auto;
+  color: var(--cipher-muted);
+}
+.tileAside > :not(.tileEyebrow) {
+  flex: none;
+}
 .tileEyebrow {
   min-width: 0;
   overflow: hidden;
@@ -159,7 +174,7 @@
   letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
   text-transform: uppercase;
 }
-.tile[aria-disabled="true"] > .tileTop {
+.tile[aria-disabled="true"]:not([data-disabled]) > .tileTop {
   opacity: 0.5;
 }
 .banner {
