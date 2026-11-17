@@ -237,7 +237,7 @@ export function MultiSelect({
     ...(createAction && !createBlocked && !disabled ? [createId] : [])
   ];
   const activeKey = navigable.includes(active) ? active : navigable[0];
-  const createActive = Boolean(activeKey) && activeKey === createId;
+  const createActive = activeKey === createId;
   const currentActive = createActive
     ? undefined
     : enabled.find((option) => option.value === activeKey);
@@ -305,12 +305,12 @@ export function MultiSelect({
       props.onEmptyBackspace();
       return;
     }
-    if (event.key === "Enter" && !activeKey && canCreate) {
+    if (event.key === "Enter" && activeKey === undefined && canCreate) {
       event.preventDefault();
       create();
       return;
     }
-    const index = activeKey ? navigable.indexOf(activeKey) : -1;
+    const index = activeKey === undefined ? -1 : navigable.indexOf(activeKey);
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       setActive(
@@ -323,7 +323,7 @@ export function MultiSelect({
       setActive((event.key === "Home" ? navigable[0] : navigable[navigable.length - 1]) ?? "");
     } else if (
       (event.key === "Enter" || (event.key === " " && event.target !== search.current)) &&
-      activeKey
+      activeKey !== undefined
     ) {
       event.preventDefault();
       if (currentActive) toggle(currentActive);
