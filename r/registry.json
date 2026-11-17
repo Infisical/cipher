@@ -368,6 +368,30 @@
       ]
     },
     {
+      "name": "provider-picker",
+      "type": "registry:block",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/empty",
+        "@cipher/icon",
+        "@cipher/input",
+        "@cipher/item"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/patterns/provider-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/patterns/provider-picker.tsx"
+        },
+        {
+          "path": "src/components/cipher/patterns/provider-picker.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/patterns/provider-picker.module.css"
+        }
+      ]
+    },
+    {
       "name": "accordion",
       "type": "registry:ui",
       "registryDependencies": [

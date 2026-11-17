@@ -932,6 +932,30 @@
     ]
   },
   {
+    "id": "provider-picker",
+    "title": "Provider picker",
+    "summary": "Search plus a grid of provider tiles: popular first, then all; a search lists matches flat and offers to clear itself when nothing matches.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Popular and all providers",
+        "module": "provider-picker/default"
+      },
+      {
+        "title": "A few providers",
+        "module": "provider-picker/few"
+      },
+      {
+        "title": "Long names and disabled providers",
+        "module": "provider-picker/stressed"
+      },
+      {
+        "title": "In a sheet",
+        "module": "provider-picker/in-sheet"
+      }
+    ]
+  },
+  {
     "id": "floating-action-bar",
     "title": "Floating action bar",
     "summary": "Bulk actions for the current selection, floating over the bottom of the view while anything is selected.",
