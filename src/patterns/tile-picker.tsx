@@ -77,20 +77,21 @@ export function TilePicker({
   const popular = query ? [] : items.filter((item) => item.popular);
   const grid = (list: readonly TilePickerItem[]) => (
     <div className={styles.grid}>
-      {list.map((item) => (
-        <Tile
-          key={item.value}
-          layout="stacked"
-          title={item.title}
-          description={item.description}
-          eyebrow={item.eyebrow}
-          disabledReason={item.disabledReason}
-          media={(item.icon || item.media) && <Media icon={item.icon}>{item.media}</Media>}
-          href={item.href}
-          external={item.external}
-          onClick={item.href ? undefined : () => onSelect?.(item.value)}
-        />
-      ))}
+      {list.map((item) => {
+        const shared = {
+          layout: "stacked" as const,
+          title: item.title,
+          description: item.description,
+          eyebrow: item.eyebrow,
+          disabledReason: item.disabledReason,
+          media: (item.icon || item.media) && <Media icon={item.icon}>{item.media}</Media>
+        };
+        return item.href ? (
+          <Tile key={item.value} {...shared} href={item.href} external={item.external} />
+        ) : (
+          <Tile key={item.value} {...shared} onClick={() => onSelect?.(item.value)} />
+        );
+      })}
     </div>
   );
   const section = (label: string, list: readonly TilePickerItem[]) => (

@@ -113,10 +113,12 @@
 .tile[data-in-frame]:not([aria-disabled="true"]):hover {
   background: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-tint));
 }
-.tile[aria-pressed="true"] {
+.tile[aria-pressed="true"],
+.tile[aria-current="page"] {
   border-color: var(--cipher-ink, var(--foreground));
 }
-.tile:disabled {
+.tile:disabled,
+.tile[data-disabled] {
   cursor: not-allowed;
   opacity: 0.5;
 }

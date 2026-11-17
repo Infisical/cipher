@@ -471,6 +471,46 @@ export function Media({
   );
 }
 Media.displayName = "Media";
+type TileOwnProps = {
+  selected?: boolean;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  media?: React.ReactNode;
+  /** stacked puts the media and eyebrow on top, then the title on one line and a description clamped at two, with no chevron. For grids of choices such as a TilePicker. */
+  layout?: "row" | "stacked";
+  /** A short label across from the media in the stacked layout, such as a category. */
+  eyebrow?: React.ReactNode;
+  /** Disables the tile and shows why in place of the description. Unlike disabled, it stays focusable so the reason can be reached. */
+  disabledReason?: string;
+};
+type TileButtonProps = TileOwnProps &
+  Omit<React.ComponentPropsWithoutRef<"button">, "title"> & {
+    href?: undefined;
+    asChild?: false;
+    external?: undefined;
+    ref?: React.Ref<HTMLButtonElement>;
+  };
+type TileLinkProps = TileOwnProps &
+  Omit<React.ComponentPropsWithoutRef<"a">, "title" | "media"> & {
+    /** Opens href in a new tab and marks the tile with an external icon. With asChild, set the child's target yourself. */
+    external?: boolean;
+    /** Takes the link's destination away and dims it, so it cannot be opened. */
+    disabled?: boolean;
+    ref?: React.Ref<HTMLAnchorElement>;
+  } & (
+    | {
+        /** Renders the tile as a link, so hover shows the URL and modifier or middle clicks open it elsewhere. */
+        href: string;
+        asChild?: false;
+      }
+    | {
+        /** Renders the one child, such as a router Link, with the tile's content inside it. */
+        asChild: true;
+        href?: undefined;
+      }
+  );
+export type TileProps = TileButtonProps | TileLinkProps;
+
 export function Tile({
   selected,
   title,
@@ -482,50 +522,34 @@ export function Tile({
   href,
   external,
   asChild,
+  disabled,
   children,
   className,
   onClick,
-  type = "button",
+  type,
   ref,
   ...props
-}: Omit<React.ComponentPropsWithoutRef<"button">, "title"> & {
-  selected?: boolean;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  media?: React.ReactNode;
-  /** stacked puts the media and eyebrow on top, then the title on one line and a description clamped at two, with no chevron. For grids of choices such as a TilePicker. */
-  layout?: "row" | "stacked";
-  /** A short label across from the media in the stacked layout, such as a category. */
-  eyebrow?: React.ReactNode;
-  /** Disables the tile and shows why in place of the description. Unlike disabled, it stays focusable so the reason can be reached. */
-  disabledReason?: string;
-  /** Renders the tile as a link, so hover shows the URL and modifier or middle clicks open it elsewhere. */
-  href?: string;
-  /** Opens href in a new tab and marks the tile with an external icon. With asChild, set the child's target yourself. */
-  external?: boolean;
-  /** Renders the one child, such as a router Link, with the tile's content inside it. */
-  asChild?: boolean;
-} & { ref?: React.Ref<HTMLButtonElement | HTMLAnchorElement> }) {
+}: TileProps) {
   const inFrame = useInFrame("Tile");
   const reason = disabledReason || undefined;
   const detail = reason ?? description;
   const stacked = layout === "stacked";
   const link = Boolean(href || asChild);
+  const inactive = Boolean(reason || (link && disabled));
   const Comp: React.ElementType = asChild ? Slot.Root : href ? "a" : "button";
   const externalMark = external && <Icon name="external" label="Opens in a new tab" />;
-  const linkProps = asChild
-    ? {}
-    : href
-      ? {
-          href: reason ? undefined : href,
-          role: reason ? "link" : undefined,
-          tabIndex: reason ? 0 : undefined,
-          target: external ? "_blank" : undefined,
-          rel: external ? "noopener noreferrer" : undefined
-        }
-      : { type };
+  const linkProps = link
+    ? {
+        href: inactive ? undefined : href,
+        role: inactive ? "link" : undefined,
+        tabIndex: inactive && !disabled ? 0 : undefined,
+        target: external && !asChild ? "_blank" : undefined,
+        rel: external && !asChild ? "noopener noreferrer" : undefined,
+        "data-disabled": link && disabled ? "" : undefined
+      }
+    : { type: type ?? "button", disabled };
   const child =
-    asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+    asChild && React.isValidElement<{ children?: React.ReactNode; href?: string }>(children)
       ? children
       : undefined;
   const inner = child ? child.props.children : children;
@@ -583,7 +607,9 @@ export function Tile({
       {!stacked && (externalMark || <Icon name={selected ? "check" : "chev-right"} />)}
     </>
   );
-  const body = child ? React.cloneElement(child, undefined, content) : content;
+  const body = child
+    ? React.cloneElement(child, inactive ? { href: undefined } : undefined, content)
+    : content;
   return (
     <Comp
       ref={ref}
@@ -593,10 +619,10 @@ export function Tile({
       data-in-frame={inFrame || undefined}
       aria-pressed={link ? undefined : selected}
       aria-current={link && selected ? "page" : undefined}
-      aria-disabled={reason ? true : undefined}
+      aria-disabled={inactive || undefined}
       className={cn(helperStyles.tile, className)}
-      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-        if (reason) {
+      onClick={(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) => {
+        if (inactive) {
           event.preventDefault();
           return;
         }
