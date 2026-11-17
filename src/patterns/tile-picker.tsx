@@ -23,11 +23,16 @@ export type TilePickerItem = {
   disabledReason?: string;
   /** Extra words the search matches, such as a vendor's other product names. */
   keywords?: readonly string[];
+  /** Makes the tile a link that navigates instead of calling onSelect. */
+  href?: string;
+  /** Opens href in a new tab and marks the tile as external. */
+  external?: boolean;
 };
 
 export type TilePickerProps = Omit<React.ComponentPropsWithoutRef<"div">, "onSelect"> & {
   items: readonly TilePickerItem[];
-  onSelect: (value: string) => void;
+  /** Called with a picked item's value. Items with an href navigate instead. */
+  onSelect?: (value: string) => void;
   searchLabel?: string;
   searchPlaceholder?: string;
   popularLabel?: string;
@@ -81,7 +86,9 @@ export function TilePicker({
           eyebrow={item.eyebrow}
           disabledReason={item.disabledReason}
           media={(item.icon || item.media) && <Media icon={item.icon}>{item.media}</Media>}
-          onClick={() => onSelect(item.value)}
+          href={item.href}
+          external={item.external}
+          onClick={item.href ? undefined : () => onSelect?.(item.value)}
         />
       ))}
     </div>

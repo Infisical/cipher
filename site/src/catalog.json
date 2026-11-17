@@ -950,6 +950,10 @@
         "module": "tile-picker/few"
       },
       {
+        "title": "Links: items with an href navigate, external ones open a new tab",
+        "module": "tile-picker/links"
+      },
+      {
         "title": "Long names and disabled providers",
         "module": "tile-picker/stressed"
       },
@@ -1168,6 +1172,10 @@
       {
         "title": "Selectable tile and media",
         "module": "item/tiles"
+      },
+      {
+        "title": "Tiles as links, internal and external",
+        "module": "item/tile-links"
       }
     ]
   },
