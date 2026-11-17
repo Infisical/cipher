@@ -950,6 +950,10 @@
         "module": "tile-picker/few"
       },
       {
+        "title": "Pinned items: Custom HTTP and MCP stay listed under any search",
+        "module": "tile-picker/pinned"
+      },
+      {
         "title": "Long names and disabled providers",
         "module": "tile-picker/stressed"
       },
