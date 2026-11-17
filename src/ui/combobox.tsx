@@ -324,6 +324,7 @@ export function Combobox({
           disabled={disabled}
           invalid={invalid}
           searchable
+          searchPlaceholder={searchPlaceholder}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
