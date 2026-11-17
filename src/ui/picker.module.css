@@ -318,3 +318,14 @@
 .pathList {
   width: var(--radix-popover-trigger-width);
 }
+.panelColumn {
+  display: flex;
+  flex-direction: column;
+}
+.panelColumn > * {
+  flex: none;
+}
+.panelColumn > [role="listbox"] {
+  flex: 0 1 auto;
+  min-height: 0;
+}

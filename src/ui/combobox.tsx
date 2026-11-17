@@ -515,7 +515,7 @@ export function Combobox({
             )}
             {rowCreation && (
               <>
-                {filtered.length > 0 && <CommandSeparator />}
+                <CommandSeparator alwaysRender />
                 <CommandGroup>
                   <CommandItem
                     value="combobox-create-dialog"
