@@ -31,7 +31,14 @@ export type FilterBarField =
   | (FilterBarChoiceField & { type: "multi-select" })
   | { key: string; label: string; type: "date"; defaultMonth?: Date }
   | { key: string; label: string; type: "date-range"; defaultMonth?: Date }
-  | { key: string; label: string; type: "text"; placeholder?: string };
+  | {
+      key: string;
+      label: string;
+      type: "text";
+      placeholder?: string;
+      /** How the chip reads the value, such as "is" for an exact match. Defaults to "contains". */
+      verb?: string;
+    };
 export type FilterBarFilter = {
   field: string;
   operator?: "before" | "after";
@@ -88,7 +95,8 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
     if (!from || !to) return { verb: "is", value: "any date" };
     return { verb: from.getTime() === to.getTime() ? "on" : "from", value: shortRange(from, to) };
   }
-  if (field.type === "text") return { verb: "contains", value: filter.values[0] ?? "anything" };
+  if (field.type === "text")
+    return { verb: field.verb ?? "contains", value: filter.values[0] ?? "anything" };
   const labels = filter.values.map(
     (value) => field.options.find((option) => option.value === value)?.label ?? value
   );

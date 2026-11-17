@@ -544,6 +544,10 @@
       {
         "title": "Option icons",
         "module": "combobox/icons"
+      },
+      {
+        "title": "Search over keywords and group headings, with a custom search placeholder",
+        "module": "combobox/keywords"
       }
     ]
   },
@@ -932,6 +936,10 @@
       {
         "title": "Search only",
         "module": "filter-bar/search-only"
+      },
+      {
+        "title": "Exact-match text field: the chip reads is instead of contains",
+        "module": "filter-bar/exact-match"
       }
     ]
   },
