@@ -413,12 +413,19 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]),
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .card[data-variant="framed"]
   > .cardHeader
   > .cardAction
   [data-cipher-button]:not([data-layout="trigger"])
-  > [data-press] {
+  > [data-press]
+  [data-slot="button-text"] {
+  display: block;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -428,7 +435,8 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   > .cardAction
   [data-cipher-button]:not([data-layout="trigger"])
   > [data-press] {
-  display: block;
+  min-width: 0;
+  max-width: 100%;
 }
 .card[data-variant="framed"] > .cardHeader > [data-slot="card-description"] {
   flex-basis: 100%;
