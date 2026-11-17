@@ -92,6 +92,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.detail[data-reason] {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 .title {
   font-family: var(--cipher-type-row-title-font-family);
   font-size: var(--cipher-type-row-title-font-size);

@@ -18,7 +18,7 @@ export type ProviderTileProps = Omit<React.ComponentPropsWithoutRef<"button">, "
   icon?: IconSource;
   /** The provider's logo, framed like an icon. Ignored when icon is set. */
   media?: React.ReactNode;
-  /** Disables the tile and shows why in place of the description. It stays focusable. */
+  /** Disables the tile and shows why in place of the description, wrapped in full. It stays focusable. */
   disabledReason?: string;
   ref?: React.Ref<HTMLButtonElement>;
 };
@@ -78,7 +78,7 @@ export function ProviderTile({
           data-slot="provider-tile-detail"
           data-reason={reason ? "" : undefined}
           className={styles.detail}
-          title={detail}
+          title={reason ? undefined : detail}
         >
           {detail}
         </span>
@@ -197,6 +197,7 @@ export function ProviderPicker({
         aria-label={searchLabel}
         placeholder={searchPlaceholder ?? searchLabel}
         value={search}
+        data-cipher-escape-owner={search ? "" : undefined}
         onChange={(event) => setSearch(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Escape" && search) {
