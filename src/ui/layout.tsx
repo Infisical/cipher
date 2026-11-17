@@ -443,13 +443,13 @@ export function Panes({
             </TabsList>
           </Tabs>
         )}
-        {open && (
+        {narrow && (
           <div
             data-slot="panes-details"
             role="tabpanel"
             id={tabsId + "asidepanel"}
             aria-labelledby={tabsId + ASIDE_TAB}
-            className={paneStyles.page}
+            className={cn(paneStyles.page, !open && paneStyles.hidden)}
           >
             {aside}
           </div>
