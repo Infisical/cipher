@@ -143,3 +143,6 @@
   .triggerChevron {
   color: var(--cipher-muted);
 }
+[data-cipher-button] > [data-press] [data-slot="button-text"] {
+  display: contents;
+}
