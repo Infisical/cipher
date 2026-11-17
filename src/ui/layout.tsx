@@ -433,7 +433,7 @@ export function Panes({
           </div>
         )}
         <div
-          className={cn(paneStyles.main, open && paneStyles.hidden)}
+          className={cn(paneStyles.main, paneStyles.scroll, open && paneStyles.hidden)}
           {...(narrow
             ? { role: "tabpanel", id: tabsId + "mainpanel", "aria-labelledby": tabsId + MAIN_TAB }
             : {})}

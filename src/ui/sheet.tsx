@@ -342,7 +342,9 @@ type SheetAsideProps = {
  * it form the main pane. Use it with size="xl". Below size-pane-collapse the identity becomes the
  * fixed header and the body becomes the first header tab (label). A header with controlled Tabs
  * and a TabsList keeps its tabs after it; otherwise a second tab, mainLabel, holds the main pane.
- * The sheet opens on the main pane's tab either way.
+ * The sheet opens on the main pane's tab either way. Only a header that is a direct child of
+ * SheetContent merges its tabs: beside SheetViews or SheetSections the Details and mainLabel tabs
+ * sit above their headers, so keep tabs out of those headers or give the sheet a direct header.
  */
 function SheetAside(_: SheetAsideProps): React.ReactNode {
   return null;

@@ -99,6 +99,11 @@
   flex: none;
   padding-inline: var(--cipher-pane-pad, var(--cipher-space-overlay-inset));
 }
+.scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 .hidden {
   display: none;
 }
