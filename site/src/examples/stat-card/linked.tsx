@@ -1,3 +1,4 @@
+import { Button } from "@infisical/cipher/ui/button";
 import { Halftone } from "@infisical/cipher/ui/halftone";
 import { Grid } from "@infisical/cipher/ui/layout";
 import { StatCard } from "@infisical/cipher/ui/stat-card";
@@ -9,7 +10,11 @@ export default function Example() {
         label="Total accounts"
         value="1,284"
         icon="building"
-        note="vs last month"
+        note={
+          <Button variant="link" size="sm" asChild>
+            <a href="#/stat-card-linked/new-accounts">12 new this week</a>
+          </Button>
+        }
         link={{ href: "#/stat-card-linked/accounts" }}
       />
       <StatCard
