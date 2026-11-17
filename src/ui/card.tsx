@@ -47,7 +47,7 @@ const withPanelBackdrop = (children: React.ReactNode, backdrop: React.ReactNode)
       if (placed || !React.isValidElement<{ children?: React.ReactNode }>(child)) return child;
       if (child.type === React.Fragment)
         return React.cloneElement(child, undefined, walk(child.props.children));
-      if (child.type !== CardContent) return child;
+      if (child.type !== CardContent || "dangerouslySetInnerHTML" in child.props) return child;
       placed = true;
       return React.cloneElement(
         child as React.ReactElement<{ children?: React.ReactNode; "data-backdrop"?: string }>,
