@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { useListFiltered } from "../lib/list-query";
 import { cn } from "../lib/utils";
 import { Button } from "../ui/button";
 import { type EmptyGhost, EmptyGhostScope, EmptyState } from "../ui/empty";
@@ -46,6 +47,8 @@ export type TilePickerProps = Omit<React.ComponentPropsWithoutRef<"div">, "onSel
   empty?: React.ReactNode;
   /** The ghost behind an Empty in the empty slot. Defaults to cards; a search that finds nothing never draws one. */
   ghost?: EmptyGhost;
+  /** The items are narrowed outside the picker, so an empty picker means no matches and draws no ghost. Inside a ListQueryScope it follows the FilterBar unless passed. */
+  filtered?: boolean;
 };
 
 const matches = (item: TilePickerItem, query: string) =>
@@ -69,11 +72,14 @@ export function TilePicker({
   noun = "items",
   empty,
   ghost,
+  filtered: filteredProp,
   className,
   ref,
   ...props
 }: TilePickerProps & { ref?: React.Ref<HTMLDivElement> }) {
   const [search, setSearch] = React.useState("");
+  const listFiltered = useListFiltered();
+  const filtered = filteredProp ?? listFiltered;
   const inputRef = React.useRef<HTMLInputElement>(null);
   const query = search.trim().toLowerCase();
   const popular = query ? [] : items.filter((item) => item.popular);
@@ -105,8 +111,10 @@ export function TilePicker({
   const found = query ? items.filter((item) => matches(item, query)) : items;
   const pinned = query ? items.filter((item) => item.pinned && !matches(item, query)) : [];
   let body: React.ReactNode;
-  if (items.length === 0 && empty !== undefined)
-    body = <EmptyGhostScope ghost={ghost ?? "cards"}>{empty}</EmptyGhostScope>;
+  if (!query && items.length === 0 && empty !== undefined)
+    body = (
+      <EmptyGhostScope ghost={ghost ?? (filtered ? false : "cards")}>{empty}</EmptyGhostScope>
+    );
   else if (query && found.length === 0)
     body = (
       <>

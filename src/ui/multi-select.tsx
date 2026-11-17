@@ -6,7 +6,7 @@ import { useControllableState } from "../lib/use-controllable-state";
 import { type OptionCreateHandler, useOptionCreation } from "../lib/use-option-creation";
 import { cn, titleIfClamped } from "../lib/utils";
 import { Button } from "./button";
-import { Icon } from "./icon";
+import { Icon, type IconSource } from "./icon";
 import { useMenuInset } from "./menu-inset";
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./popover";
 import { Spinner } from "./spinner";
@@ -22,11 +22,28 @@ export type MultiSelectOption = {
   description?: string;
   /** A short muted value at the row's end, such as a count. */
   meta?: string;
+  /** A glyph at the row's start. */
+  icon?: IconSource;
+  /** A logo or image at the row's start, sized like an icon, such as an app connection's logo. Ignored when icon is set. */
+  media?: React.ReactNode;
   disabled?: boolean;
+  /** Search matches the group's heading too. */
   group?: string;
+  /** Extra words the search matches but never shows, such as an ID or an alias. */
+  keywords?: readonly string[];
+};
+export type MultiSelectCreateAction = {
+  /** The row's text, for example Create connection. */
+  label: string;
+  /** Closes the menu and hands over to your own flow. query is the trimmed search text; complete selects the option it made, which you add to options too. */
+  onSelect: (props: { query: string; complete: (option: MultiSelectOption) => void }) => void;
+  /** Keeps the row visible but disabled, with this reason beside it. */
+  disabledReason?: string;
 };
 type Shared = {
   onCreate?: OptionCreateHandler;
+  /** A Create row at the end of the list that starts your own flow, such as a dialog that makes a connection. */
+  createAction?: MultiSelectCreateAction;
   /** The Create row's text for the trimmed search, for example (query) => `Create tag "${query}"`. */
   createLabel?: (query: string) => string;
   onEmptyBackspace?: () => void;
@@ -39,6 +56,7 @@ type Shared = {
   disabled?: boolean;
   invalid?: boolean;
   searchable?: boolean;
+  searchPlaceholder?: string;
   /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. It turns on the search field. Include the selected options in options on first render so their labels show. */
   onSearch?: (query: string) => void;
   /** While onSearch is in flight: a spinner in the search field, and Searching… in place of No options found. */
@@ -84,6 +102,7 @@ export function MultiSelect({
     disabled,
     invalid,
     searchable: searchableProp = false,
+    searchPlaceholder = "Search options",
     onSearch,
     loading = false,
     anchorRef,
@@ -95,6 +114,7 @@ export function MultiSelect({
     menuWidth,
     quickActions = true,
     closeOnFocusOutside = true,
+    createAction,
     className
   } = props;
   const optionValues = new Set<string>();
@@ -154,7 +174,7 @@ export function MultiSelect({
   const list = React.useRef<HTMLDivElement>(null);
   const listInset = useMenuInset(list);
   const search = React.useRef<HTMLInputElement>(null);
-  const apply = (values: string[]) => {
+  const apply = (values: string[], keepOrder = false) => {
     if (disabled) return;
     if (props.multiple === false) {
       const next = values[0] ?? null;
@@ -162,9 +182,10 @@ export function MultiSelect({
       props.onChange?.(next);
     } else {
       const included = new Set(values);
-      const ordered = onSearch
-        ? [...included]
-        : options.filter((option) => included.has(option.value)).map((option) => option.value);
+      const ordered =
+        onSearch || keepOrder
+          ? [...included]
+          : options.filter((option) => included.has(option.value)).map((option) => option.value);
       if (props.value === undefined) setInternal(ordered);
       props.onChange?.(ordered);
     }
@@ -209,18 +230,51 @@ export function MultiSelect({
   const filtered = onSearch
     ? options
     : options.filter((option) =>
-        `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
+        [option.label, option.description, option.meta, option.group, ...(option.keywords ?? [])]
+          .join(" ")
           .toLowerCase()
           .includes(query.toLowerCase())
       );
   const enabled = filtered.filter((option) => !option.disabled && !disabled);
-  const currentActive = enabled.find((option) => option.value === active) ?? enabled[0];
+  const createId = `${generated}-create`;
+  const createBlocked = createAction?.disabledReason || undefined;
+  const navigable = [
+    ...enabled.map((option) => option.value),
+    ...(createAction && !createBlocked && !disabled ? [createId] : [])
+  ];
+  const activeKey = navigable.includes(active) ? active : navigable[0];
+  const createActive = activeKey === createId;
+  const currentActive = createActive
+    ? undefined
+    : enabled.find((option) => option.value === activeKey);
   const optionId = (value: string) =>
     `${generated}-option-${options.findIndex((option) => option.value === value)}`;
+  const activeId = createActive ? createId : currentActive && optionId(currentActive.value);
   React.useEffect(() => {
-    if (open && currentActive)
-      document.getElementById(optionId(currentActive.value))?.scrollIntoView({ block: "nearest" });
-  }, [open, currentActive?.value]);
+    if (open && activeId) document.getElementById(activeId)?.scrollIntoView({ block: "nearest" });
+  }, [open, activeId]);
+  const latestComplete = React.useRef((_option: MultiSelectOption) => {});
+  React.useLayoutEffect(() => {
+    latestComplete.current = (option) => {
+      if (onSearch)
+        setRemembered((known) => [...known.filter((item) => item.value !== option.value), option]);
+      apply(
+        props.multiple === false
+          ? [option.value]
+          : [...selected.filter((value) => value !== option.value), option.value],
+        true
+      );
+    };
+  });
+  const startCreate = () => {
+    if (!createAction || createBlocked || disabled) return;
+    const started = query.trim();
+    changeOpen(false);
+    createAction.onSelect({
+      query: started,
+      complete: (option) => latestComplete.current(option)
+    });
+  };
   const groups = [...new Set(filtered.map((option) => option.group ?? ""))];
   const all = () => apply([...selected, ...eligible.map((option) => option.value)]);
   const none = () =>
@@ -257,27 +311,29 @@ export function MultiSelect({
       props.onEmptyBackspace();
       return;
     }
-    if (event.key === "Enter" && !currentActive && canCreate) {
+    if (event.key === "Enter" && activeKey === undefined && canCreate) {
       event.preventDefault();
       create();
       return;
     }
-    const index = enabled.findIndex((option) => option.value === currentActive?.value);
+    const index = activeKey === undefined ? -1 : navigable.indexOf(activeKey);
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       setActive(
-        enabled[(index + (event.key === "ArrowDown" ? 1 : -1) + enabled.length) % enabled.length]
-          ?.value ?? ""
+        navigable[
+          (index + (event.key === "ArrowDown" ? 1 : -1) + navigable.length) % navigable.length
+        ] ?? ""
       );
     } else if ((event.key === "Home" || event.key === "End") && event.target !== search.current) {
       event.preventDefault();
-      setActive((event.key === "Home" ? enabled[0] : enabled[enabled.length - 1])?.value ?? "");
+      setActive((event.key === "Home" ? navigable[0] : navigable[navigable.length - 1]) ?? "");
     } else if (
       (event.key === "Enter" || (event.key === " " && event.target !== search.current)) &&
-      currentActive
+      activeKey !== undefined
     ) {
       event.preventDefault();
-      toggle(currentActive);
+      if (currentActive) toggle(currentActive);
+      else startCreate();
     } else if (
       !searchable &&
       event.key.length === 1 &&
@@ -374,14 +430,14 @@ export function MultiSelect({
         align={align}
         side={side}
         surface="menu"
+        className={styles.panelColumn}
         style={{ width: menuWidth }}
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();
         }}
         onInteractOutside={(event) => {
           const clear =
-            event.target instanceof Element &&
-            event.target.closest('[data-slot="combobox-clear"]');
+            event.target instanceof Element && event.target.closest('[data-slot="combobox-clear"]');
           if (clear && (!clear.isConnected || anchorRef?.current?.contains(clear)))
             event.preventDefault();
         }}
@@ -401,10 +457,10 @@ export function MultiSelect({
               aria-controls={listId}
               aria-expanded={open}
               aria-autocomplete="list"
-              aria-activedescendant={currentActive ? optionId(currentActive.value) : undefined}
+              aria-activedescendant={activeId}
               value={query}
               onChange={(event) => changeQuery(event.target.value)}
-              placeholder="Search options"
+              placeholder={searchPlaceholder}
             />
             {loading && <Spinner />}
           </div>
@@ -441,6 +497,11 @@ export function MultiSelect({
             {selected.length} selected
           </span>
         )}
+        {!filtered.length && (
+          <p role={onSearch ? "status" : undefined} className={menu.empty}>
+            {loading ? "Searching…" : "No options found"}
+          </p>
+        )}
         <div
           ref={listInset}
           id={listId}
@@ -449,7 +510,8 @@ export function MultiSelect({
           aria-busy={loading || undefined}
           aria-multiselectable={multiple || undefined}
           tabIndex={0}
-          aria-activedescendant={currentActive ? optionId(currentActive.value) : undefined}
+          aria-activedescendant={activeId}
+          aria-owns={createAction ? createId : undefined}
           data-scroll-fade="y"
           className={cn(menu.list, menu.inset)}
         >
@@ -485,6 +547,11 @@ export function MultiSelect({
                         )}
                       </span>
                     )}
+                    {option.icon ? (
+                      <Icon icon={option.icon} />
+                    ) : (
+                      option.media && <span data-menu-icon="">{option.media}</span>
+                    )}
                     {option.description ? (
                       <span className={cn(menu.text, styles.optionLabel)}>
                         <span className={menu.title}>{option.label}</span>
@@ -510,10 +577,28 @@ export function MultiSelect({
           ))}
           <ListHighlight />
         </div>
-        {!filtered.length && (
-          <p role={onSearch ? "status" : undefined} className={menu.empty}>
-            {loading ? "Searching…" : "No options found"}
-          </p>
+        {createAction && (
+          <div className={cn(menu.inset, menu.actionFooter)} data-slot="multi-select-create-footer">
+            <div
+              id={createId}
+              role="option"
+              tabIndex={-1}
+              aria-selected={false}
+              aria-disabled={createBlocked || disabled ? true : undefined}
+              data-active={createActive || undefined}
+              data-slot="multi-select-create"
+              className={cn(menu.row, styles.option)}
+              onPointerMove={() => {
+                if (!createBlocked) setActive(createId);
+              }}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={startCreate}
+            >
+              <Icon name="plus" />
+              <span className={styles.optionLabel}>{createAction.label}</span>
+              {createBlocked && <span className={styles.optionMeta}>{createBlocked}</span>}
+            </div>
+          </div>
         )}
         {canCreate && (
           <div className={menu.footer} data-slot="multi-select-footer">

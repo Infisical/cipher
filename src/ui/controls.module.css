@@ -74,7 +74,7 @@
   color: var(--cipher-muted);
 }
 @media (hover: hover) {
-  .field:hover:not(:disabled, [aria-disabled="true"]) {
+  .field:hover:not(:disabled, [aria-disabled="true"], [data-control-disabled]) {
     background-color: var(--cipher-control-surface-hover);
   }
 }
@@ -98,7 +98,7 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
-.field:is([readonly], [data-field-box][data-control-readonly]) {
+.field:is([readonly]:not([aria-disabled="true"]), [data-field-box][data-control-readonly]) {
   background-color: var(--cipher-paper);
 }
 .fieldBox {
@@ -413,13 +413,18 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]),
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .card[data-variant="framed"]
   > .cardHeader
   > .cardAction
   [data-cipher-button]:not([data-layout="trigger"])
   > [data-press]
   [data-slot="button-text"] {
+  display: block;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -660,6 +665,10 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   justify-content: space-between;
   padding-block: 12px;
   border-bottom: 1px solid var(--cipher-line-soft);
+}
+/* Among fields a switch row takes the fields' measure, so its control ends at their right edge. */
+.choiceRow:is(:global([data-slot="field"]:not([data-orientation="horizontal"])) ~ *, :has(~ :global([data-slot="field"]:not([data-orientation="horizontal"])))) {
+  max-width: var(--cipher-size-measure-field);
 }
 .choiceRow:last-child {
   border-bottom: 0;

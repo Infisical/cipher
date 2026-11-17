@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 
+import { useReportListQuery } from "../lib/list-query";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import { Calendar } from "../ui/calendar";
@@ -31,7 +32,14 @@ export type FilterBarField =
   | (FilterBarChoiceField & { type: "multi-select" })
   | { key: string; label: string; type: "date"; defaultMonth?: Date }
   | { key: string; label: string; type: "date-range"; defaultMonth?: Date }
-  | { key: string; label: string; type: "text"; placeholder?: string };
+  | {
+      key: string;
+      label: string;
+      type: "text";
+      placeholder?: string;
+      /** How the chip reads the value, such as "is" for an exact match. Defaults to "contains". */
+      verb?: string;
+    };
 export type FilterBarFilter = {
   field: string;
   operator?: "before" | "after";
@@ -45,7 +53,7 @@ export type FilterBarProps = {
   /** Applied filters. Only filters with values arrive here: one just added stays in the bar until its picker closes, and leaves without a change if none was picked. */
   value?: readonly FilterBarFilter[];
   onChange?: (value: FilterBarFilter[]) => void;
-  /** Your own search control. Leave out and pass searchValue and onSearchChange for the built-in one. */
+  /** Your own search control. Leave out and pass searchValue and onSearchChange for the built-in one. Pass searchValue with it too, so a ListQueryScope knows the list is searched. */
   search?: React.ReactNode;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
@@ -88,7 +96,8 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
     if (!from || !to) return { verb: "is", value: "any date" };
     return { verb: from.getTime() === to.getTime() ? "on" : "from", value: shortRange(from, to) };
   }
-  if (field.type === "text") return { verb: "contains", value: filter.values[0] ?? "anything" };
+  if (field.type === "text")
+    return { verb: field.verb ?? "contains", value: filter.values[0] ?? "anything" };
   const labels = filter.values.map(
     (value) => field.options.find((option) => option.value === value)?.label ?? value
   );
@@ -157,6 +166,7 @@ export const FilterBar = ({
 }: FilterBarProps) => {
   const [uncontrolled, setUncontrolled] = React.useState<readonly FilterBarFilter[]>([]);
   const value = valueProp ?? uncontrolled;
+  useReportListQuery(searchValue ?? "", value.length);
   const [draft, setDraftState] = React.useState<Draft | null>(null);
   const draftRef = React.useRef(draft);
   const setDraft = (next: Draft | null) => {

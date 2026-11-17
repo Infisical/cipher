@@ -38,8 +38,9 @@ function Empty({
    * Faded placeholder rows or cards behind the message, hinting at what fills the space. They fade
    * out toward the center, so the message and action never sit on a line. Containers pick it for
    * you: DataTable draws rows, Grid and TilePicker draw cards, and none draw one while filtered or
-   * when the table sits flush in a framed Card. A standalone Empty stays plain. Pass a value to
-   * override the container, or false to turn it off.
+   * when the table sits flush in a framed Card. Inside a ListQueryScope, a FilterBar search or filter
+   * counts as filtered. A standalone Empty stays plain. Pass a value to override the container, or
+   * false to turn it off.
    */
   ghost?: EmptyGhost;
 } & {

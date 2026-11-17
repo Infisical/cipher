@@ -9,7 +9,7 @@ type SectionTypes = {
   footer: React.ElementType;
 };
 
-const flattenFragments = (children: React.ReactNode, prefix = ""): React.ReactNode[] =>
+export const flattenFragments = (children: React.ReactNode, prefix = ""): React.ReactNode[] =>
   React.Children.toArray(children).flatMap((child) => {
     if (React.isValidElement(child) && child.type === React.Fragment)
       return flattenFragments(
