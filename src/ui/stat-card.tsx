@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import type { CipherLinkProps } from "../lib/link";
-import { useInFrame } from "../lib/frame-context";
 import { cn } from "../lib/utils";
 import { Card, CardContent, CardLink } from "./card";
 import { Icon, type IconSource } from "./icon";
@@ -54,12 +53,9 @@ export function StatCard({
   loading = false,
   error,
   variant = "framed",
-  backdrop,
   className,
   ...props
 }: StatCardProps) {
-  const inFrame = useInFrame("StatCard");
-  const panelBackdrop = variant === "framed" && !inFrame;
   const id = React.useId();
   const labelId = `${id}-label`;
   const valueId = `${id}-value`;
@@ -72,11 +68,9 @@ export function StatCard({
       aria-busy={loading || undefined}
       variant={variant}
       className={cn(styles.statCard, className)}
-      backdrop={panelBackdrop ? undefined : backdrop}
       {...props}
     >
       <CardContent className={styles.body}>
-        {panelBackdrop && backdrop}
         <div className={styles.head}>
           <span id={labelId} className={styles.label}>
             {link ? (

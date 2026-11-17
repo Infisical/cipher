@@ -2200,6 +2200,10 @@
       {
         "title": "Bounds, size and reveal (hover a card)",
         "module": "halftone/bounds"
+      },
+      {
+        "title": "Framed, without a frame footer",
+        "module": "halftone/framed"
       }
     ]
   },
