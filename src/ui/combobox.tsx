@@ -43,8 +43,10 @@ export type ComboboxOption = {
   /** A muted line under the label. Search matches it as well as the label. */
   description?: string;
   meta?: string;
-  /** Options that share a group sit under its heading, in the order each group first appears. */
+  /** Options that share a group sit under its heading, in the order each group first appears. Search matches the heading too. */
   group?: string;
+  /** Extra words search matches but never shows, such as a product's other names or an ID. */
+  keywords?: readonly string[];
   disabled?: boolean;
 };
 export type ComboboxCreationFormProps = {
@@ -96,6 +98,8 @@ type SharedComboboxProps = {
   id?: string;
   "aria-describedby"?: string;
   emptyText?: string;
+  /** The search field's placeholder. Defaults to "Search options". */
+  searchPlaceholder?: string;
   disabled?: boolean;
   invalid?: boolean;
   mono?: boolean;
@@ -144,6 +148,7 @@ export function Combobox({
     placeholder = "Select an option",
     label,
     emptyText = "No options found",
+    searchPlaceholder = "Search options",
     disabled,
     invalid,
     mono,
@@ -229,7 +234,8 @@ export function Combobox({
   const filtered = onSearch
     ? options
     : options.filter((option) =>
-        `${option.label} ${option.description ?? ""} ${option.meta ?? ""}`
+        [option.label, option.description, option.meta, option.group, ...(option.keywords ?? [])]
+          .join(" ")
           .toLowerCase()
           .includes(query.toLowerCase())
       );
@@ -318,6 +324,7 @@ export function Combobox({
           disabled={disabled}
           invalid={invalid}
           searchable
+          searchPlaceholder={searchPlaceholder}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
@@ -442,7 +449,7 @@ export function Combobox({
           <CommandInput
             value={query}
             onValueChange={changeQuery}
-            placeholder="Search options"
+            placeholder={searchPlaceholder}
             aria-label={`Search ${label}`}
             onKeyDown={(event) => {
               if (event.nativeEvent.isComposing || event.keyCode === 229) event.stopPropagation();
@@ -515,7 +522,7 @@ export function Combobox({
             )}
             {rowCreation && (
               <>
-                {filtered.length > 0 && <CommandSeparator />}
+                <CommandSeparator alwaysRender />
                 <CommandGroup>
                   <CommandItem
                     value="combobox-create-dialog"
