@@ -10,6 +10,21 @@ type EmptySize = "default" | "sm";
 
 const GHOSTS = ["a", "b", "c", "d", "e", "f"];
 
+export type EmptyGhost = "rows" | "cards" | false;
+
+const GhostContext = React.createContext<EmptyGhost | undefined>(undefined);
+
+/** Sets the ghost an Empty inside defaults to. Containers with an empty slot use it, so an explicit ghost on the Empty still wins. */
+export function EmptyGhostScope({
+  ghost,
+  children
+}: {
+  ghost: EmptyGhost | undefined;
+  children: React.ReactNode;
+}) {
+  return <GhostContext value={ghost}>{children}</GhostContext>;
+}
+
 function Empty({
   className,
   size = "default",
@@ -19,21 +34,29 @@ function Empty({
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   size?: EmptySize;
-  /** Faded placeholder rows or cards behind the message, hinting at what fills the space. They fade out toward the center, so the message and action never sit on a line. */
-  ghost?: "rows" | "cards";
+  /**
+   * Faded placeholder rows or cards behind the message, hinting at what fills the space. They fade
+   * out toward the center, so the message and action never sit on a line. Containers pick it for
+   * you: DataTable draws rows, Grid and TilePicker draw cards, and none draw one while filtered or
+   * when the table sits flush in a framed Card. A standalone Empty stays plain. Pass a value to
+   * override the container, or false to turn it off.
+   */
+  ghost?: EmptyGhost;
 } & {
   ref?: React.Ref<React.ComponentRef<"div">>;
 }) {
+  const inherited = React.useContext(GhostContext);
+  const resolved = ghost === undefined ? inherited : ghost;
   return (
     <div
       ref={ref}
       data-slot="empty"
       data-size={size}
-      data-ghost={ghost}
+      data-ghost={resolved || undefined}
       className={cn(styles.root, className)}
       {...props}
     >
-      {ghost && (
+      {resolved && (
         <div className={styles.ghosts} aria-hidden="true">
           {GHOSTS.map((id) => (
             <span key={id} className={styles.ghost} />
@@ -121,7 +144,7 @@ export const EmptyState = ({
   icon?: IconSource;
   media?: EmptyMediaVariant;
   size?: EmptySize;
-  ghost?: "rows" | "cards";
+  ghost?: EmptyGhost;
 }) => (
   <Empty size={size} ghost={ghost}>
     <EmptyMedia variant={media}>
