@@ -424,6 +424,7 @@ export function MultiSelect({
         align={align}
         side={side}
         surface="menu"
+        className={styles.panelColumn}
         style={{ width: menuWidth }}
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();
