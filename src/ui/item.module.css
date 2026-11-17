@@ -241,7 +241,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-[data-slot="tile"][aria-disabled="true"] .tileTitle {
+[data-slot="tile"][aria-disabled="true"]:not([data-disabled]) .tileTitle {
   opacity: 0.5;
 }
 
