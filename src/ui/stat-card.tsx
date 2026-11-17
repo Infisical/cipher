@@ -58,7 +58,8 @@ export function StatCard({
   className,
   ...props
 }: StatCardProps) {
-  const panelBackdrop = variant === "framed" && !useInFrame("StatCard");
+  const inFrame = useInFrame("StatCard");
+  const panelBackdrop = variant === "framed" && !inFrame;
   const id = React.useId();
   const labelId = `${id}-label`;
   const valueId = `${id}-value`;
