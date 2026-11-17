@@ -100,7 +100,7 @@
   background: var(--cipher-surface, var(--background));
   color: var(--cipher-ink, var(--foreground));
 }
-.tile:hover {
+.tile:not([aria-disabled="true"]):hover {
   border-color: var(--cipher-control, var(--border));
   background: var(--cipher-hover);
 }
@@ -108,7 +108,7 @@
   border-color: transparent;
   background: var(--cipher-tint);
 }
-.tile[data-in-frame]:hover {
+.tile[data-in-frame]:not([aria-disabled="true"]):hover {
   background: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-tint));
 }
 .tile[aria-pressed="true"] {
@@ -125,6 +125,42 @@
 .tileBody {
   flex: 1;
   min-width: 0;
+}
+.tile[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+.tile[data-layout="stacked"] {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--cipher-space-4);
+  padding: var(--cipher-space-16);
+}
+.tile[data-layout="stacked"] > .tileBody {
+  flex: 1 1 auto;
+}
+.tileTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cipher-space-12);
+  min-width: 0;
+  margin-bottom: var(--cipher-space-8);
+}
+.tileEyebrow {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-eyebrow-font-family);
+  font-size: var(--cipher-type-eyebrow-font-size);
+  line-height: var(--cipher-type-eyebrow-line-height);
+  font-weight: var(--cipher-type-eyebrow-font-weight);
+  letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
+  text-transform: uppercase;
+}
+.tile[aria-disabled="true"] > .tileTop {
+  opacity: 0.5;
 }
 .banner {
   display: flex;
@@ -568,6 +604,19 @@
   font-weight: var(--cipher-type-title-sm-font-weight);
   letter-spacing: var(--cipher-type-title-sm-letter-spacing);
   margin-bottom: var(--cipher-space-field-label);
+}
+.fieldLegend[data-variant="legend"] {
+  margin-bottom: var(--cipher-space-field-legend);
+}
+.fieldLegend[data-variant="legend"] + .fieldDescription {
+  margin-top: calc(var(--cipher-space-field-label) - var(--cipher-space-field-legend));
+}
+[data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
+  row-gap: var(--cipher-space-field-legend);
+}
+.fieldGroup > [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) + *,
+.fieldGroup > * + [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
+  margin-top: calc(var(--cipher-space-content-section) - var(--cipher-space-field-group));
 }
 .fieldLegend[data-variant="label"] {
   font-family: var(--cipher-type-field-label-font-family);

@@ -368,6 +368,30 @@
       ]
     },
     {
+      "name": "tile-picker",
+      "type": "registry:block",
+      "registryDependencies": [
+        "@cipher/button",
+        "@cipher/cipher-base",
+        "@cipher/empty",
+        "@cipher/icon",
+        "@cipher/input",
+        "@cipher/item"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/patterns/tile-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/patterns/tile-picker.tsx"
+        },
+        {
+          "path": "src/components/cipher/patterns/tile-picker.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/patterns/tile-picker.module.css"
+        }
+      ]
+    },
+    {
       "name": "accordion",
       "type": "registry:ui",
       "registryDependencies": [
@@ -1071,6 +1095,7 @@
         "@cipher/button",
         "@cipher/checkbox",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/sortable-list",
         "@cipher/table",
@@ -1717,7 +1742,8 @@
       "name": "layout",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/empty"
       ],
       "files": [
         {

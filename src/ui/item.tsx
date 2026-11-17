@@ -476,8 +476,12 @@ export function Tile({
   title,
   description,
   media,
+  layout = "row",
+  eyebrow,
+  disabledReason,
   children,
   className,
+  onClick,
   type = "button",
   ref,
   ...props
@@ -486,19 +490,51 @@ export function Tile({
   title?: React.ReactNode;
   description?: React.ReactNode;
   media?: React.ReactNode;
+  /** stacked puts the media and eyebrow on top, then the title on one line and a description clamped at two, with no chevron. For grids of choices such as a TilePicker. */
+  layout?: "row" | "stacked";
+  /** A short label across from the media in the stacked layout, such as a category. */
+  eyebrow?: React.ReactNode;
+  /** Disables the tile and shows why in place of the description. Unlike disabled, it stays focusable so the reason can be reached. */
+  disabledReason?: string;
 } & { ref?: React.Ref<HTMLButtonElement> }) {
   const inFrame = useInFrame("Tile");
+  const reason = disabledReason || undefined;
+  const detail = reason ?? description;
+  const stacked = layout === "stacked";
   return (
     <button
       ref={ref}
       type={type}
       data-slot="tile"
+      data-layout={stacked ? "stacked" : undefined}
       data-in-frame={inFrame || undefined}
       aria-pressed={selected}
+      aria-disabled={reason ? true : undefined}
       className={cn(helperStyles.tile, className)}
+      onClick={(event) => {
+        if (reason) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event);
+      }}
       {...props}
     >
-      {media && <span className={itemStyles.lead}>{media}</span>}
+      {stacked
+        ? (media || eyebrow) && (
+            <span className={helperStyles.tileTop}>
+              {media && <span className={itemStyles.lead}>{media}</span>}
+              {eyebrow && (
+                <span
+                  className={helperStyles.tileEyebrow}
+                  title={typeof eyebrow === "string" ? eyebrow : undefined}
+                >
+                  {eyebrow}
+                </span>
+              )}
+            </span>
+          )
+        : media && <span className={itemStyles.lead}>{media}</span>}
       <span className={helperStyles.tileBody}>
         {title !== undefined ? (
           <>
@@ -508,18 +544,27 @@ export function Tile({
             >
               {title}
             </span>
-            {description && (
-              <span className={cn(itemStyles.description, itemStyles.tileDescription)}>
-                {description}
-              </span>
-            )}
+            {detail &&
+              (stacked ? (
+                <span
+                  data-reason={reason ? "" : undefined}
+                  className={itemStyles.description}
+                  title={typeof detail === "string" ? detail : undefined}
+                >
+                  {detail}
+                </span>
+              ) : (
+                <span className={cn(itemStyles.description, itemStyles.tileDescription)}>
+                  {detail}
+                </span>
+              ))}
             {children}
           </>
         ) : (
           children
         )}
       </span>
-      <Icon name={selected ? "check" : "chev-right"} />
+      {!stacked && <Icon name={selected ? "check" : "chev-right"} />}
     </button>
   );
 }
