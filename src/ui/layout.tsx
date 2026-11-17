@@ -191,7 +191,7 @@ export function Grid({
       }}
       {...props}
     >
-      {empty !== undefined && React.Children.count(children) === 0 ? (
+      {empty !== undefined && React.Children.toArray(children).length === 0 ? (
         <div style={{ gridColumn: "1 / -1" }}>
           <EmptyGhostScope ghost={ghost ?? (filtered ? false : "cards")}>{empty}</EmptyGhostScope>
         </div>

@@ -98,11 +98,14 @@
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
   pointer-events: none;
+  --cipher-ghost-clear: calc(var(--cipher-size-measure-field) / 2 + var(--cipher-space-24));
   mask-image:
-    radial-gradient(
-      ellipse calc(var(--cipher-size-measure-field) / 2 + 2 * var(--cipher-space-48)) 50% at center,
-      transparent 72%,
-      var(--cipher-ink) 100%
+    linear-gradient(
+      to right,
+      var(--cipher-ink) calc(50% - var(--cipher-ghost-clear) - var(--cipher-space-48)),
+      transparent calc(50% - var(--cipher-ghost-clear)),
+      transparent calc(50% + var(--cipher-ghost-clear)),
+      var(--cipher-ink) calc(50% + var(--cipher-ghost-clear) + var(--cipher-space-48))
     ),
     linear-gradient(to bottom, var(--cipher-ink) 0%, transparent 92%);
   mask-composite: intersect;

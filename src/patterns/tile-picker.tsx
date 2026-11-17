@@ -100,7 +100,7 @@ export function TilePicker({
   );
   const found = query ? items.filter((item) => matches(item, query)) : items;
   let body: React.ReactNode;
-  if (items.length === 0 && empty !== undefined)
+  if (!query && items.length === 0 && empty !== undefined)
     body = (
       <EmptyGhostScope ghost={ghost ?? (filtered ? false : "cards")}>{empty}</EmptyGhostScope>
     );
