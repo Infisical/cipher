@@ -174,7 +174,7 @@
   letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
   text-transform: uppercase;
 }
-.tile[aria-disabled="true"] > .tileTop {
+.tile[aria-disabled="true"]:not([data-disabled]) > .tileTop {
   opacity: 0.5;
 }
 .banner {

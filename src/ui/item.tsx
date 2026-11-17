@@ -540,7 +540,7 @@ export function Tile({
   const externalMark = external && <Icon name="external" label="Opens in a new tab" />;
   const linkProps = link
     ? {
-        href: inactive ? undefined : href,
+        ...(asChild ? {} : { href: inactive ? undefined : href }),
         role: inactive ? "link" : undefined,
         tabIndex: inactive && !disabled ? 0 : undefined,
         target: external && !asChild ? "_blank" : undefined,
