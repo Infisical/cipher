@@ -7,6 +7,7 @@ import { Input } from "@infisical/cipher/ui/input";
 import { Media } from "@infisical/cipher/ui/item";
 import { Stack } from "@infisical/cipher/ui/layout";
 import { DataList } from "@infisical/cipher/ui/list";
+import { MiddleTruncate } from "@infisical/cipher/ui/middle-truncate";
 import * as UI from "@infisical/cipher/ui/sheet";
 import { Switch } from "@infisical/cipher/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@infisical/cipher/ui/tabs";
@@ -60,8 +61,13 @@ const AccountSheet = ({
             variant="props"
             items={[
               ["Description", "Writer endpoint for the orders service"],
-              ["Template", "production-postgres"],
-              ["Host", mono(account.host)],
+              [
+                "Template",
+                <Button key="template" variant="link" size="sm" asChild>
+                  <a href="#/components/sheet">production-postgres</a>
+                </Button>
+              ],
+              ["Host", <MiddleTruncate key="host" mono text={account.host} />],
               ["Port", mono(account.port)],
               ["Database", mono(account.database)],
               ["SSL", ssl ? "Enabled" : "Disabled"],
