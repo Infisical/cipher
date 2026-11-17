@@ -420,6 +420,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   [data-cipher-button]:not([data-layout="trigger"])
   > [data-press]
   [data-slot="button-text"] {
+  display: block;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
