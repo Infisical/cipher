@@ -605,6 +605,19 @@
   letter-spacing: var(--cipher-type-title-sm-letter-spacing);
   margin-bottom: var(--cipher-space-field-label);
 }
+.fieldLegend[data-variant="legend"] {
+  margin-bottom: var(--cipher-space-field-legend);
+}
+.fieldLegend[data-variant="legend"] + .fieldDescription {
+  margin-top: calc(var(--cipher-space-field-label) - var(--cipher-space-field-legend));
+}
+[data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
+  row-gap: var(--cipher-space-field-legend);
+}
+.fieldGroup > [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) + *,
+.fieldGroup > * + [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
+  margin-top: calc(var(--cipher-space-content-section) - var(--cipher-space-field-group));
+}
 .fieldLegend[data-variant="label"] {
   font-family: var(--cipher-type-field-label-font-family);
   font-size: var(--cipher-type-field-label-font-size);
