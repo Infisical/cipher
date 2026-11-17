@@ -102,6 +102,11 @@
           "target": "src/components/cipher/lib/list-highlight.tsx"
         },
         {
+          "path": "src/components/cipher/lib/list-query.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/list-query.tsx"
+        },
+        {
           "path": "src/components/cipher/lib/menu-kind.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/menu-kind.ts"

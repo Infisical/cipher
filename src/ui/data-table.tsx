@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { FrameScope, useInFrame } from "../lib/frame-context";
+import { useListFiltered } from "../lib/list-query";
 import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
@@ -120,7 +121,7 @@ interface DataTableBaseProps<Row> {
   empty?: React.ReactNode;
   /** The ghost behind an Empty in the empty slot. Defaults to rows, and to none while filtered or when the table sits flush in a framed Card. */
   ghost?: EmptyGhost;
-  /** The rows are narrowed by a search or filters, so an empty table means no matches and draws no ghost. */
+  /** The rows are narrowed by a search or filters, so an empty table means no matches and draws no ghost. Inside a ListQueryScope it follows the FilterBar unless passed. */
   filtered?: boolean;
   /** Caps the table in its own scroll window. With virtual, the window is trimmed to the header plus whole rows, so no row is cut at the bottom edge. */
   height?: number;
@@ -200,7 +201,7 @@ export function DataTable<Row>({
   onSortChange,
   empty = "No rows",
   ghost,
-  filtered = false,
+  filtered: filteredProp,
   height,
   virtual = false,
   rowHeight,
@@ -223,6 +224,8 @@ export function DataTable<Row>({
   reorder
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
+  const listFiltered = useListFiltered();
+  const filtered = filteredProp ?? listFiltered;
   const [ownSelected, setOwnSelected] = React.useState<readonly string[]>(defaultSelectedIds);
   const [top, setTop] = React.useState(0);
   const scroll = React.useRef<HTMLDivElement>(null);

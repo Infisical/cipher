@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { useListFiltered } from "../lib/list-query";
 import { cn, truncateTitle } from "../lib/utils";
 import { type EmptyGhost, EmptyGhostScope } from "./empty";
 
@@ -154,7 +155,7 @@ export function Grid({
   min = "tile",
   empty,
   ghost,
-  filtered = false,
+  filtered: filteredProp,
   style,
   className,
   children,
@@ -167,11 +168,13 @@ export function Grid({
   empty?: React.ReactNode;
   /** The ghost behind an Empty in the empty slot. Defaults to cards, and to none while filtered. */
   ghost?: EmptyGhost;
-  /** The items are narrowed by a search or filters, so an empty grid means no matches and draws no ghost. */
+  /** The items are narrowed by a search or filters, so an empty grid means no matches and draws no ghost. Inside a ListQueryScope it follows the FilterBar unless passed. */
   filtered?: boolean;
 } & {
   ref?: React.Ref<HTMLDivElement>;
 }) {
+  const listFiltered = useListFiltered();
+  const filtered = filteredProp ?? listFiltered;
   let gridTemplateColumns = `repeat(auto-fit, minmax(min(100%, var(--cipher-size-${min}-min)), 1fr))`;
   if (columns === "1:2") gridTemplateColumns = "minmax(0, 1fr) minmax(0, 2fr)";
   else if (columns) gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
