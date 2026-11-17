@@ -164,7 +164,13 @@ function Button({
     ) : (
       <>
         {icon && <Icon icon={icon} size={iconDimension} data-button-icon="" />}
-        {iconOnly && (icon || iconRight) ? <span className="sr-only">{label}</span> : label}
+        {iconOnly && (icon || iconRight) ? (
+          <span className="sr-only">{label}</span>
+        ) : (
+          label != null &&
+          label !== false &&
+          label !== "" && <span data-slot="button-text">{label}</span>
+        )}
         {iconRight && <Icon icon={iconRight} size={iconDimension} />}
       </>
     );
