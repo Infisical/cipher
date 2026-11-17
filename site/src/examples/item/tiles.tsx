@@ -41,6 +41,36 @@ export default function Example() {
         </div>
         <figcaption className="text-muted-foreground text-xs">{"Inside a Card: shaded"}</figcaption>
       </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <Grid columns={3} gap={12}>
+            <Tile
+              layout="stacked"
+              media={<Media icon="cloud" />}
+              eyebrow="AWS"
+              title="AWS Secrets Manager"
+              description="Managed secret rotation and audit on AWS."
+            />
+            <Tile
+              layout="stacked"
+              media={<Media icon="git" />}
+              eyebrow="CI/CD"
+              title="GitHub"
+              description="Actions, Dependabot, or Codespaces secrets."
+            />
+            <Tile
+              layout="stacked"
+              media={<Media icon="vault" />}
+              eyebrow="Oracle Cloud"
+              title="OCI Vault"
+              disabledReason="Your plan doesn't include this destination."
+            />
+          </Grid>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"Stacked: an eyebrow across from the media, and a disabled reason"}
+        </figcaption>
+      </figure>
     </div>
   );
 }

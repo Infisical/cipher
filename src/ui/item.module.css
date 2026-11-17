@@ -236,6 +236,14 @@
   overflow-wrap: anywhere;
   color: var(--cipher-ink);
 }
+[data-slot="tile"][data-layout="stacked"] .tileTitle {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[data-slot="tile"][aria-disabled="true"] .tileTitle {
+  opacity: 0.5;
+}
 
 .titleLine {
   display: flex;

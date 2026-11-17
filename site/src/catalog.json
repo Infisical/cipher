@@ -932,6 +932,30 @@
     ]
   },
   {
+    "id": "tile-picker",
+    "title": "Tile picker",
+    "summary": "Search plus a grid of stacked tiles: popular first, then all; a search lists matches flat and offers to clear itself when nothing matches.",
+    "group": "Patterns",
+    "examples": [
+      {
+        "title": "Popular and all providers",
+        "module": "tile-picker/default"
+      },
+      {
+        "title": "A few providers",
+        "module": "tile-picker/few"
+      },
+      {
+        "title": "Long names and disabled providers",
+        "module": "tile-picker/stressed"
+      },
+      {
+        "title": "In a sheet",
+        "module": "tile-picker/in-sheet"
+      }
+    ]
+  },
+  {
     "id": "floating-action-bar",
     "title": "Floating action bar",
     "summary": "Bulk actions for the current selection, floating over the bottom of the view while anything is selected.",
