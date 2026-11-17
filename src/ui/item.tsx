@@ -142,7 +142,12 @@ const hasVisibleText = (root: HTMLElement) => {
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     if (!node.textContent?.trim()) continue;
     let element = node.parentElement;
-    while (element && element !== root && element.offsetWidth > 1) element = element.parentElement;
+    while (
+      element &&
+      element !== root &&
+      (element.offsetWidth > 1 || getComputedStyle(element).display === "contents")
+    )
+      element = element.parentElement;
     if (element === root) return true;
   }
   return false;

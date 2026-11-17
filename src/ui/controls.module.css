@@ -413,12 +413,19 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]),
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .card[data-variant="framed"]
   > .cardHeader
   > .cardAction
   [data-cipher-button]:not([data-layout="trigger"])
-  > [data-press] {
+  > [data-press]
+  [data-slot="button-text"] {
+  display: block;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -428,7 +435,8 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   > .cardAction
   [data-cipher-button]:not([data-layout="trigger"])
   > [data-press] {
-  display: block;
+  min-width: 0;
+  max-width: 100%;
 }
 .card[data-variant="framed"] > .cardHeader > [data-slot="card-description"] {
   flex-basis: 100%;
@@ -657,6 +665,10 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   justify-content: space-between;
   padding-block: 12px;
   border-bottom: 1px solid var(--cipher-line-soft);
+}
+/* Among fields a switch row takes the fields' measure, so its control ends at their right edge. */
+.choiceRow:is(:global([data-slot="field"]:not([data-orientation="horizontal"])) ~ *, :has(~ :global([data-slot="field"]:not([data-orientation="horizontal"])))) {
+  max-width: var(--cipher-size-measure-field);
 }
 .choiceRow:last-child {
   border-bottom: 0;
