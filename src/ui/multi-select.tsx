@@ -430,8 +430,7 @@ export function MultiSelect({
         }}
         onInteractOutside={(event) => {
           const clear =
-            event.target instanceof Element &&
-            event.target.closest('[data-slot="combobox-clear"]');
+            event.target instanceof Element && event.target.closest('[data-slot="combobox-clear"]');
           if (clear && (!clear.isConnected || anchorRef?.current?.contains(clear)))
             event.preventDefault();
         }}
@@ -505,6 +504,7 @@ export function MultiSelect({
           aria-multiselectable={multiple || undefined}
           tabIndex={0}
           aria-activedescendant={activeId}
+          aria-owns={createAction ? createId : undefined}
           data-scroll-fade="y"
           className={cn(menu.list, menu.inset)}
         >
@@ -568,32 +568,31 @@ export function MultiSelect({
                 ))}
             </div>
           ))}
-          {createAction && (
-            <div role="group" aria-label={createAction.label}>
-              {filtered.length > 0 && <div role="separator" className={menu.separator} />}
-              <div
-                id={createId}
-                role="option"
-                tabIndex={-1}
-                aria-selected={false}
-                aria-disabled={createBlocked || disabled ? true : undefined}
-                data-active={createActive || undefined}
-                data-slot="multi-select-create"
-                className={cn(menu.row, styles.option)}
-                onPointerMove={() => {
-                  if (!createBlocked) setActive(createId);
-                }}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={startCreate}
-              >
-                <Icon name="plus" />
-                <span className={styles.optionLabel}>{createAction.label}</span>
-                {createBlocked && <span className={styles.optionMeta}>{createBlocked}</span>}
-              </div>
-            </div>
-          )}
           <ListHighlight />
         </div>
+        {createAction && (
+          <div className={cn(menu.inset, menu.actionFooter)} data-slot="multi-select-create-footer">
+            <div
+              id={createId}
+              role="option"
+              tabIndex={-1}
+              aria-selected={false}
+              aria-disabled={createBlocked || disabled ? true : undefined}
+              data-active={createActive || undefined}
+              data-slot="multi-select-create"
+              className={cn(menu.row, styles.option)}
+              onPointerMove={() => {
+                if (!createBlocked) setActive(createId);
+              }}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={startCreate}
+            >
+              <Icon name="plus" />
+              <span className={styles.optionLabel}>{createAction.label}</span>
+              {createBlocked && <span className={styles.optionMeta}>{createBlocked}</span>}
+            </div>
+          </div>
+        )}
         {canCreate && (
           <div className={menu.footer} data-slot="multi-select-footer">
             {canCreate && (

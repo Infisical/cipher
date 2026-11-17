@@ -431,6 +431,9 @@
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
+.actionFooter {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
 .footer {
   display: flex;
   align-items: center;
