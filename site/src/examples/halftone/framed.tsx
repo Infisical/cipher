@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@infisical/cipher/ui/card";
+import { Button } from "@infisical/cipher/ui/button";
+import { Card, CardContent, CardHeader, CardLink, CardTitle } from "@infisical/cipher/ui/card";
 import { Halftone } from "@infisical/cipher/ui/halftone";
 import { hueScope } from "@infisical/cipher/lib/hue";
 
@@ -36,6 +37,23 @@ export default function Example() {
         </Card>
         <figcaption className="text-muted-foreground text-xs">
           {"composed from CardHeader and CardContent"}
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <Card
+          variant="framed"
+          title={<CardLink link={{ href: "#/components/halftone" }}>payments-api</CardLink>}
+          backdrop={<Halftone seed="linked" />}
+        >
+          <div className="flex items-center justify-between gap-3">
+            Card checkout and refunds.
+            <Button variant="outline" size="sm">
+              Rotate
+            </Button>
+          </div>
+        </Card>
+        <figcaption className="text-muted-foreground text-xs">
+          {"linked, with a control in the body"}
         </figcaption>
       </figure>
     </div>
