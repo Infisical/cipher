@@ -501,6 +501,11 @@ const AccountSheet = ({
             >
               {themeOptions.map((option) => (
                 <ToggleGroupItem key={option.value} value={option.value}>
+                  <Icon
+                    name={
+                      themeIcons[option.value === "system" ? "system" : themeScheme(option.value)]
+                    }
+                  />
                   {option.label}
                 </ToggleGroupItem>
               ))}

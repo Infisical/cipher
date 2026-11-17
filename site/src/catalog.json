@@ -1296,6 +1296,10 @@
       {
         "title": "Refreshing in the background",
         "module": "list/refreshing"
+      },
+      {
+        "title": "Long keys and paths",
+        "module": "list/long-keys"
       }
     ]
   },

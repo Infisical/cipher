@@ -24,7 +24,7 @@ export type DateRangePickerProps = Omit<
   disabled?: Matcher | Matcher[];
   numberOfMonths?: number;
   presets?: readonly DateRangePreset[];
-  /** immediate commits as soon as both ends are picked. apply keeps picks and presets as a draft until Apply, and Cancel or closing discards it. Defaults to apply with presets or more than one month, else immediate. */
+  /** immediate commits as soon as both ends are picked. apply keeps picks and presets as a draft until Apply, and Cancel or closing discards it. Defaults to apply with presets or more than one month, so a half-picked range never reaches the value, else immediate. */
   commit?: "immediate" | "apply";
   align?: "start" | "center" | "end";
   locale?: Partial<Locale>;
