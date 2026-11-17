@@ -7,7 +7,6 @@
     "card-framed-hint--*": "#106 (0.1.11): the framed card-head action icon stays inline at 28px.",
     "header-search-client--*": "#106 (0.1.11): the framed card-head Add domain button keeps its icon inline at 28px.",
     "sortable-list-card--*": "#106 (0.1.11): the framed card-head Add rule button keeps its icon inline at 28px.",
-    "item-*": "#108 (0.1.12) regression: the display: contents label span made Item treat text buttons as icon-only and put them beside the copy. #114 reverts it.",
-    "chart-*": "Not a design change: under v0.1.10's lockfile the chart examples load a second copy of React through recharts and throw (Cannot read properties of null, reading useContext), so v0.1.10 renders an error block where main renders the chart."
+    "item-*": "#108 (0.1.12) regression: the display: contents label span made Item treat text buttons as icon-only and put them beside the copy. #114 reverts it."
   }
 }
