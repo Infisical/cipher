@@ -784,6 +784,10 @@
       {
         "title": "Composed from parts: the same result as Default",
         "module": "empty-state/parts"
+      },
+      {
+        "title": "Ghost rows and cards behind the message",
+        "module": "empty-state/ghost"
       }
     ]
   },
