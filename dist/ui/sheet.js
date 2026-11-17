@@ -311,9 +311,10 @@ function renderAsideMain({ panes, aside, sections, rest, detailsTabId, detailsPa
 		id: mainPanelId,
 		"aria-labelledby": mainTabId
 	} : {};
-	const details = open && /* @__PURE__ */ jsx("div", {
+	const details = narrow && /* @__PURE__ */ jsx("div", {
 		"data-slot": "sheet-scroll",
 		"data-scroll-fade": "y",
+		"data-hidden": !open || void 0,
 		children: /* @__PURE__ */ jsx(SheetBody, {
 			role: "tabpanel",
 			id: detailsPanelId,

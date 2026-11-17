@@ -32,6 +32,8 @@
     "src",
     "scripts",
     "site",
-    "vite.config.ts"
+    "visual",
+    "vite.config.ts",
+    "playwright.config.ts"
   ]
 }

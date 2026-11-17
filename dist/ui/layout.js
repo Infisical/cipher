@@ -259,12 +259,12 @@ function Panes({ identity, aside, asideLabel = "Details", asideClassName, mainLa
 				children: mainLabel
 			})] })
 		}),
-		open && /* @__PURE__ */ jsx("div", {
+		narrow && /* @__PURE__ */ jsx("div", {
 			"data-slot": "panes-details",
 			role: "tabpanel",
 			id: tabsId + "asidepanel",
 			"aria-labelledby": tabsId + ASIDE_TAB,
-			className: panes_module_default.page,
+			className: cn(panes_module_default.page, !open && panes_module_default.hidden),
 			children: aside
 		}),
 		/* @__PURE__ */ jsx("div", {

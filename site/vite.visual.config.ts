@@ -1,0 +1,19 @@
+import path from "node:path";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  root: import.meta.dirname,
+  base: "./",
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: { "@infisical/cipher": path.resolve(import.meta.dirname, "../src") }
+  },
+  build: {
+    outDir: "dist-visual",
+    emptyOutDir: true,
+    rollupOptions: { input: path.resolve(import.meta.dirname, "visual.html") }
+  },
+  preview: { port: 4173, strictPort: true }
+});
