@@ -74,7 +74,7 @@
   color: var(--cipher-muted);
 }
 @media (hover: hover) {
-  .field:hover:not(:disabled, [aria-disabled="true"]) {
+  .field:hover:not(:disabled, [aria-disabled="true"], [data-control-disabled]) {
     background-color: var(--cipher-control-surface-hover);
   }
 }

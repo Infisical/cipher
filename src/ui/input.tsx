@@ -6,7 +6,7 @@ import { useSlashShortcut } from "../lib/slash-shortcut";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Kbd } from "./kbd";
-import { Tooltip } from "./tooltip";
+import { Tooltip, TooltipProvider } from "./tooltip";
 
 import styles from "./controls.module.css";
 
@@ -72,6 +72,7 @@ export function Input({
     }
   });
   const hintId = React.useId();
+  const reasonId = React.useId();
   const reason = disabledReason || undefined;
   const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
@@ -106,12 +107,14 @@ export function Input({
       placeholder={suggestedValue || placeholder}
       {...props}
       {...field}
+      disabled={reason ? undefined : props.disabled}
       readOnly={reason ? true : props.readOnly}
       aria-disabled={reason ? true : props["aria-disabled"]}
-      aria-description={reason ?? props["aria-description"]}
       aria-invalid={invalid || field["aria-invalid"] || undefined}
       aria-describedby={
-        [field["aria-describedby"], suggesting && hintId].filter(Boolean).join(" ") || undefined
+        [field["aria-describedby"], suggesting && hintId, reason && reasonId]
+          .filter(Boolean)
+          .join(" ") || undefined
       }
       onKeyDown={(event) => {
         onKeyDown?.(event);
@@ -178,6 +181,20 @@ export function Input({
   ) : (
     input
   );
-  return reason ? <Tooltip content={reason}>{control}</Tooltip> : control;
+  return (
+    <>
+      {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same input and its typed value. Its own provider keeps that from requiring one around every Input. */}
+      <TooltipProvider>
+        <Tooltip content={reason || " "} open={reason ? undefined : false} defaultOpen={false}>
+          {control}
+        </Tooltip>
+      </TooltipProvider>
+      {reason && (
+        <span id={reasonId} className="sr-only">
+          {reason}
+        </span>
+      )}
+    </>
+  );
 }
 Input.displayName = "Input";
