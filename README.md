@@ -156,6 +156,19 @@ $ scripts/visual-rc.sh --merged --base v0.1.13 --version 0.1.14 --explain explan
 
 The report is `visual/rc/<version>/report.md`.
 
+### Visual check between two refs in CI
+
+The Cipher visual check workflow (`.github/workflows/cipher-visual.yml`) renders every showcase example at a baseline ref and at a candidate ref, both in the pinned Playwright image, and pixel-diffs them. It doesn't need baselines or explanations, so it is the quick first pass on a release candidate: run it with the previous tag as the baseline and the RC commit as the candidate, and read the changed list against the release's PRs.
+
+```bash
+$ gh workflow run cipher-visual.yml -f base=v0.1.15 -f candidate=<rc sha>
+$ gh workflow run cipher-visual.yml -f base=v0.1.15 -f candidate=<rc sha> -f scope=scoped
+```
+
+A release tag renders the source commit under it. With `scope=scoped` it renders only the pages whose examples reach a changed file, following imports and, for icons, the changed icon names. Changes to tokens, global CSS, fonts, theme code, package dependencies or the frame and overlay primitives (Card, Dialog, Sheet, Popover, menus, tooltips and their shared stylesheets) render every page. The `prepare` job prints the scope and why.
+
+The run summary lists the changed count, the total and every changed snapshot with its pixel count. The `cipher-visual-report` artifact holds `summary.md`, `summary.json`, `scope.json` and `changed/`, with a before, after and diff image for each change. The app runs the same check on its Cipher pin bump pull requests (see `.github/cipher-visual/README.md` in Infisical/infisical).
+
 1. Bump `version` in `package.json` in a pull request and merge it.
 2. Run the Release workflow with `commit` set to that merge's full sha. It builds exactly that commit, even if main has moved since, and pushes a `vX.Y.Z` tag on a commit that adds `dist/` to it, so the tag pins both the registry URL and the package. The workflow refuses a commit that isn't on main. The Showcase then publishes the source of the newest release tag, so it matches the package.
 

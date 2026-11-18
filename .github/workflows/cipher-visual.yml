@@ -26,10 +26,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: cipher-visual-${{ github.ref }}-${{ github.run_id }}
-  cancel-in-progress: false
-
 env:
   CIPHER_BASE: v0.1.15
   CIPHER_CANDIDATE: v0.1.16
@@ -130,7 +126,7 @@ jobs:
           [ -n "$VISUAL_PAGES" ] || unset VISUAL_PAGES
           (cd side && npx vite preview --config site/vite.visual.config.ts --host 127.0.0.1 --port 4173 --strictPort > /tmp/preview.log 2>&1 &)
           for _ in $(seq 60); do curl -sf http://127.0.0.1:4173/visual.html > /dev/null && break; sleep 1; done
-          npx playwright test --shard=${{ matrix.shard }}/4 --update-snapshots=all --pass-with-no-tests --reporter=dot || true
+          npx playwright test --shard=${{ matrix.shard }}/4 --update-snapshots=all --pass-with-no-tests --reporter=dot
           echo "$(find snapshots -name '*.png' | wc -l) snapshots"
       - uses: actions/upload-artifact@v4
         with:

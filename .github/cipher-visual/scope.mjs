@@ -158,7 +158,8 @@ if (args.pages) {
         else stack.push(resolveConsumer(spec, file));
       }
     }
-    if (iconFiles.size && [...found].some((m) => m.startsWith("@infisical/cipher/ui/icon"))) found.add("icon names: " + icons.join(", "));
+    // Any Cipher component that takes an icon prop renders it through Icon, so naming one is enough.
+    if (iconFiles.size && found.size) found.add("icon names: " + icons.join(", "));
     return found;
   };
   const touched = new Set(modules);
