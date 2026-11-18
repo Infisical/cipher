@@ -1,0 +1,1 @@
+{"version":3,"file":"boot-loader.module.js","names":[],"sources":["../../src/ui/boot-loader.module.css"],"sourcesContent":[".boot {\n  display: flex;\n  flex-direction: column;\n  height: 100dvh;\n}\n.boot[data-fill=\"container\"] {\n  height: 100%;\n}\n"],"mappings":""}
