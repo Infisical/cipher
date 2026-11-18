@@ -158,6 +158,9 @@
   transition-duration: var(--cipher-duration-fast);
   transition-timing-function: var(--cipher-ease-standard);
 }
+a.tabTrigger[href] {
+  cursor: pointer;
+}
 .tabTrigger svg {
   flex: none;
   width: var(--cipher-size-icon);
