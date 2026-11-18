@@ -146,6 +146,12 @@ The check also reads source, because some changes no example shows. A merge comm
 $ scripts/visual-rc.sh --base v0.1.12 --version 0.1.13 --explain explanations.json 95 99 103
 ```
 
+When the PRs have already merged, pass `--merged` and name each PR's commit on main, in merge order. The check starts from the previous tag and applies each commit in turn, so squash merges work too.
+
+```bash
+$ scripts/visual-rc.sh --merged --base v0.1.13 --version 0.1.14 --explain explanations.json 118=f4de878 119=491308f 120=5e843d9 121=ee1c1b8
+```
+
 The report is `visual/rc/<version>/report.md`.
 
 1. Bump `version` in `package.json` in a pull request and merge it.

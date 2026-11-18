@@ -6,6 +6,9 @@
 #
 # Usage: scripts/visual-rc.sh --base v0.1.12 --version 0.1.13 [--explain file.json] [--compare v0.1.10] PR...
 # A PR given as N=<ref> merges that ref instead of the PR's head, for a conflict resolved by hand.
+# With --merged, every PR is already on main: give each as N=<sha of its commit on main>, in merge
+# order. The candidate starts at the base tag instead of main, each step applies that commit, and a
+# PR's baseline updates are read from the commit itself, so squash merges work.
 # The explanations file maps a step ("main" or a PR number) to globs over snapshot names:
 #   { "113": { "card-band-actions--*": "Framed card actions keep their own display" } }
 # Two source checks block too, explained by key: "merge:<sha7>" for a merge commit on the PR that
@@ -15,13 +18,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 root=$PWD
-base="" version="" explain="" compare="" prs=()
+base="" version="" explain="" compare="" merged="" prs=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --base) base=$2; shift 2 ;;
     --version) version=$2; shift 2 ;;
     --explain) explain=$(realpath "$2"); shift 2 ;;
     --compare) compare=$2; shift 2 ;;
+    --merged) merged=1; shift ;;
     *) prs+=("$1"); shift ;;
   esac
 done
@@ -61,7 +65,13 @@ render() {
     VISUAL_SNAPSHOTS="$out/snapshots/$name" bash scripts/visual.sh --update-snapshots=all --reporter=dot >"$out/work/$name.log" 2>&1 || true
   kill -- -$server 2>/dev/null || true
   wait $server 2>/dev/null || true
-  echo "rendered $name: $(find "$out/snapshots/$name" -name '*.png' | wc -l) snapshots"
+  (cd "$dir" && for file in "${overlay[@]}"; do
+    if git ls-files --error-unmatch "$file" >/dev/null 2>&1; then git checkout -q -- "$file"; else rm -f "$file"; fi
+  done)
+  local count
+  count=$(find "$out/snapshots/$name" -name '*.png' 2>/dev/null | wc -l)
+  [ "$count" -gt 0 ] || { echo "rendered no snapshots for $name, see $out/work/$name.log" >&2; exit 1; }
+  echo "rendered $name: $count snapshots"
 }
 
 steps=()
@@ -89,9 +99,13 @@ render "$out/work/base" "0-base"
 steps+=("0-base")
 
 cand="$out/work/candidate"
-add_worktree "$cand" origin/main
-render "$cand" "1-main"
-steps+=("1-main")
+if [ -n "$merged" ]; then
+  add_worktree "$cand" "$base"
+else
+  add_worktree "$cand" origin/main
+  render "$cand" "1-main"
+  steps+=("1-main")
+fi
 
 i=1
 for spec in "${prs[@]}"; do
@@ -109,4 +123,4 @@ for spec in "${prs[@]}"; do
   steps+=("$i-pr-$pr")
 done
 
-node scripts/visual-rc-report.mjs "$out" "$base" "$explain" "$compare" "${steps[@]}"
+VISUAL_RC_MERGED=$merged node scripts/visual-rc-report.mjs "$out" "$base" "$explain" "$compare" "${steps[@]}"
