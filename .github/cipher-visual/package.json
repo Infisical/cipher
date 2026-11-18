@@ -1,0 +1,9 @@
+{
+  "name": "cipher-visual-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "pixelmatch": "7.1.0",
+    "pngjs": "7.0.0"
+  }
+}
