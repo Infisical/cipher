@@ -157,7 +157,7 @@ $ scripts/visual-rc.sh --merged --base v0.1.13 --version 0.1.14 --explain explan
 The report is `visual/rc/<version>/report.md`.
 
 1. Bump `version` in `package.json` in a pull request and merge it.
-2. Run the Release workflow with `commit` set to that merge's full sha. It builds exactly that commit, even if main has moved since, and pushes a `vX.Y.Z` tag on a commit that adds `dist/` to it, so the tag pins both the registry URL and the package. The workflow refuses a commit that isn't on main.
+2. Run the Release workflow with `commit` set to that merge's full sha. It builds exactly that commit, even if main has moved since, and pushes a `vX.Y.Z` tag on a commit that adds `dist/` to it, so the tag pins both the registry URL and the package. The workflow refuses a commit that isn't on main. The Showcase then publishes the source of the newest release tag, so it matches the package.
 
    ```bash
    $ gh workflow run release.yml -f commit=<merge sha>
