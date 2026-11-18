@@ -169,3 +169,5 @@ The report is `visual/rc/<version>/report.md`.
 Cipher is MIT licensed. See [LICENSE](LICENSE).
 
 The Archivo and Geist Mono fonts are licensed under the SIL Open Font License 1.1. Their license texts ship in `src/fonts/`, in the package under `dist/fonts/`, and with `@cipher/cipher-base`. The Infisical name and logo are trademarks of Infisical Inc. and are not part of the license.
+
+Some icons are adapted from Lucide (ISC) and Hugeicons (MIT). [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) lists them with their license texts, and it ships in the package.

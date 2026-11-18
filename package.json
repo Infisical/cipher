@@ -15,6 +15,7 @@
   "files": [
     "dist",
     "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
     "README.md"
   ],
   "exports": {
