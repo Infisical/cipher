@@ -23,6 +23,9 @@
   letter-spacing: var(--cipher-type-label-letter-spacing);
   cursor: default;
 }
+a.button[href] {
+  cursor: pointer;
+}
 .default {
   --cipher-action-icon-size: var(--cipher-size-icon-sm);
   --cipher-action-requested-height: var(--cipher-size-control-default);

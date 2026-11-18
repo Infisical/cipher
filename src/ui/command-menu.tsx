@@ -295,6 +295,7 @@ export const CommandMenu = ({
                     disabled={item.disabled || pendingActions.includes(item.id)}
                     aria-busy={pendingActions.includes(item.id) || undefined}
                     data-danger={item.danger || undefined}
+                    data-navigates={item.href ? "" : undefined}
                     onSelect={() => {
                       activate(item);
                     }}

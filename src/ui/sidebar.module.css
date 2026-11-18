@@ -403,6 +403,9 @@
   transition-duration: var(--cipher-duration-fast);
   transition-timing-function: var(--cipher-ease-standard);
 }
+a.row[href] {
+  cursor: pointer;
+}
 .row:hover {
   background: var(--cipher-hover);
   color: var(--cipher-ink);

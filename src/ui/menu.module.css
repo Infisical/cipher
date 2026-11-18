@@ -228,6 +228,10 @@
   font-weight: var(--cipher-type-body-font-weight);
   letter-spacing: var(--cipher-type-body-letter-spacing);
 }
+a.row[href],
+.row[data-navigates] {
+  cursor: pointer;
+}
 .row.row[data-lead-icon] {
   padding-inline-start: var(--cipher-space-8);
 }

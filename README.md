@@ -107,6 +107,8 @@ A `DocumentationLink` is icon only, so it always sits right after the title or l
 
 Link components (RowLink, CardLink, Breadcrumb, Sidebar and others) take a `link` prop. By default it's `{ href: string }` and renders a plain anchor, so Cipher needs no router. To route through your router, wrap the app in `CipherRouterProvider` from `lib/link` with your router's `Link` and a match hook, and augment `CipherRegister` to type `link` as your router's link options.
 
+The pointer cursor means navigation. Anything that renders as a link (`a[href]`) shows a pointer, whichever component styles it: links, RowLink and CardLink rows, Sidebar and Breadcrumb items, linked tiles, a Button or menu item rendered as a link, and a TabsTrigger rendered as a link for route tabs. CommandMenu items with an `href` show one too. Controls that act in place, such as buttons, menu commands, toggles, selects and in-page tabs, keep the default cursor.
+
 ## Development
 
 ```bash
