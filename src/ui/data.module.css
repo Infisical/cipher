@@ -1049,6 +1049,9 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll table[data-layout="fixed"] :is(.tablePrimary, .tableValue):not([data-wrap]) {
   min-width: 0;
 }
+.tableScroll table[data-layout="fixed"] .tableShrink {
+  grid-template-columns: minmax(0, max-content);
+}
 .tableSkeleton {
   width: 80%;
 }
@@ -1559,6 +1562,9 @@ tbody > .nativeTableRow[data-loading] {
   overflow: clip;
   overflow-clip-margin: calc(2 * var(--cipher-size-focus-ring));
   text-overflow: ellipsis;
+}
+:is(.nativeTableHead, .nativeTableCell):is([data-pin], .tableActions) {
+  overflow: visible;
 }
 .nativeTableCell {
   height: var(--cipher-table-row-height, var(--cipher-size-row));

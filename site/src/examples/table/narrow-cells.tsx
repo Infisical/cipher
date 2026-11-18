@@ -64,10 +64,17 @@ function Narrow({ environments, rows }: { environments: string[]; rows: Row[] })
       render: (row: Row) => row.values[index]
     }))
   ];
+  const index = sort ? Number(sort.columnId.slice(4)) : 0;
+  const sorted = sort
+    ? [...rows].sort(
+        (a, b) =>
+          a.values[index].localeCompare(b.values[index]) * (sort.direction === "asc" ? 1 : -1)
+      )
+    : rows;
   return (
     <DataTable
       label="Secrets by environment"
-      rows={rows}
+      rows={sorted}
       columns={columns}
       getRowId={(row) => row.id}
       rowLabel={(row) => row.name}
