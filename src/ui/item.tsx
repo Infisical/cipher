@@ -86,6 +86,7 @@ export type ItemProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> &
     icon?: IconSource;
     media?: React.ReactNode;
     badge?: React.ReactNode;
+    /** A short, predictable value beside the title, such as a time, date, count, status or role. Put an uncapped string in the description instead. */
     meta?: React.ReactNode;
     error?: React.ReactNode;
     /** Buttons at the row end. They sit beside the copy once the row is 36rem wide and stack below it under that. The width is the content box, so an outline Item needs its padding and border on top (about 39rem outside). */
