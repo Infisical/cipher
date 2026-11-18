@@ -331,6 +331,7 @@ TableHead.displayName = "TableHead";
 function TableHeadButton({
   className,
   type = "button",
+  children,
   ref,
   ...props
 }: React.ComponentProps<"button">) {
@@ -342,7 +343,15 @@ function TableHeadButton({
       data-table-head-button=""
       className={cn(styles.tableSort, className)}
       {...props}
-    />
+    >
+      {React.Children.map(children, (child) =>
+        typeof child === "string" || typeof child === "number" ? (
+          <span>{child}</span>
+        ) : (
+          child
+        )
+      )}
+    </button>
   );
 }
 TableHeadButton.displayName = "TableHeadButton";

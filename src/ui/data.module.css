@@ -1046,6 +1046,12 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll table[data-layout="fixed"] {
   table-layout: fixed;
 }
+.tableScroll table[data-layout="fixed"] :is(.tablePrimary, .tableValue):not([data-wrap]) {
+  min-width: 0;
+}
+.tableScroll table[data-layout="fixed"] .tableShrink {
+  grid-template-columns: minmax(0, max-content);
+}
 .tableSkeleton {
   width: 80%;
 }
@@ -1257,6 +1263,16 @@ tbody > .nativeTableRow[data-loading] {
 }
 :is(th:hover, th:focus-within) > .tableSort > svg {
   opacity: 1;
+}
+.tableHeadLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tableSort > :not(svg) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .tableSort > svg {
   flex: none;
@@ -1548,6 +1564,12 @@ tbody > .nativeTableRow[data-loading] {
   text-align: start;
   vertical-align: middle;
   white-space: nowrap;
+  overflow: clip;
+  overflow-clip-margin: calc(2 * var(--cipher-size-focus-ring));
+  text-overflow: ellipsis;
+}
+:is(.nativeTableHead, .nativeTableCell):is([data-pin], .tableActions) {
+  overflow: visible;
 }
 .nativeTableCell {
   height: var(--cipher-table-row-height, var(--cipher-size-row));

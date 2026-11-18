@@ -2058,6 +2058,10 @@
         "module": "table/wrap"
       },
       {
+        "title": "Narrow cells",
+        "module": "table/narrow-cells"
+      },
+      {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
       },
