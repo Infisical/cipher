@@ -412,6 +412,13 @@ function CellEditor({
   const attempt = React.useRef(0);
   const closed = React.useRef(false);
   const errorId = React.useId();
+  React.useEffect(
+    () => () => {
+      closed.current = true;
+      attempt.current += 1;
+    },
+    []
+  );
   const close = (refocus: boolean) => {
     closed.current = true;
     attempt.current += 1;
@@ -478,6 +485,8 @@ function EditableCell({
   onClick,
   onKeyDown,
   onBlur,
+  tabIndex,
+  ref,
   ...props
 }: React.ComponentProps<typeof TableCell> & { edit?: InlineEdit }) {
   const [initial, setInitial] = React.useState<string>();
@@ -492,15 +501,21 @@ function EditableCell({
   };
   return (
     <TableCell
-      ref={cell}
+      ref={(node: HTMLTableCellElement | null) => {
+        cell.current = node;
+        if (typeof ref === "function") return ref(node);
+        if (ref) ref.current = node;
+      }}
       data-row-interactive={edit ? true : undefined}
       {...props}
       className={cn(edit && styles.editableCell, className)}
       data-editing={initial !== undefined || undefined}
-      tabIndex={edit ? (initial === undefined ? 0 : -1) : undefined}
+      tabIndex={edit ? (initial === undefined ? 0 : -1) : tabIndex}
       onClick={(event) => {
         onClick?.(event);
         if (!edit || initial !== undefined || event.defaultPrevented) return;
+        const hit = (event.target as HTMLElement).closest(interactiveTarget);
+        if (hit && hit !== event.currentTarget) return;
         event.preventDefault();
         open();
       }}

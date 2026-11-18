@@ -380,7 +380,9 @@ export function DataTable<Row>({
     const measure = () => {
       const actual = Math.max(
         requestedRowHeight,
-        ...visibleRows.map((row) => row.getBoundingClientRect().height)
+        ...visibleRows
+          .filter((row) => !row.querySelector("[data-editing]"))
+          .map((row) => row.getBoundingClientRect().height)
       );
       if (actual > effectiveRowHeight + 0.5)
         setMeasuredRow({ requested: requestedRowHeight, height: actual });
