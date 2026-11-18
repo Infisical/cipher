@@ -5,6 +5,10 @@ on:
     workflows: [Release]
     types: [completed]
   workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit to publish. Leave empty for the source of the newest release tag.
+        required: false
 
 permissions:
   contents: read
@@ -22,7 +26,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - name: Check out the released source
+        env:
+          REF: ${{ inputs.ref }}
+        run: |
+          if [ -n "$REF" ]; then
+            git checkout "$REF"
+          else
+            tag=$(git tag --list 'v*' --sort=-v:refname | head -1)
+            git checkout "$tag^"
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 24
