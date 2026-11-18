@@ -38,7 +38,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  border: var(--cipher-size-control-border) dashed var(--cipher-line);
+  border: var(--cipher-size-control-border) dashed var(--cipher-muted);
   background: var(--cipher-tint);
 }
 .item[data-following] > .card {
