@@ -23,7 +23,7 @@
   letter-spacing: var(--cipher-type-label-letter-spacing);
   cursor: default;
 }
-a.button[href] {
+a.button[href]:not([aria-busy="true"]) {
   cursor: pointer;
 }
 .default {
