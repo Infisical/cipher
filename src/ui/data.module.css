@@ -1431,8 +1431,8 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll [data-row-kind="empty"] > td {
   padding-block: var(--cipher-space-48);
 }
-.tableScroll [data-row-kind="empty"] > td:has(> [data-ghost]),
-.tableScroll [data-row-kind="empty"] > td:has(> [data-fill]) {
+.tableScroll [data-row-kind="empty"] > td:has([data-slot="empty"][data-ghost]),
+.tableScroll [data-row-kind="empty"] > td:has([data-slot="empty"][data-fill]) {
   padding: 0;
 }
 .tableScroll[data-virtual] .tableValue,
