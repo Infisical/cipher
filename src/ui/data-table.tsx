@@ -6,7 +6,7 @@ import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
-import { type EmptyGhost, EmptyGhostScope } from "./empty";
+import { type EmptyGhost, EmptyScope } from "./empty";
 import { Icon, type IconSource } from "./icon";
 import { SortableAnnouncer, SortableHandle } from "./sortable-list";
 import {
@@ -851,9 +851,12 @@ export function DataTable<Row>({
             {!loading && !rows.length && (
               <TableRow data-row-kind="empty">
                 <TableCell colSpan={span}>
-                  <EmptyGhostScope ghost={ghost ?? (embedded || filtered ? false : "rows")}>
+                  <EmptyScope
+                    ghost={ghost ?? (embedded || filtered ? false : "rows")}
+                    size="sm"
+                  >
                     {empty}
-                  </EmptyGhostScope>
+                  </EmptyScope>
                 </TableCell>
               </TableRow>
             )}

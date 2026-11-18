@@ -3,6 +3,7 @@ import { Dialog as DialogPrimitive } from "radix-ui";
 
 import { usePortalContainer } from "../scope";
 import { Button } from "./button";
+import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
 
 import { FrameScope } from "../lib/frame-context";
@@ -26,7 +27,9 @@ DialogTrigger.displayName = "DialogTrigger";
 function DialogPortal({ children, ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return (
     <DialogPrimitive.Portal container={usePortalContainer()} data-slot="dialog-portal" {...props}>
-      <FrameScope framed={false}>{children}</FrameScope>
+      <FrameScope framed={false}>
+        <EmptySurface>{children}</EmptySurface>
+      </FrameScope>
     </DialogPrimitive.Portal>
   );
 }

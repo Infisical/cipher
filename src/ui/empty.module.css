@@ -87,6 +87,9 @@
   overflow: hidden;
   min-height: calc(6 * var(--cipher-size-row));
 }
+.root[data-fill] {
+  min-height: calc(6 * var(--cipher-size-row));
+}
 .root[data-ghost="cards"] {
   min-height: calc(2 * var(--cipher-size-ghost-card) + var(--cipher-space-16));
 }

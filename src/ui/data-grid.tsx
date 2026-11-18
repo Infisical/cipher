@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
+import { EmptyScope } from "./empty";
 import {
   canEditColumn,
   encodeTsv,
@@ -882,7 +883,11 @@ export function DataGrid<Row>({
         >
           {visible.map(renderRow)}
         </div>
-        {!rows.length && <div className={styles.empty}>{empty}</div>}
+        {!rows.length && (
+          <div className={styles.empty}>
+            <EmptyScope size="sm">{empty}</EmptyScope>
+          </div>
+        )}
       </div>
       {edit && (
         <div className={styles.actions}>

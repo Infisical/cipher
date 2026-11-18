@@ -808,6 +808,10 @@
       {
         "title": "Filtered from the FilterBar: a ListQueryScope turns the ghost off while a search or filter is applied",
         "module": "empty-state/list-query"
+      },
+      {
+        "title": "Size from the container",
+        "module": "empty-state/containers"
       }
     ]
   },

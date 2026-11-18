@@ -2,6 +2,7 @@ import * as React from "react";
 import { Dialog as SheetPrimitive, Slot } from "radix-ui";
 
 import { usePortalContainer } from "../scope";
+import { EmptySurface } from "./empty";
 import { DiscardChangesAlertDialog } from "./alert-dialog";
 import { Button } from "./button";
 import { Icon } from "./icon";
@@ -66,7 +67,9 @@ SheetClose.displayName = "SheetClose";
 function SheetPortal({ children, ...props }: React.ComponentProps<typeof SheetPrimitive.Portal>) {
   return (
     <SheetPrimitive.Portal container={usePortalContainer()} data-slot="sheet-portal" {...props}>
-      <FrameScope framed={false}>{children}</FrameScope>
+      <FrameScope framed={false}>
+        <EmptySurface>{children}</EmptySurface>
+      </FrameScope>
     </SheetPrimitive.Portal>
   );
 }

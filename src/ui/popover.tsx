@@ -9,6 +9,7 @@ import { useCollisionBoundary, usePortalContainer } from "../scope";
 import { FrameScope } from "../lib/frame-context";
 import { useOwnedEscape } from "../lib/use-owned-escape";
 import { cn } from "../lib/utils";
+import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
 
 import controls from "./controls.module.css";
@@ -224,7 +225,9 @@ function PopoverContent({
           </button>
         )}
         <div data-slot="popover-scroll" data-scroll-fade="y" className={menu.scroller}>
-          <FrameScope framed={false}>{children}</FrameScope>
+          <FrameScope framed={false}>
+            <EmptySurface>{children}</EmptySurface>
+          </FrameScope>
         </div>
       </PopoverPrimitive.Content>
     </PopoverPrimitive.Portal>

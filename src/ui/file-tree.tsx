@@ -3,6 +3,7 @@ import * as React from "react";
 import { useControllableState } from "../lib/use-controllable-state";
 import { AnimatedCollapse } from "./animated-collapse";
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "./context-menu";
+import { EmptyScope } from "./empty";
 import { Icon, type IconSource } from "./icon";
 import { Input } from "./input";
 import { MiddleTruncate } from "./middle-truncate";
@@ -463,6 +464,8 @@ export function FileTree({
       {render(items, 1)}
     </ul>
   ) : (
-    <div className={styles.empty}>{empty}</div>
+    <div className={styles.empty}>
+      <EmptyScope size="sm">{empty}</EmptyScope>
+    </div>
   );
 }

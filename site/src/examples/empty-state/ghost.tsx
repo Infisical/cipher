@@ -65,7 +65,7 @@ export default function Example() {
           </CardContent>
         </Card>
         <figcaption className="text-muted-foreground text-xs">
-          {"Flush in a framed Card: no ghost, there is no room for one"}
+          {"Flush in a framed Card: no ghost, the same height as a ghosted table"}
         </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
