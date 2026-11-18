@@ -4,6 +4,7 @@ const url = process.env.VISUAL_URL;
 
 export default defineConfig({
   testDir: "visual",
+  testIgnore: "**/visual/rc/**",
   snapshotPathTemplate: `${process.env.VISUAL_SNAPSHOTS ?? "visual/baselines"}/{projectName}/{arg}{ext}`,
   outputDir: "visual/results",
   fullyParallel: true,

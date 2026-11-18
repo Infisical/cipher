@@ -62,10 +62,16 @@ render() {
   local server=$!
   for _ in $(seq 60); do curl -sf "http://127.0.0.1:$port/visual.html" >/dev/null && break; sleep 1; done
   VISUAL_WORKERS=${VISUAL_WORKERS:-4} VISUAL_URL="http://127.0.0.1:$port/" VISUAL_CATALOG="$dir/site/src/catalog.json" \
-    VISUAL_SNAPSHOTS="$out/snapshots/$name" bash scripts/visual.sh "^/work/visual/visual\.spec\.ts$" --update-snapshots=all --reporter=dot >"$out/work/$name.log" 2>&1 || true
+    VISUAL_SNAPSHOTS="$out/snapshots/$name" bash scripts/visual.sh --update-snapshots=all --reporter=dot >"$out/work/$name.log" 2>&1 || true
   kill -- -$server 2>/dev/null || true
   wait $server 2>/dev/null || true
-  echo "rendered $name: $(find "$out/snapshots/$name" -name '*.png' | wc -l) snapshots"
+  (cd "$dir" && for file in "${overlay[@]}"; do
+    if git ls-files --error-unmatch "$file" >/dev/null 2>&1; then git checkout -q -- "$file"; else rm -f "$file"; fi
+  done)
+  local count
+  count=$(find "$out/snapshots/$name" -name '*.png' 2>/dev/null | wc -l)
+  [ "$count" -gt 0 ] || { echo "rendered no snapshots for $name, see $out/work/$name.log" >&2; exit 1; }
+  echo "rendered $name: $count snapshots"
 }
 
 steps=()
