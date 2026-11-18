@@ -151,8 +151,10 @@ export const Banner = ({
   className?: string;
 }) => (
   <div data-slot="banner" role="status" className={cn(helperStyles.banner, className)}>
-    <Icon icon={icon} />
-    <span className={helperStyles.bannerText}>{children}</span>
+    <span className={helperStyles.bannerLead}>
+      <Icon icon={icon} />
+      <span className={helperStyles.bannerText}>{children}</span>
+    </span>
     {action}
     {onDismiss && (
       <Button

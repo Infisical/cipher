@@ -111,8 +111,10 @@ export default function Example() {
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <Card variant="framed">
-            <div className="flex items-center gap-3">
-              <Icon name="apps" size="var(--cipher-size-icon-xl)" className="shrink-0" />
+            <div className="flex items-start gap-3">
+              <span className="flex h-[calc(var(--cipher-type-row-title-line-height)+var(--cipher-type-small-line-height))] shrink-0 items-center">
+                <Icon name="apps" size="var(--cipher-size-icon-xl)" />
+              </span>
               <div className="min-w-0 flex-1">
                 <RowLink
                   link={{ href: "/design-system/components/data-display/detail" }}
@@ -124,15 +126,17 @@ export default function Example() {
                   Stacked label and value pairs for the details of one resource.
                 </SmallText>
               </div>
-              <Button
-                variant="ghost"
-                size="icon-row"
-                icon="copy"
-                iconOnly
-                onClick={() => navigator.clipboard.writeText("detail")}
-              >
-                Copy the id of Detail
-              </Button>
+              <span className="flex h-[calc(var(--cipher-type-row-title-line-height)+var(--cipher-type-small-line-height))] shrink-0 items-center">
+                <Button
+                  variant="ghost"
+                  size="icon-row"
+                  icon="copy"
+                  iconOnly
+                  onClick={() => navigator.clipboard.writeText("detail")}
+                >
+                  Copy the id of Detail
+                </Button>
+              </span>
             </div>
           </Card>
         </div>

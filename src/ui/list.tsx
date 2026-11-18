@@ -4,6 +4,7 @@ import { FrameScope, useInFrame } from "../lib/frame-context";
 import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { cn } from "../lib/utils";
 import { Checkbox } from "./checkbox";
+import { Icon } from "./icon";
 import { Skeleton } from "./skeleton";
 
 import styles from "./data.module.css";
@@ -31,6 +32,8 @@ export interface ListRowProps {
   href?: string;
   /** A router link (to, params, search); the title renders as one anchor that keeps modifier clicks native. */
   link?: CipherLinkTarget;
+  /** Opens the link in a new tab and marks the row with an external icon. */
+  external?: boolean;
   onClick?: (event: React.MouseEvent) => void;
   current?: boolean;
   disabled?: boolean;
@@ -51,6 +54,7 @@ export function ListRow({
   children,
   href,
   link,
+  external,
   onClick,
   current,
   disabled,
@@ -139,6 +143,8 @@ export function ListRow({
               onClick={click}
               {...press}
               aria-current={current ? "page" : undefined}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
               data-list-target
             >
               {title}
@@ -151,6 +157,8 @@ export function ListRow({
               onClick={click}
               {...press}
               aria-current={current ? "page" : undefined}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
               data-list-target
             >
               {title}
@@ -180,6 +188,7 @@ export function ListRow({
               {title}
             </span>
           )}
+          {external && anchor && !disabled && <Icon name="external" label="Opens in a new tab" />}
           {badge && <span className={styles.rowBadge}>{badge}</span>}
           {meta && <span className={styles.rowMeta}>{meta}</span>}
         </div>

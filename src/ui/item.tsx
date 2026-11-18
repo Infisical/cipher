@@ -481,9 +481,15 @@ type TileOwnProps = {
   title?: React.ReactNode;
   description?: React.ReactNode;
   media?: React.ReactNode;
-  /** stacked puts the media and eyebrow on top, then the title on one line and a description clamped at two, with no chevron. For grids of choices such as a TilePicker. */
-  layout?: "row" | "stacked";
-  /** A short label across from the media in the stacked layout, such as a category. */
+  /**
+   * row ends in a chevron, or a check while selected. inline drops the chevron for grids of
+   * choices such as a TilePicker: the title wraps to two lines, with a tooltip once it is cut off,
+   * and the description clamps at two. stacked puts the media on top, then the title on one line.
+   */
+  layout?: "row" | "inline" | "stacked";
+  /** Sits right after the title, such as a plan Badge. */
+  badge?: React.ReactNode;
+  /** @deprecated A category reads better as the description under the title. */
   eyebrow?: React.ReactNode;
   /** Disables the tile and shows why in place of the description. Unlike disabled, it stays focusable so the reason can be reached. */
   disabledReason?: string;
@@ -522,6 +528,7 @@ export function Tile({
   description,
   media,
   layout = "row",
+  badge,
   eyebrow,
   disabledReason,
   href,
@@ -539,6 +546,7 @@ export function Tile({
   const reason = disabledReason || undefined;
   const detail = reason ?? description;
   const stacked = layout === "stacked";
+  const inline = layout === "inline";
   const link = Boolean(href || asChild);
   const inactive = Boolean(reason || (link && disabled));
   const Comp: React.ElementType = asChild ? Slot.Root : href ? "a" : "button";
@@ -583,14 +591,33 @@ export function Tile({
       <span className={helperStyles.tileBody}>
         {title !== undefined ? (
           <>
-            <span
-              className={itemStyles.tileTitle}
-              title={typeof title === "string" ? title : undefined}
-            >
-              {title}
-            </span>
+            {inline ? (
+              <span className={itemStyles.titleLine}>
+                <ClampedTitle lines={2} className={itemStyles.tileTitle}>
+                  {title}
+                </ClampedTitle>
+                {badge}
+              </span>
+            ) : badge !== undefined ? (
+              <span className={itemStyles.titleLine}>
+                <span
+                  className={itemStyles.tileTitle}
+                  title={typeof title === "string" ? title : undefined}
+                >
+                  {title}
+                </span>
+                {badge}
+              </span>
+            ) : (
+              <span
+                className={itemStyles.tileTitle}
+                title={typeof title === "string" ? title : undefined}
+              >
+                {title}
+              </span>
+            )}
             {detail &&
-              (stacked ? (
+              (stacked || inline ? (
                 <span
                   data-reason={reason ? "" : undefined}
                   className={itemStyles.description}
@@ -609,7 +636,8 @@ export function Tile({
           inner
         )}
       </span>
-      {!stacked && (externalMark || <Icon name={selected ? "check" : "chev-right"} />)}
+      {inline && externalMark}
+      {layout === "row" && (externalMark || <Icon name={selected ? "check" : "chev-right"} />)}
     </>
   );
   const body = child
@@ -620,7 +648,8 @@ export function Tile({
       ref={ref}
       {...linkProps}
       data-slot="tile"
-      data-layout={stacked ? "stacked" : undefined}
+      data-layout={layout === "row" ? undefined : layout}
+      data-described={detail ? "" : undefined}
       data-in-frame={inFrame || undefined}
       aria-pressed={link ? undefined : selected}
       aria-current={link && selected ? "page" : undefined}

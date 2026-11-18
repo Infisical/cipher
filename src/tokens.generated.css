@@ -70,6 +70,7 @@
   --cipher-size-field-md: 256px;
   --cipher-size-text-min: 160px;
   --cipher-size-tile-min: 208px;
+  --cipher-size-tile-inline-min: 240px;
   --cipher-size-search-max: 720px;
   --cipher-size-tile-stacked-min: 280px;
   --cipher-size-ghost-card: 132px;
