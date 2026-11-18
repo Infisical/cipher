@@ -412,13 +412,13 @@ function CellEditor({
   const attempt = React.useRef(0);
   const closed = React.useRef(false);
   const errorId = React.useId();
-  React.useEffect(
-    () => () => {
+  React.useEffect(() => {
+    closed.current = false;
+    return () => {
       closed.current = true;
       attempt.current += 1;
-    },
-    []
-  );
+    };
+  }, []);
   const close = (refocus: boolean) => {
     closed.current = true;
     attempt.current += 1;
