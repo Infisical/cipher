@@ -798,7 +798,15 @@ export function DataTable<Row>({
                     />
                   </TableHeadButton>
                 ) : (
-                  <span className={column.hideHeader || column.actions ? styles.sr : undefined}>
+                  <span
+                    className={
+                      column.hideHeader || column.actions
+                        ? styles.sr
+                        : column.toggle
+                          ? undefined
+                          : styles.tableHeadLabel
+                    }
+                  >
                     {column.header}
                   </span>
                 )}

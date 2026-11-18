@@ -1264,6 +1264,11 @@ tbody > .nativeTableRow[data-loading] {
 :is(th:hover, th:focus-within) > .tableSort > svg {
   opacity: 1;
 }
+.tableHeadLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tableSort > :not(svg) {
   min-width: 0;
   overflow: hidden;
