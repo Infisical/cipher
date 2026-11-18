@@ -165,7 +165,7 @@ $ gh workflow run cipher-visual.yml -f base=v0.1.15 -f candidate=<rc sha>
 $ gh workflow run cipher-visual.yml -f base=v0.1.15 -f candidate=<rc sha> -f scope=scoped
 ```
 
-A release tag renders the source commit under it. With `scope=scoped` it renders only the pages whose examples reach a changed file, following imports and, for icons, the changed icon names. Changes to tokens, global CSS, fonts, theme code, package dependencies or the frame and overlay primitives (Card, Dialog, Sheet, Popover, menus, tooltips and their shared stylesheets) render every page. The `prepare` job prints the scope and why.
+A release tag renders the source commit under it. With `scope=scoped` it renders only the pages whose examples reach a changed file, following imports, plus pages whose own example or catalog entry changed. An icon change reaches the pages that name a changed or added icon and the icon gallery. Changes to tokens, global CSS, fonts, theme code, installed dependencies (the lockfile or package.json beyond its version), shared showcase files, or the frame and overlay primitives (Card, Dialog, Sheet, Popover, menus, tooltips and their shared stylesheets) render every page. The `prepare` job prints the scope and why.
 
 The run summary lists the changed count, the total and every changed snapshot with its pixel count. The `cipher-visual-report` artifact holds `summary.md`, `summary.json`, `scope.json` and `changed/`, with a before, after and diff image for each change. The app runs the same check on its Cipher pin bump pull requests (see `.github/cipher-visual/README.md` in Infisical/infisical).
 
