@@ -154,11 +154,11 @@ function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         data-surface={surface}
-        data-scroll-fade="y"
         className={cn(
           "z-50",
           menu.surface,
           surface === "menu" ? menu.panel : menu.card,
+          menu.scrollHost,
           menu.motion,
           className
         )}
@@ -223,7 +223,9 @@ function PopoverContent({
             </span>
           </button>
         )}
-        <FrameScope framed={false}>{children}</FrameScope>
+        <div data-slot="popover-scroll" data-scroll-fade="y" className={menu.scroller}>
+          <FrameScope framed={false}>{children}</FrameScope>
+        </div>
       </PopoverPrimitive.Content>
     </PopoverPrimitive.Portal>
   );

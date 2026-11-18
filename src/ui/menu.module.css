@@ -47,7 +47,7 @@
   width: min(var(--cipher-size-sheet-md), var(--radix-popper-available-width, 100vw));
 }
 .card[data-width="content"],
-.card:not([data-width]):has(> [data-slot="calendar"]) {
+.card:not([data-width]):has(> .scroller > [data-slot="calendar"]) {
   width: max-content;
   max-width: min(var(--cipher-size-dialog-wide), var(--radix-popper-available-width, 100vw));
 }
@@ -481,4 +481,26 @@
   .hint {
     display: none;
   }
+}
+
+/* The surface paints the background, ring and shadow, so the scroll fade's mask sits on an inner
+   scroller and never clips them. */
+.scrollHost {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.scroller {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.card > .scroller {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+  margin: calc(-1 * var(--cipher-focus-clearance));
+  padding: var(--cipher-focus-clearance);
+  scroll-padding-block: var(--cipher-focus-clearance);
 }

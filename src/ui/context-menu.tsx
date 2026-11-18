@@ -110,16 +110,15 @@ function ContextMenuContent({
   ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
   const pressedSinceOpen = React.useContext(PressedSinceOpenContext);
-  const insetRef = useMenuInset(ref);
+  const insetRef = useMenuInset<HTMLDivElement>();
   return (
     <ContextMenuPrimitive.Portal container={usePortalContainer()}>
       <ContextMenuPrimitive.Content
-        ref={insetRef}
+        ref={ref}
         data-slot="context-menu-content"
         collisionPadding={collisionPadding}
         collisionBoundary={useCollisionBoundary()}
-        className={cn("z-50", menu.surface, menu.panel, menu.inset, menu.motion, className)}
-        data-scroll-fade="y"
+        className={cn("z-50", menu.surface, menu.panel, menu.scrollHost, menu.motion, className)}
         {...props}
         onPointerDownCapture={(event) => {
           onPointerDownCapture?.(event);
@@ -130,8 +129,15 @@ function ContextMenuContent({
           if (pressedSinceOpen && !pressedSinceOpen.current) event.preventDefault();
         }}
       >
-        <MenuKindContext value="context">{children}</MenuKindContext>
-        <ListHighlight />
+        <div
+          ref={insetRef}
+          data-slot="context-menu-scroll"
+          data-scroll-fade="y"
+          className={cn(menu.scroller, menu.inset)}
+        >
+          <MenuKindContext value="context">{children}</MenuKindContext>
+          <ListHighlight />
+        </div>
       </ContextMenuPrimitive.Content>
     </ContextMenuPrimitive.Portal>
   );
@@ -199,11 +205,11 @@ function ContextMenuSubContent({
   ref,
   ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
-  const insetRef = useMenuInset(ref);
+  const insetRef = useMenuInset<HTMLDivElement>();
   return (
     <ContextMenuPrimitive.Portal container={usePortalContainer()}>
       <ContextMenuPrimitive.SubContent
-        ref={insetRef}
+        ref={ref}
         data-slot="context-menu-sub-content"
         collisionPadding={collisionPadding}
         collisionBoundary={useCollisionBoundary()}
@@ -214,15 +220,21 @@ function ContextMenuSubContent({
           menu.surface,
           menu.panel,
           menu.sub,
-          menu.inset,
+          menu.scrollHost,
           menu.motion,
           className
         )}
-        data-scroll-fade="y"
         {...props}
       >
-        <MenuKindContext value="context">{children}</MenuKindContext>
-        <ListHighlight />
+        <div
+          ref={insetRef}
+          data-slot="context-menu-sub-scroll"
+          data-scroll-fade="y"
+          className={cn(menu.scroller, menu.inset)}
+        >
+          <MenuKindContext value="context">{children}</MenuKindContext>
+          <ListHighlight />
+        </div>
       </ContextMenuPrimitive.SubContent>
     </ContextMenuPrimitive.Portal>
   );

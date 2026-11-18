@@ -103,7 +103,6 @@ function DialogContent({
         ref={escape.ref}
         data-slot="dialog-content"
         data-has-close={showCloseButton || undefined}
-        data-scroll-fade={sections ? undefined : "y"}
         data-sections={sections ? "" : undefined}
         aria-busy={pending || undefined}
         className={cn("z-50", overlay.pop, overlay.dialog, className)}
@@ -135,7 +134,11 @@ function DialogContent({
                   {sections.footer}
                 </>
               )
-            : children}
+            : (
+                <div data-slot="overlay-scroll" data-scroll-fade="y">
+                  {children}
+                </div>
+              )}
           {showCloseButton && (
             <DialogPrimitive.Close data-slot="dialog-close" asChild>
               <Button variant="ghost" className={overlay.close} size="icon-sm" disabled={pending}>

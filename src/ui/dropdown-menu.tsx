@@ -65,22 +65,28 @@ function DropdownMenuContent({
   ref,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
-  const insetRef = useMenuInset(ref);
+  const insetRef = useMenuInset<HTMLDivElement>();
   return (
     <DropdownMenuPrimitive.Portal container={usePortalContainer()}>
       <DropdownMenuPrimitive.Content
-        ref={insetRef}
+        ref={ref}
         data-slot="dropdown-menu-content"
         collisionPadding={collisionPadding}
         collisionBoundary={useCollisionBoundary()}
         sideOffset={sideOffset}
         align={align}
-        className={cn("z-50", menu.surface, menu.panel, menu.inset, menu.motion, className)}
-        data-scroll-fade="y"
+        className={cn("z-50", menu.surface, menu.panel, menu.scrollHost, menu.motion, className)}
         {...props}
       >
-        {children}
-        <ListHighlight />
+        <div
+          ref={insetRef}
+          data-slot="dropdown-menu-scroll"
+          data-scroll-fade="y"
+          className={cn(menu.scroller, menu.inset)}
+        >
+          {children}
+          <ListHighlight />
+        </div>
       </DropdownMenuPrimitive.Content>
     </DropdownMenuPrimitive.Portal>
   );
@@ -342,11 +348,11 @@ function DropdownMenuSubContent({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
   const Primitive = useMenuPrimitive();
-  const insetRef = useMenuInset(ref);
+  const insetRef = useMenuInset<HTMLDivElement>();
   return (
     <Primitive.Portal container={usePortalContainer()}>
       <Primitive.SubContent
-        ref={insetRef}
+        ref={ref}
         data-slot="dropdown-menu-sub-content"
         collisionPadding={collisionPadding}
         collisionBoundary={useCollisionBoundary()}
@@ -357,15 +363,21 @@ function DropdownMenuSubContent({
           menu.surface,
           menu.panel,
           menu.sub,
-          menu.inset,
+          menu.scrollHost,
           menu.motion,
           className
         )}
-        data-scroll-fade="y"
         {...props}
       >
-        {children}
-        <ListHighlight />
+        <div
+          ref={insetRef}
+          data-slot="dropdown-menu-sub-scroll"
+          data-scroll-fade="y"
+          className={cn(menu.scroller, menu.inset)}
+        >
+          {children}
+          <ListHighlight />
+        </div>
       </Primitive.SubContent>
     </Primitive.Portal>
   );
