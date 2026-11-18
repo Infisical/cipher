@@ -16,8 +16,8 @@
   overflow: hidden;
   pointer-events: none;
   opacity: 0;
-  animation: refreshShow var(--cipher-duration-moderate) var(--cipher-ease-fade) var(--cipher-duration-slow)
-    forwards;
+  animation: refreshShow var(--cipher-duration-moderate) var(--cipher-ease-fade)
+    var(--cipher-duration-slow) forwards;
 }
 .refreshing::before {
   content: "";
@@ -26,7 +26,8 @@
   inset-inline-start: 0;
   width: 30%;
   background: var(--cipher-ink);
-  animation: refreshTravel calc(var(--cipher-duration-slow) * 5) var(--cipher-ease-standard) infinite;
+  animation: refreshTravel calc(var(--cipher-duration-slow) * 5) var(--cipher-ease-standard)
+    infinite;
 }
 @keyframes refreshShow {
   to {
@@ -769,6 +770,7 @@
   flex: 1;
   min-width: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--cipher-space-4);
 }
 .listBody > .rowActions {
@@ -847,6 +849,7 @@ button.rowTitle::after {
   letter-spacing: var(--cipher-type-small-letter-spacing);
   color: var(--cipher-muted);
   margin: 0;
+  min-width: 0;
   overflow-wrap: anywhere;
 }
 .rowError {
@@ -1052,10 +1055,17 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll [data-depth="2"] {
   padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
 }
+/* Set on every scope, not matched by descendant, so a Light scope nested in a Dark one keeps paper. */
+:global(.cipher) {
+  --cipher-table-group-ground: var(--cipher-paper);
+}
+:global(.cipher[data-scheme="dark"]) {
+  --cipher-table-group-ground: var(--cipher-tint);
+}
 .tableGroupRow {
-  --cipher-table-row-ground: var(--cipher-paper);
+  --cipher-table-row-ground: var(--cipher-table-group-ground);
   --cipher-table-row-layers: none;
-  background-color: var(--cipher-paper);
+  background-color: var(--cipher-table-group-ground);
 }
 .tableScroll th.tableGroupHead {
   height: var(--cipher-table-row-height, var(--cipher-size-row));
@@ -1428,7 +1438,9 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll[data-virtual] .tablePrimary,
 .tableScroll[data-virtual] .tableRowActions,
 .tableScroll[data-virtual] .tableSelection {
-  min-height: calc(var(--cipher-table-row-height, var(--cipher-size-row)) - var(--cipher-size-control-border));
+  min-height: calc(
+    var(--cipher-table-row-height, var(--cipher-size-row)) - var(--cipher-size-control-border)
+  );
   display: flex;
   align-items: center;
 }
@@ -1573,7 +1585,8 @@ td.tableActions {
   position: sticky;
   inset-inline-end: 0;
   width: calc(
-    var(--cipher-size-row) + (var(--cipher-row-action-slots, 1) - 1) * var(--cipher-size-row-action-step)
+    var(--cipher-size-row) + (var(--cipher-row-action-slots, 1) - 1) *
+      var(--cipher-size-row-action-step)
   );
   padding-inline: var(--cipher-space-row-actions-inset);
   text-align: end;
@@ -1582,11 +1595,16 @@ td.tableActions {
   --cipher-nested-action-height: var(--cipher-size-target-row);
 }
 .tableActions [data-cipher-button] {
-  --cipher-action-height: min(var(--cipher-action-requested-height), var(--cipher-nested-action-height));
+  --cipher-action-height: min(
+    var(--cipher-action-requested-height),
+    var(--cipher-nested-action-height)
+  );
 }
 /* DataTable draws the frame edge inside the pinned cell, so the end pad clears that line too. */
 .tableScroll td.tableActions {
-  padding-inline-end: calc(var(--cipher-space-row-actions-inset) + var(--cipher-size-control-border));
+  padding-inline-end: calc(
+    var(--cipher-space-row-actions-inset) + var(--cipher-size-control-border)
+  );
 }
 .tableScroll th.tableActions {
   background-color: var(--cipher-tint);
@@ -1617,8 +1635,7 @@ th[data-pin="start"] {
 /* A pinned cell draws its column edge and DataTable's frame-pad cover as inset and outer shadows, so both stick with the cell; a table border would stay with the scrolled columns. */
 :is(td, th):is([data-pin], .tableActions) {
   box-shadow:
-    var(--cipher-drop-edge, 0 0 transparent),
-    var(--cipher-pin-edge, 0 0 transparent),
+    var(--cipher-drop-edge, 0 0 transparent), var(--cipher-pin-edge, 0 0 transparent),
     var(--cipher-pin-frame, 0 0 transparent);
 }
 :is([data-scroll-start-x] > table, [data-scroll-start-x] > .nativeTableContainer > table)

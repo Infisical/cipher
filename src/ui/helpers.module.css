@@ -244,7 +244,9 @@
   --cipher-toast-bottom: var(--cipher-space-action-bar-offset);
 }
 :global(.cipher)[data-action-bar-reserve] {
-  --cipher-toast-bottom: calc(var(--cipher-size-action-bar) + 2 * var(--cipher-space-action-bar-offset));
+  --cipher-toast-bottom: calc(
+    var(--cipher-size-action-bar) + 2 * var(--cipher-space-action-bar-offset)
+  );
 }
 .toastFixed {
   position: fixed;
@@ -312,7 +314,9 @@
   margin-inline-start: auto;
 }
 .fieldHelp {
-  margin-block: calc((var(--cipher-type-field-label-line-height) - var(--cipher-size-control-xs)) / 2);
+  margin-block: calc(
+    (var(--cipher-type-field-label-line-height) - var(--cipher-size-control-xs)) / 2
+  );
   color: var(--cipher-muted);
 }
 .fieldDescription {
@@ -402,7 +406,7 @@
 }
 .badge[data-slot][data-tone="soft"] {
   border-color: var(--cipher-line-soft);
-  background: var(--cipher-line-soft);
+  background: var(--cipher-paper);
   color: var(--cipher-text2);
 }
 .badge[data-slot][data-tone="solid"] {
@@ -459,7 +463,11 @@
   background: var(--cipher-ink);
 }
 .steps .step[data-current]::before {
-  background: repeating-linear-gradient(135deg, var(--cipher-ink) 0 2px, var(--cipher-line-soft) 2px 4px);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--cipher-ink) 0 2px,
+    var(--cipher-line-soft) 2px 4px
+  );
 }
 .fieldset {
   min-width: 0;
