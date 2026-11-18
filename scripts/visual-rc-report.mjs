@@ -5,6 +5,11 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const [out, base, explainFile, compare, ...steps] = process.argv.slice(2);
+const merged = Boolean(process.env.VISUAL_RC_MERGED);
+const prRange = (pr, dots = "...") =>
+  merged
+    ? `refs/visual-rc/pr-${pr}^1..refs/visual-rc/pr-${pr}`
+    : `origin/main${dots}refs/visual-rc/pr-${pr}`;
 const explanations = explainFile ? JSON.parse(readFileSync(explainFile, "utf8")) : {};
 const snapshots = (step) => path.join(out, "snapshots", step);
 const diff = (from, to, label) =>
@@ -34,13 +39,9 @@ const stepLabel = (step) => (step === "1-main" ? "main" : step.replace(/^\d+-pr-
 const baselineUpdates = (pr) => {
   try {
     return new Set(
-      execFileSync(
-        "git",
-        ["diff", "--name-only", `origin/main...refs/visual-rc/pr-${pr}`, "--", "visual/baselines"],
-        {
-          encoding: "utf8"
-        }
-      )
+      execFileSync("git", ["diff", "--name-only", prRange(pr), "--", "visual/baselines"], {
+        encoding: "utf8"
+      })
         .split("\n")
         .filter(Boolean)
         .map((file) => file.replace(/^visual\/baselines\//, ""))
@@ -60,7 +61,7 @@ const git = (args) => {
 // so re-run each merge and flag every changed line outside a conflict region. Generated files are
 // skipped: r/ is checked against src/ by `npm run check`, and versions move with every release.
 const mergeEdits = (pr) =>
-  git(["rev-list", "--merges", `origin/main..refs/visual-rc/pr-${pr}`])
+  git(["rev-list", "--merges", prRange(pr, "..")])
     .split("\n")
     .filter(Boolean)
     .flatMap((sha) => {
@@ -95,13 +96,7 @@ const unseenStyles = (pr, changes) => {
   if (changes.some((change) => change.kind === "changed")) return [];
   const files = new Set();
   let file = null;
-  for (const line of git([
-    "diff",
-    "-U0",
-    `origin/main...refs/visual-rc/pr-${pr}`,
-    "--",
-    "src/**/*.css"
-  ]).split("\n")) {
+  for (const line of git(["diff", "-U0", prRange(pr), "--", "src/**/*.css"]).split("\n")) {
     if (line.startsWith("diff --git ")) file = line.split(" b/").pop();
     else if (/^-(?!--)/.test(line)) files.add(file);
   }
@@ -159,9 +154,9 @@ const img = (step, key, kind) => {
 const lines = [
   `# Release candidate visual check`,
   "",
-  `Previous tag: \`${base}\`. Steps: main, then ${
+  `Previous tag: \`${base}\`. Steps: ${merged ? "" : "main, then "}${
     steps
-      .slice(2)
+      .slice(merged ? 1 : 2)
       .map((step) => `#${stepLabel(step)}`)
       .join(", ") || "no PRs"
   }.`,
