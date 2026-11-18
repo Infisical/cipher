@@ -322,10 +322,14 @@
   display: flex;
   flex-direction: column;
 }
-.panelColumn > * {
+.panelColumn > [data-slot="popover-scroll"] {
+  display: flex;
+  flex-direction: column;
+}
+.panelColumn > [data-slot="popover-scroll"] > * {
   flex: none;
 }
-.panelColumn > [role="listbox"] {
+.panelColumn > [data-slot="popover-scroll"] > [role="listbox"] {
   flex: 0 1 auto;
   min-height: 0;
 }
