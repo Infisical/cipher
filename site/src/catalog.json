@@ -576,6 +576,10 @@
       {
         "title": "Right-click region",
         "module": "context-menu/default"
+      },
+      {
+        "title": "Overflowing content",
+        "module": "context-menu/overflow"
       }
     ]
   },
@@ -712,6 +716,10 @@
       {
         "title": "Docs link beside the title",
         "module": "dialog/title-badges"
+      },
+      {
+        "title": "Overflowing content",
+        "module": "dialog/overflow"
       }
     ]
   },
@@ -748,6 +756,10 @@
       {
         "title": "Disabled with a reason",
         "module": "dropdown-menu/disabled-reason"
+      },
+      {
+        "title": "Overflowing content",
+        "module": "dropdown-menu/overflow"
       }
     ]
   },
@@ -1484,6 +1496,10 @@
       {
         "title": "Draggable annotation",
         "module": "popover/draggable"
+      },
+      {
+        "title": "Overflowing content",
+        "module": "popover/overflow"
       }
     ]
   },

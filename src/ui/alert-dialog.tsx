@@ -147,7 +147,6 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         ref={escape.ref}
         data-slot="alert-dialog-content"
-        data-scroll-fade={sections ? undefined : "y"}
         data-sections={sections ? "" : undefined}
         data-size={size}
         data-tone={tone}
@@ -186,14 +185,14 @@ function AlertDialogContent({
                     {sections.footer}
                   </>
                 ) : (
-                  <>
+                  <div data-slot="overlay-scroll" data-scroll-fade="y">
                     {!hasMedia && (icon || tone === "danger") && (
                       <AlertDialogMedia data-auto="">
                         <Icon icon={icon ?? "trash"} size={20} />
                       </AlertDialogMedia>
                     )}
                     {parts}
-                  </>
+                  </div>
                 )}
               </ToneContext>
             </ConfirmContext>
