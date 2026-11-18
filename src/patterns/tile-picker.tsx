@@ -85,6 +85,7 @@ const matches = (item: TilePickerItem, query: string) =>
   ].some((text) => text?.toLowerCase().includes(query));
 
 type Group = {
+  id: string;
   label?: string;
   items: readonly TilePickerItem[];
   counted?: boolean;
@@ -166,7 +167,7 @@ export function TilePicker({
       current: value === item.value
     };
     return item.href ? (
-      <ListRow key={item.value} {...shared} href={item.href} />
+      <ListRow key={item.value} {...shared} href={item.href} external={item.external} />
     ) : (
       <ListRow key={item.value} {...shared} onClick={() => onSelect?.(item.value)} />
     );
@@ -190,31 +191,31 @@ export function TilePicker({
           {visible.map((group) =>
             group.label ? (
               <ListSection
-                key={group.label}
+                key={group.id}
                 label={group.label}
                 meta={group.counted ? String(group.items.length) : undefined}
               >
                 {group.items.map(row)}
               </ListSection>
             ) : (
-              group.items.map(row)
+              <React.Fragment key={group.id}>{group.items.map(row)}</React.Fragment>
             )
           )}
         </List>
       );
-    return visible.map((group, index) =>
+    return visible.map((group) =>
       group.label ? (
-        <section key={group.label} className={styles.section} aria-label={group.label}>
+        <section key={group.id} className={styles.section} aria-label={group.label}>
           {head(group.label, group.counted ? group.items.length : undefined)}
           {grid(group)}
         </section>
       ) : (
-        <React.Fragment key={index}>{grid(group)}</React.Fragment>
+        <React.Fragment key={group.id}>{grid(group)}</React.Fragment>
       )
     );
   };
   const ownPinned = pinnedLabel ? items.filter((item) => item.pinned) : [];
-  const pinnedGroup: Group = { label: pinnedLabel, items: ownPinned, pinned: true };
+  const pinnedGroup: Group = { id: "pinned", label: pinnedLabel, items: ownPinned, pinned: true };
   let body: React.ReactNode;
   if (!query && items.length === 0 && empty !== undefined)
     body = <EmptyGhostScope ghost={ghost ?? (filtered ? false : "cards")}>{empty}</EmptyGhostScope>;
@@ -245,7 +246,7 @@ export function TilePicker({
             }
           />
         )}
-        {render([{ items: [...found, ...trailing] }, pinnedGroup])}
+        {render([{ id: "results", items: [...found, ...trailing] }, pinnedGroup])}
       </>
     );
   } else {
@@ -253,11 +254,11 @@ export function TilePicker({
     const featured = popularStyle === "featured" && layout === "grid" ? popular : [];
     const rest = items.filter((item) => !ownPinned.includes(item) && !featured.includes(item));
     const lead: Group[] = [
-      { label: popularLabel, items: featured.length > 0 ? [] : popular },
+      { id: "popular", label: popularLabel, items: featured.length > 0 ? [] : popular },
       pinnedGroup
     ];
     const above = featured.length > 0 || lead.some((group) => group.items.length > 0);
-    let catalog: Group[] = [{ label: above ? allLabel : undefined, items: rest }];
+    let catalog: Group[] = [{ id: "all", label: above ? allLabel : undefined, items: rest }];
     if (groupBy) {
       const groups = new Map<string, TilePickerItem[]>();
       for (const item of rest) {
@@ -266,7 +267,12 @@ export function TilePicker({
       }
       catalog = [...groups]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([label, members]) => ({ label, items: members, counted: true }));
+        .map(([label, members]) => ({
+          id: `category:${label}`,
+          label,
+          items: members,
+          counted: true
+        }));
     }
     body = (
       <>
