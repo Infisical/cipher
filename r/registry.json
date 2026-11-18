@@ -431,6 +431,7 @@
       "registryDependencies": [
         "@cipher/button",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/input"
       ],
@@ -704,6 +705,7 @@
       "registryDependencies": [
         "@cipher/badge",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/tooltip"
       ],
@@ -1076,6 +1078,7 @@
         "@cipher/button",
         "@cipher/checkbox",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/input",
         "@cipher/popover",
@@ -1215,6 +1218,7 @@
       "registryDependencies": [
         "@cipher/button",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon"
       ],
       "dependencies": [
@@ -1420,6 +1424,7 @@
         "@cipher/animated-collapse",
         "@cipher/cipher-base",
         "@cipher/context-menu",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/input",
         "@cipher/middle-truncate"
@@ -1510,7 +1515,8 @@
       "name": "hover-card",
       "type": "registry:ui",
       "registryDependencies": [
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/empty"
       ],
       "dependencies": [
         "radix-ui@^1.6.7"
@@ -1806,6 +1812,7 @@
       "registryDependencies": [
         "@cipher/checkbox",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/skeleton"
       ],
@@ -2001,6 +2008,7 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon"
       ],
       "dependencies": [
@@ -2353,6 +2361,7 @@
       "registryDependencies": [
         "@cipher/button",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/skeleton",
         "@cipher/sonner",
@@ -2397,6 +2406,7 @@
         "@cipher/alert-dialog",
         "@cipher/button",
         "@cipher/cipher-base",
+        "@cipher/empty",
         "@cipher/icon",
         "@cipher/layout",
         "@cipher/tabs"

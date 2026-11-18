@@ -4,6 +4,7 @@ import * as React from "react";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 
 import { usePortalContainer } from "../scope";
+import { EmptySurface } from "./empty";
 import { Button } from "./button";
 import { Icon, type IconSource } from "./icon";
 import { Input } from "./input";
@@ -45,7 +46,9 @@ function AlertDialogPortal({
       data-slot="alert-dialog-portal"
       {...props}
     >
-      <FrameScope framed={false}>{children}</FrameScope>
+      <FrameScope framed={false}>
+        <EmptySurface>{children}</EmptySurface>
+      </FrameScope>
     </AlertDialogPrimitive.Portal>
   );
 }

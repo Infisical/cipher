@@ -16,6 +16,7 @@ import {
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
 
+import { EmptyScope } from "./empty";
 import { Badge } from "./badge";
 import { Icon } from "./icon";
 import { TooltipText } from "./tooltip";
@@ -182,50 +183,52 @@ function Card({
       <StretchedLinkContext value={reportLink}>
         <CardChoiceContext value={reportChoice}>
           <FrameScope framed={inFrame || variant !== "plain"}>
-            <FramedContext value={variant !== "plain"}>
-              {convenience &&
-              variant !== "plain" &&
-              footer !== undefined &&
-              footerPlacement === "frame" ? (
-                <>
-                  <div
-                    data-slot="card-inset"
-                    className={cn(frameStyles.frameInset, controlStyles.cardInset)}
-                  >
+            <EmptyScope size="sm" fill={flush}>
+              <FramedContext value={variant !== "plain"}>
+                {convenience &&
+                variant !== "plain" &&
+                footer !== undefined &&
+                footerPlacement === "frame" ? (
+                  <>
+                    <div
+                      data-slot="card-inset"
+                      className={cn(frameStyles.frameInset, controlStyles.cardInset)}
+                    >
+                      {backdrop}
+                      <FramedContext value={false}>
+                        {header}
+                        {children !== undefined && children !== null && (
+                          <CardContent>{children}</CardContent>
+                        )}
+                      </FramedContext>
+                    </div>
+                    <CardFooter placement="frame">{footer}</CardFooter>
+                  </>
+                ) : convenience ? (
+                  <>
+                    {!panelBackdrop && backdrop}
+                    {header}
+                    <CardContent data-backdrop={panelBackdrop ? "" : undefined}>
+                      {panelBackdrop && backdrop}
+                      {children}
+                    </CardContent>
+                    {footer !== undefined && (
+                      <CardFooter placement={footerPlacement}>{footer}</CardFooter>
+                    )}
+                  </>
+                ) : composed ? (
+                  <>
+                    {!composed.placed && backdrop}
+                    {composed.content}
+                  </>
+                ) : (
+                  <>
                     {backdrop}
-                    <FramedContext value={false}>
-                      {header}
-                      {children !== undefined && children !== null && (
-                        <CardContent>{children}</CardContent>
-                      )}
-                    </FramedContext>
-                  </div>
-                  <CardFooter placement="frame">{footer}</CardFooter>
-                </>
-              ) : convenience ? (
-                <>
-                  {!panelBackdrop && backdrop}
-                  {header}
-                  <CardContent data-backdrop={panelBackdrop ? "" : undefined}>
-                    {panelBackdrop && backdrop}
                     {children}
-                  </CardContent>
-                  {footer !== undefined && (
-                    <CardFooter placement={footerPlacement}>{footer}</CardFooter>
-                  )}
-                </>
-              ) : composed ? (
-                <>
-                  {!composed.placed && backdrop}
-                  {composed.content}
-                </>
-              ) : (
-                <>
-                  {backdrop}
-                  {children}
-                </>
-              )}
-            </FramedContext>
+                  </>
+                )}
+              </FramedContext>
+            </EmptyScope>
           </FrameScope>
         </CardChoiceContext>
       </StretchedLinkContext>

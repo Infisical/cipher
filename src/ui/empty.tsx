@@ -12,7 +12,30 @@ const GHOSTS = ["a", "b", "c", "d", "e", "f"];
 
 export type EmptyGhost = "rows" | "cards" | false;
 
-const GhostContext = React.createContext<EmptyGhost | undefined>(undefined);
+type EmptyDefaults = { ghost?: EmptyGhost; size?: EmptySize; fill?: boolean };
+
+const EmptyContext = React.createContext<EmptyDefaults>({});
+
+/** Sets what an Empty inside defaults to, keeping the outer scope's value for anything left unset. Containers with an empty slot use it, so a prop on the Empty still wins. fill gives an Empty without ghost rows the height of a ghosted table empty. */
+export function EmptyScope({
+  ghost,
+  size,
+  fill,
+  children
+}: EmptyDefaults & { children: React.ReactNode }) {
+  const outer = React.useContext(EmptyContext);
+  return (
+    <EmptyContext
+      value={{
+        ghost: ghost === undefined ? outer.ghost : ghost,
+        size: size ?? outer.size,
+        fill: fill ?? outer.fill
+      }}
+    >
+      {children}
+    </EmptyContext>
+  );
+}
 
 /** Sets the ghost an Empty inside defaults to. Containers with an empty slot use it, so an explicit ghost on the Empty still wins. */
 export function EmptyGhostScope({
@@ -22,17 +45,30 @@ export function EmptyGhostScope({
   ghost: EmptyGhost | undefined;
   children: React.ReactNode;
 }) {
-  return <GhostContext value={ghost}>{children}</GhostContext>;
+  return <EmptyScope ghost={ghost}>{children}</EmptyScope>;
+}
+
+/** Starts a fresh surface such as an overlay: an Empty inside takes the page defaults, whatever container opened it. */
+export function EmptySurface({ children }: { children: React.ReactNode }) {
+  return (
+    <EmptyScope ghost={false} size="default" fill={false}>
+      {children}
+    </EmptyScope>
+  );
 }
 
 function Empty({
   className,
-  size = "default",
+  size,
   ghost,
   children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
+  /**
+   * The container picks it: sm in a table cell, a List and a card body, default on a page and in
+   * a sheet or dialog. Pass a size to override the container.
+   */
   size?: EmptySize;
   /**
    * Faded placeholder rows or cards behind the message, hinting at what fills the space. They fade
@@ -46,14 +82,15 @@ function Empty({
 } & {
   ref?: React.Ref<React.ComponentRef<"div">>;
 }) {
-  const inherited = React.useContext(GhostContext);
-  const resolved = ghost === undefined ? inherited : ghost;
+  const defaults = React.useContext(EmptyContext);
+  const resolved = ghost === undefined ? defaults.ghost : ghost;
   return (
     <div
       ref={ref}
       data-slot="empty"
-      data-size={size}
+      data-size={size ?? defaults.size ?? "default"}
       data-ghost={resolved || undefined}
+      data-fill={(defaults.fill && !resolved) || undefined}
       className={cn(styles.root, className)}
       {...props}
     >
@@ -136,7 +173,7 @@ export const EmptyState = ({
   actions,
   icon = "inbox",
   media = "tile",
-  size = "default",
+  size,
   ghost
 }: {
   title: string;

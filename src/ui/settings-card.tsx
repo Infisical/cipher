@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { FrameScope } from "../lib/frame-context";
 import { cn } from "../lib/utils";
+import { EmptyScope } from "./empty";
 import { Button } from "./button";
 import { Icon } from "./icon";
 import { Skeleton } from "./skeleton";
@@ -262,7 +263,9 @@ export function SettingsCard({
         {header}
         {hasBody && (
           <FrameScope framed>
-            <div className={styles.flushContent}>{body}</div>
+            <EmptyScope size="sm" fill>
+              <div className={styles.flushContent}>{body}</div>
+            </EmptyScope>
           </FrameScope>
         )}
       </section>
@@ -287,9 +290,11 @@ export function SettingsCard({
         {header}
         {hasBody && (
           <FrameScope framed>
-            <fieldset className={styles.content} disabled={Boolean(locked) || saving}>
-              {body}
-            </fieldset>
+            <EmptyScope size="sm" fill={false}>
+              <fieldset className={styles.content} disabled={Boolean(locked) || saving}>
+                {body}
+              </fieldset>
+            </EmptyScope>
           </FrameScope>
         )}
         {hasFooter && (

@@ -4,6 +4,7 @@ import { FrameScope, useInFrame } from "../lib/frame-context";
 import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { cn } from "../lib/utils";
 import { Checkbox } from "./checkbox";
+import { EmptyScope } from "./empty";
 import { Icon } from "./icon";
 import { Skeleton } from "./skeleton";
 
@@ -445,7 +446,11 @@ export function List({
                   <span className={styles.sr}>Loading</span>
                 </li>
               ))}
-            {!rows.size && !loading && <li className={styles.empty}>{empty}</li>}
+            {!rows.size && !loading && (
+              <li className={styles.empty}>
+                <EmptyScope size="sm">{empty}</EmptyScope>
+              </li>
+            )}
           </ul>
           {footer && <div className={styles.status}>{footer}</div>}
           <span className={styles.sr} role="status">

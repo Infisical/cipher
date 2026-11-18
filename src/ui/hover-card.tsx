@@ -7,6 +7,7 @@ import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { FrameScope } from "../lib/frame-context";
 import { cn } from "../lib/utils";
+import { EmptySurface } from "./empty";
 
 import menu from "./menu.module.css";
 
@@ -48,7 +49,9 @@ function HoverCardContent({
         className={cn("z-50", menu.surface, menu.card, menu.motion, className)}
         {...props}
       >
-        <FrameScope framed={false}>{children}</FrameScope>
+        <FrameScope framed={false}>
+          <EmptySurface>{children}</EmptySurface>
+        </FrameScope>
       </HoverCardPrimitive.Content>
     </HoverCardPrimitive.Portal>
   );
