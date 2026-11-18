@@ -34,6 +34,7 @@ export default function Example() {
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <Card
             variant="framed"
+            flush
             title="Evaluation order"
             action={
               <Button variant="outline" icon="plus">

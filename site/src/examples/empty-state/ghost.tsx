@@ -56,7 +56,7 @@ export default function Example() {
         </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
-        <Card variant="framed">
+        <Card variant="framed" flush>
           <CardHeader>
             <CardTitle>App connections</CardTitle>
           </CardHeader>

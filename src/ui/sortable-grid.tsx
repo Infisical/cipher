@@ -1,5 +1,5 @@
 import * as React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { animate, motion, useMotionValue, useReducedMotion } from "motion/react";
 
 import { snap, spring } from "../lib/motion";
 import { useSortable } from "../lib/sortable";
@@ -34,6 +34,15 @@ export interface SortableGridProps<T> {
   className?: string;
 }
 
+type Box = { left: number; top: number; width: number; height: number };
+type Drag = {
+  slots: Box[];
+  grab: { x: number; y: number };
+  pointer: { x: number; y: number };
+};
+
+const center = (box: Box) => ({ x: box.left + box.width / 2, y: box.top + box.height / 2 });
+
 const columnsOf = (container: HTMLElement | null) => {
   const items = Array.from(container?.children ?? []) as HTMLElement[];
   const top = items[0]?.offsetTop;
@@ -65,24 +74,72 @@ export function SortableGrid<T>({
     if (key === "ArrowDown") return columns;
     return 0;
   };
-  const follow = (event: PointerEvent) => {
-    const target = Array.from(list.current?.children ?? []).findIndex((element) => {
-      const box = element.getBoundingClientRect();
-      return (
-        event.clientX >= box.left &&
-        event.clientX <= box.right &&
-        event.clientY >= box.top &&
-        event.clientY <= box.bottom
-      );
-    });
-    if (target >= 0) sort.moveTo(target);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const drag = React.useRef<Drag | null>(null);
+  const [held, setHeld] = React.useState<string | null>(null);
+
+  const origin = () => list.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
+  const place = () => {
+    const current = drag.current;
+    const element = list.current?.querySelector<HTMLElement>("[data-following]");
+    if (!current || !element) return;
+    const box = element.getBoundingClientRect();
+    x.set(current.pointer.x - current.grab.x - box.left);
+    y.set(current.pointer.y - current.grab.y - box.top);
   };
-  const startDrag = (item: T) => {
+  const follow = (event: PointerEvent) => {
+    const current = drag.current;
+    const lift = sort.liftRef.current;
+    if (!current || !lift) return;
+    current.pointer = { x: event.clientX, y: event.clientY };
+    const { left, top } = origin();
+    const from = current.slots[lift.from]!;
+    const card = {
+      x: event.clientX - left - current.grab.x + from.width / 2,
+      y: event.clientY - top - current.grab.y + from.height / 2
+    };
+    const distance = (box: Box) => Math.hypot(center(box).x - card.x, center(box).y - card.y);
+    let best = lift.to;
+    current.slots.forEach((slot, index) => {
+      if (distance(slot) < distance(current.slots[best]!)) best = index;
+    });
+    const slot = current.slots[lift.to]!;
+    const hysteresis = Math.min(slot.width, slot.height) * 0.25;
+    if (best !== lift.to && distance(current.slots[best]!) < distance(slot) - hysteresis)
+      sort.moveTo(best);
+    else place();
+  };
+  React.useLayoutEffect(place, [sort.lift?.to]);
+  const startDrag = (item: T, event: React.PointerEvent) => {
+    const container = list.current;
+    if (!container) return;
+    const { left, top } = container.getBoundingClientRect();
+    const slots = Array.from(container.children).map((element) => {
+      const box = element.getBoundingClientRect();
+      return { left: box.left - left, top: box.top - top, width: box.width, height: box.height };
+    });
+    const from = slots[items.indexOf(item)];
+    if (!from) return;
+    const key = getKey(item);
+    drag.current = {
+      slots,
+      grab: { x: event.clientX - left - from.left, y: event.clientY - top - from.top },
+      pointer: { x: event.clientX, y: event.clientY }
+    };
+    x.set(0);
+    y.set(0);
+    setHeld(key);
     sort.pick(item, true);
     const stop = () => {
       window.removeEventListener("pointermove", follow);
       window.removeEventListener("pointerup", stop);
       window.removeEventListener("pointercancel", stop);
+      drag.current = null;
+      const settle = reduced ? snap : spring.moderate;
+      Promise.all([animate(x, 0, settle), animate(y, 0, settle)]).then(() =>
+        setHeld((current) => (current === key ? null : current))
+      );
     };
     window.addEventListener("pointermove", follow);
     window.addEventListener("pointerup", stop);
@@ -112,35 +169,39 @@ export function SortableGrid<T>({
           const key = getKey(item);
           const itemDisabled = disabled || Boolean(isItemDisabled?.(item));
           const lifted = sort.lift?.key === key;
+          const following = held === key;
           return (
             <motion.li
               key={key}
-              layout="position"
+              layout={following ? false : "position"}
               transition={reduced ? snap : spring.moderate}
               className={styles.item}
               data-slot="sortable-grid-item"
-              data-dragging={lifted || undefined}
+              data-dragging={lifted || following || undefined}
+              data-following={following || undefined}
               data-disabled={itemDisabled || undefined}
             >
-              {renderItem(item, {
-                index,
-                dragging: lifted,
-                disabled: itemDisabled,
-                handle: (
-                  <SortableHandle
-                    itemKey={key}
-                    label={getLabel(item)}
-                    instructions={sort.instructions}
-                    lifted={lifted && !sort.lift?.pointer}
-                    disabled={itemDisabled}
-                    onPointerDown={() => {
-                      if (!sort.lift) startDrag(item);
-                    }}
-                    onKeyDown={(event) => sort.keyDown(event, item, delta(event.key))}
-                    onBlur={(event) => sort.blur(event, item)}
-                  />
-                )
-              })}
+              <motion.div className={styles.card} style={following ? { x, y } : undefined}>
+                {renderItem(item, {
+                  index,
+                  dragging: lifted,
+                  disabled: itemDisabled,
+                  handle: (
+                    <SortableHandle
+                      itemKey={key}
+                      label={getLabel(item)}
+                      instructions={sort.instructions}
+                      lifted={lifted && !sort.lift?.pointer}
+                      disabled={itemDisabled}
+                      onPointerDown={(event) => {
+                        if (!sort.lift && !held) startDrag(item, event);
+                      }}
+                      onKeyDown={(event) => sort.keyDown(event, item, delta(event.key))}
+                      onBlur={(event) => sort.blur(event, item)}
+                    />
+                  )
+                })}
+              </motion.div>
             </motion.li>
           );
         })}
