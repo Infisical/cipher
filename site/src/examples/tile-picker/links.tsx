@@ -5,7 +5,7 @@ const services: TilePickerItem[] = [
     value: "github",
     title: "GitHub",
     description: "Repositories, issues and pull requests.",
-    eyebrow: "Source control",
+    category: "Source control",
     icon: "git",
     href: "#/agent-vault/connections/new/github",
     popular: true
@@ -14,7 +14,7 @@ const services: TilePickerItem[] = [
     value: "linear",
     title: "Linear",
     description: "Issues, projects and cycles.",
-    eyebrow: "Project management",
+    category: "Project management",
     icon: "folder",
     href: "#/agent-vault/connections/new/linear"
   },
@@ -22,7 +22,7 @@ const services: TilePickerItem[] = [
     value: "custom-http",
     title: "Custom HTTP",
     description: "Any HTTP API, with headers and auth you define.",
-    eyebrow: "Generic",
+    category: "Generic",
     icon: "cloud",
     href: "https://infisical.com/docs",
     external: true
@@ -31,7 +31,7 @@ const services: TilePickerItem[] = [
     value: "mcp",
     title: "MCP",
     description: "Any server that speaks the Model Context Protocol.",
-    eyebrow: "Protocol",
+    category: "Protocol",
     icon: "link",
     href: "https://modelcontextprotocol.io/docs/getting-started/intro",
     external: true

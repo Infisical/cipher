@@ -381,7 +381,8 @@
         "@cipher/empty",
         "@cipher/icon",
         "@cipher/input",
-        "@cipher/item"
+        "@cipher/item",
+        "@cipher/list"
       ],
       "files": [
         {
@@ -393,6 +394,11 @@
           "path": "src/components/cipher/patterns/tile-picker.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/patterns/tile-picker.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/data.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/data.module.css"
         }
       ]
     },

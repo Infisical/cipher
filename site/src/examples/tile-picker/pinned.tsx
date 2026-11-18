@@ -5,35 +5,35 @@ const services: TilePickerItem[] = [
     value: "github",
     title: "GitHub",
     description: "Repositories, issues and pull requests.",
-    eyebrow: "Source control",
+    category: "Source control",
     icon: "git"
   },
   {
     value: "gitlab",
     title: "GitLab",
     description: "Projects, merge requests and pipelines.",
-    eyebrow: "Source control",
+    category: "Source control",
     icon: "git"
   },
   {
     value: "linear",
     title: "Linear",
     description: "Issues, projects and cycles.",
-    eyebrow: "Project management",
+    category: "Project management",
     icon: "folder"
   },
   {
     value: "stripe",
     title: "Stripe",
     description: "Customers, invoices and subscriptions.",
-    eyebrow: "Payments",
+    category: "Payments",
     icon: "key"
   },
   {
     value: "custom-http",
     title: "Custom HTTP",
     description: "Any HTTP API, with headers and auth you define.",
-    eyebrow: "Generic",
+    category: "Generic",
     icon: "cloud",
     pinned: true
   },
@@ -41,7 +41,7 @@ const services: TilePickerItem[] = [
     value: "mcp",
     title: "MCP",
     description: "Any server that speaks the Model Context Protocol.",
-    eyebrow: "Protocol",
+    category: "Protocol",
     icon: "link",
     pinned: true
   }

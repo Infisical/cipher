@@ -950,16 +950,36 @@
   {
     "id": "tile-picker",
     "title": "Tile picker",
-    "summary": "Search plus a grid of stacked tiles: popular first, then all; a search lists matches flat and offers to clear itself when nothing matches.",
+    "summary": "Search plus a grid of tiles with the category under each name, or a list of rows: popular first, as a section or a featured strip, then pinned items, then everything, optionally grouped by category. A search lists matches flat and offers to clear itself when nothing matches.",
     "group": "Patterns",
     "examples": [
       {
-        "title": "Popular and all providers",
+        "title": "Comfortable tiles: the category under the name, popular first",
         "module": "tile-picker/default"
+      },
+      {
+        "title": "Compact tiles grouped by category, with counts",
+        "module": "tile-picker/grouped"
+      },
+      {
+        "title": "List layout: the category as trailing meta, items as links",
+        "module": "tile-picker/list"
+      },
+      {
+        "title": "A short choice: no search, a selected tile",
+        "module": "tile-picker/short-choice"
       },
       {
         "title": "A few providers",
         "module": "tile-picker/few"
+      },
+      {
+        "title": "Plan badges, descriptions and inline disabled reasons",
+        "module": "tile-picker/badges"
+      },
+      {
+        "title": "Featured strip, pinned catch-alls under their own heading, then the catalog by category",
+        "module": "tile-picker/featured"
       },
       {
         "title": "Pinned items: Custom HTTP and MCP stay listed under any search",
@@ -1593,10 +1613,22 @@
     "summary": "Play back a recorded session on a timeline, with event markers and an event list kept in sync.",
     "group": "Data display",
     "examples": [
-      { "title": "Terminal recording", "module": "session-replay/default" },
-      { "title": "RDP recording", "module": "session-replay/rdp" },
-      { "title": "No events", "module": "session-replay/empty" },
-      { "title": "Long session with errors and a missing chunk", "module": "session-replay/stressed" }
+      {
+        "title": "Terminal recording",
+        "module": "session-replay/default"
+      },
+      {
+        "title": "RDP recording",
+        "module": "session-replay/rdp"
+      },
+      {
+        "title": "No events",
+        "module": "session-replay/empty"
+      },
+      {
+        "title": "Long session with errors and a missing chunk",
+        "module": "session-replay/stressed"
+      }
     ]
   },
   {

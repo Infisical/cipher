@@ -6,7 +6,7 @@ const items: TilePickerItem[] = [
     title: "AWS Secrets Manager in GovCloud (US-West) with cross-account replication",
     description:
       "Managed secret rotation, audit, and cross-account replication for regulated workloads in AWS GovCloud.",
-    eyebrow: "Amazon Web Services GovCloud",
+    category: "Amazon Web Services GovCloud",
     icon: "cloud",
     popular: true
   },
@@ -14,7 +14,7 @@ const items: TilePickerItem[] = [
     value: "azure-entra-scim",
     title: "Azure Entra ID SCIM",
     description: "SCIM provisioning tokens for Azure Entra ID Enterprise Applications.",
-    eyebrow: "Azure",
+    category: "Azure",
     icon: "users",
     popular: true,
     disabledReason: "Not available in this version yet. Use the classic app to set it up."
@@ -23,7 +23,7 @@ const items: TilePickerItem[] = [
     value: "github",
     title: "GitHub",
     description: "Actions, Dependabot, or Codespaces secrets.",
-    eyebrow: "CI/CD",
+    category: "CI/CD",
     icon: "git"
   },
   {
@@ -31,14 +31,14 @@ const items: TilePickerItem[] = [
     title: "Oracle Cloud Infrastructure Vault",
     description:
       "Secrets in an OCI Vault compartment, encrypted with a customer-managed master encryption key.",
-    eyebrow: "Oracle Cloud Infrastructure",
+    category: "Oracle Cloud Infrastructure",
     icon: "vault",
     disabledReason: "Your plan doesn't include this destination."
   },
   {
     value: "windmill",
     title: "Windmill",
-    eyebrow: "Automation",
+    category: "Automation",
     icon: "zap"
   }
 ];

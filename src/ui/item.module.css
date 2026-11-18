@@ -256,6 +256,10 @@
   flex: 0 1 auto;
   min-width: 0;
 }
+.titleLine > .tileTitle {
+  flex: 0 1 auto;
+  min-width: 0;
+}
 .titleLine > .clamp {
   display: -webkit-box;
   -webkit-box-orient: vertical;
