@@ -962,7 +962,7 @@
         "module": "tile-picker/grouped"
       },
       {
-        "title": "List layout: the category as trailing meta, items as links",
+        "title": "List layout: the category under each name, items as links",
         "module": "tile-picker/list"
       },
       {

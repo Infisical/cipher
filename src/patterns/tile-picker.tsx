@@ -21,8 +21,6 @@ export type TilePickerItem = {
   category?: string;
   /** @deprecated Use category. */
   eyebrow?: string;
-  /** The trailing slot in the list layout. Defaults to category. */
-  meta?: React.ReactNode;
   /** Sits right after the title, such as a plan Badge. */
   badge?: React.ReactNode;
   icon?: IconSource;
@@ -45,7 +43,7 @@ export type TilePickerProps = Omit<React.ComponentPropsWithoutRef<"div">, "onSel
   items: readonly TilePickerItem[];
   /** Called with a picked item's value. Items with an href navigate instead. */
   onSelect?: (value: string) => void;
-  /** grid shows tiles; list shows a List of rows with the category as trailing meta. */
+  /** grid shows tiles; list shows a List of rows, each with the description or category under its name. */
   layout?: "grid" | "list";
   /** compact shows the title only, so about twice as many tiles fit. Grid only. */
   density?: "comfortable" | "compact";
@@ -159,10 +157,9 @@ export function TilePicker({
       value: item.value,
       label: item.title,
       title: item.title,
-      description: item.disabledReason ?? item.description,
+      description: item.disabledReason ?? item.description ?? categoryOf(item),
       media: media(item),
       badge: item.badge,
-      meta: item.meta ?? categoryOf(item),
       disabled: Boolean(item.disabledReason),
       current: value === item.value
     };

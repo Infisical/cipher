@@ -21,6 +21,20 @@
   align-items: center;
   justify-content: center;
 }
+/* The media centres on a title plus one description line, then stays put as longer copy grows downward. */
+[data-slot="tile"]:not([data-layout="stacked"])[data-described] {
+  --cipher-tile-default-row: calc(
+    var(--cipher-type-row-title-line-height) + var(--cipher-space-4) +
+      var(--cipher-type-small-line-height)
+  );
+}
+[data-slot="tile"]:not([data-layout="stacked"])[data-described] > .lead {
+  min-height: var(--cipher-tile-default-row);
+}
+[data-slot="tile"]:not([data-layout="stacked"])[data-described] > svg:last-child {
+  align-self: flex-start;
+  margin-top: calc((var(--cipher-tile-default-row) - var(--cipher-size-icon)) / 2);
+}
 .main {
   display: flex;
   flex: 1 1 var(--cipher-size-text-min);

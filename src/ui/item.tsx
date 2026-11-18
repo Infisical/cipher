@@ -649,6 +649,7 @@ export function Tile({
       {...linkProps}
       data-slot="tile"
       data-layout={layout === "row" ? undefined : layout}
+      data-described={detail ? "" : undefined}
       data-in-frame={inFrame || undefined}
       aria-pressed={link ? undefined : selected}
       aria-current={link && selected ? "page" : undefined}
