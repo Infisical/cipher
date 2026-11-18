@@ -27,7 +27,7 @@ export const iconShapes = {
     {
       tag: "path",
       attributes: {
-        d: "m11 12 8.5-8.5M16.5 6.5 19 9M14 9l2 2"
+        d: "m11 12 8.5-8.5M18 5l2.3 2.3M15.5 7.5l1.8 1.8"
       }
     }
   ],
@@ -297,27 +297,17 @@ export const iconShapes = {
     {
       tag: "rect",
       attributes: {
-        x: "4",
-        y: "4.5",
-        width: "16",
-        height: "6",
-        rx: "1.5"
-      }
-    },
-    {
-      tag: "rect",
-      attributes: {
-        x: "4",
-        y: "13.5",
-        width: "16",
-        height: "6",
+        x: "6.5",
+        y: "6.5",
+        width: "11",
+        height: "11",
         rx: "1.5"
       }
     },
     {
       tag: "path",
       attributes: {
-        d: "M7.5 7.5h.01M7.5 16.5h.01"
+        d: "M9.5 3.5v3M14.5 3.5v3M9.5 17.5v3M14.5 17.5v3M3.5 9.5h3M3.5 14.5h3M17.5 9.5h3M17.5 14.5h3"
       }
     }
   ],
@@ -325,13 +315,33 @@ export const iconShapes = {
     {
       tag: "path",
       attributes: {
-        d: "M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"
+        d: "M12 10.2H6.6"
       }
     },
     {
       tag: "path",
       attributes: {
-        d: "m9 12 2 2 4-4"
+        d: "M19.82 15.13L20.98 19.52A0.45 0.45 0 0 1 20.35 20.05L18.7 19.29A0.9 0.9 0 0 0 17.9 19.29L16.24 20.06A0.45 0.45 0 0 1 15.62 19.52L16.78 15.13"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M21 7.21V6.3A1.5 1.5 0 0 0 19.5 4.8H4.5A1.5 1.5 0 0 0 3 6.3V17.7A1.5 1.5 0 0 0 4.5 19.2H12"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M6.6 13.8H10.2"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "18.3",
+        cy: "12.9",
+        r: "2.7"
       }
     }
   ],
@@ -1346,6 +1356,788 @@ export const iconShapes = {
       tag: "path",
       attributes: {
         d: "M7.5 7.5h.01M7.5 16.5h.01"
+      }
+    }
+  ],
+  keyhole: [
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "12",
+        r: "8.5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "10.2",
+        r: "2.2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 12.4v4.1"
+      }
+    }
+  ],
+  "scan-key": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "10",
+        cy: "14",
+        r: "2.2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m11.6 12.4 4.4-4.4M14.4 9.6l1.3 1.3"
+      }
+    }
+  ],
+  "terminal-key": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.55 19.5H5A2 2 0 0 1 3 17.5V6.5A2 2 0 0 1 5 4.5H19A2 2 0 0 1 21 6.5V17.5A2 2 0 0 1 19 19.5H18.85"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m7 8.5 3 2.5-3 2.5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "15.2",
+        cy: "19.3",
+        r: "1.8"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.2 17.5V12.1M15.2 13.9h1.8"
+      }
+    }
+  ],
+  "agent-lock": [
+    {
+      tag: "rect",
+      attributes: {
+        x: "5",
+        y: "8.5",
+        width: "14",
+        height: "11",
+        rx: "3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M9 8.5V7a3 3 0 0 1 6 0v1.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M9.5 13v1.5M14.5 13v1.5"
+      }
+    }
+  ],
+  "folder-secrets": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.5 19.5H5A1.5 1.5 0 0 1 3.5 18V7A1.5 1.5 0 0 1 5 5.5h4.2l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V11.5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "15.2",
+        cy: "18.4",
+        r: "2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M16.6 17L20.4 13.2M19.4 14.2l1.2 1.2"
+      }
+    }
+  ],
+  "folder-cert": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.5 19.5H5A1.5 1.5 0 0 1 3.5 18V7A1.5 1.5 0 0 1 5 5.5h4.2l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V11.5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "17",
+        cy: "15.4",
+        r: "2.4"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.6 17.4l-.6 3 2-.9 2 .9-.6-3"
+      }
+    }
+  ],
+  "folder-kms": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.5 19.5H5A1.5 1.5 0 0 1 3.5 18V7A1.5 1.5 0 0 1 5 5.5h4.2l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V11.5"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "17",
+        cy: "16.6",
+        r: "3.8"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "17",
+        cy: "15.7",
+        r: "1.1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M17 16.8v1.8"
+      }
+    }
+  ],
+  "folder-scanning": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.5 19.5H5A1.5 1.5 0 0 1 3.5 18V7A1.5 1.5 0 0 1 5 5.5h4.2l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V11.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M13 15v-1.4a1 1 0 0 1 1-1h1.4M18.6 12.6H20a1 1 0 0 1 1 1v1.4M21 18.2V19.6a1 1 0 0 1-1 1h-1.4M15.4 20.6H14a1 1 0 0 1-1-1v-1.4"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.4 16.6h3.2"
+      }
+    }
+  ],
+  "folder-pam": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.4 19.5H5A1.5 1.5 0 0 1 3.5 18V7A1.5 1.5 0 0 1 5 5.5h4.2l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V11.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m13.6 14 2.6 2.6-2.6 2.6M17.4 19.2h3.2"
+      }
+    }
+  ],
+  "folder-agent": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.5 19.5H5A1.5 1.5 0 0 1 3.5 18V7A1.5 1.5 0 0 1 5 5.5h4.2l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V11.5"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "13.4",
+        y: "15",
+        width: "7.2",
+        height: "5.4",
+        rx: "1.6"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.5 15v-.9a1.5 1.5 0 0 1 3 0v.9M15.6 17.3v.7M18.4 17.3v.7"
+      }
+    }
+  ],
+  "shield-user": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "10",
+        r: "2.3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.4 16.3c.8-1.6 2-2.4 3.6-2.4s2.8.8 3.6 2.4"
+      }
+    }
+  ],
+  "shield-check": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m9 12 2 2 4-4"
+      }
+    }
+  ],
+  "sign-in": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M4 12h10M10.5 8.5 14 12l-3.5 3.5"
+      }
+    }
+  ],
+  "app-window": [
+    {
+      tag: "rect",
+      attributes: {
+        x: "3",
+        y: "4.8",
+        width: "18",
+        height: "14.4",
+        rx: "1.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.2 4.8V8.4"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M3 8.4H21"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M6.6 4.8V8.4"
+      }
+    }
+  ],
+  network: [
+    {
+      tag: "rect",
+      attributes: {
+        x: "9",
+        y: "3.5",
+        width: "6",
+        height: "5",
+        rx: "1.2"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "3.5",
+        y: "15.5",
+        width: "6",
+        height: "5",
+        rx: "1.2"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "14.5",
+        y: "15.5",
+        width: "6",
+        height: "5",
+        rx: "1.2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 8.5v3.5M6.5 15.5V13.5a1.5 1.5 0 0 1 1.5-1.5h8a1.5 1.5 0 0 1 1.5 1.5v2"
+      }
+    }
+  ],
+  "id-badge": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M14.7 4.8C15.54 4.8 15.96 4.8 16.3 4.89 17.23 5.14 17.96 5.87 18.21 6.8 18.3 7.14 18.3 7.56 18.3 8.4V15.6C18.3 18.15 18.3 19.42 17.51 20.21 16.72 21 15.45 21 12.9 21H11.1C8.55 21 7.28 21 6.49 20.21 5.7 19.42 5.7 18.15 5.7 15.6V10.2C5.7 7.65 5.7 6.38 6.49 5.59 7.28 4.8 8.55 4.8 11.1 4.8"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.2 8.4H13.8"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 8.4L15.6 3M9.6 4.8L8.4 3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M14.25 14.25C14.25 13.01 13.24 12 12 12 10.76 12 9.75 13.01 9.75 14.25 9.75 15.49 10.76 16.5 12 16.5 13.24 16.5 14.25 15.49 14.25 14.25Z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.52 20.55C7.75 18.28 9.67 16.5 12 16.5 14.33 16.5 16.25 18.28 16.48 20.55"
+      }
+    }
+  ],
+  proxy: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 12H12.01"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.6 12H15.61"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M16.5 7.5L21 12 16.5 16.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.5 7.5L3 12 7.5 16.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.4 12H8.41"
+      }
+    }
+  ],
+  layers: [
+    {
+      tag: "path",
+      attributes: {
+        d: "m12 4 8.5 4.5L12 13 3.5 8.5z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m3.5 12.5 8.5 4.5 8.5-4.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m3.5 16.5 8.5 4.5 8.5-4.5"
+      }
+    }
+  ],
+  tag: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M3.5 11.6V5A1.5 1.5 0 0 1 5 3.5h6.6a1.5 1.5 0 0 1 1 .4l7.5 7.5a1.5 1.5 0 0 1 0 2.1l-6.6 6.6a1.5 1.5 0 0 1-2.1 0L3.9 12.6a1.5 1.5 0 0 1-.4-1z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8 8h.01"
+      }
+    }
+  ],
+  webhook: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M17.4 16.48H12.01C11.02 16.48 10.25 17.33 9.78 18.19A3.6 3.6 0 0 1 3 16.5C3.01 15.87 3.18 15.24 3.51 14.7"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M6.6 16.5L9.42 11.3C9.89 10.43 9.51 9.34 8.97 8.51A3.6 3.6 0 1 1 15.17 4.85"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 6.6L14.82 11.76C15.29 12.63 16.41 12.9 17.4 12.9A3.6 3.6 0 0 1 17.4 20.1"
+      }
+    }
+  ],
+  "pen-nib": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 3.5 6.5 9.5l1.8 7.5h7.4l1.8-7.5z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 3.5v7.2"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "12",
+        cy: "11.7",
+        r: "1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8 20.5h8"
+      }
+    }
+  ],
+  landmark: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.2 17.4V11.1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M11.21 3.18A1.8 1.8 0 0 1 12.79 3.18L19.85 6.65A0.45 0.45 0 0 1 19.65 7.5H4.35A0.45 0.45 0 0 1 4.15 6.65Z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M13.8 17.4V11.1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M17.4 17.4V11.1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M3.9 21H20.1"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M6.6 17.4V11.1"
+      }
+    }
+  ],
+  "file-badge": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12.9 21H17.7A1.5 1.5 0 0 0 19.2 19.5V8.4A2.16 2.16 0 0 0 18.56 6.86L15.34 3.64A2.16 2.16 0 0 0 13.8 3H6.3A1.5 1.5 0 0 0 4.8 4.5V7.77"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M13.8 3V7.5A0.9 0.9 0 0 0 14.7 8.4H19.2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.12 16.03L9.28 20.42A0.45 0.45 0 0 1 8.65 20.95L7 20.19A0.9 0.9 0 0 0 6.2 20.19L4.54 20.96A0.45 0.45 0 0 1 3.92 20.42L5.08 16.03"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "6.6",
+        cy: "13.8",
+        r: "2.7"
+      }
+    }
+  ],
+  cable: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M16.5 18.3A0.9 0.9 0 0 1 15.6 17.4V15.3A1.5 1.5 0 0 1 17.1 13.8H19.5A1.5 1.5 0 0 1 21 15.3V17.4A0.9 0.9 0 0 1 20.1 18.3Z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M16.5 20.1V18.3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M18.3 13.8V7.05A0.9 0.9 0 0 0 12 7.05V16.95A0.9 0.9 0 0 1 5.7 16.95V10.2"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M20.1 20.1V18.3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M3.9 5.7V3.9"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M4.5 10.2A1.5 1.5 0 0 1 3 8.7V6.6A0.9 0.9 0 0 1 3.9 5.7H7.5A0.9 0.9 0 0 1 8.4 6.6V8.7A1.5 1.5 0 0 1 6.9 10.2Z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.5 5.7V3.9"
+      }
+    }
+  ],
+  "user-key": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M19.2 11.1V16.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M19.2 12.9H21"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M3.9 20.1V16.2A1.5 1.5 0 0 1 5.4 14.7H12.9A3.6 3.6 0 0 1 14.76 15.22"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "10.2",
+        cy: "7.5",
+        r: "3.6"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "19.2",
+        cy: "18.3",
+        r: "1.8"
+      }
+    }
+  ],
+  "clipboard-list": [
+    {
+      tag: "rect",
+      attributes: {
+        x: "8.4",
+        y: "3",
+        width: "7.2",
+        height: "3.6",
+        rx: "0.9"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.6 4.8H17.7A1.5 1.5 0 0 1 19.2 6.3V19.5A1.5 1.5 0 0 1 17.7 21H6.3A1.5 1.5 0 0 1 4.8 19.5V6.3A1.5 1.5 0 0 1 6.3 4.8H8.4"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 11.1H15.6"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 15.6H15.6"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.4 11.1H8.41"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.4 15.6H8.41"
+      }
+    }
+  ],
+  "id-card": [
+    {
+      tag: "path",
+      attributes: {
+        d: "M12.9 18.3A3.6 3.6 0 0 0 5.7 18.3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.6 10.2H17.4"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.6 13.8H17.4"
+      }
+    },
+    {
+      tag: "circle",
+      attributes: {
+        cx: "9.3",
+        cy: "12",
+        r: "2.7"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "3",
+        y: "5.7",
+        width: "18",
+        height: "12.6",
+        rx: "1.5"
+      }
+    }
+  ],
+  braces: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M8.5 4H8a2 2 0 0 0-2 2v3.5a2.5 2.5 0 0 1-2.5 2.5A2.5 2.5 0 0 1 6 14.5V18a2 2 0 0 0 2 2h.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M15.5 4h.5a2 2 0 0 1 2 2v3.5a2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0-2.5 2.5V18a2 2 0 0 1-2 2h-.5"
+      }
+    }
+  ],
+  book: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M5.5 18.5V5A1.5 1.5 0 0 1 7 3.5h11.5v14H7A1.5 1.5 0 0 0 5.5 19 1.5 1.5 0 0 0 7 20.5h11.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M18.5 17.5v3"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M10 3.5v6l1.75-1.2 1.75 1.2v-6"
+      }
+    }
+  ],
+  funnel: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M10.2 19.2A0.9 0.9 0 0 0 10.7 20.01L12.5 20.91A0.9 0.9 0 0 0 13.8 20.1V13.8A1.8 1.8 0 0 1 14.27 12.59L20.77 5.4A0.9 0.9 0 0 0 20.1 3.9H3.9A0.9 0.9 0 0 0 3.23 5.4L9.73 12.59A1.8 1.8 0 0 1 10.2 13.8Z"
+      }
+    }
+  ],
+  honey: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M7.5 10.7L12 13.3V18.5L7.5 21.09L3 18.5V13.3z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M16.5 10.7L21 13.3V18.5L16.5 21.09L12 18.5V13.3z"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "M12 2.91L16.5 5.5V10.7L12 13.3L7.5 10.7V5.5z"
       }
     }
   ]

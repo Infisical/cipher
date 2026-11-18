@@ -18,6 +18,7 @@ filesIn(dist)
   });
 cpSync(path.join(root, "src/tokens.json"), path.join(dist, "tokens.json"));
 cpSync(path.join(root, "src/tokens.generated.css"), path.join(dist, "tokens.css"));
+cpSync(path.join(root, "src/THIRD_PARTY_NOTICES.md"), path.join(dist, "THIRD_PARTY_NOTICES.md"));
 mkdirSync(path.join(dist, "fonts"), { recursive: true });
 readdirSync(path.join(root, "src/fonts")).forEach((file) =>
   cpSync(path.join(root, "src/fonts", file), path.join(dist, "fonts", file))
