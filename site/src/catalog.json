@@ -2056,6 +2056,10 @@
       {
         "title": "Row focus while editing",
         "module": "table/row-focus"
+      },
+      {
+        "title": "Inline editable cells",
+        "module": "table/editable-cells"
       }
     ]
   },

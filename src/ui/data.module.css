@@ -1551,6 +1551,25 @@ tbody > .nativeTableRow[data-loading] {
 .nativeTableCell {
   height: var(--cipher-table-row-height, var(--cipher-size-row));
 }
+.editableCell {
+  cursor: text;
+}
+.editableCell:focus-visible {
+  outline: 2px solid var(--cipher-ink);
+  outline-offset: -2px;
+}
+.cellEditor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cipher-space-4);
+  padding-block: var(--cipher-space-4);
+  min-width: 0;
+  white-space: normal;
+}
+.cellEditor > * {
+  width: 100%;
+  min-width: 0;
+}
 .nativeTableHead {
   height: var(--cipher-size-control-md);
   color: var(--cipher-muted);
