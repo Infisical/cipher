@@ -17,6 +17,11 @@
       ],
       "files": [
         {
+          "path": "src/components/cipher/THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "src/components/cipher/THIRD_PARTY_NOTICES.md"
+        },
+        {
           "path": "src/components/cipher/base.css",
           "type": "registry:file",
           "target": "src/components/cipher/base.css"

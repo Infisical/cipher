@@ -1,6 +1,6 @@
 # Third-party notices
 
-Some icons in `src/ui/icon-data.ts` are adapted from open-source icon sets. Each was redrawn to Cipher's construction (scaled to the 24 grid, corner radii and stroke width fitted), and the licenses below apply to those icons.
+Some icons in Cipher's icon set (`ui/icon-data.ts`) are adapted from open-source icon sets. Each was redrawn to Cipher's construction (scaled to the 24 grid, corner radii and stroke width fitted), and the licenses below apply to those icons.
 
 ## Lucide
 
