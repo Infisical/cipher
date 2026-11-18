@@ -20,8 +20,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./dropdown-menu";
+import { FieldError } from "./field";
 import { Icon, type IconSource } from "./icon";
+import { Input } from "./input";
 import { Skeleton } from "./skeleton";
+import { Textarea } from "./textarea";
 import { Tooltip, TooltipScope } from "./tooltip";
 
 import geometry from "./button-geometry.module.css";
@@ -375,6 +378,176 @@ function TableCell({
   );
 }
 TableCell.displayName = "TableCell";
+
+export type InlineEdit = {
+  /** Names the field for assistive tech, such as "Value of API_KEY". */
+  label: string;
+  /** The value the editor opens with, or a loader for one fetched on open, such as a secret's value. A loader that resolves undefined leaves the cell closed. */
+  value: string | (() => Promise<string | undefined>);
+  /** Runs with the new value once validate passes. It doesn't run when the value is unchanged. */
+  onCommit: (value: string) => void;
+  /** Returns a message to keep the editor open with that error under the field. A result that arrives after a newer edit, a cancel or a close is ignored. */
+  validate?: (value: string) => string | undefined | Promise<string | undefined>;
+  /** Runs when focus leaves while the value is invalid. The edit is discarded. */
+  onInvalidBlur?: (message: string) => void;
+  /** Rewrites each change, such as uppercasing a key. */
+  transform?: (value: string) => string;
+  /** A textarea that grows with the value, where Shift+Enter adds a line. Single-line values are trimmed before they commit. */
+  multiline?: boolean;
+  placeholder?: string;
+  mono?: boolean;
+};
+
+function CellEditor({
+  edit,
+  initial,
+  onDone
+}: {
+  edit: InlineEdit;
+  initial: string;
+  onDone: (refocus: boolean) => void;
+}) {
+  const [draft, setDraft] = React.useState(initial);
+  const [error, setError] = React.useState<string>();
+  const attempt = React.useRef(0);
+  const closed = React.useRef(false);
+  const errorId = React.useId();
+  React.useEffect(() => {
+    closed.current = false;
+    return () => {
+      closed.current = true;
+      attempt.current += 1;
+    };
+  }, []);
+  const close = (refocus: boolean) => {
+    closed.current = true;
+    attempt.current += 1;
+    onDone(refocus);
+  };
+  const finish = async (blurred: boolean) => {
+    if (closed.current) return;
+    const next = edit.multiline ? draft : draft.trim();
+    if (next === initial) return close(!blurred);
+    attempt.current += 1;
+    const started = attempt.current;
+    const problem = await edit.validate?.(next);
+    if (started !== attempt.current || closed.current) return;
+    if (problem && !blurred) return setError(problem);
+    if (problem) edit.onInvalidBlur?.(problem);
+    else edit.onCommit(next);
+    close(!blurred);
+  };
+  const control = {
+    autoFocus: true,
+    value: draft,
+    placeholder: edit.placeholder,
+    mono: edit.mono,
+    "aria-label": edit.label,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+    autoComplete: "off",
+    spellCheck: false,
+    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      attempt.current += 1;
+      setDraft(edit.transform ? edit.transform(event.target.value) : event.target.value);
+      setError(undefined);
+    },
+    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (event.nativeEvent.isComposing) return;
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        finish(false);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        close(true);
+      }
+    },
+    onBlur: () => finish(true)
+  };
+  return (
+    <div className={styles.cellEditor} data-invalid={error ? "" : undefined}>
+      {edit.multiline ? (
+        <Textarea {...control} rows={1} maxRows={6} />
+      ) : (
+        <Input {...control} invalid={Boolean(error)} />
+      )}
+      {error && <FieldError id={errorId}>{error}</FieldError>}
+    </div>
+  );
+}
+
+/** A TableCell that edits its value in place: click it, or press Enter or F2 on it, to open the editor. Enter or leaving the field commits, and Escape cancels. Without edit it is a plain TableCell. */
+function EditableCell({
+  edit,
+  children,
+  className,
+  onClick,
+  onKeyDown,
+  onBlur,
+  tabIndex,
+  ref,
+  ...props
+}: React.ComponentProps<typeof TableCell> & { edit?: InlineEdit }) {
+  const [initial, setInitial] = React.useState<string>();
+  const cell = React.useRef<HTMLTableCellElement>(null);
+  const opening = React.useRef(0);
+  const open = async () => {
+    if (!edit || initial !== undefined) return;
+    opening.current += 1;
+    const request = opening.current;
+    const loaded = typeof edit.value === "string" ? edit.value : await edit.value();
+    if (request === opening.current && loaded !== undefined) setInitial(loaded);
+  };
+  return (
+    <TableCell
+      ref={(node: HTMLTableCellElement | null) => {
+        cell.current = node;
+        if (typeof ref === "function") return ref(node);
+        if (ref) ref.current = node;
+      }}
+      data-row-interactive={edit ? true : undefined}
+      {...props}
+      className={cn(edit && styles.editableCell, className)}
+      data-editing={initial !== undefined || undefined}
+      tabIndex={edit ? (initial === undefined ? 0 : -1) : tabIndex}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!edit || initial !== undefined || event.defaultPrevented) return;
+        const hit = (event.target as HTMLElement).closest(interactiveTarget);
+        if (hit && hit !== event.currentTarget) return;
+        event.preventDefault();
+        open();
+      }}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        if (!edit || event.defaultPrevented || event.target !== event.currentTarget) return;
+        if (event.key !== "Enter" && event.key !== "F2") return;
+        event.preventDefault();
+        open();
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        if (initial === undefined) opening.current += 1;
+      }}
+    >
+      {edit && initial !== undefined ? (
+        <CellEditor
+          edit={edit}
+          initial={initial}
+          onDone={(refocus) => {
+            opening.current += 1;
+            setInitial(undefined);
+            if (refocus) cell.current?.focus();
+          }}
+        />
+      ) : (
+        children
+      )}
+    </TableCell>
+  );
+}
+EditableCell.displayName = "EditableCell";
 
 function TableCaption({ className, ref, ...props }: React.ComponentProps<"caption">) {
   return (
@@ -915,6 +1088,7 @@ RowContextMenu.displayName = "RowContextMenu";
 const rowActionSlots = (inline: number, menu: boolean) => Math.max(1, inline + (menu ? 1 : 0));
 
 export {
+  EditableCell,
   rowActionSlots,
   RowActions,
   RowContextMenu,

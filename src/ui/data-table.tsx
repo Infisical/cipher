@@ -14,6 +14,8 @@ import {
   RowActions,
   RowContextMenu,
   Table,
+  EditableCell,
+  type InlineEdit,
   TableActionsCell,
   TableActionsHead,
   TableBody,
@@ -59,6 +61,8 @@ export interface DataTableColumn<Row> {
   /** true pins the column to the inline end (the actions tail); start pins it to the inline start, after a pinned selection column. */
   pin?: boolean | "start";
   hideHeader?: boolean;
+  /** Edits the cell in place for this row, or undefined when the row can't be edited. Click the cell, or press Enter or F2 on it, to open the editor. */
+  edit?: (row: Row) => InlineEdit | undefined;
 }
 /** Attributes and handlers for a data row's tr, such as drag and drop handlers that make it a drop target. */
 export type DataTableRowProps = Omit<
@@ -376,7 +380,9 @@ export function DataTable<Row>({
     const measure = () => {
       const actual = Math.max(
         requestedRowHeight,
-        ...visibleRows.map((row) => row.getBoundingClientRect().height)
+        ...visibleRows
+          .filter((row) => !row.querySelector("[data-editing]"))
+          .map((row) => row.getBoundingClientRect().height)
       );
       if (actual > effectiveRowHeight + 0.5)
         setMeasuredRow({ requested: requestedRowHeight, height: actual });
@@ -639,16 +645,18 @@ export function DataTable<Row>({
               </div>
             </CellContent>
           );
+          const edit = column.actions || column.toggle ? undefined : column.edit?.(row);
           return (
-            <TableCell
+            <EditableCell
               key={column.id}
+              edit={edit}
               className={column.actions ? styles.tableActions : undefined}
               style={columnStyle(column)}
               data-actions={column.actions || undefined}
               data-pin={column.pin ?? column.actions}
               data-wrap={column.wrap || undefined}
               data-secondary={column.secondary ? true : undefined}
-              data-row-interactive={column.actions || column.toggle ? true : undefined}
+              data-row-interactive={column.actions || column.toggle || edit ? true : undefined}
             >
               {reorder && columnIndex === 0 ? (
                 <div className={styles.tableSortCell}>
@@ -658,7 +666,7 @@ export function DataTable<Row>({
               ) : (
                 content
               )}
-            </TableCell>
+            </EditableCell>
           );
         })}
         {rowActions && (

@@ -25,6 +25,7 @@ export interface ListRowProps {
   description?: React.ReactNode;
   media?: React.ReactNode;
   badge?: React.ReactNode;
+  /** A short, predictable value at the row end, such as a time, date, count, status or role. Put an uncapped string in the description instead. */
   meta?: React.ReactNode;
   actions?: React.ReactNode;
   error?: React.ReactNode;

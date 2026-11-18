@@ -2683,8 +2683,11 @@
         "@cipher/cipher-base",
         "@cipher/context-menu",
         "@cipher/dropdown-menu",
+        "@cipher/field",
         "@cipher/icon",
+        "@cipher/input",
         "@cipher/skeleton",
+        "@cipher/textarea",
         "@cipher/tooltip"
       ],
       "files": [
