@@ -6,6 +6,7 @@
 // node scope.mjs --cipher <dir> --base <ref> --candidate <ref> [--pages <manifest.json>] [--showcase]
 //   --showcase: the pages are Cipher's own showcase, so changes under site/ count too.
 //   manifest: { "root": "frontend/src", "alias": { "@app/": "frontend/src/" }, "pages": [{ "id": "x", "entries": ["frontend/src/pages/x.tsx"] }] }
+//   "ignore": [paths] lists consumer files the walk never enters, such as a generated route tree that imports every page.
 //   Paths in the manifest are relative to the manifest's directory unless absolute.
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -25,7 +26,8 @@ const sourceOf = (ref) => {
   try {
     const parent = git("rev-parse", sha + "^");
     const outside = git("diff", "--name-only", parent, sha, "--", ".", ":!dist", ":!package.json");
-    if (!outside) return parent;
+    const built = git("diff", "--name-only", parent, sha, "--", "dist");
+    if (!outside && built) return parent;
   } catch {}
   return sha;
 };
@@ -158,10 +160,12 @@ if (args.pages) {
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
   const rel = (p) => (path.isAbsolute(p) ? p : path.resolve(path.dirname(manifestPath), p));
   const alias = Object.entries(manifest.alias ?? {}).map(([k, v]) => [k, rel(v)]);
+  const ignore = new Set((manifest.ignore ?? []).map((p) => resolveFile(rel(p))));
   const resolveConsumer = (spec, from) => {
-    if (spec.startsWith(".")) return resolveFile(path.resolve(path.dirname(from), spec));
-    for (const [prefix, target] of alias) if (spec.startsWith(prefix)) return resolveFile(path.join(target, spec.slice(prefix.length)));
-    return null;
+    let file = null;
+    if (spec.startsWith(".")) file = resolveFile(path.resolve(path.dirname(from), spec));
+    else for (const [prefix, target] of alias) if (spec.startsWith(prefix)) { file = resolveFile(path.join(target, spec.slice(prefix.length))); break; }
+    return file && ignore.has(file) ? null : file;
   };
   const cache = new Map();
   const iconFiles = new Set();

@@ -29,6 +29,9 @@ permissions:
 env:
   CIPHER_BASE: v0.1.15
   CIPHER_CANDIDATE: v0.1.16
+  # Any changed pixel counts, antialiasing included: a soft Badge fill moved by 25 per channel, under
+  # pixelmatch's default threshold. Renders are byte-identical run to run, so this adds no noise.
+  PIXEL_THRESHOLD: "0"
 
 jobs:
   prepare:
@@ -87,7 +90,7 @@ jobs:
     if: needs.prepare.outputs.pages != 'none'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --ipc=host
     strategy:
       fail-fast: false
