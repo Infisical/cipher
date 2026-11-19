@@ -177,7 +177,7 @@ function Field({
     if (name && formError) React.startTransition(() => form?.clear(name));
   };
   const generated = React.useId();
-  const child = React.isValidElement<{ id?: string }>(children) ? children : null;
+  const child = React.isValidElement<React.HTMLAttributes<HTMLElement>>(children) ? children : null;
   const controlId = child?.props.id ?? id ?? generated;
   const noteId = `${controlId}-note`;
   const fieldRef = useDescendantFlags(fieldFlags, fieldWatch, ref);
@@ -190,9 +190,14 @@ function Field({
     "aria-invalid": Boolean(error) || undefined,
     "aria-labelledby": group ? undefined : labelId
   };
+  const unlabeled = {
+    "aria-describedby": attributes["aria-describedby"],
+    "aria-invalid": attributes["aria-invalid"]
+  };
+  const controlAttributes = label ? attributes : unlabeled;
   const control =
     child && typeof child.type === "string"
-      ? React.cloneElement(child, { ...attributes })
+      ? React.cloneElement(child, { ...controlAttributes })
       : children;
   const note = hasNote && (
     <p
@@ -205,7 +210,7 @@ function Field({
     </p>
   );
   return (
-    <FieldControlContext value={label ? attributes : {}}>
+    <FieldControlContext value={controlAttributes}>
       <div
         ref={fieldRef}
         role={label ? undefined : "group"}
@@ -255,7 +260,10 @@ function Field({
             </>
           )
         ) : (
-          children
+          <>
+            {control}
+            {note}
+          </>
         )}
       </div>
     </FieldControlContext>

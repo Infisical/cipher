@@ -11,6 +11,9 @@ export default function Example() {
         <UI.Field label="Service account" error="Choose an account with read access.">
           <Input defaultValue="" />
         </UI.Field>
+        <UI.Field error="Use 3 to 64 characters.">
+          <Input aria-label="Secret key" defaultValue="a" />
+        </UI.Field>
         <UI.Field>
           <UI.FieldLabel htmlFor="field-project">Project name</UI.FieldLabel>
           <Input id="field-project" defaultValue="payments" />
