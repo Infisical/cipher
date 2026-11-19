@@ -1400,6 +1400,11 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.groupText:not(:has(> *)) {
+  display: block;
+  align-content: center;
+  text-overflow: ellipsis;
+}
 .groupText svg {
   flex: none;
   width: var(--cipher-size-icon-sm);

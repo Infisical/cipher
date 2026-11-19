@@ -133,6 +133,29 @@ function ButtonGroup({
 }
 ButtonGroup.displayName = "ButtonGroup";
 
+const labelRuns = (children: React.ReactNode) => {
+  const runs: React.ReactNode[] = [];
+  let text = "";
+  const flush = () => {
+    if (text)
+      runs.push(
+        <span key={"text-" + runs.length} className={controlStyles.groupTextLabel}>
+          {text}
+        </span>
+      );
+    text = "";
+  };
+  for (const child of React.Children.toArray(children)) {
+    if (typeof child === "string" || typeof child === "number") text += child;
+    else {
+      flush();
+      runs.push(child);
+    }
+  }
+  flush();
+  return runs;
+};
+
 function ButtonGroupText({
   className,
   asChild = false,
@@ -155,15 +178,7 @@ function ButtonGroupText({
       className={cn(controlStyles.groupText, className)}
       {...props}
     >
-      {asChild
-        ? children
-        : React.Children.map(children, (child) =>
-            typeof child === "string" || typeof child === "number" ? (
-              <span className={controlStyles.groupTextLabel}>{child}</span>
-            ) : (
-              child
-            )
-          )}
+      {asChild ? children : labelRuns(children)}
     </Comp>
   );
 }
