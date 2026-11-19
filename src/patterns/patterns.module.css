@@ -35,6 +35,9 @@
 .activityLog [data-list-row] {
   border-bottom-color: transparent;
 }
+.activityLog [data-slot="list"][data-size] [data-slot="list-section-head"] {
+  padding-inline: var(--cipher-space-surface-inset-sm);
+}
 .activityActor {
   color: var(--cipher-ink);
 }

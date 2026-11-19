@@ -476,7 +476,7 @@ export function ListSection({
 }) {
   return (
     <li>
-      <div className={styles.sectionHead}>
+      <div className={styles.sectionHead} data-slot="list-section-head">
         <div className={styles.sectionLabel}>{label}</div>
         {meta && <div className={styles.sectionMeta}>{meta}</div>}
       </div>
