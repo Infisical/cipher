@@ -131,15 +131,17 @@
     margin-top: var(--cipher-space-16);
   }
   .actions
-    [data-slot="button"]:has([data-button-icon]):has(
-      [data-slot="button-text"]
-    ) {
+    [data-slot="button"]:has([data-button-icon]):not(
+      :has(svg:not([data-button-icon]))
+    ):has([data-slot="button-text"]) {
     width: var(--cipher-action-height);
     min-width: var(--cipher-action-height);
     padding-inline: 0;
   }
   .actions
-    [data-slot="button"]:has([data-button-icon])
+    [data-slot="button"]:has([data-button-icon]):not(
+      :has(svg:not([data-button-icon]))
+    )
     [data-slot="button-text"] {
     display: block;
     position: absolute;

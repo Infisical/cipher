@@ -98,12 +98,17 @@ export function PageHeader({
                 "[data-slot=button-text]",
               );
               if (!button || !text) return;
-              const automatic = button.dataset.autoTitle !== undefined;
-              if (button.title && !automatic) return;
-              if (text.clientWidth === 0) {
-                button.title = text.textContent ?? "";
-                button.dataset.autoTitle = "";
-              } else if (automatic) {
+              const generated = button.dataset.autoTitle;
+              if (generated !== undefined && button.title !== generated) {
+                delete button.dataset.autoTitle;
+                return;
+              }
+              if (button.title && generated === undefined) return;
+              if (getComputedStyle(text).position === "absolute") {
+                const label = text.textContent ?? "";
+                button.title = label;
+                button.dataset.autoTitle = label;
+              } else if (generated !== undefined) {
                 button.removeAttribute("title");
                 delete button.dataset.autoTitle;
               }
