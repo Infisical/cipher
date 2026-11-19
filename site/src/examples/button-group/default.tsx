@@ -5,6 +5,8 @@ import {
   ButtonGroupText
 } from "@infisical/cipher/ui/button-group";
 
+const version = 12;
+
 export default function Example() {
   return (
     <div className="grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] items-start gap-x-6 gap-y-8">
@@ -14,7 +16,7 @@ export default function Example() {
             <Button variant="outline" icon="chev-left">
               Older
             </Button>
-            <ButtonGroupText>v12</ButtonGroupText>
+            <ButtonGroupText>v{version}</ButtonGroupText>
             <Button variant="outline" iconRight="chev-right">
               Newer
             </Button>
