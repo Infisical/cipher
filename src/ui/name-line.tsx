@@ -21,6 +21,14 @@ export function NameLine({
   /** Short content held whole at the line's end, such as a time or a count. */
   trailing?: React.ReactNode;
 } & { ref?: React.Ref<HTMLDivElement> }) {
+  const nameRef = React.useRef<HTMLSpanElement>(null);
+  React.useLayoutEffect(() => {
+    const name = nameRef.current;
+    if (!name) return;
+    if ((name.textContent ?? "").length > 12)
+      name.setAttribute("data-floor", "");
+    else name.removeAttribute("data-floor");
+  });
   return (
     <div
       ref={ref}
@@ -36,9 +44,7 @@ export function NameLine({
         )}
         <span
           data-slot="name-line-name"
-          data-floor={
-            typeof children !== "string" || children.length > 12 || undefined
-          }
+          ref={nameRef}
           className={styles.name}
           onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
         >

@@ -55,9 +55,18 @@ function Badge({
   collapse?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
+  const textRef = React.useRef<HTMLSpanElement>(null);
+  React.useLayoutEffect(() => {
+    const label = textRef.current;
+    const root = label?.parentElement;
+    if (!label || !root) return;
+    if (!icon && !dot && (label.textContent ?? "").length <= 6)
+      root.setAttribute("data-fit", "");
+    else root.removeAttribute("data-fit");
+  });
   const text = (content: React.ReactNode) =>
     collapse ? (
-      <span data-badge-text="" className={helperStyles.badgeText}>
+      <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
         {content}
       </span>
     ) : (
@@ -93,27 +102,23 @@ function Badge({
       data-slot="badge"
       data-tone={tone ?? (variant ? legacyTone[variant] : "outline")}
       data-size={size}
-      data-collapse={
-        collapse
-          ? !icon &&
-            !dot &&
-            typeof children === "string" &&
-            children.length <= 6
-            ? "fit"
-            : ""
-          : undefined
-      }
+      data-collapse={collapse || undefined}
       className={cn(badgeVariants(), mono && helperStyles.mono, className)}
       onPointerEnter={(event: React.PointerEvent<HTMLSpanElement>) => {
         onPointerEnter?.(event);
+        const badge = event.currentTarget;
         const label =
-          collapse &&
-          !props.title &&
-          event.currentTarget.querySelector<HTMLElement>("[data-badge-text]");
+          collapse && badge.querySelector<HTMLElement>("[data-badge-text]");
         if (!label) return;
-        if (label.scrollWidth > label.clientWidth + 1)
-          event.currentTarget.title = label.textContent ?? "";
-        else event.currentTarget.removeAttribute("title");
+        const automatic = badge.dataset.autoTitle !== undefined;
+        if (badge.title && !automatic) return;
+        if (label.scrollWidth > label.clientWidth + 1) {
+          badge.title = label.textContent ?? "";
+          badge.dataset.autoTitle = "";
+        } else if (automatic) {
+          badge.removeAttribute("title");
+          delete badge.dataset.autoTitle;
+        }
       }}
       {...props}
     >

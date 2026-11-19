@@ -387,6 +387,7 @@
   border-radius: 0;
 }
 .badge[data-collapse] {
+  box-sizing: border-box;
   flex-shrink: 1000;
   justify-content: flex-start;
   min-width: calc(
@@ -394,7 +395,7 @@
   );
   max-width: 100%;
 }
-.badge[data-collapse="fit"] {
+.badge[data-collapse][data-fit] {
   flex-shrink: 0;
   min-width: auto;
 }
@@ -405,6 +406,9 @@
   min-width: calc(
     var(--cipher-badge-glyph) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
   );
+}
+.badge[data-collapse]:has(> .badgeDot):not(:has(> svg)) {
+  min-width: calc(6px + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border));
 }
 .badgeText {
   min-width: 0;
