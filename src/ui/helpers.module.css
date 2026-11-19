@@ -366,6 +366,12 @@
   flex-direction: column;
   gap: var(--cipher-space-2);
 }
+.field[data-note-row] {
+  flex-wrap: wrap;
+}
+.field[data-note-row] > :is(.fieldError, .fieldDescription) {
+  flex-basis: 100%;
+}
 .fieldControl {
   display: flex;
   flex-direction: column;
