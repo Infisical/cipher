@@ -26,12 +26,9 @@ function Textarea({
   const fieldAttributes = useFieldControlAttributes(props);
   const inner = React.useRef<HTMLTextAreaElement>(null);
   React.useImperativeHandle(ref, () => inner.current as HTMLTextAreaElement);
-  const shownPlaceholder = useFittingPlaceholder(
-    inner,
-    placeholder,
-    placeholderShort,
-    { truncate: true },
-  );
+  const shownPlaceholder = useFittingPlaceholder(inner, placeholder, placeholderShort, {
+    truncate: true
+  });
   return (
     <textarea
       ref={inner}
@@ -48,17 +45,10 @@ function Textarea({
           : ({
               ...style,
               ...(rows === undefined ? {} : { "--cipher-textarea-rows": rows }),
-              ...(maxRows === undefined
-                ? {}
-                : { "--cipher-textarea-max-rows": maxRows }),
+              ...(maxRows === undefined ? {} : { "--cipher-textarea-max-rows": maxRows })
             } as React.CSSProperties)
       }
-      className={cn(
-        controlStyles.field,
-        controlStyles.textarea,
-        "flex w-full",
-        className,
-      )}
+      className={cn(controlStyles.field, controlStyles.textarea, "flex w-full", className)}
       {...props}
       {...fieldAttributes}
     />

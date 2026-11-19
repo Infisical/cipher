@@ -28,8 +28,7 @@ export function NameLine({
     const name = nameRef.current;
     if (!name) return;
     const measure = () => {
-      if ((name.textContent ?? "").length > 12)
-        name.setAttribute("data-floor", "");
+      if ((name.textContent ?? "").length > 12) name.setAttribute("data-floor", "");
       else name.removeAttribute("data-floor");
     };
     measure();
@@ -37,17 +36,12 @@ export function NameLine({
     observer.observe(name, {
       subtree: true,
       childList: true,
-      characterData: true,
+      characterData: true
     });
     return () => observer.disconnect();
   }, []);
   return (
-    <div
-      ref={ref}
-      data-slot="name-line"
-      className={cn(styles.line, className)}
-      {...props}
-    >
+    <div ref={ref} data-slot="name-line" className={cn(styles.line, className)} {...props}>
       <span className={styles.main}>
         {media && (
           <span data-slot="name-line-media" className={styles.media}>
