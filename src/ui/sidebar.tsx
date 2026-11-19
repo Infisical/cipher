@@ -101,6 +101,8 @@ export interface SidebarProps {
   footer?: React.ReactNode;
   footerIcon?: IconSource;
   footerLabel?: string;
+  /** A square dot on the rail's footer button, for state the hidden footer holds, such as a usage warning. Say what it means in `footerLabel`. */
+  footerIndicator?: "accent" | "warn" | "bad";
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
@@ -530,6 +532,7 @@ const SidebarView = ({
   footer,
   footerIcon = "more",
   footerLabel = "More",
+  footerIndicator,
   collapsed,
   defaultCollapsed = false,
   onCollapsedChange,
@@ -929,17 +932,26 @@ const SidebarView = ({
           (rail ? (
             <div className={styles.footerSlot}>
               <Popover>
-                <Tooltip content={footerLabel} side="right">
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="md"
-                      icon={footerIcon}
-                      iconOnly
-                      aria-label={footerLabel}
+                <span className={styles.marked}>
+                  <Tooltip content={footerLabel} side="right">
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="md"
+                        icon={footerIcon}
+                        iconOnly
+                        aria-label={footerLabel}
+                      />
+                    </PopoverTrigger>
+                  </Tooltip>
+                  {footerIndicator && (
+                    <span
+                      className={styles.unread}
+                      data-tone={footerIndicator}
+                      aria-hidden="true"
                     />
-                  </PopoverTrigger>
-                </Tooltip>
+                  )}
+                </span>
                 <PopoverContent side="right" align="end" aria-label={footerLabel}>
                   {footer}
                 </PopoverContent>
