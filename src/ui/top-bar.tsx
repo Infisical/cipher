@@ -1,7 +1,11 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 
-import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
+import {
+  type PresenceReport,
+  usePresenceCount,
+  useReportPresence,
+} from "../lib/presence-count";
 import { themeScheme, themes } from "../lib/theme-registry";
 import { cn } from "../lib/utils";
 import { useActionBarReport } from "../scope";
@@ -16,7 +20,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Icon, type IconSource } from "./icon";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
@@ -40,7 +44,8 @@ export interface ShellMenuItem {
   disabledReason?: string;
 }
 export type ShellMenuEntry = ShellMenuItem | { type: "separator" };
-export type ShellSheetSlot = "org" | "switchers" | "actions" | "account" | "icons";
+export type ShellSheetSlot =
+  "org" | "switchers" | "actions" | "account" | "icons";
 
 type ShellState = {
   mode: ShellMode;
@@ -87,17 +92,21 @@ const rememberPointer = (event: PointerEvent) => {
 let pointerWatchers = 0;
 const watchPointer = () => {
   pointerWatchers += 1;
-  if (pointerWatchers === 1) document.addEventListener("pointerdown", rememberPointer, true);
+  if (pointerWatchers === 1)
+    document.addEventListener("pointerdown", rememberPointer, true);
   return () => {
     pointerWatchers -= 1;
-    if (pointerWatchers === 0) document.removeEventListener("pointerdown", rememberPointer, true);
+    if (pointerWatchers === 0)
+      document.removeEventListener("pointerdown", rememberPointer, true);
   };
 };
 
 const isNavigationShortcut = (event: KeyboardEvent) => {
   const apple = /Mac|iPhone|iPad|iPod/i.test(navigator.platform);
   return (
-    (apple ? event.metaKey && !event.ctrlKey : event.ctrlKey && !event.metaKey) &&
+    (apple
+      ? event.metaKey && !event.ctrlKey
+      : event.ctrlKey && !event.metaKey) &&
     !event.altKey &&
     !event.shiftKey &&
     event.key.toLowerCase() === "b"
@@ -136,18 +145,27 @@ export function AppShell({
   const [slots, setSlots] = React.useState<ShellState["slots"]>({});
   const setSlot = React.useCallback(
     (slot: ShellSheetSlot, node: HTMLElement | null) =>
-      setSlots((previous) => (previous[slot] === node ? previous : { ...previous, [slot]: node })),
-    []
+      setSlots((previous) =>
+        previous[slot] === node ? previous : { ...previous, [slot]: node },
+      ),
+    [],
   );
   const navigationTrigger = React.useRef<HTMLButtonElement>(null);
   const navigationToggle = React.useRef<(() => void) | null>(null);
-  const toggleNavigation = React.useCallback(() => navigationToggle.current?.(), []);
+  const toggleNavigation = React.useCallback(
+    () => navigationToggle.current?.(),
+    [],
+  );
   const [hasTopBar, reportTopBar] = usePresenceCount();
   const [hasSidebar, reportSidebar] = usePresenceCount();
   const [sidebarOpen, reportSidebarOpen] = usePresenceCount();
   const chrome = React.useMemo(
-    () => ({ topBar: reportTopBar, sidebar: reportSidebar, sidebarOpen: reportSidebarOpen }),
-    [reportTopBar, reportSidebar, reportSidebarOpen]
+    () => ({
+      topBar: reportTopBar,
+      sidebar: reportSidebar,
+      sidebarOpen: reportSidebarOpen,
+    }),
+    [reportTopBar, reportSidebar, reportSidebarOpen],
   );
   const sheetOpen = React.useRef(false);
   React.useEffect(() => {
@@ -160,8 +178,10 @@ export function AppShell({
     const measure = () => {
       const width = element.offsetWidth;
       let next: ShellMode = "wide";
-      if (width < sizeOf(element, "--cipher-size-shell-collapse")) next = "narrow";
-      else if (width < sizeOf(element, "--cipher-size-shell-rail")) next = "rail";
+      if (width < sizeOf(element, "--cipher-size-shell-collapse"))
+        next = "narrow";
+      else if (width < sizeOf(element, "--cipher-size-shell-rail"))
+        next = "rail";
       setMode(next);
       if (next === "wide") setNavigationOpen(false);
     };
@@ -202,9 +222,17 @@ export function AppShell({
       navigationUnread,
       setNavigationUnread,
       slots,
-      setSlot
+      setSlot,
     }),
-    [mode, hasNavigation, navigationOpen, toggleNavigation, navigationUnread, slots, setSlot]
+    [
+      mode,
+      hasNavigation,
+      navigationOpen,
+      toggleNavigation,
+      navigationUnread,
+      slots,
+      setSlot,
+    ],
   );
   return (
     <ShellContext value={value}>
@@ -260,7 +288,7 @@ export const scrollInsetTo = (target: HTMLElement) => {
       inset.scrollTop +
       target.getBoundingClientRect().top -
       inset.getBoundingClientRect().top -
-      offset
+      offset,
   });
 };
 
@@ -268,22 +296,37 @@ export function PageGutter({
   className,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
-    <div ref={ref} data-slot="page-gutter" className={cn(styles.gutter, className)} {...props} />
+    <div
+      ref={ref}
+      data-slot="page-gutter"
+      className={cn(styles.gutter, className)}
+      {...props}
+    />
   );
 }
 PageGutter.displayName = "PageGutter";
 
-const glyph = (icon: IconSource, size?: number) => <Icon key="icon" icon={icon} size={size} />;
+const glyph = (icon: IconSource, size?: number) => (
+  <Icon key="icon" icon={icon} size={size} />
+);
 
 const itemContent = (item: ShellMenuItem) => [
   item.icon && glyph(item.icon),
   item.label,
-  item.external && <Icon key="external" name="external" size={14} className={styles.menuEnd} />
+  item.external && (
+    <Icon key="external" name="external" size={14} className={styles.menuEnd} />
+  ),
 ];
 
-export const ShellMenuItems = ({ entries }: { entries: readonly ShellMenuEntry[] }) =>
+export const ShellMenuItems = ({
+  entries,
+}: {
+  entries: readonly ShellMenuEntry[];
+}) =>
   entries.map((entry, index) =>
     "type" in entry ? (
       <DropdownMenuSeparator key={index} />
@@ -307,18 +350,19 @@ export const ShellMenuItems = ({ entries }: { entries: readonly ShellMenuEntry[]
           itemContent(entry)
         )}
       </DropdownMenuItem>
-    )
+    ),
   );
 
 export const ShellSheetRows = ({
   entries,
-  onDone
+  onDone,
 }: {
   entries: readonly ShellMenuEntry[];
   onDone: () => void;
 }) =>
   entries.map((entry, index) => {
-    if ("type" in entry) return <span key={index} role="separator" className={styles.sheetRule} />;
+    if ("type" in entry)
+      return <span key={index} role="separator" className={styles.sheetRule} />;
     const content = (
       <>
         {entry.icon && glyph(entry.icon, 18)}
@@ -328,7 +372,9 @@ export const ShellSheetRows = ({
             <span className={styles.sheetRowMeta}>{entry.disabledReason}</span>
           )}
         </span>
-        {entry.external && <Icon name="external" size={14} className={styles.menuEnd} />}
+        {entry.external && (
+          <Icon name="external" size={14} className={styles.menuEnd} />
+        )}
       </>
     );
     if (entry.href && !entry.disabled)
@@ -367,7 +413,7 @@ export const ShellBottomSheet = ({
   title,
   open,
   onOpenChange,
-  children
+  children,
 }: {
   title: string;
   open: boolean;
@@ -375,7 +421,11 @@ export const ShellBottomSheet = ({
   children: React.ReactNode;
 }) => (
   <Sheet open={open} onOpenChange={onOpenChange}>
-    <SheetContent side="bottom" aria-describedby={undefined} className={styles.bottomSheet}>
+    <SheetContent
+      side="bottom"
+      aria-describedby={undefined}
+      className={styles.bottomSheet}
+    >
       <SheetHeader>
         <SheetTitle>{title}</SheetTitle>
       </SheetHeader>
@@ -386,7 +436,7 @@ export const ShellBottomSheet = ({
 
 const themeOptions: { value: ShellTheme; label: string }[] = [
   { value: "system", label: "System" },
-  ...themes.map((theme) => ({ value: theme.id, label: theme.name }))
+  ...themes.map((theme) => ({ value: theme.id, label: theme.name })),
 ];
 
 const themeIcons = { system: "monitor", light: "sun", dark: "moon" } as const;
@@ -395,7 +445,11 @@ export interface TopBarAccount {
   name: string;
   email?: string;
   items?: readonly ShellMenuEntry[];
-  theme?: { value: ShellTheme; onChange: (value: ShellTheme) => void; label?: string };
+  theme?: {
+    value: ShellTheme;
+    onChange: (value: ShellTheme) => void;
+    label?: string;
+  };
   endItems?: readonly ShellMenuEntry[];
   label?: string;
 }
@@ -415,7 +469,9 @@ export interface TopBarNotifications {
 const Identity = ({ account }: { account: TopBarAccount }) => (
   <div className={styles.identity}>
     <span className={styles.identityName}>{account.name}</span>
-    {account.email && <span className={styles.identityMeta}>{account.email}</span>}
+    {account.email && (
+      <span className={styles.identityMeta}>{account.email}</span>
+    )}
   </div>
 );
 
@@ -443,10 +499,14 @@ const AccountMenu = ({ account }: { account: TopBarAccount }) => {
         {account.theme && (
           <>
             {items.length > 0 && <DropdownMenuSeparator />}
-            <DropdownMenuLabel>{account.theme.label ?? "Theme"}</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {account.theme.label ?? "Theme"}
+            </DropdownMenuLabel>
             <DropdownMenuRadioGroup
               value={account.theme.value}
-              onValueChange={(value) => account.theme?.onChange(value as ShellTheme)}
+              onValueChange={(value) =>
+                account.theme?.onChange(value as ShellTheme)
+              }
             >
               {themeOptions.map((option) => (
                 <DropdownMenuRadioItem key={option.value} value={option.value}>
@@ -470,7 +530,7 @@ const AccountMenu = ({ account }: { account: TopBarAccount }) => {
 const AccountSheet = ({
   account,
   open,
-  onOpenChange
+  onOpenChange,
 }: {
   account: TopBarAccount;
   open: boolean;
@@ -480,15 +540,23 @@ const AccountSheet = ({
   const items = account.items ?? [];
   const endItems = account.endItems ?? [];
   return (
-    <ShellBottomSheet title={account.label ?? "Account"} open={open} onOpenChange={onOpenChange}>
+    <ShellBottomSheet
+      title={account.label ?? "Account"}
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <Identity account={account} />
       <span role="separator" className={styles.sheetRule} />
       <ShellSheetRows entries={items} onDone={close} />
       {account.theme && (
         <>
-          {items.length > 0 && <span role="separator" className={styles.sheetRule} />}
+          {items.length > 0 && (
+            <span role="separator" className={styles.sheetRule} />
+          )}
           <div className={styles.sheetTheme}>
-            <span className={styles.sheetEyebrow}>{account.theme.label ?? "Theme"}</span>
+            <span className={styles.sheetEyebrow}>
+              {account.theme.label ?? "Theme"}
+            </span>
             <ToggleGroup
               type="single"
               aria-label={account.theme.label ?? "Theme"}
@@ -503,7 +571,11 @@ const AccountSheet = ({
                 <ToggleGroupItem key={option.value} value={option.value}>
                   <Icon
                     name={
-                      themeIcons[option.value === "system" ? "system" : themeScheme(option.value)]
+                      themeIcons[
+                        option.value === "system"
+                          ? "system"
+                          : themeScheme(option.value)
+                      ]
                     }
                   />
                   {option.label}
@@ -514,7 +586,10 @@ const AccountSheet = ({
         </>
       )}
       {endItems.length > 0 && (
-        <ShellSheetRows entries={[{ type: "separator" }, ...endItems]} onDone={close} />
+        <ShellSheetRows
+          entries={[{ type: "separator" }, ...endItems]}
+          onDone={close}
+        />
       )}
     </ShellBottomSheet>
   );
@@ -525,10 +600,13 @@ const plainCrumb = (crumb: BreadcrumbCrumb): BreadcrumbCrumb => ({
   mono: crumb.mono,
   link: crumb.link,
   href: crumb.href,
-  onNavigate: crumb.onNavigate
+  onNavigate: crumb.onNavigate,
 });
 
-export type TopBarProps = Omit<React.ComponentPropsWithoutRef<"header">, "children"> & {
+export type TopBarProps = Omit<
+  React.ComponentPropsWithoutRef<"header">,
+  "children"
+> & {
   breadcrumb: readonly BreadcrumbCrumb[];
   search?: { onClick: () => void; label?: string; shortcut?: string };
   notifications?: TopBarNotifications;
@@ -538,6 +616,8 @@ export type TopBarProps = Omit<React.ComponentPropsWithoutRef<"header">, "childr
   actions?: React.ReactNode;
   label?: string;
   navigationLabel?: string;
+  /** Pins the first crumb to the sidebar's width while the sidebar is open, so its divider lands on the sidebar's edge. Off sizes it to its content. */
+  pairRoot?: boolean;
 };
 
 export function TopBar({
@@ -549,6 +629,7 @@ export function TopBar({
   actions,
   label = "Location",
   navigationLabel = "Open navigation",
+  pairRoot = true,
   className,
   ref,
   ...props
@@ -564,7 +645,7 @@ export function TopBar({
   const marked = unread > 0 || Boolean(shell?.navigationUnread);
   const [root, ...rest] = breadcrumb;
   const org = root?.switcher ? root : undefined;
-  const orgZone = Boolean(org) && !narrow;
+  const orgZone = pairRoot && Boolean(root) && !narrow;
   const switchers = (org ? rest : breadcrumb).filter((crumb) => crumb.switcher);
   const slots = shell?.slots ?? {};
   const notificationsButton = (size: "sm" | "icon-lg") => (
@@ -578,7 +659,9 @@ export function TopBar({
           iconOnly
           onClick={notifications?.onClick}
         >
-          {unread > 0 ? `${notificationsLabel}, ${unread} unread` : notificationsLabel}
+          {unread > 0
+            ? `${notificationsLabel}, ${unread} unread`
+            : notificationsLabel}
         </Button>
         {unread > 0 &&
           (size === "sm" ? (
@@ -631,7 +714,11 @@ export function TopBar({
           {!narrow && actions}
           {!narrow && notifications && notificationsButton("sm")}
           {search && (
-            <Tooltip content={searchLabel} shortcut={search.shortcut ?? "mod+K"} side="bottom">
+            <Tooltip
+              content={searchLabel}
+              shortcut={search.shortcut ?? "mod+K"}
+              side="bottom"
+            >
               <Button
                 type="button"
                 variant="ghost"
@@ -656,7 +743,11 @@ export function TopBar({
               size={narrow ? "lg" : "default"}
             >
               {themeOptions.map((option) => (
-                <Tooltip key={option.value} content={option.label} side="bottom">
+                <Tooltip
+                  key={option.value}
+                  content={option.label}
+                  side="bottom"
+                >
                   <ToggleGroupItem
                     value={option.value}
                     aria-label={option.label}
@@ -664,7 +755,11 @@ export function TopBar({
                   >
                     <Icon
                       name={
-                        themeIcons[option.value === "system" ? "system" : themeScheme(option.value)]
+                        themeIcons[
+                          option.value === "system"
+                            ? "system"
+                            : themeScheme(option.value)
+                        ]
                       }
                     />
                   </ToggleGroupItem>
@@ -690,7 +785,7 @@ export function TopBar({
               data-fill=""
               className={styles.sheetOrg}
             />,
-            slots.org
+            slots.org,
           )}
         {slots.switchers &&
           switchers.length > 0 &&
@@ -706,7 +801,7 @@ export function TopBar({
                 className={styles.sheetSwitcher}
               />
             )),
-            slots.switchers
+            slots.switchers,
           )}
         {slots.actions && actions && createPortal(actions, slots.actions)}
         {slots.account &&
@@ -722,15 +817,23 @@ export function TopBar({
               <Icon name="user" size={18} />
               <span className={styles.identity}>
                 <span className={styles.identityName}>{account.name}</span>
-                {account.email && <span className={styles.identityMeta}>{account.email}</span>}
+                {account.email && (
+                  <span className={styles.identityMeta}>{account.email}</span>
+                )}
               </span>
               <Icon name="chev-ud" size={16} className={styles.menuEnd} />
             </button>,
-            slots.account
+            slots.account,
           )}
-        {slots.icons && notifications && createPortal(notificationsButton("icon-lg"), slots.icons)}
+        {slots.icons &&
+          notifications &&
+          createPortal(notificationsButton("icon-lg"), slots.icons)}
         {narrow && account && (
-          <AccountSheet account={account} open={accountOpen} onOpenChange={setAccountOpen} />
+          <AccountSheet
+            account={account}
+            open={accountOpen}
+            onOpenChange={setAccountOpen}
+          />
         )}
       </header>
     </TooltipProvider>
