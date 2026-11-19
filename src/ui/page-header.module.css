@@ -132,7 +132,7 @@
   }
   .actions
     [data-slot="button"]:has([data-button-icon]):not(
-      :has(svg:not([data-button-icon]))
+      :has(svg:not([data-button-icon], [data-slot="button-progress"]))
     ):has([data-slot="button-text"]) {
     width: var(--cipher-action-height);
     min-width: var(--cipher-action-height);
@@ -140,7 +140,7 @@
   }
   .actions
     [data-slot="button"]:has([data-button-icon]):not(
-      :has(svg:not([data-button-icon]))
+      :has(svg:not([data-button-icon], [data-slot="button-progress"]))
     )
     [data-slot="button-text"] {
     display: block;
