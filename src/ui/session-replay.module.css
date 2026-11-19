@@ -185,8 +185,7 @@
   line-height: var(--cipher-type-mono-sm-line-height);
   font-weight: var(--cipher-type-mono-sm-font-weight);
   letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
-  transition: background-color var(--cipher-duration-fast)
-    var(--cipher-ease-standard);
+  transition: background-color var(--cipher-duration-fast) var(--cipher-ease-standard);
 }
 @media (hover: hover) {
   .row:hover {

@@ -3,16 +3,12 @@
   --cipher-field-inline: var(--cipher-space-control-inline-sm);
   --cipher-field-nested: calc(
     var(--cipher-field-height) - 2 *
-      (
-        var(--cipher-space-control-slot-inset) +
-          var(--cipher-size-control-border)
-      )
+      (var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border))
   );
   box-sizing: border-box;
   min-height: var(--cipher-field-height);
   padding-block: calc(
-    (var(--cipher-field-height) - var(--cipher-type-body-line-height)) / 2 -
-      var(--cipher-size-control-border)
+    (var(--cipher-field-height) - var(--cipher-type-body-line-height)) / 2 - var(--cipher-size-control-border)
   );
   padding-inline: var(--cipher-field-inline);
   border: var(--cipher-size-control-border) solid var(--cipher-control);
@@ -34,10 +30,7 @@
   --cipher-field-inline: var(--cipher-space-6);
   --cipher-field-nested: calc(
     var(--cipher-size-control-xs) - 2 *
-      (
-        var(--cipher-space-control-slot-inset) +
-          var(--cipher-size-control-border)
-      )
+      (var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border))
   );
   padding-block: calc(
     (var(--cipher-field-height) - var(--cipher-type-caption-line-height)) / 2 -
@@ -94,14 +87,8 @@
 .field[data-field-box][data-control-invalid] {
   border-color: var(--cipher-control-invalid-border);
 }
-.field:is([aria-invalid="true"], [data-invalid]):is(
-    :focus-visible,
-    [aria-expanded="true"]
-  ),
-.field:is(
-    [aria-invalid="true"],
-    [data-invalid]
-  )[data-field-box][data-control-input-focus],
+.field:is([aria-invalid="true"], [data-invalid]):is(:focus-visible, [aria-expanded="true"]),
+.field:is([aria-invalid="true"], [data-invalid])[data-field-box][data-control-input-focus],
 .field[data-field-box][data-control-invalid][data-control-invalid-focus] {
   border-color: var(--cipher-bad);
   box-shadow: 0 0 0 var(--cipher-size-focus-glow) var(--cipher-focus-ring-bad);
@@ -111,10 +98,7 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
-.field:is(
-  [readonly]:not([aria-disabled="true"]),
-  [data-field-box][data-control-readonly]
-) {
+.field:is([readonly]:not([aria-disabled="true"]), [data-field-box][data-control-readonly]) {
   background-color: var(--cipher-paper);
 }
 .fieldBox {
@@ -127,9 +111,7 @@
   cursor: text;
 }
 .fieldBox[data-trailing] {
-  --cipher-kbd-host-block: calc(
-    var(--cipher-field-height) - 2 * var(--cipher-size-control-border)
-  );
+  --cipher-kbd-host-block: calc(var(--cipher-field-height) - 2 * var(--cipher-size-control-border));
   --cipher-kbd-host-end: var(--cipher-space-control-slot-inset);
   padding-inline-end: var(--cipher-space-control-slot-inset);
 }
@@ -137,9 +119,7 @@
   flex: 1 1 auto;
   align-self: stretch;
   min-width: 0;
-  min-height: calc(
-    var(--cipher-field-height) - 2 * var(--cipher-size-control-border)
-  );
+  min-height: calc(var(--cipher-field-height) - 2 * var(--cipher-size-control-border));
   margin: 0;
   padding: 0;
   border: 0;
@@ -223,8 +203,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 /* field-sizing: content ignores the rows attribute, so rows becomes the starting height: that many lines plus the field's padding and border, and content still grows it. */
 .textarea[data-rows] {
   min-height: calc(
-    var(--cipher-textarea-rows) * 1lh + var(--cipher-field-height) -
-      var(--cipher-type-body-line-height)
+    var(--cipher-textarea-rows) * 1lh + var(--cipher-field-height) - var(--cipher-type-body-line-height)
   );
 }
 .textarea[data-max-rows] {
@@ -380,9 +359,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 :where(.cardBody) {
   min-width: 0;
   padding: var(--cipher-card-body-inset);
-  padding-inline-start: calc(
-    var(--cipher-card-body-inset) + var(--cipher-card-lead)
-  );
+  padding-inline-start: calc(var(--cipher-card-body-inset) + var(--cipher-card-lead));
 }
 .cardHeader + .cardBody {
   padding-top: 0;
@@ -426,9 +403,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   > .cardHeader:has(> .cardAction):not(:has(> [data-slot="card-description"]))
   > :is(.cardTitleGroup, [data-slot="card-title"]) {
   flex: 0 0 auto;
-  max-width: calc(
-    100% - var(--cipher-card-action-min) - var(--cipher-space-12)
-  );
+  max-width: calc(100% - var(--cipher-card-action-min) - var(--cipher-space-12));
 }
 .card[data-variant="framed"] > .cardHeader > .cardAction {
   flex: 0 1 auto;
@@ -438,10 +413,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"]
-  > .cardHeader
-  > .cardAction
-  > :not([data-cipher-button]) {
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -479,9 +451,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-end-end-radius: 0;
   box-shadow: none;
 }
-.card[data-variant="framed"]
-  > .cardBody
-  + .cardFooter:not([data-placement="frame"]) {
+.card[data-variant="framed"] > .cardBody + .cardFooter:not([data-placement="frame"]) {
   border-top-color: var(--cipher-line-soft);
   border-start-start-radius: 0;
   border-start-end-radius: 0;
@@ -548,18 +518,10 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
     var(--cipher-choice-selected-surface)
   );
 }
-.card[data-selected][data-stretched-link]:not(
-    [data-variant="framed"][data-has-slots]
-  ):hover {
+.card[data-selected][data-stretched-link]:not([data-variant="framed"][data-has-slots]):hover {
   background-image:
-    linear-gradient(
-      var(--cipher-action-ghost-hover),
-      var(--cipher-action-ghost-hover)
-    ),
-    linear-gradient(
-      var(--cipher-choice-selected-surface),
-      var(--cipher-choice-selected-surface)
-    );
+    linear-gradient(var(--cipher-action-ghost-hover), var(--cipher-action-ghost-hover)),
+    linear-gradient(var(--cipher-choice-selected-surface), var(--cipher-choice-selected-surface));
 }
 .cardDescription {
   color: var(--cipher-text2);
@@ -592,9 +554,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   gap: var(--cipher-space-12);
   min-width: 0;
   padding: var(--cipher-space-12) var(--cipher-card-inset);
-  padding-inline-start: calc(
-    var(--cipher-card-inset) + var(--cipher-card-lead)
-  );
+  padding-inline-start: calc(var(--cipher-card-inset) + var(--cipher-card-lead));
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   color: var(--cipher-text2);
   overflow-wrap: anywhere;
@@ -707,10 +667,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-bottom: 1px solid var(--cipher-line-soft);
 }
 /* Among fields a switch row takes the fields' measure, so its control ends at their right edge. */
-.choiceRow:is(
-  :global([data-slot="field"]:not([data-orientation="horizontal"])) ~ *,
-  :has(~ :global([data-slot="field"]:not([data-orientation="horizontal"])))
-) {
+.choiceRow:is(:global([data-slot="field"]:not([data-orientation="horizontal"])) ~ *, :has(~ :global([data-slot="field"]:not([data-orientation="horizontal"])))) {
   max-width: var(--cipher-size-measure-field);
 }
 .choiceRow:last-child {
@@ -761,8 +718,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 }
 .switch[data-state="checked"] > .switchThumb {
   background-color: var(--cipher-sw-knob-on);
-  box-shadow: 0 1px 2px
-    color-mix(in oklab, var(--cipher-frame) 24%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--cipher-frame) 24%, transparent);
 }
 .radioGroup [data-slot="label"] {
   font-weight: var(--cipher-type-body-font-weight);
@@ -787,10 +743,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-color: var(--cipher-ink);
   background-color: var(--cipher-ink);
 }
-.choiceMark[aria-invalid="true"]:not(
-    [data-state="checked"],
-    [data-state="indeterminate"]
-  ) {
+.choiceMark[aria-invalid="true"]:not([data-state="checked"], [data-state="indeterminate"]) {
   border-color: var(--cipher-control-invalid-border);
 }
 .radioDot {
@@ -901,11 +854,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   background: var(--cipher-ink);
 }
 .stepBar[data-current] {
-  background: repeating-linear-gradient(
-    135deg,
-    var(--cipher-ink) 0 3px,
-    transparent 3px 6px
-  );
+  background: repeating-linear-gradient(135deg, var(--cipher-ink) 0 3px, transparent 3px 6px);
   outline: var(--cipher-size-control-border) solid var(--cipher-ink);
   outline-offset: calc(-1 * var(--cipher-size-control-border));
 }
@@ -985,10 +934,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   min-height: var(--cipher-nested-action-height);
 }
 .trailing > [data-cipher-button] {
-  --cipher-action-height: min(
-    var(--cipher-action-requested-height),
-    var(--cipher-nested-action-height)
-  );
+  --cipher-action-height: min(var(--cipher-action-requested-height), var(--cipher-nested-action-height));
 }
 .suggestion {
   padding: 0;
@@ -1165,8 +1111,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border: 2px solid var(--cipher-on-accent);
   border-radius: 0;
   background: var(--cipher-accent);
-  box-shadow: 0 1px 2px
-    color-mix(in oklab, var(--cipher-frame) 18%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--cipher-frame) 18%, transparent);
   transition-property: box-shadow;
   transition-duration: var(--cipher-duration-fast);
   transition-timing-function: var(--cipher-ease-standard);
@@ -1250,8 +1195,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   display: flex;
   width: 100%;
 }
-.toggleGroup[data-width="full"][data-orientation="horizontal"]
-  > [data-slot="toggle-group-item"] {
+.toggleGroup[data-width="full"][data-orientation="horizontal"] > [data-slot="toggle-group-item"] {
   flex: 1 1 0;
 }
 .toggleGroup[data-spacing="0"] {
@@ -1261,8 +1205,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-radius: 0;
 }
 .toggleGroup[data-spacing="0"]:not([data-indicator], [data-bare]) {
-  box-shadow: inset 0 0 0 var(--cipher-size-control-border)
-    var(--cipher-line-soft);
+  box-shadow: inset 0 0 0 var(--cipher-size-control-border) var(--cipher-line-soft);
 }
 .toggleGroup[data-spacing="0"][data-bare] {
   padding: 0;
@@ -1273,24 +1216,16 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-radius: 0;
 }
 .toggleGroup[data-spacing="0"] > [data-slot="toggle-group-item"] {
-  --cipher-action-height: calc(
-    var(--cipher-action-requested-height) - 2 * var(--cipher-space-2)
-  );
+  --cipher-action-height: calc(var(--cipher-action-requested-height) - 2 * var(--cipher-space-2));
   border-color: transparent;
   background-color: transparent;
   box-shadow: none;
   border-radius: 0;
 }
 .toggleGroup[data-spacing="0"]:not([data-indicator])
-  > [data-slot="toggle-group-item"].toggle:is(
-    [aria-pressed="true"],
-    [data-state="on"]
-  ),
+  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]),
 .toggleGroup[data-spacing="0"]:not([data-indicator])
-  > [data-slot="toggle-group-item"].toggle:is(
-    [aria-pressed="true"],
-    [data-state="on"]
-  ):hover {
+  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]):hover {
   background-color: var(--cipher-pop);
   border-color: var(--cipher-line-soft);
   box-shadow: var(--cipher-shadow-raised);
@@ -1298,16 +1233,10 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 }
 :global(.cipher[data-scheme="dark"])
   .toggleGroup[data-spacing="0"]:not([data-indicator])
-  > [data-slot="toggle-group-item"].toggle:is(
-    [aria-pressed="true"],
-    [data-state="on"]
-  ),
+  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]),
 :global(.cipher[data-scheme="dark"])
   .toggleGroup[data-spacing="0"]:not([data-indicator])
-  > [data-slot="toggle-group-item"].toggle:is(
-    [aria-pressed="true"],
-    [data-state="on"]
-  ):hover {
+  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]):hover {
   background-color: var(--cipher-surface);
   border-color: var(--cipher-line);
   box-shadow: none;
@@ -1319,15 +1248,9 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   position: relative;
 }
 .toggleGroup[data-indicator]
-  > [data-slot="toggle-group-item"].toggle:is(
-    [aria-pressed="true"],
-    [data-state="on"]
-  ),
+  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]),
 .toggleGroup[data-indicator]
-  > [data-slot="toggle-group-item"].toggle:is(
-    [aria-pressed="true"],
-    [data-state="on"]
-  ):hover {
+  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]):hover {
   background-color: transparent;
   border-color: transparent;
   color: var(--cipher-ink);
@@ -1368,8 +1291,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   gap: var(--cipher-space-control-gap);
   padding-inline: var(--cipher-space-control-inline-sm);
-  border: var(--cipher-size-control-border) solid
-    var(--cipher-action-outline-border);
+  border: var(--cipher-size-control-border) solid var(--cipher-action-outline-border);
   border-radius: 0;
   background-color: transparent;
   color: var(--cipher-muted);

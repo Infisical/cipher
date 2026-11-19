@@ -4,9 +4,7 @@
   align-items: center;
   justify-content: center;
   height: var(--cipher-size-control-xs);
-  margin-block-start: calc(
-    var(--cipher-focus-clearance) - var(--cipher-space-12)
-  );
+  margin-block-start: calc(var(--cipher-focus-clearance) - var(--cipher-space-12));
   border: 0;
   padding: 0;
   background-color: transparent;

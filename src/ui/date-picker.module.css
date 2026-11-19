@@ -13,8 +13,7 @@
   align-self: stretch;
   gap: var(--cipher-space-2);
   padding-inline-end: var(--cipher-space-12);
-  border-inline-end: var(--cipher-size-control-border) solid
-    var(--cipher-line-soft);
+  border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .main {
   display: flex;
@@ -30,8 +29,7 @@
   gap: var(--cipher-space-8);
   min-height: var(--cipher-size-control-xs);
   padding-block-start: var(--cipher-space-8);
-  border-block-start: var(--cipher-size-control-border) solid
-    var(--cipher-line-soft);
+  border-block-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .actions {
   display: flex;

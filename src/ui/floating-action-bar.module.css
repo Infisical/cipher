@@ -19,9 +19,7 @@
   white-space: nowrap;
 }
 :global([data-slot="app-inset"])[data-action-bar-reserve] {
-  padding-bottom: calc(
-    var(--cipher-size-action-bar) + var(--cipher-space-action-bar-offset)
-  );
+  padding-bottom: calc(var(--cipher-size-action-bar) + var(--cipher-space-action-bar-offset));
 }
 .count {
   display: inline-flex;

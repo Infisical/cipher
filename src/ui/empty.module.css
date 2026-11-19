@@ -103,9 +103,7 @@
   pointer-events: none;
   mask-image:
     radial-gradient(
-      ellipse
-        calc(var(--cipher-size-measure-field) / 2 + 2 * var(--cipher-space-48))
-        50% at center,
+      ellipse calc(var(--cipher-size-measure-field) / 2 + 2 * var(--cipher-space-48)) 50% at center,
       transparent 72%,
       var(--cipher-ink) 100%
     ),

@@ -20,9 +20,7 @@
   width: var(--cipher-size-sidebar-rail);
 }
 .sidebar[data-collapsed][data-edge] {
-  width: calc(
-    var(--cipher-size-sidebar-rail) + var(--cipher-size-control-border)
-  );
+  width: calc(var(--cipher-size-sidebar-rail) + var(--cipher-size-control-border));
 }
 @media (prefers-reduced-motion: reduce) {
   .sidebar,
@@ -207,11 +205,7 @@
 }
 .spaces > div[data-variant] {
   border-radius: 0;
-  background: color-mix(
-    in srgb,
-    var(--cipher-mix-ink) var(--cipher-hover-mix),
-    var(--cipher-sidebar)
-  );
+  background: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-sidebar));
 }
 .spaces [data-slot="tabs-list"] {
   padding: 3px;
@@ -255,11 +249,7 @@
   width: var(--cipher-size-control-md);
   padding: 2px;
   border-radius: 0;
-  background: color-mix(
-    in srgb,
-    var(--cipher-mix-ink) var(--cipher-hover-mix),
-    var(--cipher-sidebar)
-  );
+  background: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-sidebar));
 }
 .railSpace {
   position: relative;
@@ -300,12 +290,7 @@
   height: 6px;
   border-radius: 0;
   background: var(--cipher-accent-fg);
-  box-shadow: 0 0 0 2px
-    color-mix(
-      in srgb,
-      var(--cipher-mix-ink) var(--cipher-hover-mix),
-      var(--cipher-sidebar)
-    );
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-sidebar));
 }
 .railSpace[aria-selected="true"] .railDot {
   box-shadow: 0 0 0 2px var(--cipher-pop);
@@ -545,12 +530,7 @@ a.row[href] {
   pointer-events: none;
 }
 .sidebar[data-collapsed] .row:hover .dot {
-  box-shadow: 0 0 0 2px
-    color-mix(
-      in srgb,
-      var(--cipher-mix-ink) var(--cipher-hover-mix),
-      var(--cipher-sidebar)
-    );
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-sidebar));
 }
 .sidebar[data-collapsed] .row:is([data-current], [data-holds-current]) .dot {
   box-shadow: 0 0 0 2px var(--cipher-sidebar-current);
@@ -584,12 +564,10 @@ a.row[href] {
   color: var(--cipher-ink);
 }
 .nav[data-enter="forward"] {
-  animation: scopeForward var(--cipher-duration-moderate)
-    var(--cipher-ease-standard) both;
+  animation: scopeForward var(--cipher-duration-moderate) var(--cipher-ease-standard) both;
 }
 .nav[data-enter="back"] {
-  animation: scopeBack var(--cipher-duration-moderate)
-    var(--cipher-ease-standard) both;
+  animation: scopeBack var(--cipher-duration-moderate) var(--cipher-ease-standard) both;
 }
 @keyframes scopeForward {
   from {
@@ -621,9 +599,6 @@ a.row[href] {
   background: var(--cipher-sidebar);
 }
 .sheet > .sidebar {
-  width: min(
-    calc(var(--cipher-size-sidebar) + var(--cipher-space-48)),
-    calc(100vw - var(--cipher-space-48))
-  );
+  width: min(calc(var(--cipher-size-sidebar) + var(--cipher-space-48)), calc(100vw - var(--cipher-space-48)));
   height: 100%;
 }

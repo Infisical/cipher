@@ -19,8 +19,7 @@
   transform-origin: left;
 }
 .progress[data-state="loading"] > .bar {
-  animation: trickle calc(var(--cipher-duration-slow) * 40)
-    var(--cipher-ease-exit) forwards;
+  animation: trickle calc(var(--cipher-duration-slow) * 40) var(--cipher-ease-exit) forwards;
 }
 .progress[data-state="done"] > .bar {
   transform: scaleX(1);

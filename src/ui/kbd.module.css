@@ -11,8 +11,7 @@
 .group:last-child,
 .cap:last-child:not(.group > .cap) {
   margin-inline-end: calc(
-    (var(--cipher-kbd-host-block) - var(--cipher-kbd-size)) / 2 -
-      var(--cipher-kbd-host-end)
+    (var(--cipher-kbd-host-block) - var(--cipher-kbd-size)) / 2 - var(--cipher-kbd-host-end)
   );
 }
 .group {

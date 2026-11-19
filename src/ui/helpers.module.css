@@ -111,11 +111,7 @@
   background: var(--cipher-tint);
 }
 .tile[data-in-frame]:not([aria-disabled="true"]):hover {
-  background: color-mix(
-    in srgb,
-    var(--cipher-mix-ink) var(--cipher-hover-mix),
-    var(--cipher-tint)
-  );
+  background: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-hover-mix), var(--cipher-tint));
 }
 .tile[aria-pressed="true"],
 .tile[aria-current="page"] {
@@ -336,11 +332,7 @@
 }
 .fieldHelp {
   margin-block: calc(
-    (
-        var(--cipher-type-field-label-line-height) -
-          var(--cipher-size-control-xs)
-      ) /
-      2
+    (var(--cipher-type-field-label-line-height) - var(--cipher-size-control-xs)) / 2
   );
   color: var(--cipher-muted);
 }
@@ -398,8 +390,7 @@
   flex-shrink: 1000;
   justify-content: flex-start;
   min-width: calc(
-    min(6ch, 100%) + 2 * var(--cipher-badge-pad) + 2 *
-      var(--cipher-size-control-border)
+    min(6ch, 100%) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
   );
   max-width: 100%;
 }
@@ -412,8 +403,7 @@
 }
 .badge[data-collapse]:has(> svg, > .badgeDot) {
   min-width: calc(
-    var(--cipher-badge-glyph) + 2 * var(--cipher-badge-pad) + 2 *
-      var(--cipher-size-control-border)
+    var(--cipher-badge-glyph) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
   );
 }
 .badgeText {
@@ -433,15 +423,9 @@
   --cipher-badge-glyph: var(--cipher-size-badge-glyph-sm);
   --cipher-badge-pad: var(--cipher-space-6);
   height: var(--cipher-size-badge-sm);
-  line-height: calc(
-    var(--cipher-size-badge-sm) - 2 * var(--cipher-size-control-border)
-  );
+  line-height: calc(var(--cipher-size-badge-sm) - 2 * var(--cipher-size-control-border));
 }
-.badge:is(
-  [data-size="control-sm"],
-  [data-size="control-md"],
-  [data-size="control-lg"]
-) {
+.badge:is([data-size="control-sm"], [data-size="control-md"], [data-size="control-lg"]) {
   --cipher-badge-glyph: var(--cipher-size-icon);
   gap: var(--cipher-space-control-gap);
   font-family: var(--cipher-type-body-font-family);
@@ -587,10 +571,7 @@
   max-width: min(var(--cipher-size-toast), 100%);
 }
 .toastStack.toastFixed {
-  max-width: min(
-    var(--cipher-size-toast),
-    calc(100vw - 2 * var(--cipher-space-16))
-  );
+  max-width: min(var(--cipher-size-toast), calc(100vw - 2 * var(--cipher-space-16)));
 }
 .toast {
   border-radius: 0;
@@ -618,9 +599,7 @@
 }
 .toast > button {
   flex: none;
-  margin-block: calc(
-    (var(--cipher-toast-line) - var(--cipher-action-height)) / 2
-  );
+  margin-block: calc((var(--cipher-toast-line) - var(--cipher-action-height)) / 2);
 }
 .toastActions {
   display: flex;
@@ -696,22 +675,14 @@
   margin-bottom: var(--cipher-space-field-legend);
 }
 .fieldLegend[data-variant="legend"] + .fieldDescription {
-  margin-top: calc(
-    var(--cipher-space-field-label) - var(--cipher-space-field-legend)
-  );
+  margin-top: calc(var(--cipher-space-field-label) - var(--cipher-space-field-legend));
 }
 [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
   row-gap: var(--cipher-space-field-legend);
 }
-.fieldGroup
-  > [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"])
-  + *,
-.fieldGroup
-  > *
-  + [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
-  margin-top: calc(
-    var(--cipher-space-content-section) - var(--cipher-space-field-group)
-  );
+.fieldGroup > [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) + *,
+.fieldGroup > * + [data-slot="field-set"]:has(> .fieldLegend[data-variant="legend"]) {
+  margin-top: calc(var(--cipher-space-content-section) - var(--cipher-space-field-group));
 }
 .fieldLegend[data-variant="label"] {
   font-family: var(--cipher-type-field-label-font-family);

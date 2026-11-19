@@ -21,10 +21,7 @@
   );
   max-width: min(
     var(--cipher-size-menu-max),
-    var(
-      --radix-popper-available-width,
-      calc(100vw - 2 * var(--cipher-space-16))
-    )
+    var(--radix-popper-available-width, calc(100vw - 2 * var(--cipher-space-16)))
   );
   max-height: var(--radix-popper-available-height, none);
   overflow-x: hidden;
@@ -37,34 +34,22 @@
   display: flex;
   flex-direction: column;
   gap: var(--cipher-space-8);
-  width: min(
-    var(--cipher-size-popover),
-    var(--radix-popper-available-width, 100vw)
-  );
+  width: min(var(--cipher-size-popover), var(--radix-popper-available-width, 100vw));
   max-height: var(--radix-popper-available-height, none);
   overflow-y: auto;
   scroll-padding-block: var(--cipher-focus-clearance);
   padding: var(--cipher-space-12);
 }
 .card[data-width="sm"] {
-  width: min(
-    var(--cipher-size-sheet-sm),
-    var(--radix-popper-available-width, 100vw)
-  );
+  width: min(var(--cipher-size-sheet-sm), var(--radix-popper-available-width, 100vw));
 }
 .card[data-width="md"] {
-  width: min(
-    var(--cipher-size-sheet-md),
-    var(--radix-popper-available-width, 100vw)
-  );
+  width: min(var(--cipher-size-sheet-md), var(--radix-popper-available-width, 100vw));
 }
 .card[data-width="content"],
 .card:not([data-width]):has(> .scroller > [data-slot="calendar"]) {
   width: max-content;
-  max-width: min(
-    var(--cipher-size-dialog-wide),
-    var(--radix-popper-available-width, 100vw)
-  );
+  max-width: min(var(--cipher-size-dialog-wide), var(--radix-popper-available-width, 100vw));
 }
 .tooltip {
   box-sizing: border-box;
@@ -72,10 +57,7 @@
   align-items: center;
   gap: var(--cipher-space-8);
   width: fit-content;
-  max-width: min(
-    var(--cipher-size-tooltip-max),
-    var(--radix-popper-available-width, 100vw)
-  );
+  max-width: min(var(--cipher-size-tooltip-max), var(--radix-popper-available-width, 100vw));
   padding: var(--cipher-space-6) var(--cipher-space-8);
   pointer-events: none;
   user-select: none;
@@ -120,22 +102,13 @@
 .motion[data-side="left"] {
   --cipher-pop-from: var(--cipher-space-4) 0;
 }
-.motion:is(
-  [data-state="open"],
-  [data-state="delayed-open"],
-  [data-state="instant-open"]
-) {
+.motion:is([data-state="open"], [data-state="delayed-open"], [data-state="instant-open"]) {
   animation: popIn var(--cipher-duration-fast) var(--cipher-ease-spring) both;
 }
 .motion[data-state="closed"] {
-  animation: popOut var(--cipher-duration-exit-fast) var(--cipher-ease-exit)
-    both;
+  animation: popOut var(--cipher-duration-exit-fast) var(--cipher-ease-exit) both;
 }
-.tooltip.motion:is(
-    [data-state="open"],
-    [data-state="delayed-open"],
-    [data-state="instant-open"]
-  ) {
+.tooltip.motion:is([data-state="open"], [data-state="delayed-open"], [data-state="instant-open"]) {
   animation-name: tipIn;
 }
 .tooltip.motion[data-state="closed"] {
@@ -178,11 +151,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .motion:is(
-    [data-state="open"],
-    [data-state="delayed-open"],
-    [data-state="instant-open"]
-  ),
+  .motion:is([data-state="open"], [data-state="delayed-open"], [data-state="instant-open"]),
   .tooltip.motion:is(
       [data-state="open"],
       [data-state="delayed-open"],
@@ -205,9 +174,7 @@
   padding: var(--cipher-menu-pad);
 }
 .inset[data-icon-slot] {
-  --cipher-menu-icon-slot: calc(
-    var(--cipher-size-icon) + var(--cipher-space-8)
-  );
+  --cipher-menu-icon-slot: calc(var(--cipher-size-icon) + var(--cipher-space-8));
 }
 
 /* Nine whole rows plus one inset pad: at rest the top pad and nine rows show, and scrolled to the
@@ -244,9 +211,7 @@
   min-width: 0;
   min-height: var(--cipher-size-control-sm);
   padding: var(--cipher-space-6) var(--cipher-space-8);
-  padding-inline-start: calc(
-    var(--cipher-space-8) + var(--cipher-menu-icon-slot, 0px)
-  );
+  padding-inline-start: calc(var(--cipher-space-8) + var(--cipher-menu-icon-slot, 0px));
   --cipher-kbd-host-block: var(--cipher-size-control-sm);
   --cipher-kbd-host-end: var(--cipher-space-8);
   border-radius: 0;
@@ -293,26 +258,20 @@ a.row[href],
   )
   > :is(svg, img, [data-menu-icon]):not(.trail) {
   align-self: flex-start;
-  margin-block-start: calc(
-    (var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2
-  );
+  margin-block-start: calc((var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2);
 }
 :global(.cipher) {
   --overlay-hover: var(--cipher-hover-mix);
 }
 .row:is(
-  [data-highlighted],
-  [data-selected="true"],
-  [data-active],
-  [data-state="open"],
-  a:hover,
-  a:focus-visible
-) {
-  background-color: color-mix(
-    in oklab,
-    var(--cipher-mix-ink) var(--overlay-hover),
-    transparent
-  );
+    [data-highlighted],
+    [data-selected="true"],
+    [data-active],
+    [data-state="open"],
+    a:hover,
+    a:focus-visible
+  ) {
+  background-color: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
 }
 .row:is([data-variant="destructive"], [data-danger]) {
   color: var(--cipher-bad);
@@ -328,8 +287,7 @@ a.row[href],
   background-color: transparent;
   pointer-events: none;
 }
-.row:is([data-disabled]:not([data-disabled="false"]), [aria-disabled="true"])
-  > :is(img, [data-menu-icon]) {
+.row:is([data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) > :is(img, [data-menu-icon]) {
   opacity: var(--cipher-opacity-row-dim);
 }
 .indicator {
@@ -422,9 +380,7 @@ a.row[href],
 .group > [cmdk-group-heading] {
   display: block;
   padding: var(--cipher-space-6) var(--cipher-space-8);
-  padding-inline-start: calc(
-    var(--cipher-space-8) + var(--cipher-menu-icon-slot, 0px)
-  );
+  padding-inline-start: calc(var(--cipher-space-8) + var(--cipher-menu-icon-slot, 0px));
   color: var(--cipher-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -443,10 +399,7 @@ a.row[href],
 :is([role="group"], [cmdk-group]):not(:first-child)
   > :is(.label, [cmdk-group-heading]):first-child {
   position: relative;
-  padding-top: calc(
-    var(--cipher-space-6) + 2 * var(--cipher-menu-pad, var(--cipher-space-3)) +
-      var(--cipher-size-control-border)
-  );
+  padding-top: calc(var(--cipher-space-6) + 2 * var(--cipher-menu-pad, var(--cipher-space-3)) + var(--cipher-size-control-border));
 }
 .label:not(:first-child, .separator + *),
 :is([role="group"], [cmdk-group]):not(:first-child)
@@ -461,10 +414,7 @@ a.row[href],
 .separator {
   position: relative;
   flex: none;
-  height: calc(
-    2 * var(--cipher-menu-pad, var(--cipher-space-3)) +
-      var(--cipher-size-control-border)
-  );
+  height: calc(2 * var(--cipher-menu-pad, var(--cipher-space-3)) + var(--cipher-size-control-border));
   border: 0;
 }
 .separator::before {

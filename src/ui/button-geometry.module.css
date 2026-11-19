@@ -5,16 +5,13 @@
   --cipher-action-line-height: var(--cipher-type-label-line-height);
   --cipher-action-inset: var(--cipher-space-control-inline);
   --cipher-action-icon-size: var(--cipher-size-icon);
-  --cipher-kbd-host-block: calc(
-    var(--cipher-action-height) - 2 * var(--cipher-size-control-border)
-  );
+  --cipher-kbd-host-block: calc(var(--cipher-action-height) - 2 * var(--cipher-size-control-border));
   --cipher-kbd-host-end: var(--cipher-action-inset);
   box-sizing: border-box;
   min-height: var(--cipher-action-height);
   gap: var(--cipher-space-control-gap);
   padding-block: calc(
-    (var(--cipher-action-height) - var(--cipher-action-line-height)) / 2 -
-      var(--cipher-size-control-border)
+    (var(--cipher-action-height) - var(--cipher-action-line-height)) / 2 - var(--cipher-size-control-border)
   );
   padding-inline: var(--cipher-action-inset);
   border-width: var(--cipher-size-control-border);
@@ -97,12 +94,10 @@ a.button[href]:not([aria-busy="true"]) {
     var(--cipher-nested-action-height, var(--cipher-action-requested-height))
   );
 }
-.inputGroup
-  > [data-slot="input-group-addon"][data-align="inline-start"][data-has-button] {
+.inputGroup > [data-slot="input-group-addon"][data-align="inline-start"][data-has-button] {
   padding-inline-start: var(--cipher-space-control-slot-inset);
 }
-.inputGroup
-  > [data-slot="input-group-addon"][data-align="inline-end"][data-has-button] {
+.inputGroup > [data-slot="input-group-addon"][data-align="inline-end"][data-has-button] {
   padding-inline-end: var(--cipher-space-control-slot-inset);
 }
 .badged[data-cipher-button] {
@@ -147,11 +142,7 @@ a.button[href]:not([aria-busy="true"]) {
   width: var(--cipher-size-icon);
   height: var(--cipher-size-icon);
 }
-.triggerLayout:is(
-    [data-variant="outline"],
-    [data-variant="secondary"],
-    [data-variant="ghost"]
-  )
+.triggerLayout:is([data-variant="outline"], [data-variant="secondary"], [data-variant="ghost"])
   .triggerChevron {
   color: var(--cipher-muted);
 }

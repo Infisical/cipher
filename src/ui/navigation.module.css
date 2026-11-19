@@ -18,14 +18,7 @@
 .tabsTrack[data-rule-spans] {
   width: 100%;
 }
-:global(
-    [data-slot="sheet-head"]
-      > [data-slot="sheet-header"]:not(
-        :has(~ :not([data-slot="sheet-view-subheader"]:empty))
-      )
-      > [data-slot="sheet-header-tabs"]
-  )
-  .tabsTrack {
+:global([data-slot="sheet-head"] > [data-slot="sheet-header"]:not(:has(~ :not([data-slot="sheet-view-subheader"]:empty))) > [data-slot="sheet-header-tabs"]) .tabsTrack {
   border-bottom: 0;
 }
 .tabsList {
@@ -108,11 +101,8 @@
 .tabsList[data-variant="segmented"][data-orientation="horizontal"] {
   padding: var(--cipher-space-2);
 }
-.tabsList[data-variant="segmented"][data-orientation="horizontal"]
-  [role="tab"] {
-  min-height: calc(
-    var(--cipher-size-control-default) - 2 * var(--cipher-space-2)
-  );
+.tabsList[data-variant="segmented"][data-orientation="horizontal"] [role="tab"] {
+  min-height: calc(var(--cipher-size-control-default) - 2 * var(--cipher-space-2));
 }
 .tabsList[data-width="full"][data-orientation="horizontal"] [role="tab"] {
   flex: 1 1 0;
@@ -124,8 +114,7 @@
   border-radius: 0;
   border-bottom: 2px solid var(--cipher-ink);
 }
-.tabsList[data-orientation="vertical"][data-variant="underline"]
-  .tabIndicator.tabIndicator {
+.tabsList[data-orientation="vertical"][data-variant="underline"] .tabIndicator.tabIndicator {
   border-bottom: 0;
   border-right: 2px solid var(--cipher-ink);
 }

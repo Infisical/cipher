@@ -7,9 +7,7 @@
 .header {
   justify-content: flex-start;
   gap: var(--cipher-space-4) var(--cipher-space-8);
-  padding-inline-start: calc(
-    var(--cipher-space-frame-inline) + var(--cipher-space-frame-title-inline)
-  );
+  padding-inline-start: calc(var(--cipher-space-frame-inline) + var(--cipher-space-frame-title-inline));
   font-family: var(--cipher-type-mono-sm-font-family);
   font-size: var(--cipher-type-mono-sm-font-size);
   line-height: var(--cipher-type-mono-sm-line-height);
