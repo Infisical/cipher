@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "radix-ui";
 
+import { isDev } from "../lib/dev";
 import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
@@ -21,6 +22,7 @@ export type BreadcrumbCrumb = {
   label: React.ReactNode;
   link?: CipherLinkTarget;
   href?: string;
+  /** Runs on click beside `link` or `href`. On its own the crumb renders as a button, which can't open in a new tab, and development builds warn. */
   onNavigate?: React.MouseEventHandler<HTMLElement>;
   mono?: boolean;
   media?: React.ReactNode;
@@ -282,6 +284,17 @@ function Breadcrumb({
   ...props
 }: BreadcrumbProps & { ref?: React.Ref<HTMLElement> }) {
   const nameId = React.useId();
+  const navigateOnly = Boolean(
+    items?.some((crumb) => crumb.onNavigate && !crumb.link && !crumb.href)
+  );
+  const warned = React.useRef(false);
+  React.useEffect(() => {
+    if (!isDev || !navigateOnly || warned.current) return;
+    warned.current = true;
+    console.warn(
+      "Breadcrumb: a crumb has onNavigate but no link or href, so it renders as a button that can't open in a new tab. Pass link or href for navigation."
+    );
+  }, [navigateOnly]);
   const nav = React.useRef<HTMLElement | null>(null);
   const measure = React.useRef<HTMLOListElement | null>(null);
   const [lastHidden, setLastHidden] = React.useState(-1);

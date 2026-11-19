@@ -1208,6 +1208,10 @@
       {
         "title": "Disabled with a reason, beside read only",
         "module": "input/disabled-reason"
+      },
+      {
+        "title": "Short placeholders on narrow fields",
+        "module": "input/placeholder-short"
       }
     ]
   },

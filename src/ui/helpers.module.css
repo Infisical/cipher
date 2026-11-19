@@ -419,9 +419,12 @@
   font-family: var(--cipher-type-mono-sm-font-family);
 }
 .badge[data-slot][data-tone] {
-  border-color: var(--cipher-line-soft);
+  border-color: transparent;
   color: var(--cipher-muted);
   background: transparent;
+}
+.badge[data-slot][data-tone="outline"] {
+  border-color: var(--cipher-line-soft);
 }
 .badge[data-size="sm"] {
   --cipher-badge-glyph: var(--cipher-size-badge-glyph-sm);
@@ -452,37 +455,30 @@
   height: var(--cipher-size-control-lg);
 }
 .badge[data-slot][data-tone="soft"] {
-  border-color: var(--cipher-line-soft);
-  background: var(--cipher-paper);
+  background: var(--cipher-badge-soft);
   color: var(--cipher-text2);
 }
 .badge[data-slot][data-tone="solid"] {
-  border-color: var(--cipher-ink);
   background: var(--cipher-ink);
   color: var(--cipher-on-ink);
 }
 .badge[data-slot][data-tone="accent"] {
-  border-color: var(--cipher-accent);
   background: var(--cipher-accent);
   color: var(--cipher-on-accent);
 }
 .badge[data-slot][data-tone="ok"] {
-  border-color: var(--cipher-ok-line);
   background: var(--cipher-ok-bg);
   color: var(--cipher-ok);
 }
 .badge[data-slot][data-tone="warn"] {
-  border-color: var(--cipher-warn-line);
   background: var(--cipher-warn-bg);
   color: var(--cipher-warn);
 }
 .badge[data-slot][data-tone="bad"] {
-  border-color: var(--cipher-bad-line);
   background: var(--cipher-bad-bg);
   color: var(--cipher-bad);
 }
 .badge[data-slot][data-tone="info"] {
-  border-color: var(--cipher-info-line);
   background: var(--cipher-info-bg);
   color: var(--cipher-info);
 }

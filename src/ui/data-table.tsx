@@ -858,7 +858,7 @@ export function DataTable<Row>({
             )}
             {!loading && !rows.length && (
               <TableRow data-row-kind="empty">
-                <TableCell colSpan={span}>
+                <TableCell colSpan={span} pin="viewport">
                   <EmptyScope
                     ghost={ghost ?? (embedded || filtered ? false : "rows")}
                     size="sm"
