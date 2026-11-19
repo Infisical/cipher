@@ -35,10 +35,27 @@ const days: ActivityDay[] = [
   }
 ];
 
+const singleDays: ActivityDay[] = [
+  ["Nov 18", "Sarah Lin", "added 5 seats"],
+  ["Nov 15", "billing-sync", "renewed the invoice"],
+  ["Nov 11", "Marcus Okonkwo-Fitzgerald", "changed the plan to Enterprise"],
+  ["Nov 6", "Sarah Lin", "removed 2 seats"],
+  ["Oct 30", "billing-sync", "marked the invoice paid"],
+  ["Oct 24", "Priya Raman", "issued the license"]
+].map(([label, actor, summary], index) => ({
+  label,
+  events: [{ id: String(index), actor, summary, time: "12:00" }]
+}));
+
 export default function Example() {
   return (
-    <Card variant="framed" title="Activity" flush className="w-full">
-      <ActivityLog days={days} counts={false} />
-    </Card>
+    <div className="flex w-full min-w-0 flex-col gap-6">
+      <Card variant="framed" title="Activity" flush className="w-full">
+        <ActivityLog days={days} counts={false} />
+      </Card>
+      <Card variant="framed" title="Activity" flush className="w-full">
+        <ActivityLog days={singleDays} counts={false} />
+      </Card>
+    </div>
   );
 }

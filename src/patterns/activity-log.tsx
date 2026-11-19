@@ -35,6 +35,8 @@ export type ActivityLogProps = {
   empty?: React.ReactNode;
   /** Shows each day's event count and the "Showing" footer. Turn it off for a short log, such as a card on a detail page, where the counts only repeat what the rows show. */
   counts?: boolean;
+  /** A hairline between day groups, none above the first or below the last. Turn it off where the log sits right against other ruled rows. */
+  dividers?: boolean;
 };
 
 const kindLabel = { person: "", machine: "Machine", agent: "Agent" } as const;
@@ -50,6 +52,7 @@ export const ActivityLog = ({
   label = "Activity",
   empty = "No activity yet",
   counts = true,
+  dividers = true,
 }: ActivityLogProps) => {
   const inFrame = useInFrame("ActivityLog");
   const shown = days.reduce((sum, day) => sum + day.events.length, 0);
@@ -70,7 +73,11 @@ export const ActivityLog = ({
   else if (total !== undefined) footer = `Showing ${shown} of ${total} events`;
   else if (shown > 0) footer = `Showing ${plural(shown)}`;
   return (
-    <div data-slot="activity-log" className={styles.activityLog}>
+    <div
+      data-slot="activity-log"
+      data-dividers={dividers || undefined}
+      className={styles.activityLog}
+    >
       <List
         label={label}
         variant={inFrame ? undefined : "plain"}
