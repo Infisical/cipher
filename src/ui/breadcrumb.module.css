@@ -248,6 +248,7 @@ button.segment {
   max-width: 240px;
 }
 .product > .entry:first-child > :is(.segment, .link) {
+  box-sizing: border-box;
   min-inline-size: var(--cipher-crumb-root-size, 0px);
   max-inline-size: var(--cipher-crumb-root-max, none);
 }
