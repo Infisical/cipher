@@ -154,7 +154,8 @@ export function Count({
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"span"> & {
-  tone?: "accent" | "ink" | "neutral";
+  /** warn and bad reuse the soft Badge tones, for a count that flags trouble rather than volume. */
+  tone?: "accent" | "ink" | "neutral" | "warn" | "bad";
 } & {
   ref?: React.Ref<HTMLSpanElement>;
 }) {

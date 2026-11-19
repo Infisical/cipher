@@ -1362,6 +1362,10 @@
         "module": "list/refreshing"
       },
       {
+        "title": "Count beside the title",
+        "module": "list/title-count"
+      },
+      {
         "title": "Long keys and paths",
         "module": "list/long-keys"
       }
@@ -2132,6 +2136,10 @@
       {
         "title": "Variants",
         "module": "tabs/default"
+      },
+      {
+        "title": "Count tones",
+        "module": "tabs/count-tones"
       }
     ]
   },

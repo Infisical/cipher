@@ -15,6 +15,8 @@ export interface TabDefinition {
   value: string;
   label: React.ReactNode;
   count?: number;
+  /** Flags a count that needs attention, such as suspended accounts, so it reads differently from a plain total. */
+  countTone?: "neutral" | "warn" | "bad";
   content?: React.ReactNode;
   disabled?: boolean;
 }
@@ -80,7 +82,7 @@ function Tabs({
                 <TabsTrigger key={tab.value} value={tab.value} disabled={tab.disabled}>
                   {tab.label}
                   {tab.count !== undefined && (
-                    <Count tone="neutral" className={styles.tabCount}>
+                    <Count tone={tab.countTone ?? "neutral"} className={styles.tabCount}>
                       {tab.count}
                     </Count>
                   )}
