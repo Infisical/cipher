@@ -18,14 +18,20 @@ function measurer(element: HTMLInputElement | HTMLTextAreaElement) {
 
 function truncate(text: string, fits: (text: string) => boolean) {
   if (fits(text)) return text;
+  const characters = Array.from(
+    new Intl.Segmenter().segment(text),
+    (part) => part.segment,
+  );
+  const cut = (count: number) =>
+    characters.slice(0, count).join("").trimEnd() + "…";
   let low = 0;
-  let high = text.length;
+  let high = characters.length;
   while (low < high) {
     const middle = Math.ceil((low + high) / 2);
-    if (fits(text.slice(0, middle).trimEnd() + "…")) low = middle;
+    if (fits(cut(middle))) low = middle;
     else high = middle - 1;
   }
-  return text.slice(0, low).trimEnd() + "…";
+  return cut(low);
 }
 
 /** The full placeholder while it fits the field on one line, else the short one, ending in an ellipsis if even that is too long. With truncate off and no short form, the placeholder passes through untouched. */
@@ -37,8 +43,13 @@ export function useFittingPlaceholder(
 ) {
   const [shown, setShown] = React.useState(placeholder);
   const active = Boolean(placeholder && (short || truncating));
+  const [element, setElement] = React.useState<
+    HTMLInputElement | HTMLTextAreaElement | null
+  >(null);
   React.useLayoutEffect(() => {
-    const element = ref.current;
+    if (ref.current !== element) setElement(ref.current);
+  });
+  React.useLayoutEffect(() => {
     if (!element || !placeholder || !active) return;
     const measure = () => {
       const fits = measurer(element);
@@ -48,7 +59,11 @@ export function useFittingPlaceholder(
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(element);
-    return () => observer.disconnect();
-  }, [ref, placeholder, short, truncating, active]);
+    document.fonts?.addEventListener("loadingdone", measure);
+    return () => {
+      observer.disconnect();
+      document.fonts?.removeEventListener("loadingdone", measure);
+    };
+  }, [element, placeholder, short, truncating, active]);
   return active ? shown : placeholder;
 }
