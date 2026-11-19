@@ -57,26 +57,27 @@ function Badge({
   collapse?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
-  const textRef = React.useRef<HTMLSpanElement>(null);
   const fitsWhole = !icon && !dot;
-  React.useLayoutEffect(() => {
-    const label = textRef.current;
-    const root = label?.parentElement;
-    if (!label || !root) return;
-    const measure = () => {
-      if (fitsWhole && (label.textContent ?? "").length <= 6)
-        root.setAttribute("data-fit", "");
-      else root.removeAttribute("data-fit");
-    };
-    measure();
-    const observer = new MutationObserver(measure);
-    observer.observe(label, {
-      subtree: true,
-      childList: true,
-      characterData: true,
-    });
-    return () => observer.disconnect();
-  }, [collapse, fitsWhole]);
+  const textRef = React.useCallback(
+    (label: HTMLSpanElement | null) => {
+      const root = label?.parentElement;
+      if (!label || !root) return;
+      const measure = () => {
+        if (fitsWhole && (label.textContent ?? "").length <= 6)
+          root.setAttribute("data-fit", "");
+        else root.removeAttribute("data-fit");
+      };
+      measure();
+      const observer = new MutationObserver(measure);
+      observer.observe(label, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+      });
+      return () => observer.disconnect();
+    },
+    [fitsWhole],
+  );
   const text = (content: React.ReactNode) =>
     collapse ? (
       <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
