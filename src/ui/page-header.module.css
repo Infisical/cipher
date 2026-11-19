@@ -7,8 +7,7 @@
   margin-bottom: var(--cipher-space-8);
 }
 .trail [data-slot="breadcrumb-name"] {
-  gap: var(--cipher-space-2);
-  color: var(--cipher-faint);
+  color: var(--cipher-muted);
   transition: color var(--cipher-duration-fast) var(--cipher-ease-standard);
 }
 .trail [data-slot="breadcrumb-name"]:hover {
