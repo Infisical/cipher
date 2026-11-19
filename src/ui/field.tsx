@@ -228,6 +228,7 @@ function Field({
         data-orientation={orientation}
         data-width={wide ? "wide" : undefined}
         data-invalid={Boolean(error) || undefined}
+        data-note-row={(!label && hasNote) || undefined}
         className={cn(fieldVariants({ orientation }), helperStyles.field, className)}
         onInputCapture={(event) => {
           onInputCapture?.(event);
@@ -269,13 +270,11 @@ function Field({
               </div>
             </>
           )
-        ) : hasNote ? (
-          <div className={helperStyles.fieldControl}>
+        ) : (
+          <>
             {control}
             {note}
-          </div>
-        ) : (
-          control
+          </>
         )}
       </div>
     </FieldControlContext>
