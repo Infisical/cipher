@@ -6,10 +6,7 @@ function measurer(element: HTMLInputElement | HTMLTextAreaElement) {
   const style = getComputedStyle(element);
   canvas ??= document.createElement("canvas");
   const context = canvas.getContext("2d");
-  const room =
-    element.clientWidth -
-    parseFloat(style.paddingLeft) -
-    parseFloat(style.paddingRight);
+  const room = element.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
   if (!context) return () => true;
   context.font = style.font;
   context.letterSpacing = style.letterSpacing;
@@ -18,12 +15,8 @@ function measurer(element: HTMLInputElement | HTMLTextAreaElement) {
 
 function truncate(text: string, fits: (text: string) => boolean) {
   if (fits(text)) return text;
-  const characters = Array.from(
-    new Intl.Segmenter().segment(text),
-    (part) => part.segment,
-  );
-  const cut = (count: number) =>
-    characters.slice(0, count).join("").trimEnd() + "…";
+  const characters = Array.from(new Intl.Segmenter().segment(text), (part) => part.segment);
+  const cut = (count: number) => characters.slice(0, count).join("").trimEnd() + "…";
   let low = 0;
   let high = characters.length;
   while (low < high) {
@@ -39,13 +32,11 @@ export function useFittingPlaceholder(
   ref: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>,
   placeholder: string | undefined,
   short: string | undefined,
-  { truncate: truncating = false }: { truncate?: boolean } = {},
+  { truncate: truncating = false }: { truncate?: boolean } = {}
 ) {
   const [shown, setShown] = React.useState(placeholder);
   const active = Boolean(placeholder && (short || truncating));
-  const [element, setElement] = React.useState<
-    HTMLInputElement | HTMLTextAreaElement | null
-  >(null);
+  const [element, setElement] = React.useState<HTMLInputElement | HTMLTextAreaElement | null>(null);
   React.useLayoutEffect(() => {
     if (ref.current !== element) setElement(ref.current);
   });

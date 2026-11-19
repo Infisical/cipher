@@ -18,28 +18,17 @@ export const fieldBoxFlags = {
   "data-control-invalid": `:is([data-field-control], ${field})[aria-invalid="true"]`,
   "data-control-input-focus": "[data-field-control]:focus-visible",
   "data-control-invalid-focus": `[data-field-control][aria-invalid="true"]:focus-visible, ${field}[aria-invalid="true"]:is(:focus-visible, [aria-expanded="true"])`,
-  "data-control-disabled":
-    '[data-field-control]:is(:disabled, [aria-disabled="true"])',
-  "data-control-readonly":
-    '[data-field-control][readonly]:not([aria-disabled="true"])',
+  "data-control-disabled": '[data-field-control]:is(:disabled, [aria-disabled="true"])',
+  "data-control-readonly": '[data-field-control][readonly]:not([aria-disabled="true"])'
 };
 export const fieldBoxWatch = {
-  attributes: [
-    "aria-invalid",
-    "aria-expanded",
-    "aria-disabled",
-    "disabled",
-    "readonly",
-  ],
-  focus: true,
+  attributes: ["aria-invalid", "aria-expanded", "aria-disabled", "disabled", "readonly"],
+  focus: true
 };
 
 export type FieldWidth = "xs" | "sm" | "md";
 
-export type InputProps = Omit<
-  React.ComponentPropsWithoutRef<"input">,
-  "size" | "width"
-> & {
+export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size" | "width"> & {
   size?: number | "xs" | "sm" | "md" | "lg";
   /** A fixed token width that doesn't shrink: xs for short numbers, sm for dates, md for short names. Unset fills the row. */
   width?: FieldWidth;
@@ -80,40 +69,32 @@ export function Input({
   const field = useFieldControlAttributes(props);
   const inner = React.useRef<HTMLInputElement>(null);
   React.useImperativeHandle(ref, () => inner.current as HTMLInputElement);
-  const shownPlaceholder = useFittingPlaceholder(
-    inner,
-    placeholder,
-    placeholderShort,
-  );
+  const shownPlaceholder = useFittingPlaceholder(inner, placeholder, placeholderShort);
   useSlashShortcut(inner, {
     enabled: slashShortcut,
     onTrigger: () => {
       inner.current?.focus();
       inner.current?.select();
-    },
+    }
   });
   const hintId = React.useId();
   const reasonId = React.useId();
   const reason = disabledReason || undefined;
-  const suggesting =
-    Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
+  const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
     const element = inner.current;
     if (!element || !suggestedValue || element.value) return;
-    Object.getOwnPropertyDescriptor(
-      HTMLInputElement.prototype,
-      "value",
-    )?.set?.call(element, suggestedValue);
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(
+      element,
+      suggestedValue
+    );
     element.dispatchEvent(new Event("input", { bubbles: true }));
   };
   const fieldSize = typeof size === "number" ? "sm" : size;
   const leading = icon ?? (props.readOnly && !reason ? "lock" : undefined);
   const trailed = Boolean(kbd || trailing || suggesting);
   const boxed = Boolean(leading || kbd || trailing || suggestedValue);
-  const boxRef = useDescendantFlags<HTMLSpanElement>(
-    fieldBoxFlags,
-    fieldBoxWatch,
-  );
+  const boxRef = useDescendantFlags<HTMLSpanElement>(fieldBoxFlags, fieldBoxWatch);
   const input = (
     <input
       ref={inner}
@@ -127,7 +108,7 @@ export function Input({
       className={cn(
         boxed ? styles.bare : [styles.field, "w-full min-w-0"],
         mono && styles.mono,
-        className,
+        className
       )}
       placeholder={suggestedValue || shownPlaceholder}
       {...props}
@@ -214,11 +195,7 @@ export function Input({
     <>
       {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same input and its typed value. Its own provider keeps that from requiring one around every Input. */}
       <TooltipProvider>
-        <Tooltip
-          content={reason || " "}
-          open={reason ? undefined : false}
-          defaultOpen={false}
-        >
+        <Tooltip content={reason || " "} open={reason ? undefined : false} defaultOpen={false}>
           {control}
         </Tooltip>
       </TooltipProvider>
