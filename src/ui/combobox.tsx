@@ -458,7 +458,7 @@ export function Combobox({
           />
           <CommandList aria-busy={loading || undefined}>
             {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
-            {(onSearch || rowCreation) && !filtered.length && (
+            {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
               <p role="status" data-slot="combobox-status" className={menu.empty}>
                 {loading ? "Searching…" : emptyText}
               </p>
@@ -507,10 +507,13 @@ export function Combobox({
                 <CommandItem
                   disabled={creating || loading || disabled || Boolean(creationBlocked)}
                   value={`create:${query}`}
+                  data-slot="combobox-create-option"
+                  data-highlight-default=""
                   onSelect={() => {
                     creation.create(query.trim());
                   }}
                 >
+                  <Icon name="plus" />
                   <span className={menu.title}>
                     {creating
                       ? "Creating…"

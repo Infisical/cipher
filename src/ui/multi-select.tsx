@@ -147,6 +147,7 @@ export function MultiSelect({
   const changeQuery = (next: string) => {
     creation.cancel();
     setQuery(next);
+    setActive("");
     onSearch?.(next);
   };
   const changeOpen = (next: boolean) => {
@@ -167,7 +168,7 @@ export function MultiSelect({
     !options.some((option) => option.label.toLowerCase() === query.trim().toLowerCase())
   );
   const create = () => {
-    if (canCreate && !creating && !disabled) creation.create(query.trim());
+    if (canCreate && !creating && !loading && !disabled) creation.create(query.trim());
   };
   const [active, setActive] = React.useState("");
   const prefix = React.useRef({ value: "", at: 0 });
@@ -237,19 +238,22 @@ export function MultiSelect({
       );
   const enabled = filtered.filter((option) => !option.disabled && !disabled);
   const createId = `${generated}-create`;
+  const createQueryId = `${generated}-create-query`;
   const createBlocked = createAction?.disabledReason || undefined;
+  const createQueryReady = canCreate && !creating && !loading && !disabled;
   const navigable = [
     ...enabled.map((option) => option.value),
+    ...(createQueryReady ? [createQueryId] : []),
     ...(createAction && !createBlocked && !disabled ? [createId] : [])
   ];
   const activeKey = navigable.includes(active) ? active : navigable[0];
   const createActive = activeKey === createId;
-  const currentActive = createActive
-    ? undefined
-    : enabled.find((option) => option.value === activeKey);
+  const createQueryActive = activeKey === createQueryId;
+  const currentActive = enabled.find((option) => option.value === activeKey);
   const optionId = (value: string) =>
     `${generated}-option-${options.findIndex((option) => option.value === value)}`;
-  const activeId = createActive ? createId : currentActive && optionId(currentActive.value);
+  const activeId =
+    createActive || createQueryActive ? activeKey : currentActive && optionId(currentActive.value);
   React.useEffect(() => {
     if (open && activeId) document.getElementById(activeId)?.scrollIntoView({ block: "nearest" });
   }, [open, activeId]);
@@ -311,11 +315,6 @@ export function MultiSelect({
       props.onEmptyBackspace();
       return;
     }
-    if (event.key === "Enter" && activeKey === undefined && canCreate) {
-      event.preventDefault();
-      create();
-      return;
-    }
     const index = activeKey === undefined ? -1 : navigable.indexOf(activeKey);
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
@@ -333,6 +332,7 @@ export function MultiSelect({
     ) {
       event.preventDefault();
       if (currentActive) toggle(currentActive);
+      else if (createQueryActive) create();
       else startCreate();
     } else if (
       !searchable &&
@@ -497,7 +497,7 @@ export function MultiSelect({
             {selected.length} selected
           </span>
         )}
-        {!filtered.length && (
+        {!filtered.length && (loading || !canCreate) && (
           <p role={onSearch ? "status" : undefined} className={menu.empty}>
             {loading ? "Searching…" : "No options found"}
           </p>
@@ -575,6 +575,38 @@ export function MultiSelect({
                 ))}
             </div>
           ))}
+          {canCreate && (
+            <div
+              id={createQueryId}
+              role="option"
+              tabIndex={-1}
+              aria-selected={false}
+              aria-disabled={createQueryReady ? undefined : true}
+              data-active={createQueryActive || undefined}
+              data-slot="multi-select-create-option"
+              data-highlight-default=""
+              data-wrap=""
+              className={cn(menu.row, styles.option, styles.createOption)}
+              onPointerMove={() => {
+                if (createQueryReady) setActive(createQueryId);
+              }}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={create}
+            >
+              {multiple ? (
+                <span aria-hidden className={styles.optionBox}>
+                  <Icon name="plus" />
+                </span>
+              ) : (
+                <Icon name="plus" />
+              )}
+              <span className={styles.optionLabel}>
+                {creating
+                  ? "Creating…"
+                  : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
+              </span>
+            </div>
+          )}
           <ListHighlight />
         </div>
         {createAction && (
@@ -598,22 +630,6 @@ export function MultiSelect({
               <span className={styles.optionLabel}>{createAction.label}</span>
               {createBlocked && <span className={styles.optionMeta}>{createBlocked}</span>}
             </div>
-          </div>
-        )}
-        {canCreate && (
-          <div className={menu.footer} data-slot="multi-select-footer">
-            {canCreate && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="xs"
-                loading={creating}
-                disabled={disabled}
-                onClick={create}
-              >
-                {props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`}
-              </Button>
-            )}
           </div>
         )}
         {createError && (
