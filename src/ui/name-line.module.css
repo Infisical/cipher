@@ -1,0 +1,40 @@
+.line {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  max-width: 100%;
+}
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  overflow: hidden;
+}
+.media {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+.name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.name[data-floor] {
+  min-width: min(100%, 12ch);
+}
+.badges {
+  display: contents;
+}
+.trailing {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-4);
+  color: var(--cipher-muted);
+}

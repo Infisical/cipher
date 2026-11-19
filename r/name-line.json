@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "name-line",
+  "type": "registry:ui",
+  "registryDependencies": [
+    "@cipher/cipher-base"
+  ],
+  "files": [
+    {
+      "path": "src/components/cipher/ui/name-line.tsx",
+      "type": "registry:file",
+      "target": "src/components/cipher/ui/name-line.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn, titleIfClamped } from \"../lib/utils\";\n\nimport styles from \"./name-line.module.css\";\n\n/** One line of media, name, badges and trailing content. Under pressure the badges give way first (use Badge collapse), then a long name truncates to a 12ch floor, then the badges clip; the trailing content always stays whole. The full name shows on hover. */\nexport function NameLine({\n  media,\n  badges,\n  trailing,\n  children,\n  className,\n  ref,\n  ...props\n}: React.ComponentPropsWithoutRef<\"div\"> & {\n  /** A leading icon, logo or avatar. */\n  media?: React.ReactNode;\n  /** Badges after the name; give each one collapse so they shrink before the name does. */\n  badges?: React.ReactNode;\n  /** Short content held whole at the line's end, such as a time or a count. */\n  trailing?: React.ReactNode;\n} & { ref?: React.Ref<HTMLDivElement> }) {\n  const nameRef = React.useRef<HTMLSpanElement>(null);\n  React.useLayoutEffect(() => {\n    const name = nameRef.current;\n    if (!name) return;\n    const measure = () => {\n      if ((name.textContent ?? \"\").length > 12)\n        name.setAttribute(\"data-floor\", \"\");\n      else name.removeAttribute(\"data-floor\");\n    };\n    measure();\n    const observer = new MutationObserver(measure);\n    observer.observe(name, {\n      subtree: true,\n      childList: true,\n      characterData: true,\n    });\n    return () => observer.disconnect();\n  }, []);\n  return (\n    <div\n      ref={ref}\n      data-slot=\"name-line\"\n      className={cn(styles.line, className)}\n      {...props}\n    >\n      <span className={styles.main}>\n        {media && (\n          <span data-slot=\"name-line-media\" className={styles.media}>\n            {media}\n          </span>\n        )}\n        <span\n          data-slot=\"name-line-name\"\n          ref={nameRef}\n          className={styles.name}\n          onPointerEnter={(event) => titleIfClamped(event.currentTarget)}\n        >\n          {children}\n        </span>\n        {badges && <span className={styles.badges}>{badges}</span>}\n      </span>\n      {trailing && (\n        <span data-slot=\"name-line-trailing\" className={styles.trailing}>\n          {trailing}\n        </span>\n      )}\n    </div>\n  );\n}\nNameLine.displayName = \"NameLine\";\n"
+    },
+    {
+      "path": "src/components/cipher/ui/name-line.module.css",
+      "type": "registry:file",
+      "target": "src/components/cipher/ui/name-line.module.css",
+      "content": ".line {\n  display: flex;\n  align-items: center;\n  gap: var(--cipher-space-8);\n  min-width: 0;\n  max-width: 100%;\n}\n.main {\n  display: flex;\n  flex: 1 1 auto;\n  align-items: center;\n  gap: var(--cipher-space-8);\n  min-width: 0;\n  overflow: hidden;\n}\n.media {\n  display: inline-flex;\n  flex: none;\n  align-items: center;\n}\n.name {\n  flex: 0 1 auto;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.name[data-floor] {\n  min-width: min(100%, 12ch);\n}\n.badges {\n  display: contents;\n}\n.trailing {\n  display: inline-flex;\n  flex: none;\n  align-items: center;\n  gap: var(--cipher-space-4);\n  color: var(--cipher-muted);\n}\n"
+    }
+  ]
+}
