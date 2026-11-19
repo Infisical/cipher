@@ -3,6 +3,7 @@ import * as React from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { List, ListRow, ListSection } from "../ui/list";
+import { useInFrame } from "../lib/frame-context";
 
 import styles from "./patterns.module.css";
 
@@ -32,10 +33,13 @@ export type ActivityLogProps = {
   label?: string;
   /** What renders when there are no events. */
   empty?: React.ReactNode;
+  /** Shows each day's event count and the "Showing" footer. Turn it off for a short log, such as a card on a detail page, where the counts only repeat what the rows show. */
+  counts?: boolean;
 };
 
 const kindLabel = { person: "", machine: "Machine", agent: "Agent" } as const;
-const plural = (count: number) => `${count} ${count === 1 ? "event" : "events"}`;
+const plural = (count: number) =>
+  `${count} ${count === 1 ? "event" : "events"}`;
 
 export const ActivityLog = ({
   days,
@@ -44,31 +48,43 @@ export const ActivityLog = ({
   loading = false,
   onLoadMore,
   label = "Activity",
-  empty = "No activity yet"
+  empty = "No activity yet",
+  counts = true,
 }: ActivityLogProps) => {
+  const inFrame = useInFrame("ActivityLog");
   const shown = days.reduce((sum, day) => sum + day.events.length, 0);
   const more = hasMore ?? (total !== undefined && shown < total);
   let footer: React.ReactNode;
   if (more && onLoadMore)
     footer = (
-      <Button variant="outline" size="sm" loading={loading} onClick={onLoadMore}>
+      <Button
+        variant="outline"
+        size="sm"
+        loading={loading}
+        onClick={onLoadMore}
+      >
         Load more
       </Button>
     );
+  else if (!counts) footer = undefined;
   else if (total !== undefined) footer = `Showing ${shown} of ${total} events`;
   else if (shown > 0) footer = `Showing ${plural(shown)}`;
   return (
-    <div data-slot="activity-log">
+    <div data-slot="activity-log" className={styles.activityLog}>
       <List
         label={label}
-        variant="plain"
+        variant={inFrame ? undefined : "plain"}
         size="sm"
         loading={loading}
         empty={empty}
         footer={footer}
       >
         {days.map((day) => (
-          <ListSection key={day.label} label={day.label} meta={plural(day.events.length)}>
+          <ListSection
+            key={day.label}
+            label={day.label}
+            meta={counts ? plural(day.events.length) : undefined}
+          >
             {day.events.map((event) => {
               const kind = event.actorKind ?? "person";
               const badges = (kind !== "person" || event.badge) && (
@@ -84,10 +100,15 @@ export const ActivityLog = ({
                   label={event.actor}
                   title={
                     <>
-                      <span data-slot="activity-actor" className={styles.activityActor}>
+                      <span
+                        data-slot="activity-actor"
+                        className={styles.activityActor}
+                      >
                         {event.actor}
                       </span>{" "}
-                      <span className={styles.activitySummary}>{event.summary}</span>
+                      <span className={styles.activitySummary}>
+                        {event.summary}
+                      </span>
                     </>
                   }
                   badge={badges || undefined}

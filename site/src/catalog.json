@@ -48,6 +48,10 @@
       {
         "title": "Recent project activity, keyset pages and empty",
         "module": "activity-log/default"
+      },
+      {
+        "title": "In a framed card",
+        "module": "activity-log/in-card"
       }
     ]
   },
