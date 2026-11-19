@@ -190,14 +190,24 @@ function Field({
     "aria-invalid": Boolean(error) || undefined,
     "aria-labelledby": group ? undefined : labelId
   };
-  const unlabeled = {
-    "aria-describedby": attributes["aria-describedby"],
-    "aria-invalid": attributes["aria-invalid"]
-  };
+  const unlabeled = hasNote
+    ? { "aria-describedby": noteId, "aria-invalid": attributes["aria-invalid"] }
+    : {};
   const controlAttributes = label ? attributes : unlabeled;
   const control =
     child && typeof child.type === "string"
-      ? React.cloneElement(child, { ...controlAttributes })
+      ? React.cloneElement(
+          child,
+          label
+            ? attributes
+            : {
+                "aria-describedby":
+                  [child.props["aria-describedby"], hasNote ? noteId : undefined]
+                    .filter(Boolean)
+                    .join(" ") || undefined,
+                "aria-invalid": child.props["aria-invalid"] ?? attributes["aria-invalid"]
+              }
+        )
       : children;
   const note = hasNote && (
     <p
@@ -259,11 +269,13 @@ function Field({
               </div>
             </>
           )
-        ) : (
-          <>
+        ) : hasNote ? (
+          <div className={helperStyles.fieldControl}>
             {control}
             {note}
-          </>
+          </div>
+        ) : (
+          control
         )}
       </div>
     </FieldControlContext>
