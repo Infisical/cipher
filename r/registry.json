@@ -1966,6 +1966,25 @@
       ]
     },
     {
+      "name": "name-line",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/cipher-base"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/name-line.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/name-line.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/name-line.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/name-line.module.css"
+        }
+      ]
+    },
+    {
       "name": "page-header",
       "type": "registry:ui",
       "registryDependencies": [
