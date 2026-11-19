@@ -475,8 +475,8 @@ export function ListSection({
   children: React.ReactNode;
 }) {
   return (
-    <li>
-      <div className={styles.sectionHead}>
+    <li data-slot="list-section">
+      <div className={styles.sectionHead} data-slot="list-section-head">
         <div className={styles.sectionLabel}>{label}</div>
         {meta && <div className={styles.sectionMeta}>{meta}</div>}
       </div>

@@ -32,6 +32,15 @@
 .queueSmallLine {
   min-height: var(--cipher-type-small-line-height);
 }
+.activityLog [data-list-row] {
+  border-bottom-color: transparent;
+}
+.activityLog [data-slot="list"][data-size] [data-slot="list-section-head"] {
+  padding-inline: var(--cipher-space-surface-inset-sm);
+}
+.activityLog[data-dividers] [data-slot="list-section"] + [data-slot="list-section"] {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
 .activityActor {
   color: var(--cipher-ink);
 }
