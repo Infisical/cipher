@@ -1637,7 +1637,7 @@ td.tableActions {
   padding-inline: var(--cipher-space-row-actions-inset);
   text-align: end;
   background-color: var(--cipher-surface);
-  border-inline-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-inline-start: 0;
   --cipher-nested-action-height: var(--cipher-size-target-row);
 }
 .tableActions [data-cipher-button] {
@@ -1728,7 +1728,7 @@ th[data-pin="start"] {
   > :is(.tableActions, [data-pin="true"])::before {
   opacity: 1;
 }
-/* While content passes under the tail its divider moves into the cell as an inset edge; the border colour clears instead of the border so the column keeps its width. */
+/* The tail draws its divider only while content passes under it, as an inset edge, so a table that fits shows no stray line beside the row actions. */
 :is([data-scroll-end-x] > table, [data-scroll-end-x] > .nativeTableContainer > table)
   > *
   > tr
