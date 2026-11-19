@@ -538,6 +538,8 @@ export type TopBarProps = Omit<React.ComponentPropsWithoutRef<"header">, "childr
   actions?: React.ReactNode;
   label?: string;
   navigationLabel?: string;
+  /** Pins the first crumb to the sidebar's width while the sidebar is open, so its divider lands on the sidebar's edge. Off sizes it to its content. */
+  pairRoot?: boolean;
 };
 
 export function TopBar({
@@ -549,6 +551,7 @@ export function TopBar({
   actions,
   label = "Location",
   navigationLabel = "Open navigation",
+  pairRoot = true,
   className,
   ref,
   ...props
@@ -564,7 +567,7 @@ export function TopBar({
   const marked = unread > 0 || Boolean(shell?.navigationUnread);
   const [root, ...rest] = breadcrumb;
   const org = root?.switcher ? root : undefined;
-  const orgZone = Boolean(org) && !narrow;
+  const orgZone = pairRoot && Boolean(root) && !narrow;
   const switchers = (org ? rest : breadcrumb).filter((crumb) => crumb.switcher);
   const slots = shell?.slots ?? {};
   const notificationsButton = (size: "sm" | "icon-lg") => (
