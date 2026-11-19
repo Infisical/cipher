@@ -7,6 +7,7 @@ export const LIST_HIGHLIGHT_ITEM =
   '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [cmdk-item], [data-sidebar-target]';
 const ACTIVE =
   '[data-highlighted], [cmdk-item][data-selected="true"], [role="option"][data-active]';
+const SHOWN_ACTIVE = `[data-highlight-default]:is(${ACTIVE})`;
 const CURRENT =
   '[data-current], [aria-current="page"], [role="option"][data-state="checked"], [role="menuitemradio"][aria-checked="true"]';
 const HOLDS = "[data-holds-current]";
@@ -71,7 +72,9 @@ const offsetIn = (element: HTMLElement, list: HTMLElement) => {
  * wrapping Tooltip overwrites data-state, so aria-expanded is the reliable signal) pins the hover
  * thumb until it closes, even after the pointer leaves for the popover. The selection thumb
  * rests on the current row and shows only while the hover thumb is hidden. Arrow keys in a field
- * outside the list that names it with aria-controls move the hover thumb too. Render it as the list's
+ * outside the list that names it with aria-controls move the hover thumb too. A row marked
+ * data-highlight-default shows the hover thumb while it is the active row, before any key or
+ * pointer moves it, so a lone Create row reads as what Enter does. Render it as the list's
  * last child; it measures its parent.
  */
 export function ListHighlight() {
@@ -130,6 +133,7 @@ export function ListHighlight() {
       let hoverTarget: HTMLElement | null = expanded && !blocked(expanded) ? expanded : null;
       if (!hoverTarget && keyboard) hoverTarget = first(ACTIVE) ?? current;
       else if (!hoverTarget && inside && hovered?.isConnected) hoverTarget = hovered;
+      hoverTarget ??= first(SHOWN_ACTIVE);
       measureOne(hoverTarget, setHover);
       measureOne(hoverTarget ? null : current, setSelection);
     };

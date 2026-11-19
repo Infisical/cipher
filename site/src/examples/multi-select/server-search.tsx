@@ -41,7 +41,7 @@ export default function Example() {
   }, [query]);
   return (
     <div className="w-full max-w-sm min-w-0">
-      <Field label="Members" description="Results load from the server as you type.">
+      <Field label="Members" description="Results load from the server as you type. Type an email to invite someone new.">
         <MultiSelect
           label="Members"
           options={results}
@@ -49,6 +49,15 @@ export default function Example() {
           onChange={setMembers}
           onSearch={setQuery}
           loading={loading}
+          createLabel={(email) => `Invite ${email}`}
+          onCreate={async (email) => {
+            await new Promise((resolve) => {
+              setTimeout(resolve, 300);
+            });
+            const invited = { value: email, label: email, description: "Invited" };
+            directory.push(invited);
+            setMembers((current) => [...current, invited.value]);
+          }}
         />
       </Field>
     </div>
