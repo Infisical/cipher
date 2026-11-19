@@ -72,6 +72,11 @@
           "target": "src/components/cipher/lib/field-context.ts"
         },
         {
+          "path": "src/components/cipher/lib/fitting-placeholder.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/fitting-placeholder.ts"
+        },
+        {
           "path": "src/components/cipher/lib/frame-context.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/lib/frame-context.tsx"
