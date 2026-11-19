@@ -28,6 +28,7 @@ const added = [
   "file-key",
   "users",
   "layout-grid",
+  "list",
   "server"
 ] as const;
 
