@@ -208,6 +208,30 @@
       {
         "title": "Icon",
         "module": "badge/icon"
+      },
+      {
+        "title": "Collapse in a narrow cell",
+        "module": "badge/collapse"
+      }
+    ]
+  },
+  {
+    "id": "name-line",
+    "title": "Name line",
+    "summary": "Lay out an icon, a name, badges and a time on one line that gives way in a fixed order.",
+    "group": "Data display",
+    "examples": [
+      {
+        "title": "Empty and short values",
+        "module": "name-line/empty"
+      },
+      {
+        "title": "Typical rows",
+        "module": "name-line/default"
+      },
+      {
+        "title": "Long names and many badges",
+        "module": "name-line/stressed"
       }
     ]
   },

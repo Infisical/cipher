@@ -36,7 +36,9 @@
 .rowLink[data-disabled] .chevron {
   color: var(--cipher-faint);
 }
-:is(:global(tr), :global([data-slot="card"])):is(:hover, :focus-within) .stretched .chevron {
+:is(:global(tr), :global([data-slot="card"])):is(:hover, :focus-within)
+  .stretched
+  .chevron {
   color: var(--cipher-ink);
 }
 /* Static, so the cover is sized by the cell and not by the stretched-row rule that lifts other links. */
@@ -140,7 +142,10 @@
 /* A content panel that paints a backdrop is its own stacking context, so it rises above the link
    overlay and lets clicks through to it, keeping its controls (lifted above) clickable. It stays
    unpositioned (z-index applies to it as a flex item) so the overlay still covers the whole card. */
-:is(:global([data-slot="card"]), :global([data-slot="stat-card"]))[data-stretched-link]
+:is(
+    :global([data-slot="card"]),
+    :global([data-slot="stat-card"])
+  )[data-stretched-link]
   > :global([data-slot="card-content"][data-backdrop]) {
   z-index: 2;
   pointer-events: none;

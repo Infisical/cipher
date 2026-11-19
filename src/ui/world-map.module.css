@@ -38,7 +38,11 @@
   --world-map-tone: 100%;
 }
 .land .region {
-  fill: color-mix(in oklab, var(--cipher-map-region) var(--world-map-tone), var(--cipher-map-land));
+  fill: color-mix(
+    in oklab,
+    var(--cipher-map-region) var(--world-map-tone),
+    var(--cipher-map-land)
+  );
   transition: fill var(--cipher-duration-fast) var(--cipher-ease-standard);
 }
 .land .region:is(:hover, :focus-visible, [data-state$="open"]) {
@@ -168,7 +172,11 @@
 .step {
   width: var(--cipher-space-10);
   height: var(--cipher-space-10);
-  background: color-mix(in oklab, var(--cipher-map-region) var(--world-map-tone), var(--cipher-map-land));
+  background: color-mix(
+    in oklab,
+    var(--cipher-map-region) var(--world-map-tone),
+    var(--cipher-map-land)
+  );
 }
 @media (prefers-reduced-motion: reduce) {
   .land .region,

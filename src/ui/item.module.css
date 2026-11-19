@@ -31,9 +31,12 @@
 [data-slot="tile"]:not([data-layout="stacked"])[data-described] > .lead {
   min-height: var(--cipher-tile-default-row);
 }
-[data-slot="tile"]:not([data-layout="stacked"])[data-described] > svg:last-child {
+[data-slot="tile"]:not([data-layout="stacked"])[data-described]
+  > svg:last-child {
   align-self: flex-start;
-  margin-top: calc((var(--cipher-tile-default-row) - var(--cipher-size-icon)) / 2);
+  margin-top: calc(
+    (var(--cipher-tile-default-row) - var(--cipher-size-icon)) / 2
+  );
 }
 .main {
   display: flex;

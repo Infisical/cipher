@@ -150,7 +150,10 @@ button.segment {
   transition-duration: var(--cipher-duration-fast);
   transition-timing-function: var(--cipher-ease-standard);
 }
-.trail > .entry:first-child > .segment[data-name-target="page"] > .name:first-child,
+.trail
+  > .entry:first-child
+  > .segment[data-name-target="page"]
+  > .name:first-child,
 .trail > .entry:first-child > .segment[data-name-target="switcher"],
 .trail > .entry:first-child > .link {
   margin-inline-start: calc(-1 * var(--crumb-inset));
@@ -253,7 +256,9 @@ button.segment {
   min-inline-size: 0;
   inline-size: var(--cipher-crumb-root-size, fit-content);
   transition-property: background-color, color, inline-size;
-  transition-duration: var(--cipher-duration-fast), var(--cipher-duration-fast), var(--cipher-duration-slow);
+  transition-duration:
+    var(--cipher-duration-fast), var(--cipher-duration-fast),
+    var(--cipher-duration-slow);
   transition-timing-function: var(--cipher-ease-standard);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -261,8 +266,15 @@ button.segment {
     transition-duration: 0s;
   }
 }
-.root[data-org-zone] .product > .entry:first-child > .segment[data-name-target="switcher"],
-.root[data-org-zone] .product > .entry:first-child > .segment[data-name-target="page"] > .name {
+.root[data-org-zone]
+  .product
+  > .entry:first-child
+  > .segment[data-name-target="switcher"],
+.root[data-org-zone]
+  .product
+  > .entry:first-child
+  > .segment[data-name-target="page"]
+  > .name {
   gap: var(--cipher-space-10);
   margin-inline-start: 0;
   padding-inline-start: var(--cipher-space-sidebar-row-inset);

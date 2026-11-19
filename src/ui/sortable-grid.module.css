@@ -3,7 +3,10 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--cipher-sortable-grid-min)), 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, var(--cipher-sortable-grid-min)), 1fr)
+  );
   gap: var(--cipher-space-16);
   margin: 0;
   padding: 0;

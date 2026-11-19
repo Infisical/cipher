@@ -7,7 +7,8 @@
   animation: fadeIn var(--cipher-duration-slow) var(--cipher-ease-fade) both;
 }
 .scrim[data-state="closed"] {
-  animation: fadeOut var(--cipher-duration-exit-slow) var(--cipher-ease-exit) both;
+  animation: fadeOut var(--cipher-duration-exit-slow) var(--cipher-ease-exit)
+    both;
 }
 .pop {
   box-sizing: border-box;
@@ -36,13 +37,19 @@
   overflow: hidden;
 }
 .dialog[data-state="open"] {
-  animation: dialogIn var(--cipher-duration-slow) var(--cipher-ease-spring-soft) both;
+  animation: dialogIn var(--cipher-duration-slow) var(--cipher-ease-spring-soft)
+    both;
 }
 .dialog[data-state="closed"] {
-  animation: dialogOut var(--cipher-duration-exit-slow) var(--cipher-ease-exit) both;
+  animation: dialogOut var(--cipher-duration-exit-slow) var(--cipher-ease-exit)
+    both;
 }
 .palette {
-  --cipher-palette-top: clamp(var(--cipher-space-48), 13vh, calc(3 * var(--cipher-space-48)));
+  --cipher-palette-top: clamp(
+    var(--cipher-space-48),
+    13vh,
+    calc(3 * var(--cipher-space-48))
+  );
   top: var(--cipher-palette-top);
   display: flex;
   flex-direction: column;
@@ -73,7 +80,9 @@
   );
 }
 .sheet:has(
-    [data-slot="sheet-header"][data-tabs="only"]:not([data-slot="sheet-view"][data-hidden] *)
+    [data-slot="sheet-header"][data-tabs="only"]:not(
+        [data-slot="sheet-view"][data-hidden] *
+      )
   ):not(:has([data-slot="panes"][data-narrow]))
   > .close[data-slot] {
   top: calc(
@@ -97,7 +106,8 @@
 .sheet[data-side="left"],
 .sheet[data-side="right"] {
   max-width: min(var(--cipher-sheet-size), 100vw);
-  transition: max-width var(--cipher-duration-moderate) var(--cipher-ease-standard);
+  transition: max-width var(--cipher-duration-moderate)
+    var(--cipher-ease-standard);
 }
 .sheet[data-side="left"] {
   --cipher-sheet-from: -100% 0;
@@ -109,10 +119,12 @@
   --cipher-sheet-from: 0 100%;
 }
 .sheet[data-state="open"] {
-  animation: sheetIn var(--cipher-duration-slow) var(--cipher-ease-spring-soft) both;
+  animation: sheetIn var(--cipher-duration-slow) var(--cipher-ease-spring-soft)
+    both;
 }
 .sheet[data-state="closed"] {
-  animation: sheetOut var(--cipher-duration-exit-slow) var(--cipher-ease-exit) both;
+  animation: sheetOut var(--cipher-duration-exit-slow) var(--cipher-ease-exit)
+    both;
 }
 @keyframes fadeIn {
   from {
@@ -186,7 +198,9 @@
   margin-inline-start: calc(-1 * var(--cipher-space-6));
 }
 .viewTitleRow > [data-slot="button"] {
-  margin-block: calc((var(--cipher-type-title-line-height) - var(--cipher-size-nested-md)) / 2);
+  margin-block: calc(
+    (var(--cipher-type-title-line-height) - var(--cipher-size-nested-md)) / 2
+  );
 }
 .viewTitle {
   min-width: 0;

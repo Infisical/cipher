@@ -38,7 +38,8 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 .row + .row {
-  border-block-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-block-start: var(--cipher-size-control-border) solid
+    var(--cipher-line-soft);
 }
 .weekday {
   padding: var(--cipher-space-6) var(--cipher-space-8);
@@ -54,7 +55,10 @@
   flex-direction: column;
   gap: var(--cipher-space-4);
   min-width: 0;
-  min-height: calc(var(--cipher-size-badge) * 3 + var(--cipher-space-4) * 2 + var(--cipher-space-6) * 2);
+  min-height: calc(
+    var(--cipher-size-badge) * 3 + var(--cipher-space-4) * 2 +
+      var(--cipher-space-6) * 2
+  );
   padding: var(--cipher-space-6);
   cursor: pointer;
   outline: none;
@@ -63,7 +67,8 @@
   transition-timing-function: var(--cipher-ease-standard);
 }
 .day + .day {
-  border-inline-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-inline-start: var(--cipher-size-control-border) solid
+    var(--cipher-line-soft);
 }
 .day[data-outside] {
   background: var(--cipher-tint);
@@ -189,7 +194,10 @@ button.pill:hover {
   white-space: nowrap;
 }
 .popover[data-slot="popover-content"] {
-  width: min(var(--cipher-size-popover), var(--radix-popper-available-width, 100vw));
+  width: min(
+    var(--cipher-size-popover),
+    var(--radix-popper-available-width, 100vw)
+  );
   gap: var(--cipher-space-8);
 }
 .popoverTitle {

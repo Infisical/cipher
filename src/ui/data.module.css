@@ -26,8 +26,8 @@
   inset-inline-start: 0;
   width: 30%;
   background: var(--cipher-ink);
-  animation: refreshTravel calc(var(--cipher-duration-slow) * 5) var(--cipher-ease-standard)
-    infinite;
+  animation: refreshTravel calc(var(--cipher-duration-slow) * 5)
+    var(--cipher-ease-standard) infinite;
 }
 @keyframes refreshShow {
   to {
@@ -254,7 +254,11 @@
   --overlay-press: var(--cipher-press-mix);
 }
 .gridRow:hover > .gridCell:not([data-selected], [data-dirty]) {
-  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
+  background: color-mix(
+    in oklab,
+    var(--cipher-mix-ink) var(--overlay-hover),
+    transparent
+  );
 }
 .gridCell[data-selected] {
   background: var(--cipher-accent-wash);
@@ -295,7 +299,9 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  right: calc(-1 * (var(--cipher-space-12) + var(--cipher-size-control-border)));
+  right: calc(
+    -1 * (var(--cipher-space-12) + var(--cipher-size-control-border))
+  );
   z-index: 1;
   width: var(--cipher-space-24);
   cursor: col-resize;
@@ -309,7 +315,8 @@
   width: var(--cipher-size-control-border);
   background: transparent;
   pointer-events: none;
-  transition: background-color var(--cipher-duration-fast) var(--cipher-ease-fade);
+  transition: background-color var(--cipher-duration-fast)
+    var(--cipher-ease-fade);
 }
 .resize:hover::after {
   background: var(--cipher-control);
@@ -401,8 +408,11 @@
   min-height: var(--cipher-size-control-default);
   max-height: calc(12 * var(--cipher-type-body-line-height));
   padding: calc(
-      (var(--cipher-size-control-default) - var(--cipher-type-body-line-height)) / 2 -
-        var(--cipher-size-control-border)
+      (
+          var(--cipher-size-control-default) -
+            var(--cipher-type-body-line-height)
+        ) /
+        2 - var(--cipher-size-control-border)
     )
     var(--cipher-space-control-inline);
   width: 100%;
@@ -504,7 +514,11 @@
   min-height: var(--cipher-size-nested-md);
 }
 .treeRow:hover {
-  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
+  background: color-mix(
+    in oklab,
+    var(--cipher-mix-ink) var(--overlay-hover),
+    transparent
+  );
 }
 .treeRow[data-selected="true"] {
   background: var(--cipher-select);
@@ -577,7 +591,9 @@
   flex-wrap: wrap;
   gap: var(--cipher-space-12);
   padding: var(--cipher-space-surface-inset-sm);
-  padding-inline: calc(var(--cipher-space-surface-inset-sm) + var(--cipher-size-control-border));
+  padding-inline: calc(
+    var(--cipher-space-surface-inset-sm) + var(--cipher-size-control-border)
+  );
   color: var(--cipher-ink);
 }
 .listTitle {
@@ -628,7 +644,9 @@
   padding: var(--cipher-space-8) var(--cipher-space-12) var(--cipher-space-4);
 }
 .listShell > [data-select] {
-  padding-inline-start: calc(var(--cipher-space-12) + var(--cipher-size-control-border));
+  padding-inline-start: calc(
+    var(--cipher-space-12) + var(--cipher-size-control-border)
+  );
 }
 .sectionHead {
   display: flex;
@@ -720,10 +738,15 @@
   --cipher-list-row-surface: var(--cipher-selected-surface);
 }
 .listRow[data-interactive] {
-  transition: background-color var(--cipher-duration-fast) var(--cipher-ease-fade);
+  transition: background-color var(--cipher-duration-fast)
+    var(--cipher-ease-fade);
 }
 .listRow[data-interactive]:not([data-selected], [data-current]):hover {
-  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
+  background: color-mix(
+    in oklab,
+    var(--cipher-mix-ink) var(--overlay-hover),
+    transparent
+  );
   --cipher-list-row-surface: color-mix(
     in oklab,
     var(--cipher-mix-ink) var(--overlay-hover),
@@ -732,7 +755,11 @@
 }
 :where(.listShell[data-variant="segmented"])
   .listRow[data-interactive]:not([data-selected], [data-current]):hover {
-  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), var(--cipher-tint));
+  background: color-mix(
+    in oklab,
+    var(--cipher-mix-ink) var(--overlay-hover),
+    var(--cipher-tint)
+  );
   --cipher-list-row-surface: color-mix(
     in oklab,
     var(--cipher-mix-ink) var(--overlay-hover),
@@ -740,11 +767,22 @@
   );
 }
 .listRow[data-interactive][data-pressed]:not([data-selected], [data-current]) {
-  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-press), transparent);
+  background: color-mix(
+    in oklab,
+    var(--cipher-mix-ink) var(--overlay-press),
+    transparent
+  );
 }
 :where(.listShell[data-variant="segmented"])
-  .listRow[data-interactive][data-pressed]:not([data-selected], [data-current]) {
-  background: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-press), var(--cipher-tint));
+  .listRow[data-interactive][data-pressed]:not(
+    [data-selected],
+    [data-current]
+  ) {
+  background: color-mix(
+    in oklab,
+    var(--cipher-mix-ink) var(--overlay-press),
+    var(--cipher-tint)
+  );
 }
 .listRow[data-resolved] {
   background: var(--cipher-row-done);
@@ -943,7 +981,10 @@ button.rowTitle::after {
 .dataList[data-density="compact"] .dataPair {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(min-content, var(--cipher-size-data-list-term)) minmax(0, 1fr);
+  grid-template-columns: minmax(
+      min-content,
+      var(--cipher-size-data-list-term)
+    ) minmax(0, 1fr);
   align-content: center;
   align-items: baseline;
   gap: 0 var(--cipher-space-12);
@@ -955,7 +996,9 @@ button.rowTitle::after {
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
 }
-.dataList[data-density="compact"] .dataPair[data-span="half"]:first-child + .dataPair {
+.dataList[data-density="compact"]
+  .dataPair[data-span="half"]:first-child
+  + .dataPair {
   border-top: 0;
 }
 .dataList[data-density="compact"] dt {
@@ -1046,7 +1089,9 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll table[data-layout="fixed"] {
   table-layout: fixed;
 }
-.tableScroll table[data-layout="fixed"] :is(.tablePrimary, .tableValue):not([data-wrap]) {
+.tableScroll
+  table[data-layout="fixed"]
+  :is(.tablePrimary, .tableValue):not([data-wrap]) {
   min-width: 0;
 }
 .tableScroll table[data-layout="fixed"] .tableShrink {
@@ -1056,10 +1101,14 @@ tbody > .nativeTableRow[data-loading] {
   width: 80%;
 }
 .tableScroll [data-depth="1"] {
-  padding-inline-start: calc(var(--cipher-focus-clearance) + var(--cipher-space-row-indent));
+  padding-inline-start: calc(
+    var(--cipher-focus-clearance) + var(--cipher-space-row-indent)
+  );
 }
 .tableScroll [data-depth="2"] {
-  padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
+  padding-inline-start: calc(
+    var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent)
+  );
 }
 /* Set on every scope, not matched by descendant, so a Light scope nested in a Dark one keeps paper. */
 :global(.cipher) {
@@ -1160,7 +1209,8 @@ tbody > .nativeTableRow[data-loading] {
 .tableShell[data-embedded] .tablePagination {
   background: var(--cipher-surface);
 }
-.tableShell[data-embedded] td:is([data-pin="true"], [data-pin="start"]:first-child) {
+.tableShell[data-embedded]
+  td:is([data-pin="true"], [data-pin="start"]:first-child) {
   --cipher-pin-frame: 0 0 transparent;
 }
 .tableShell[data-embedded] .tablePagination {
@@ -1220,7 +1270,8 @@ tbody > .nativeTableRow[data-loading] {
 }
 .tableScroll td[data-pin="true"] {
   --cipher-pin-frame:
-    inset calc(-1 * var(--cipher-size-control-border)) 0 0 var(--cipher-line-soft),
+    inset calc(-1 * var(--cipher-size-control-border)) 0 0
+      var(--cipher-line-soft),
     var(--cipher-frame-pad) 0 0 var(--cipher-tint);
 }
 .tableScroll th:is([data-pin="true"], [data-pin="start"]) {
@@ -1340,10 +1391,14 @@ tbody > .nativeTableRow[data-loading] {
   text-overflow: clip;
 }
 .tableScroll .tableSecondary[data-depth="1"] {
-  padding-inline-start: calc(var(--cipher-focus-clearance) + var(--cipher-space-row-indent));
+  padding-inline-start: calc(
+    var(--cipher-focus-clearance) + var(--cipher-space-row-indent)
+  );
 }
 .tableScroll .tableSecondary[data-depth="2"] {
-  padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
+  padding-inline-start: calc(
+    var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent)
+  );
 }
 .tableScroll[data-virtual] .tableLines > * {
   min-height: 0;
@@ -1438,7 +1493,10 @@ tbody > .nativeTableRow[data-loading] {
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
-.tableScroll[data-virtual] tbody tr:not([data-spacer], [data-row-kind="empty"]) > td {
+.tableScroll[data-virtual]
+  tbody
+  tr:not([data-spacer], [data-row-kind="empty"])
+  > td {
   padding-block: 0;
 }
 .tableScroll [data-spacer] > td {
@@ -1456,7 +1514,8 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll[data-virtual] .tableRowActions,
 .tableScroll[data-virtual] .tableSelection {
   min-height: calc(
-    var(--cipher-table-row-height, var(--cipher-size-row)) - var(--cipher-size-control-border)
+    var(--cipher-table-row-height, var(--cipher-size-row)) -
+      var(--cipher-size-control-border)
   );
   display: flex;
   align-items: center;
@@ -1468,7 +1527,9 @@ tbody > .nativeTableRow[data-loading] {
 }
 
 .nativeTable {
-  --cipher-row-glyph-pull: calc((var(--cipher-size-glyph) - var(--cipher-size-target-row)) / 2);
+  --cipher-row-glyph-pull: calc(
+    (var(--cipher-size-glyph) - var(--cipher-size-target-row)) / 2
+  );
   font-family: var(--cipher-type-body-font-family);
   font-size: var(--cipher-type-body-font-size);
   line-height: var(--cipher-type-body-line-height);
@@ -1481,8 +1542,14 @@ tbody > .nativeTableRow[data-loading] {
   --cipher-table-row-state: transparent;
   --cipher-table-row-hover: transparent;
   --cipher-table-row-layers:
-    linear-gradient(var(--cipher-table-row-hover), var(--cipher-table-row-hover)),
-    linear-gradient(var(--cipher-table-row-state), var(--cipher-table-row-state));
+    linear-gradient(
+      var(--cipher-table-row-hover),
+      var(--cipher-table-row-hover)
+    ),
+    linear-gradient(
+      var(--cipher-table-row-state),
+      var(--cipher-table-row-state)
+    );
   background-color: var(--cipher-table-row-ground);
   background-image: var(--cipher-table-row-layers);
 }
@@ -1518,7 +1585,8 @@ tbody > .nativeTableRow[data-loading] {
   --cipher-drop-edge: inset 0 var(--cipher-size-focus-ring) 0 var(--cipher-ink);
 }
 .nativeTableRow[data-drop-target="after"] {
-  --cipher-drop-edge: inset 0 calc(-1 * var(--cipher-size-focus-ring)) 0 var(--cipher-ink);
+  --cipher-drop-edge: inset 0 calc(-1 * var(--cipher-size-focus-ring)) 0
+    var(--cipher-ink);
 }
 .nativeTableRow[data-drop-target="inside"] {
   --cipher-table-row-state: var(--cipher-selected-surface);
@@ -1530,18 +1598,29 @@ tbody > .nativeTableRow[data-loading] {
   box-shadow: var(--cipher-drop-edge);
 }
 /* filter, not opacity, so the dim composes with opacity reveals inside the cells; a cell holding only text dims itself, since text has no element to filter. */
-:where(tbody > .nativeTableRow > td[data-text-only], tbody > .nativeTableRow > td > *) {
+:where(
+  tbody > .nativeTableRow > td[data-text-only],
+  tbody > .nativeTableRow > td > *
+) {
   transition: filter var(--cipher-duration-moderate) var(--cipher-ease-fade);
 }
 /* A row that holds the focused row in a nested table, and the row it expands from, keep full strength. */
 :where(
     tbody[data-has-focus]
-      > .nativeTableRow:not([data-focused], [data-contains-focus], [data-focus-anchor])
+      > .nativeTableRow:not(
+        [data-focused],
+        [data-contains-focus],
+        [data-focus-anchor]
+      )
   )
   > td[data-text-only]:not([data-pin], .tableActions),
 :where(
     tbody[data-has-focus]
-      > .nativeTableRow:not([data-focused], [data-contains-focus], [data-focus-anchor])
+      > .nativeTableRow:not(
+        [data-focused],
+        [data-contains-focus],
+        [data-focus-anchor]
+      )
   )
   > td
   > * {
@@ -1554,7 +1633,10 @@ tbody > .nativeTableRow[data-loading] {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  :where(tbody > .nativeTableRow > td[data-text-only], tbody > .nativeTableRow > td > *) {
+  :where(
+    tbody > .nativeTableRow > td[data-text-only],
+    tbody > .nativeTableRow > td > *
+  ) {
     transition: none;
   }
 }
@@ -1637,7 +1719,8 @@ td.tableActions {
   padding-inline: var(--cipher-space-row-actions-inset);
   text-align: end;
   background-color: var(--cipher-surface);
-  border-inline-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-inline-start: var(--cipher-size-control-border) solid
+    var(--cipher-line-soft);
   --cipher-nested-action-height: var(--cipher-size-target-row);
 }
 .tableActions [data-cipher-button] {
@@ -1681,14 +1764,19 @@ th[data-pin="start"] {
 /* A pinned cell draws its column edge and DataTable's frame-pad cover as inset and outer shadows, so both stick with the cell; a table border would stay with the scrolled columns. */
 :is(td, th):is([data-pin], .tableActions) {
   box-shadow:
-    var(--cipher-drop-edge, 0 0 transparent), var(--cipher-pin-edge, 0 0 transparent),
+    var(--cipher-drop-edge, 0 0 transparent),
+    var(--cipher-pin-edge, 0 0 transparent),
     var(--cipher-pin-frame, 0 0 transparent);
 }
-:is([data-scroll-start-x] > table, [data-scroll-start-x] > .nativeTableContainer > table)
+:is(
+    [data-scroll-start-x] > table,
+    [data-scroll-start-x] > .nativeTableContainer > table
+  )
   > *
   > tr
   > [data-pin="start"][data-pin-edge] {
-  --cipher-pin-edge: inset calc(-1 * var(--cipher-size-control-border)) 0 0 var(--cipher-line-soft);
+  --cipher-pin-edge: inset calc(-1 * var(--cipher-size-control-border)) 0 0
+    var(--cipher-line-soft);
   border-inline-end-color: transparent;
 }
 /* Pinned columns fade scrolled content into their own paint, inherited from the cell so stripe, hover, selected and the header band all match; it shows only while the scroll-edge watcher reports content past that edge. */
@@ -1718,22 +1806,32 @@ th[data-pin="start"] {
 :dir(rtl):is(td, th):is(.tableActions, [data-pin="true"])::before {
   mask-image: linear-gradient(to right, black, transparent);
 }
-:is([data-scroll-start-x] > table, [data-scroll-start-x] > .nativeTableContainer > table)
+:is(
+    [data-scroll-start-x] > table,
+    [data-scroll-start-x] > .nativeTableContainer > table
+  )
   > *
   > tr
   > [data-pin="start"][data-pin-edge]::before,
-:is([data-scroll-end-x] > table, [data-scroll-end-x] > .nativeTableContainer > table)
+:is(
+    [data-scroll-end-x] > table,
+    [data-scroll-end-x] > .nativeTableContainer > table
+  )
   > *
   > tr
   > :is(.tableActions, [data-pin="true"])::before {
   opacity: 1;
 }
 /* While content passes under the tail its divider moves into the cell as an inset edge; the border colour clears instead of the border so the column keeps its width. */
-:is([data-scroll-end-x] > table, [data-scroll-end-x] > .nativeTableContainer > table)
+:is(
+    [data-scroll-end-x] > table,
+    [data-scroll-end-x] > .nativeTableContainer > table
+  )
   > *
   > tr
   > :is(.tableActions, [data-pin="true"]) {
-  --cipher-pin-edge: inset var(--cipher-size-control-border) 0 0 var(--cipher-line-soft);
+  --cipher-pin-edge: inset var(--cipher-size-control-border) 0 0
+    var(--cipher-line-soft);
   border-inline-start-color: transparent;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1749,7 +1847,10 @@ th[data-pin="start"] {
   )[data-scroll-fade][data-scroll-start-x][data-has-start-pin] {
   --cipher-fade-x-start: 0px;
 }
-:is(.tableScroll, .nativeTableContainer)[data-scroll-fade][data-scroll-end-x][data-has-end-pin] {
+:is(
+    .tableScroll,
+    .nativeTableContainer
+  )[data-scroll-fade][data-scroll-end-x][data-has-end-pin] {
   --cipher-fade-x-end: 0px;
 }
 /* A full-width cell keeps its content in the scroll container's visible width, sized from the container, so a nested table never scrolls out of view. */
@@ -1769,7 +1870,8 @@ th.tableSelectionCell,
 td.tableSelectionCell {
   width: var(--cipher-size-row);
   padding-inline: 0;
-  border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-inline-end: var(--cipher-size-control-border) solid
+    var(--cipher-line-soft);
   background-color: var(--cipher-table-row-ground);
   background-image: var(--cipher-table-row-layers);
 }

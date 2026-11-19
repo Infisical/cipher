@@ -106,7 +106,10 @@
   justify-content: center;
   width: var(--cipher-size-nested-md);
   height: var(--cipher-size-nested-md);
-  margin-block: calc((var(--cipher-type-row-title-line-height) - var(--cipher-size-nested-md)) / 2);
+  margin-block: calc(
+    (var(--cipher-type-row-title-line-height) - var(--cipher-size-nested-md)) /
+      2
+  );
   margin-inline-start: var(--cipher-space-8);
   padding: 0;
   border: 0;

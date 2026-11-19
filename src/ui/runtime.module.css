@@ -97,7 +97,11 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: repeating-radial-gradient(circle at 1px 1px, currentColor 0 1px, transparent 1px 3px);
+  background: repeating-radial-gradient(
+    circle at 1px 1px,
+    currentColor 0 1px,
+    transparent 1px 3px
+  );
   opacity: 0.16;
   animation: busyBand 1.2s steps(28) infinite;
 }

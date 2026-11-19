@@ -22,7 +22,8 @@
   fill: currentColor;
 }
 .rest {
-  transition: opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
+  transition: opacity calc(var(--cipher-duration-slow) * 2)
+    var(--cipher-ease-fade);
 }
 .hover {
   opacity: 0;
@@ -35,7 +36,9 @@
   opacity: 0;
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .halftone {
-  opacity: calc(var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1));
+  opacity: calc(
+    var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1)
+  );
 }
 :global([data-slot="card"]):is(:hover, :focus-within) .rest {
   opacity: 0;

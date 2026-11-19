@@ -38,7 +38,8 @@
   touch-action: none;
   background: var(--cipher-paper);
   outline: var(--cipher-size-control-border) solid var(--cipher-line-soft);
-  transition: outline-color var(--cipher-duration-fast) var(--cipher-ease-standard);
+  transition: outline-color var(--cipher-duration-fast)
+    var(--cipher-ease-standard);
 }
 .stage[data-captured] .frame {
   outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
@@ -78,7 +79,8 @@
   gap: var(--cipher-space-4) var(--cipher-space-12);
   min-width: 0;
   min-height: var(--cipher-size-control-lg);
-  padding: var(--cipher-space-4) var(--cipher-space-4) var(--cipher-space-4) var(--cipher-space-12);
+  padding: var(--cipher-space-4) var(--cipher-space-4) var(--cipher-space-4)
+    var(--cipher-space-12);
   border-top: var(--cipher-size-control-border) solid var(--cipher-line);
   background: var(--cipher-surface);
   color: var(--cipher-muted);

@@ -17,7 +17,8 @@
   background-size: 200px 200px;
   background-blend-mode: overlay;
 }
-.shell[data-grain] :is([data-slot="top-bar"], [data-slot="sidebar"]:not([data-sheet])) {
+.shell[data-grain]
+  :is([data-slot="top-bar"], [data-slot="sidebar"]:not([data-sheet])) {
   background-color: transparent;
 }
 .inset {
@@ -66,7 +67,8 @@
 }
 
 .gutter {
-  padding: var(--cipher-space-40) var(--cipher-page-gutter, var(--cipher-space-40));
+  padding: var(--cipher-space-40)
+    var(--cipher-page-gutter, var(--cipher-space-40));
 }
 .topBar {
   grid-area: bar;
@@ -81,7 +83,9 @@
   color: var(--cipher-ink);
 }
 .topBar[data-org-zone] {
-  --cipher-crumb-root-max: calc(var(--cipher-size-sidebar) - 2 * var(--cipher-space-8));
+  --cipher-crumb-root-max: calc(
+    var(--cipher-size-sidebar) - 2 * var(--cipher-space-8)
+  );
   padding-inline-start: var(--cipher-space-8);
 }
 .shell[data-sidebar-open] > .topBar[data-org-zone] {
@@ -101,7 +105,9 @@
   justify-content: center;
 }
 .actions {
-  --band-divider-gap: calc(var(--cipher-space-crumb-divider) - var(--cipher-space-4));
+  --band-divider-gap: calc(
+    var(--cipher-space-crumb-divider) - var(--cipher-space-4)
+  );
   display: flex;
   flex: none;
   align-items: center;

@@ -23,7 +23,8 @@
   overscroll-behavior: contain;
   overflow-wrap: anywhere;
   scroll-padding-block: var(--cipher-focus-clearance);
-  border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  border-inline-end: var(--cipher-size-control-border) solid
+    var(--cipher-line-soft);
 }
 .aside :global([data-slot="data-list"]) > * {
   flex-direction: column;

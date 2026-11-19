@@ -4,7 +4,8 @@
   width: 100%;
   min-width: 0;
   min-height: calc(
-    var(--cipher-code-editor-rows) * var(--cipher-type-mono-line-height) + 2 * var(--cipher-space-control-inline-sm)
+    var(--cipher-code-editor-rows) * var(--cipher-type-mono-line-height) + 2 *
+      var(--cipher-space-control-inline-sm)
   );
   padding: var(--cipher-space-control-inline-sm);
   cursor: text;

@@ -7,7 +7,8 @@
   color: var(--cipher-text2, var(--foreground));
 }
 .inline {
-  border: var(--cipher-size-control-border) solid var(--cipher-line-soft, var(--border));
+  border: var(--cipher-size-control-border) solid
+    var(--cipher-line-soft, var(--border));
   border-radius: 0;
   padding: var(--cipher-space-2) var(--cipher-space-4);
   background: var(--cipher-tint, var(--muted));
@@ -92,7 +93,9 @@
 .header > :global([data-slot="copy-button"]) > :global(button) {
   grid-column: -2 / -1;
 }
-.header > :global([data-slot="copy-button"]) > :global([data-copy-feedback]):not(:empty) {
+.header
+  > :global([data-slot="copy-button"])
+  > :global([data-copy-feedback]):not(:empty) {
   grid-column: 1 / -1;
 }
 .customContent {
@@ -143,7 +146,8 @@
   flex-wrap: wrap;
   gap: var(--cipher-space-control-slot-gap);
   min-width: 0;
-  border: var(--cipher-size-control-border) solid var(--cipher-control, var(--border));
+  border: var(--cipher-size-control-border) solid
+    var(--cipher-control, var(--border));
   border-radius: 0;
   background: var(--cipher-surface, var(--background));
   padding: var(--cipher-space-control-slot-inset);
@@ -206,7 +210,9 @@
 .snippet > :global([data-slot="copy-button"]) {
   display: contents;
 }
-.snippet > :global([data-slot="copy-button"]) > :global([data-copy-feedback]):not(:empty) {
+.snippet
+  > :global([data-slot="copy-button"])
+  > :global([data-copy-feedback]):not(:empty) {
   flex-basis: 100%;
 }
 .token_comment {
