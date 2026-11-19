@@ -1384,11 +1384,31 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   font-weight: var(--cipher-type-label-font-weight);
   letter-spacing: var(--cipher-type-label-letter-spacing);
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+.groupText[data-size="xs"] {
+  padding-inline: var(--cipher-space-6);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+  font-weight: var(--cipher-type-caption-font-weight);
+  letter-spacing: var(--cipher-type-caption-letter-spacing);
+}
+.groupTextLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .groupText svg {
+  flex: none;
   width: var(--cipher-size-icon-sm);
   height: var(--cipher-size-icon-sm);
   pointer-events: none;
+}
+.groupText[data-size="xs"] svg {
+  width: var(--cipher-size-icon-xs);
+  height: var(--cipher-size-icon-xs);
 }
 .groupSeparator[data-slot="button-group-separator"] {
   flex: none;

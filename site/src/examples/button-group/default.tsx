@@ -23,6 +23,22 @@ export default function Example() {
         <figcaption className="text-muted-foreground text-xs">{"attached"}</figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full max-w-60 min-w-0 flex-col items-stretch gap-3">
+          <ButtonGroup label="Sort" className="max-w-full">
+            <Button
+              variant="outline"
+              size="xs"
+              icon="chev-left"
+              iconOnly
+              aria-label="Previous sort"
+            />
+            <ButtonGroupText size="xs">Sorted by last rotated, newest first</ButtonGroupText>
+            <Button variant="outline" size="xs" icon="chev-right" iconOnly aria-label="Next sort" />
+          </ButtonGroup>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"xs, truncated"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <ButtonGroup variant="toolbar" label="Secret actions">
             <Button variant="ghost" icon="copy" iconOnly aria-label="Copy value" />

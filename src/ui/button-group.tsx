@@ -136,10 +136,14 @@ ButtonGroup.displayName = "ButtonGroup";
 function ButtonGroupText({
   className,
   asChild = false,
+  size = "default",
+  children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   asChild?: boolean;
+  /** Match the size of the buttons beside it. Text truncates with an ellipsis when the group runs out of room. */
+  size?: "default" | "xs";
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const Comp = asChild ? Slot.Root : "div";
 
@@ -147,9 +151,20 @@ function ButtonGroupText({
     <Comp
       ref={ref}
       data-slot="button-group-text"
+      data-size={size}
       className={cn(controlStyles.groupText, className)}
       {...props}
-    />
+    >
+      {asChild
+        ? children
+        : React.Children.map(children, (child) =>
+            typeof child === "string" || typeof child === "number" ? (
+              <span className={controlStyles.groupTextLabel}>{child}</span>
+            ) : (
+              child
+            )
+          )}
+    </Comp>
   );
 }
 ButtonGroupText.displayName = "ButtonGroupText";
