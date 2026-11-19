@@ -51,6 +51,8 @@ export interface FileTreeProps {
 }
 const folder = (node: FileTreeNode) =>
   node.type ? node.type === "folder" : node.children !== undefined;
+const expandable = (node: FileTreeNode, foldersOnly: boolean) =>
+  folder(node) && (node.children ?? []).some((child) => !foldersOnly || folder(child));
 function selectedAncestors(
   nodes: readonly FileTreeNode[],
   selected: string | null
@@ -91,7 +93,10 @@ export function FileTree({
     defaultValue: null,
     onChange: onRenamingChange
   });
-  const [renameError, setRenameError] = React.useState<{ id: string; message: string }>();
+  const [renameError, setRenameError] = React.useState<{
+    id: string;
+    message: string;
+  }>();
   const editingRef = React.useRef(editing);
   React.useLayoutEffect(() => {
     editingRef.current = editing;
@@ -179,7 +184,8 @@ export function FileTree({
     if (canSelect(node)) {
       if (selected === undefined) setOwnSelected(node.id);
       onSelect?.(node.id, node);
-    } else if (folder(node) && !node.disabled) expand(node.id, !open.includes(node.id));
+    } else if (expandable(node, foldersOnly) && !node.disabled)
+      expand(node.id, !open.includes(node.id));
   };
   const startRename = (id: string) => {
     setRenameError(undefined);
@@ -229,14 +235,14 @@ export function FileTree({
         focus(visible[visible.length - 1]?.node.id);
         break;
       case "ArrowRight":
-        if (folder(node) && !node.disabled) {
+        if (expandable(node, foldersOnly) && !node.disabled) {
           if (!open.includes(node.id)) expand(node.id, true);
           else
             focus(visible[index + 1]?.parent === node.id ? visible[index + 1]?.node.id : undefined);
         }
         break;
       case "ArrowLeft":
-        if (folder(node) && open.includes(node.id)) expand(node.id, false);
+        if (expandable(node, foldersOnly) && open.includes(node.id)) expand(node.id, false);
         else focus(parent ?? undefined);
         break;
       case "Enter":
@@ -312,7 +318,7 @@ export function FileTree({
             aria-level={level}
             aria-setsize={shown.length}
             aria-posinset={index + 1}
-            aria-expanded={folder(node) ? open.includes(node.id) : undefined}
+            aria-expanded={expandable(node, foldersOnly) ? open.includes(node.id) : undefined}
             aria-selected={current === node.id}
             aria-disabled={node.disabled || undefined}
             aria-label={node.label ?? node.name}
@@ -333,7 +339,7 @@ export function FileTree({
               data-selected={current === node.id}
               aria-disabled={node.disabled || undefined}
             >
-              {folder(node) && (
+              {expandable(node, foldersOnly) && (
                 <button
                   type="button"
                   tabIndex={-1}
@@ -430,7 +436,7 @@ export function FileTree({
                 </span>
               )}
             </div>
-            {folder(node) && (
+            {expandable(node, foldersOnly) && (
               <AnimatedCollapse open={open.includes(node.id)} lazy>
                 <ul role="group" id={`${uid}-${node.id}`}>
                   {render(node.children ?? [], level + 1)}
