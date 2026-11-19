@@ -287,11 +287,13 @@ function Breadcrumb({
   const navigateOnly = Boolean(
     items?.some((crumb) => crumb.onNavigate && !crumb.link && !crumb.href)
   );
+  const warned = React.useRef(false);
   React.useEffect(() => {
-    if (isDev && navigateOnly)
-      console.warn(
-        "Breadcrumb: a crumb has onNavigate but no link or href, so it renders as a button that can't open in a new tab and gets no pointer cursor. Pass link or href for navigation."
-      );
+    if (!isDev || !navigateOnly || warned.current) return;
+    warned.current = true;
+    console.warn(
+      "Breadcrumb: a crumb has onNavigate but no link or href, so it renders as a button that can't open in a new tab. Pass link or href for navigation."
+    );
   }, [navigateOnly]);
   const nav = React.useRef<HTMLElement | null>(null);
   const measure = React.useRef<HTMLOListElement | null>(null);
