@@ -1970,7 +1970,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/breadcrumb",
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/icon"
       ],
       "files": [
         {

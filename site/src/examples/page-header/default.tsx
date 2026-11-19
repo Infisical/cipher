@@ -27,6 +27,16 @@ export default function Example() {
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <PageHeader
+            breadcrumb={[{ label: "Gateways", href: "#page-header" }]}
+            title="prod-us-east"
+            actions={<Button variant="outline">Options</Button>}
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"Detail page"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <PageHeader
             size="md"
             mono
             title="stripe_api_key"

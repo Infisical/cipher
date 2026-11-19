@@ -6,6 +6,13 @@
 .trail {
   margin-bottom: var(--cipher-space-8);
 }
+.trail [data-slot="breadcrumb-name"] {
+  color: var(--cipher-muted);
+  transition: color var(--cipher-duration-fast) var(--cipher-ease-standard);
+}
+.trail [data-slot="breadcrumb-name"]:hover {
+  color: var(--cipher-ink);
+}
 .main {
   display: flex;
   flex-wrap: wrap;

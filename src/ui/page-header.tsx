@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { cn } from "../lib/utils";
 import { Breadcrumb, type BreadcrumbCrumb } from "./breadcrumb";
+import { Icon } from "./icon";
 
 import styles from "./page-header.module.css";
 
@@ -45,7 +46,14 @@ export function PageHeader({
       {breadcrumb && breadcrumb.length > 0 && (
         <Breadcrumb
           aria-label="Page path"
-          items={breadcrumb}
+          items={breadcrumb.map((crumb, index) =>
+            index === 0
+              ? {
+                  ...crumb,
+                  media: crumb.media ?? <Icon name="chev-left" size={14} />
+                }
+              : crumb
+          )}
           maxItems={maxItems}
           lastIsCurrent={false}
           className={styles.trail}
