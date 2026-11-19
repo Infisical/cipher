@@ -147,6 +147,7 @@ export function MultiSelect({
   const changeQuery = (next: string) => {
     creation.cancel();
     setQuery(next);
+    setActive("");
     onSearch?.(next);
   };
   const changeOpen = (next: boolean) => {

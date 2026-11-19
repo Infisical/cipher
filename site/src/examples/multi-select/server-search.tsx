@@ -50,12 +50,14 @@ export default function Example() {
           onSearch={setQuery}
           loading={loading}
           createLabel={(email) => `Invite ${email}`}
-          onCreate={async (email) => {
+          onCreate={async (email, { signal }) => {
             await new Promise((resolve) => {
               setTimeout(resolve, 300);
             });
+            if (signal.aborted) return;
             const invited = { value: email, label: email, description: "Invited" };
             directory.push(invited);
+            setResults((current) => [...current, invited]);
             setMembers((current) => [...current, invited.value]);
           }}
         />
