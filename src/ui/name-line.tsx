@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 import { cn, titleIfClamped } from "../lib/utils";
@@ -25,10 +27,20 @@ export function NameLine({
   React.useLayoutEffect(() => {
     const name = nameRef.current;
     if (!name) return;
-    if ((name.textContent ?? "").length > 12)
-      name.setAttribute("data-floor", "");
-    else name.removeAttribute("data-floor");
-  });
+    const measure = () => {
+      if ((name.textContent ?? "").length > 12)
+        name.setAttribute("data-floor", "");
+      else name.removeAttribute("data-floor");
+    };
+    measure();
+    const observer = new MutationObserver(measure);
+    observer.observe(name, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+    });
+    return () => observer.disconnect();
+  }, []);
   return (
     <div
       ref={ref}

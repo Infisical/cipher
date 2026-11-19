@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { cva } from "class-variance-authority";
 import { Slot } from "radix-ui";
@@ -56,14 +58,25 @@ function Badge({
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
   const textRef = React.useRef<HTMLSpanElement>(null);
+  const fitsWhole = !icon && !dot;
   React.useLayoutEffect(() => {
     const label = textRef.current;
     const root = label?.parentElement;
     if (!label || !root) return;
-    if (!icon && !dot && (label.textContent ?? "").length <= 6)
-      root.setAttribute("data-fit", "");
-    else root.removeAttribute("data-fit");
-  });
+    const measure = () => {
+      if (fitsWhole && (label.textContent ?? "").length <= 6)
+        root.setAttribute("data-fit", "");
+      else root.removeAttribute("data-fit");
+    };
+    measure();
+    const observer = new MutationObserver(measure);
+    observer.observe(label, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+    });
+    return () => observer.disconnect();
+  }, [collapse, fitsWhole]);
   const text = (content: React.ReactNode) =>
     collapse ? (
       <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
@@ -110,6 +123,10 @@ function Badge({
         const label =
           collapse && badge.querySelector<HTMLElement>("[data-badge-text]");
         if (!label) return;
+        if (props.title !== undefined) {
+          delete badge.dataset.autoTitle;
+          return;
+        }
         const automatic = badge.dataset.autoTitle !== undefined;
         if (badge.title && !automatic) return;
         if (label.scrollWidth > label.clientWidth + 1) {
