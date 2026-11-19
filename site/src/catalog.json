@@ -1462,8 +1462,16 @@
     "group": "Navigation",
     "examples": [
       {
+        "title": "Title only",
+        "module": "page-header/empty"
+      },
+      {
         "title": "Top-level page, object page and block description",
         "module": "page-header/default"
+      },
+      {
+        "title": "Long titles and a narrow header",
+        "module": "page-header/stressed"
       }
     ]
   },
