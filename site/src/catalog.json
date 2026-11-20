@@ -978,6 +978,10 @@
         "module": "filter-bar/width"
       },
       {
+        "title": "Search, filters and range actions",
+        "module": "filter-bar/actions"
+      },
+      {
         "title": "Date range field",
         "module": "filter-bar/date-range"
       },

@@ -6,11 +6,12 @@
 }
 .top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--cipher-space-8);
 }
 .search {
-  flex: 1 1 auto;
+  flex: 1 1 calc(var(--cipher-size-search-max) / 6);
   min-width: 0;
   max-width: var(--cipher-size-search-max);
 }
@@ -19,7 +20,9 @@
 }
 .actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  min-width: 0;
   gap: var(--cipher-space-8);
   margin-inline-start: auto;
 }
@@ -44,7 +47,20 @@
   min-width: 0;
   max-width: 100%;
 }
+.chips > li > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.chips > li > * > button:first-child {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.chips > li > * > button:first-child > span:has(> .value) {
+  display: flex;
+  min-width: 0;
+}
 .field {
+  flex: none;
   color: var(--cipher-text2);
 }
 .value {
