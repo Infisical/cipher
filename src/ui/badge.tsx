@@ -171,12 +171,14 @@ function Badge({
 Badge.displayName = "Badge";
 
 /** A row of badges that never wraps: badges that don't fit collapse into a trailing +N that opens the rest. For table cells, where every row keeps one height. */
-function flatten(children: React.ReactNode): React.ReactNode[] {
-  return React.Children.toArray(children).flatMap((child) =>
-    React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment
-      ? flatten(child.props.children)
-      : [child]
-  );
+function flatten(children: React.ReactNode, prefix = ""): React.ReactNode[] {
+  return React.Children.toArray(children).flatMap((child) => {
+    if (!React.isValidElement<{ children?: React.ReactNode }>(child)) return [child];
+    const key = `${prefix}${child.key}`;
+    return child.type === React.Fragment
+      ? flatten(child.props.children, `${key}/`)
+      : [prefix ? React.cloneElement(child, { key }) : child];
+  });
 }
 
 function BadgeGroup({
@@ -251,7 +253,11 @@ function BadgeGroup({
               </button>
             </Badge>
           </PopoverTrigger>
-          <PopoverContent align="start" data-width="content">
+          <PopoverContent
+            align="start"
+            data-width="content"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className={helperStyles.badgeGroupMore}>{items.slice(visible)}</div>
           </PopoverContent>
         </Popover>
