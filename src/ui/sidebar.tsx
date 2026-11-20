@@ -321,7 +321,7 @@ const SidebarGroup = ({
               ) : (
                 [
                   childItem.label,
-                  childItem.badge,
+                  <React.Fragment key="badge">{childItem.badge}</React.Fragment>,
                   childItem.count ? <Count key="count">{childItem.count}</Count> : null
                 ]
               )}
