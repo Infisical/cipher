@@ -38,6 +38,7 @@ export function PageHeader({
   ref,
   ...props
 }: PageHeaderProps & { ref?: React.Ref<HTMLElement> }) {
+  const [titleExpanded, setTitleExpanded] = React.useState(false);
   return (
     <header
       ref={ref}
@@ -67,10 +68,21 @@ export function PageHeader({
         <div className={styles.titleLine}>
           <h1
             data-truncate={truncateTitle || undefined}
+            data-expanded={titleExpanded || undefined}
             className={cn(styles.title, mono && styles.mono)}
-            onPointerEnter={
-              truncateTitle ? (event) => titleIfClamped(event.currentTarget) : undefined
-            }
+            onPointerEnter={(event) => {
+              const title = event.currentTarget;
+              if (getComputedStyle(title).overflow === "hidden") titleIfClamped(title);
+              else title.removeAttribute("title");
+            }}
+            onClick={(event) => {
+              if (truncateTitle || !window.getSelection()?.isCollapsed) return;
+              const title = event.currentTarget;
+              const clamped =
+                getComputedStyle(title).overflow === "hidden" &&
+                title.scrollHeight > title.clientHeight + 1;
+              if (titleExpanded || clamped) setTitleExpanded(!titleExpanded);
+            }}
           >
             {title}
           </h1>

@@ -126,6 +126,13 @@
       "media description"
       "media actions";
   }
+  .title:not([data-truncate], [data-expanded]) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
   .actions {
     justify-content: flex-start;
     margin-top: var(--cipher-space-16);
