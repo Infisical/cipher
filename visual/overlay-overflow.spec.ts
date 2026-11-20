@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 const pages = [
   "announcements",
@@ -17,24 +17,31 @@ const pages = [
   "color-picker"
 ];
 
+const triggerSelector =
+  'main :is(button, [role="button"]):is([aria-haspopup], [aria-expanded="false"]), main [data-example] button:not([aria-pressed])';
+const overlaySelector =
+  '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [data-radix-popper-content-wrapper] > *';
+
+async function load(page: Page, id: string) {
+  await page.goto(`visual.html?page=${id}&theme=light`);
+  await expect(page.locator("main")).toBeAttached({ timeout: 30_000 });
+  await expect(page.locator("[data-visual-loading]")).toHaveCount(0, { timeout: 30_000 });
+}
+
 test.use({ launchOptions: { ignoreDefaultArgs: ["--hide-scrollbars"] } });
 
 for (const id of pages) {
   test(`${id} overlays fit their scroll box with classic scrollbars`, async ({ page }, info) => {
     test.skip(info.project.name !== "desktop");
-    await page.goto(`visual.html?page=${id}&theme=light`);
-    await expect(page.locator("main")).toBeAttached({ timeout: 30_000 });
-    await expect(page.locator("[data-visual-loading]")).toHaveCount(0, { timeout: 30_000 });
-    const triggers = page.locator(
-      'main :is(button, [role="button"]):is([aria-haspopup], [aria-expanded="false"]), main [data-example] button:not([aria-pressed])'
-    );
+    test.setTimeout(300_000);
+    await load(page, id);
+    const triggers = page.locator(triggerSelector);
+    const overlays = page.locator(overlaySelector);
     const count = await triggers.count();
     expect(count, `${id} has overlay triggers`).toBeGreaterThan(0);
-    const overlays = page.locator(
-      '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [data-radix-popper-content-wrapper] > *'
-    );
     let opened = 0;
     for (let index = 0; index < count; index += 1) {
+      if (index > 0) await load(page, id);
       const trigger = triggers.nth(index);
       if (!(await trigger.isVisible()) || !(await trigger.isEnabled())) continue;
       const before = await overlays.count();
@@ -60,9 +67,6 @@ for (const id of pages) {
         )
       );
       expect.soft(overflow, `${id}, trigger ${index}`).toEqual([]);
-      await page.keyboard.press("Escape");
-      await page.keyboard.press("Escape");
-      await page.waitForTimeout(200);
     }
     expect(opened, `${id} opened an overlay`).toBeGreaterThan(0);
   });
