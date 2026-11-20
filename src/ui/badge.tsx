@@ -96,8 +96,8 @@ function Badge({
     React.Children.toArray(content).forEach((child) => {
       if (
         React.isValidElement<{ children?: React.ReactNode }>(child) &&
-        child.type !== React.Fragment &&
-        child.props.children === undefined
+        (child.type === "svg" ||
+          (child.type !== React.Fragment && child.props.children === undefined))
       ) {
         flush();
         nodes.push(child);
