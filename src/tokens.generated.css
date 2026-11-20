@@ -204,6 +204,9 @@
   --cipher-bad-fill: var(--cipher-red);
   --cipher-on-bad: var(--cipher-white);
   --cipher-bad-hover: #9e1b14;
+  --cipher-ok-fill: #2e7350;
+  --cipher-on-ok: var(--cipher-white);
+  --cipher-ok-hover: #235a3e;
   --cipher-info: #1f4e79;
   --cipher-info-deep: #143556;
   --cipher-info-bg: #dfe7ef;
@@ -442,6 +445,9 @@
   --cipher-bad-fill: var(--cipher-red);
   --cipher-on-bad: var(--cipher-white);
   --cipher-bad-hover: #9e1b14;
+  --cipher-ok-fill: #2e7350;
+  --cipher-on-ok: var(--cipher-white);
+  --cipher-ok-hover: #235a3e;
   --cipher-info: #8fb4de;
   --cipher-info-deep: #c4d9ef;
   --cipher-info-bg: #121e2b;
