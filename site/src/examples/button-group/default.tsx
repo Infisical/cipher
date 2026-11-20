@@ -5,6 +5,8 @@ import {
   ButtonGroupText
 } from "@infisical/cipher/ui/button-group";
 
+const version = 12;
+
 export default function Example() {
   return (
     <div className="grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] items-start gap-x-6 gap-y-8">
@@ -14,13 +16,29 @@ export default function Example() {
             <Button variant="outline" icon="chev-left">
               Older
             </Button>
-            <ButtonGroupText>v12</ButtonGroupText>
+            <ButtonGroupText>v{version}</ButtonGroupText>
             <Button variant="outline" iconRight="chev-right">
               Newer
             </Button>
           </ButtonGroup>
         </div>
         <figcaption className="text-muted-foreground text-xs">{"attached"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full max-w-60 min-w-0 flex-col items-stretch gap-3">
+          <ButtonGroup label="Sort" className="max-w-full">
+            <Button
+              variant="outline"
+              size="xs"
+              icon="chev-left"
+              iconOnly
+              aria-label="Previous sort"
+            />
+            <ButtonGroupText size="xs">Sorted by last rotated, newest first</ButtonGroupText>
+            <Button variant="outline" size="xs" icon="chev-right" iconOnly aria-label="Next sort" />
+          </ButtonGroup>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"xs, truncated"}</figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">

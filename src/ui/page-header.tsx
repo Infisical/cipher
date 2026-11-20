@@ -6,10 +6,7 @@ import { Icon } from "./icon";
 
 import styles from "./page-header.module.css";
 
-export type PageHeaderProps = Omit<
-  React.ComponentPropsWithoutRef<"header">,
-  "title"
-> & {
+export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "title"> & {
   title: React.ReactNode;
   size?: "lg" | "md";
   mono?: boolean;
@@ -56,9 +53,9 @@ export function PageHeader({
             index === 0
               ? {
                   ...crumb,
-                  media: crumb.media ?? <Icon name="chev-left" size={14} />,
+                  media: crumb.media ?? <Icon name="chev-left" size={14} />
                 }
-              : crumb,
+              : crumb
           )}
           maxItems={maxItems}
           lastIsCurrent={false}
@@ -72,9 +69,7 @@ export function PageHeader({
             data-truncate={truncateTitle || undefined}
             className={cn(styles.title, mono && styles.mono)}
             onPointerEnter={
-              truncateTitle
-                ? (event) => titleIfClamped(event.currentTarget)
-                : undefined
+              truncateTitle ? (event) => titleIfClamped(event.currentTarget) : undefined
             }
           >
             {title}
@@ -94,9 +89,7 @@ export function PageHeader({
                 event.target instanceof Element
                   ? event.target.closest<HTMLElement>("[data-slot=button]")
                   : null;
-              const text = button?.querySelector<HTMLElement>(
-                "[data-slot=button-text]",
-              );
+              const text = button?.querySelector<HTMLElement>("[data-slot=button-text]");
               if (!button || !text) return;
               const generated = button.dataset.autoTitle;
               if (generated !== undefined && button.title !== generated) {
@@ -118,10 +111,7 @@ export function PageHeader({
           </div>
         )}
         {description && (
-          <div
-            data-slot="page-header-description"
-            className={styles.description}
-          >
+          <div data-slot="page-header-description" className={styles.description}>
             {description}
           </div>
         )}

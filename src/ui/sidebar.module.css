@@ -100,6 +100,12 @@
   box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-sidebar);
   pointer-events: none;
 }
+.unread[data-tone="warn"] {
+  background: var(--cipher-warn);
+}
+.unread[data-tone="bad"] {
+  background: var(--cipher-bad);
+}
 .helpMenu {
   min-width: var(--cipher-size-popover);
 }

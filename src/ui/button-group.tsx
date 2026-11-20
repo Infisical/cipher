@@ -133,13 +133,40 @@ function ButtonGroup({
 }
 ButtonGroup.displayName = "ButtonGroup";
 
+const labelRuns = (children: React.ReactNode) => {
+  const runs: React.ReactNode[] = [];
+  let text = "";
+  const flush = () => {
+    if (text)
+      runs.push(
+        <span key={"text-" + runs.length} className={controlStyles.groupTextLabel}>
+          {text}
+        </span>
+      );
+    text = "";
+  };
+  for (const child of React.Children.toArray(children)) {
+    if (typeof child === "string" || typeof child === "number") text += child;
+    else {
+      flush();
+      runs.push(child);
+    }
+  }
+  flush();
+  return runs;
+};
+
 function ButtonGroupText({
   className,
   asChild = false,
+  size = "default",
+  children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   asChild?: boolean;
+  /** Match the size of the buttons beside it. Text truncates with an ellipsis when the group runs out of room. */
+  size?: "default" | "xs";
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const Comp = asChild ? Slot.Root : "div";
 
@@ -147,9 +174,12 @@ function ButtonGroupText({
     <Comp
       ref={ref}
       data-slot="button-group-text"
+      data-size={size}
       className={cn(controlStyles.groupText, className)}
       {...props}
-    />
+    >
+      {asChild ? children : labelRuns(children)}
+    </Comp>
   );
 }
 ButtonGroupText.displayName = "ButtonGroupText";

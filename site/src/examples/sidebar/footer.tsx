@@ -86,11 +86,13 @@ const Checklist = ({ title, items }: { title: string; items: Step[] }) => {
 const Shell = ({
   title = "Set up Agent Vault",
   items,
-  defaultCollapsed
+  defaultCollapsed,
+  footerIndicator
 }: {
   title?: string;
   items: Step[];
   defaultCollapsed?: boolean;
+  footerIndicator?: "accent" | "warn" | "bad";
 }) => {
   const [current, setCurrent] = useState("home");
   const done = items.filter((item) => item.done).length;
@@ -104,6 +106,7 @@ const Shell = ({
       footer={<Checklist title={title} items={items} />}
       footerIcon="list-checks"
       footerLabel={`${title}, ${done} of ${items.length} done`}
+      footerIndicator={footerIndicator}
     />
   );
 };
@@ -134,7 +137,7 @@ export default function Example() {
           />
         </Frame>
         <Frame caption="Rail, footer in a popover">
-          <Shell items={steps(2)} defaultCollapsed />
+          <Shell items={steps(2)} defaultCollapsed footerIndicator="accent" />
         </Frame>
       </div>
       <div className="w-full max-w-[600px]">
