@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "cipher",
-  "homepage": "https://github.com/Infisical/cipher",
+  "homepage": "https://infisical.com/cipher",
   "items": [
     {
       "name": "cipher-base",
