@@ -87,6 +87,20 @@ export default function Example() {
           description="rotation-bot. ledger-core, production."
         />
       </Case>
+      <Case
+        id="breakpoint"
+        width={680}
+        caption="actionsBreakpoint 720: under 720px the buttons stack below, even past 36rem"
+      >
+        <Row
+          media={<Media icon="terminal" tone="bad" />}
+          subject="Break-glass"
+          rest=" access to prod-postgres-eu"
+          meta="4m"
+          description="Leo Park. Incident 2291. Expires in 40 min."
+          actionsBreakpoint={720}
+        />
+      </Case>
       <Case id="timestamp-widths" caption="Timestamp widths: the slot sizes to its text">
         {(["4m", "12m", "3h", "2d", "Nov 4"] as const).map((meta) => (
           <Row
