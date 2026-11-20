@@ -42,13 +42,22 @@ jobs:
       - run: npm run check
       - run: npm run build
       - name: Tag a commit that holds the built package
+        env:
+          COMMIT: ${{ inputs.commit }}
+          NPM_PUBLISH: ${{ vars.NPM_PUBLISH }}
         run: |
-          tag="v$(node -p 'require("./package.json").version')"
+          version="$(node -p 'require("./package.json").version')"
+          tag="v$version"
+          npm pkg delete scripts devDependencies
           if git ls-remote --exit-code --tags origin "refs/tags/$tag"; then
+            git fetch origin "refs/tags/$tag:refs/tags/$tag"
+            if [ "$NPM_PUBLISH" = "true" ] && [ "$(git rev-parse "$tag^")" = "$COMMIT" ] && ! npm view "@infisical/cipher@$version" version >/dev/null 2>&1; then
+              echo "::notice::$tag already exists for this commit but isn't on npm, so this run only publishes."
+              exit 0
+            fi
             echo "$tag already exists. Bump version in package.json first."
             exit 1
           fi
-          npm pkg delete scripts devDependencies
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f dist package.json
