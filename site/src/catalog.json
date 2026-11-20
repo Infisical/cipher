@@ -278,6 +278,10 @@
         "module": "button/default"
       },
       {
+        "title": "Success: the action that completes a gated outcome",
+        "module": "button/success"
+      },
+      {
         "title": "Sizes",
         "module": "button/sizes"
       },
