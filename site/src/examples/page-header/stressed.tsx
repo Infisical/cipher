@@ -26,7 +26,7 @@ export default function Example() {
         </div>
         <figcaption className="text-muted-foreground text-xs">
           {
-            "A long title wraps, and icon buttons drop to their glyph when the header narrows"
+            "A long title wraps. On a narrow header it stops at two lines, a tap shows the rest, and icon buttons drop to their glyph"
           }
         </figcaption>
       </figure>

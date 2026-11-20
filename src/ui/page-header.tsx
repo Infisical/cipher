@@ -38,6 +38,37 @@ export function PageHeader({
   ref,
   ...props
 }: PageHeaderProps & { ref?: React.Ref<HTMLElement> }) {
+  const titleRef = React.useRef<HTMLHeadingElement>(null);
+  const [titleClamped, setTitleClamped] = React.useState(false);
+  const [titleExpanded, setTitleExpanded] = React.useState(false);
+  React.useEffect(() => {
+    const element = titleRef.current;
+    if (!element || truncateTitle) return;
+    const measure = () => {
+      const style = getComputedStyle(element);
+      const line = parseFloat(style.lineHeight);
+      const clamps =
+        style.getPropertyValue("--cipher-page-header-title-clamp").trim() === "2" &&
+        element.scrollHeight > 2.5 * line;
+      setTitleClamped(clamps);
+      if (clamps) element.title = element.textContent ?? "";
+      else {
+        element.removeAttribute("title");
+        setTitleExpanded(false);
+      }
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    const mutations = new MutationObserver(measure);
+    mutations.observe(element, { subtree: true, childList: true, characterData: true });
+    document.fonts.addEventListener("loadingdone", measure);
+    return () => {
+      observer.disconnect();
+      mutations.disconnect();
+      document.fonts.removeEventListener("loadingdone", measure);
+    };
+  }, [truncateTitle]);
+  const titleToggle = !truncateTitle && titleClamped;
   return (
     <header
       ref={ref}
@@ -66,13 +97,35 @@ export function PageHeader({
         {media && <span className={styles.media}>{media}</span>}
         <div className={styles.titleLine}>
           <h1
+            ref={titleRef}
             data-truncate={truncateTitle || undefined}
+            data-expanded={titleExpanded || undefined}
             className={cn(styles.title, mono && styles.mono)}
             onPointerEnter={
               truncateTitle ? (event) => titleIfClamped(event.currentTarget) : undefined
             }
           >
-            {title}
+            {titleToggle ? (
+              <span
+                role="button"
+                tabIndex={0}
+                aria-expanded={titleExpanded}
+                className={styles.titleToggle}
+                onClick={() => {
+                  if (window.getSelection()?.isCollapsed !== false)
+                    setTitleExpanded(!titleExpanded);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter" && event.key !== " ") return;
+                  event.preventDefault();
+                  setTitleExpanded(!titleExpanded);
+                }}
+              >
+                {title}
+              </span>
+            ) : (
+              title
+            )}
           </h1>
           {badges && (
             <span data-slot="page-header-badges" className={styles.badges}>
