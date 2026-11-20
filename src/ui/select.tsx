@@ -33,6 +33,8 @@ export type SelectOption = {
   description?: string;
   disabled?: boolean;
   group?: string;
+  /** A Badge after the label, in the menu row and in the trigger while this option is selected, such as "Current". */
+  badge?: React.ReactNode;
 };
 function Select({
   options,
@@ -117,6 +119,7 @@ function Select({
                         value={option.value}
                         disabled={option.disabled}
                         description={option.description}
+                        badge={option.badge}
                       >
                         <span data-slot="select-option-label">{option.label}</span>
                       </SelectItem>
@@ -279,6 +282,7 @@ function SelectItem({
   className,
   children,
   description,
+  badge,
   wrap,
   onFocus,
   "aria-describedby": describedBy,
@@ -286,6 +290,8 @@ function SelectItem({
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
   description?: string;
+  /** A Badge after the label, shown in the menu row and in the trigger while this item is selected. The label truncates before the badge does. */
+  badge?: React.ReactNode;
   /** Wrap this label instead of truncating it. Defaults to the content's `wrap`. */
   wrap?: boolean;
 } & {
@@ -320,7 +326,16 @@ function SelectItem({
         className={picker.optionLabel}
         onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
       >
-        <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+        <SelectPrimitive.ItemText>
+          {badge === undefined ? (
+            children
+          ) : (
+            <>
+              <span data-slot="option-text">{children}</span>
+              {badge}
+            </>
+          )}
+        </SelectPrimitive.ItemText>
       </span>
       {description && (
         <span id={descriptionId} className={picker.optionMeta}>

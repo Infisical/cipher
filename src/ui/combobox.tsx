@@ -43,6 +43,8 @@ export type ComboboxOption = {
   /** A muted line under the label. Search matches it as well as the label. */
   description?: string;
   meta?: string;
+  /** A Badge after the label, in the row and, for single selection, in the trigger while this option is selected. */
+  badge?: React.ReactNode;
   /** Options that share a group sit under its heading, in the order each group first appears. Search matches the heading too. */
   group?: string;
   /** Extra words search matches but never shows, such as a product's other names or an ID. */
@@ -390,7 +392,14 @@ export function Combobox({
             <Icon icon={selectedOption.icon} />
           </span>
         )}
-        <span>{selectedOption?.label ?? (selected[0] || placeholder)}</span>
+        {selectedOption?.badge === undefined ? (
+          <span>{selectedOption?.label ?? (selected[0] || placeholder)}</span>
+        ) : (
+          <span className={controlStyles.triggerValue}>
+            <span data-slot="option-text">{selectedOption.label}</span>
+            {selectedOption.badge}
+          </span>
+        )}
         <Icon name="chev-down" className={controlStyles.chevron} data-chevron="" />
       </button>
     </PopoverTrigger>
@@ -497,6 +506,7 @@ export function Combobox({
                           <Highlight text={option.label} query={query} />
                         </span>
                       )}
+                      {option.badge}
                       {option.meta && <span className={menu.meta}>{option.meta}</span>}
                     </CommandItem>
                   ))}

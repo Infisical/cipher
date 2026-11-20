@@ -29,6 +29,8 @@ export type DateRangePickerProps = Omit<
   align?: "start" | "center" | "end";
   locale?: Partial<Locale>;
   formatRange?: (range: CompleteDateRange) => string;
+  /** A Badge after the range in the trigger, such as "Current" for the period that is still running. */
+  badge?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;
 };
 
@@ -61,6 +63,7 @@ export function DateRangePicker({
   align = "start",
   locale,
   formatRange,
+  badge,
   className,
   ...props
 }: DateRangePickerProps) {
@@ -107,7 +110,12 @@ export function DateRangePicker({
           id={id}
           aria-labelledby={field["aria-labelledby"] && `${field["aria-labelledby"]} ${id}`}
         >
-          {isComplete(value) ? (
+          {isComplete(value) && badge !== undefined ? (
+            <span className={controlStyles.triggerValue}>
+              <span data-slot="option-text">{format(value)}</span>
+              {badge}
+            </span>
+          ) : isComplete(value) ? (
             format(value)
           ) : (
             <span className="text-muted-foreground">{placeholder}</span>
