@@ -15,9 +15,36 @@ export interface CopyButtonProps {
   size?: "sm" | "md" | "lg";
   iconOnly?: boolean;
 }
+function copyWithSelection(value: string) {
+  const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const host =
+    active?.closest<HTMLElement>("dialog, [role='dialog'], [role='alertdialog']") ?? document.body;
+  const field = document.createElement("textarea");
+  field.value = value;
+  field.setAttribute("readonly", "");
+  field.setAttribute("aria-hidden", "true");
+  field.style.cssText =
+    "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none";
+  host.appendChild(field);
+  field.select();
+  try {
+    if (!document.execCommand("copy")) throw new Error("Clipboard access is unavailable.");
+  } finally {
+    field.remove();
+    active?.focus({ preventScroll: true });
+  }
+}
 export async function writeClipboard(value: string): Promise<void> {
-  if (!navigator.clipboard?.writeText) throw new Error("Clipboard access is unavailable.");
-  await navigator.clipboard.writeText(value);
+  if (window.isSecureContext && navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {
+      copyWithSelection(value);
+      return;
+    }
+  }
+  copyWithSelection(value);
 }
 export function CopyButton({
   value,
@@ -98,6 +125,7 @@ export interface SecretValueProps {
   copyable?: boolean;
   label?: string;
   onCopy?: CopyButtonProps["onCopy"];
+  writeClipboard?: CopyButtonProps["writeClipboard"];
   id?: string;
   "aria-describedby"?: string;
   "aria-invalid"?: boolean;
@@ -107,6 +135,7 @@ export function SecretValue({
   copyable = true,
   label = "Secret value",
   onCopy,
+  writeClipboard: writer,
   id,
   ...aria
 }: SecretValueProps) {
@@ -138,7 +167,7 @@ export function SecretValue({
       >
         {shown ? "Hide value" : "Reveal value"}
       </Button>
-      {copyable && <CopyButton value={value} onCopy={onCopy} iconOnly />}
+      {copyable && <CopyButton value={value} onCopy={onCopy} writeClipboard={writer} iconOnly />}
     </div>
   );
 }
@@ -155,6 +184,7 @@ export interface SensitiveEditorProps {
   onReveal?: (context: { signal: AbortSignal }) => Promise<string>;
   onSave?: (value: string, context: { signal: AbortSignal; stored: StoredSecret }) => Promise<void>;
   onCopy?: CopyButtonProps["onCopy"];
+  writeClipboard?: CopyButtonProps["writeClipboard"];
   copyable?: boolean;
 }
 type View =
@@ -170,6 +200,7 @@ export function SensitiveEditor({
   onReveal,
   onSave,
   onCopy,
+  writeClipboard: writer,
   copyable = true
 }: SensitiveEditorProps) {
   // Identity keys discard plaintext before a new stored object can render.
@@ -183,6 +214,7 @@ export function SensitiveEditor({
       onReveal={onReveal}
       onSave={onSave}
       onCopy={onCopy}
+      writeClipboard={writer}
       copyable={copyable}
     />
   );
@@ -195,6 +227,7 @@ function SensitiveEditorSession({
   onReveal,
   onSave,
   onCopy,
+  writeClipboard: writer,
   copyable
 }: SensitiveEditorProps) {
   const [view, setView] = React.useState<View>({ kind: "masked" });
@@ -365,6 +398,7 @@ function SensitiveEditorSession({
                         : Promise.reject()
               }
               onCopy={onCopy}
+              writeClipboard={writer}
               disabled={!onReveal || !stored.hasValue}
               iconOnly
             />
