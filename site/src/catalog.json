@@ -360,6 +360,10 @@
       {
         "title": "Header and footer without a body",
         "module": "card/no-body"
+      },
+      {
+        "title": "Table in a framed card",
+        "module": "card/table"
       }
     ]
   },

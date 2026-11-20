@@ -862,6 +862,7 @@ export function DataTable<Row>({
                   <EmptyScope
                     ghost={ghost ?? (embedded || filtered ? false : "rows")}
                     size="sm"
+                    fill={embedded || undefined}
                   >
                     {empty}
                   </EmptyScope>
