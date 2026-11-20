@@ -127,7 +127,7 @@ jobs:
           [ -n "$VISUAL_PAGES" ] || unset VISUAL_PAGES
           (cd side && npx vite preview --config site/vite.visual.config.ts --host 127.0.0.1 --port 4173 --strictPort > /tmp/preview.log 2>&1 &)
           for _ in $(seq 60); do curl -sf http://127.0.0.1:4173/visual.html > /dev/null && break; sleep 1; done
-          npx playwright test --shard=${{ matrix.shard }}/8 --update-snapshots=all --pass-with-no-tests --reporter=dot
+          npx playwright test visual/visual.spec.ts --shard=${{ matrix.shard }}/8 --update-snapshots=all --pass-with-no-tests --reporter=dot
           echo "$(find snapshots -name '*.png' | wc -l) snapshots"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
