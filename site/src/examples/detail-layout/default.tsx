@@ -3,6 +3,7 @@ import { Button } from "@infisical/cipher/ui/button";
 import { Card } from "@infisical/cipher/ui/card";
 import { DetailLayout } from "@infisical/cipher/ui/layout";
 import { DataList, List, ListRow } from "@infisical/cipher/ui/list";
+import { CopyValue } from "@infisical/cipher/ui/sensitive-editor";
 
 const Specimen = () => (
   <DetailLayout
@@ -12,9 +13,32 @@ const Specimen = () => (
         <DataList
           variant="props"
           items={[
-            ["ID", <code key="id">4b1e8c2a-93f0-4d55-a1c6-0e7d2f9b3a11</code>],
+            [
+              "ID",
+              <CopyValue key="id" value="4b1e8c2a-93f0-4d55-a1c6-0e7d2f9b3a11" label="Copy ID">
+                <code>4b1e8c2a-93f0-4d55-a1c6-0e7d2f9b3a11</code>
+              </CopyValue>
+            ],
+            [
+              "Email",
+              <CopyValue
+                key="email"
+                value="maximilian.vandenberghe-okonkwo@platform-engineering.example.com"
+                label="Copy email"
+              />
+            ],
             ["Managed by", "Organization"],
-            ["Organization role", "Member"],
+            [
+              "Organization role",
+              "Member",
+              {
+                action: (
+                  <Button variant="ghost" size="icon-xs" icon="pencil" iconOnly>
+                    Edit role
+                  </Button>
+                )
+              }
+            ],
             [
               "Metadata",
               <Badge key="meta" tone="outline" mono>

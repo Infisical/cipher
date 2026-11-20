@@ -514,7 +514,15 @@ export function ListSection({
 }
 export type DataListItem =
   | readonly [React.ReactNode, React.ReactNode]
-  | readonly [React.ReactNode, React.ReactNode, { span: "half" }];
+  | readonly [
+      React.ReactNode,
+      React.ReactNode,
+      {
+        span?: "half";
+        /** A trailing inline action (copy, reveal, edit). It sits on the value's first line, so a wrapped value grows downward and the action stays put. */
+        action?: React.ReactNode;
+      }
+    ];
 
 const isHalf = (item?: DataListItem) => item?.[2]?.span === "half";
 
@@ -540,14 +548,23 @@ export function DataList({
       data-variant={variant}
       data-density={density}
     >
-      {items.map(([term, value], index) => (
+      {items.map(([term, value, options], index) => (
         <div
           key={index}
           className={styles.dataPair}
           data-span={halves.has(index) ? "half" : undefined}
         >
           <dt>{term}</dt>
-          <dd>{value}</dd>
+          {options?.action ? (
+            <dd className={styles.dataValueWithAction}>
+              <span className={styles.dataValue}>{value}</span>
+              <span className={styles.dataAction} data-slot="data-list-action">
+                {options.action}
+              </span>
+            </dd>
+          ) : (
+            <dd>{value}</dd>
+          )}
         </div>
       ))}
     </dl>
