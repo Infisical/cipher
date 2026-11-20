@@ -447,7 +447,13 @@
   gap: var(--cipher-space-control-slot-gap);
   min-width: 0;
 }
+@property --cipher-copy-value-line {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
 .copyValue {
+  --cipher-copy-value-line: 1lh;
   display: inline-flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -466,7 +472,7 @@
 /* The button centres on the first line, so a single-line value reads as centred and a wrapped one keeps the button at the top. */
 .copyValue > .copy > :global(button) {
   flex: none;
-  margin-block: calc((1lh - var(--cipher-nested-action-height)) / 2);
+  margin-block: calc((var(--cipher-copy-value-line) - var(--cipher-nested-action-height)) / 2);
 }
 .copyValue > .copy > [data-copy-feedback]:not(:empty) {
   flex-basis: 100%;
