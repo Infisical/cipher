@@ -23,6 +23,7 @@ const firstPage: ActivityDay[] = [
         actor: "github-deployer",
         actorKind: "machine",
         summary: "read 14 secrets in production",
+        description: "Data residency: eu",
         time: "10:31"
       },
       {
@@ -42,6 +43,8 @@ const firstPage: ActivityDay[] = [
         id: "4",
         actor: "Marcus Okonkwo-Fitzgerald",
         summary: "approved a change to production",
+        description:
+          "Rotated stripe_api_key and stripe_webhook_secret in production after the payments-ledger incident review, and revoked the old keys",
         time: "17:20"
       }
     ]
