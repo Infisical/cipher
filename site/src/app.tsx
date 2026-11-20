@@ -86,6 +86,17 @@ const groups: Group[] = [
     }))
 ];
 
+const pages = groups.flatMap((group) => group.pages);
+
+const resolve = (route: string) => {
+  const path = `/${route.replace(/^\/+|\/+$/g, "")}`;
+  return (
+    pages.find((page) => page.route === path) ??
+    pages.find((page) => `/${page.id}` === path) ??
+    pages[0]
+  );
+};
+
 const sections: SidebarSection[] = groups.map((group) => ({
   label: group.label,
   icon: group.icon,
@@ -200,11 +211,15 @@ export function App() {
   };
   const toggleTheme = () =>
     chooseTheme(defaultTheme[themeScheme(theme) === "dark" ? "light" : "dark"]);
-  const group =
-    groups.find((entry) => entry.pages.some((page) => page.route === route)) ?? groups[0];
-  const page = group.pages.find((entry) => entry.route === route) ?? group.pages[0];
+  const page = resolve(route);
+  const group = groups.find((entry) => entry.pages.includes(page)) ?? groups[0];
   const component = catalog.find((entry) => `/components/${entry.id}` === page.route);
   const foundation = foundationPages.find((entry) => entry.id === page.id) ?? foundationPages[0];
+  useEffect(() => {
+    if (page.route === route) return;
+    window.history.replaceState(null, "", href(page.route));
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  }, [page.route, route]);
   useEffect(() => {
     insetRef.current?.scrollTo({ top: 0 });
   }, [page.id]);
