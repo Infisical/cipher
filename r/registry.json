@@ -1996,7 +1996,9 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/breadcrumb",
+        "@cipher/button",
         "@cipher/cipher-base",
+        "@cipher/dropdown-menu",
         "@cipher/icon"
       ],
       "files": [
