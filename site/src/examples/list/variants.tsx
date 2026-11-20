@@ -62,7 +62,7 @@ export default function Variants() {
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
-          <List label="Bare identities" variant="bare">
+          <List label="Bare identities" variant="bare" footer="Showing 2 of 14 identities">
             {rows("bare")}
           </List>
         </div>
