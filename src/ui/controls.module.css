@@ -454,7 +454,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card[data-variant="framed"]
   > .cardHeader
   > .cardAction
-  > :not([data-cipher-button]):has(:focus-visible) {
+  > :not([data-cipher-button], .fieldBox, .inputGroup):has(:focus-visible) {
   padding: var(--cipher-space-4);
   margin: calc(-1 * var(--cipher-space-4));
 }
