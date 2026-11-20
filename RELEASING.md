@@ -4,29 +4,16 @@ Releases are cut by maintainers. Each release is a `vX.Y.Z` tag on a commit that
 
 ## Check what changed
 
-The Cipher visual check workflow (`.github/workflows/cipher-visual.yml`) renders every showcase example at a baseline ref and a candidate ref, both in the pinned Playwright image, and pixel-diffs them. Run it with the previous tag as the baseline and the release commit as the candidate, and read the changed list against the release's pull requests:
+The Cipher visual check workflow (`.github/workflows/cipher-visual.yml`) renders every showcase example at a baseline ref and a candidate ref, both in the pinned Playwright image, and pixel-diffs them. Run it with the release commit as the candidate, and read the changed list against the release's pull requests. The baseline defaults to the newest release tag; pass `base` to compare against another ref.
 
 ```bash
-$ gh workflow run cipher-visual.yml -f base=v0.1.18 -f candidate=<sha>
-$ gh workflow run cipher-visual.yml -f base=v0.1.18 -f candidate=<sha> -f scope=scoped
+$ gh workflow run cipher-visual.yml -f candidate=<sha>
+$ gh workflow run cipher-visual.yml -f candidate=<sha> -f scope=scoped
 ```
 
 A release tag renders the source commit under it. With `scope=scoped` it renders only the pages whose examples reach a changed file, following imports, plus pages whose own example or catalog entry changed. An icon change reaches the pages that name a changed or added icon and the icon gallery. Changes to tokens, global CSS, fonts, theme code, installed dependencies (the lockfile, or `package.json` beyond its version), shared showcase files, or the frame and overlay primitives (Card, Dialog, Sheet, Popover, menus, tooltips and their shared stylesheets) render every page. The `prepare` job prints the scope and why.
 
 The run summary lists every changed snapshot with its pixel count. The `cipher-visual-report` artifact holds `summary.md`, `summary.json`, `scope.json` and `changed/`, with a before, after and diff image for each change.
-
-### Release candidate check
-
-The release candidate check renders the previous tag, then applies each pull request in order, and reports every example that changed at each step. A change is explained when that step's pull request updated the example's baseline, or when the explanations file names it. Any other change fails the check.
-
-It also reads source, because some changes no example shows. A merge commit that edits lines in neither parent, or a pull request that edits an existing stylesheet line while no existing example changes, fails the check until the explanations file names it as `merge:<sha>` or `css:<path>`.
-
-```bash
-$ scripts/visual-rc.sh --base v0.1.12 --version 0.1.13 --explain explanations.json 95 99 103
-$ scripts/visual-rc.sh --merged --base v0.1.13 --version 0.1.14 --explain explanations.json 118=f4de878 119=491308f
-```
-
-With `--merged`, name each pull request's commit on main, in merge order. The report is `visual/rc/<version>/report.md`.
 
 ## Cut the release
 
