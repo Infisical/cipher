@@ -435,12 +435,6 @@
   height: var(--cipher-badge-glyph);
   vertical-align: middle;
 }
-.badgeText svg:not(:last-child) {
-  margin-inline-end: var(--cipher-space-4);
-}
-.badgeText svg:not(:first-child) {
-  margin-inline-start: var(--cipher-space-4);
-}
 .badge.mono {
   font-family: var(--cipher-type-mono-sm-font-family);
 }
