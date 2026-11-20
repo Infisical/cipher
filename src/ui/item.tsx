@@ -201,10 +201,10 @@ function Item({
   const hasActions = Boolean(actions) && (size === "default" || size === "md");
   const truncated = truncate ?? !hasActions;
   const [actionsIconOnly, actionsRef] = useIconOnly(hasActions);
-  const mainRef = React.useRef<HTMLDivElement>(null);
+  const [main, setMain] = React.useState<HTMLDivElement | null>(null);
   const [wide, setWide] = React.useState<boolean>();
   React.useLayoutEffect(() => {
-    const layout = mainRef.current?.parentElement;
+    const layout = main?.parentElement;
     if (actionsBreakpoint === undefined || !layout || typeof ResizeObserver === "undefined") {
       setWide(undefined);
       return undefined;
@@ -214,7 +214,7 @@ function Item({
     );
     observer.observe(layout);
     return () => observer.disconnect();
-  }, [actionsBreakpoint]);
+  }, [actionsBreakpoint, main]);
   const below = (actionsPlacement === "below" || wide === false) && size !== "sm";
   const metaNode = meta && (
     <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>{meta}</span>
@@ -229,7 +229,7 @@ function Item({
         </span>
       )}
       <div
-        ref={mainRef}
+        ref={setMain}
         className={itemStyles.main}
         data-actions-below={(Boolean(actions || meta) && below) || undefined}
         data-actions-beside={(hasActions && !below && wide) || undefined}
