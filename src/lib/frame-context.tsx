@@ -4,9 +4,31 @@ import { isDev } from "./dev";
 
 const FrameContext = React.createContext(false);
 
+type FrameFoot = { target: HTMLElement | null; claim: (claimed: boolean) => void };
+const FrameFootContext = React.createContext<FrameFoot | null>(null);
+
 /** Marks a subtree as inside a framed container, or, with framed false, starts a fresh surface such as an overlay. */
 export function FrameScope({ framed, children }: { framed: boolean; children: React.ReactNode }) {
-  return <FrameContext value={framed}>{children}</FrameContext>;
+  return (
+    <FrameContext value={framed}>
+      {framed ? children : <FrameFootContext value={null}>{children}</FrameFootContext>}
+    </FrameContext>
+  );
+}
+
+/** Offers a frame's empty footer band to one descendant, which portals its footer into target and claims it while it has one. */
+export function FrameFootSlot({
+  value,
+  children
+}: {
+  value: FrameFoot | null;
+  children: React.ReactNode;
+}) {
+  return <FrameFootContext value={value}>{children}</FrameFootContext>;
+}
+
+export function useFrameFoot() {
+  return React.useContext(FrameFootContext);
 }
 
 /**

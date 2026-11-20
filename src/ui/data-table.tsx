@@ -1,6 +1,7 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 
-import { FrameScope, useInFrame } from "../lib/frame-context";
+import { FrameScope, useFrameFoot, useInFrame } from "../lib/frame-context";
 import { useListFiltered } from "../lib/list-query";
 import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
@@ -136,11 +137,19 @@ interface DataTableBaseProps<Row> {
    */
   virtual?: boolean;
   rowHeight?: number;
-  loadMore?: { label: string; onClick: () => void; loading?: boolean };
+  /**
+   * A quiet "Show more" at the end of the footer. In a framed Card with footerPlacement="frame" and no
+   * footer of its own, the footer moves into the card's frame band; anywhere else it is the table's own.
+   */
+  loadMore?: { label?: string; onClick: () => void; loading?: boolean };
+  /** Collapses rows that loadMore added, beside "Show more" in the footer. */
+  showFewer?: { label?: string; onClick: () => void };
+  /** Shown at the end of the footer once loadMore is gone, such as "End of events". */
   end?: React.ReactNode;
   /**
-   * State that must stay visible under the rows, such as "Showing 5 of 120 after filter". Never an
-   * action result: copied, saved, deleted, moved, uploaded and failures go to a toast.
+   * State that must stay visible under the rows, such as "Showing 5 of 120 after filter". It starts
+   * the footer, muted, before any loadMore. Never an action result: copied, saved, deleted, moved,
+   * uploaded and failures go to a toast.
    */
   persistentStatus?: React.ReactNode;
   onRowActivate?: (row: Row) => void;
@@ -212,6 +221,7 @@ export function DataTable<Row>({
   virtual = false,
   rowHeight,
   loadMore,
+  showFewer,
   end,
   persistentStatus,
   onRowActivate,
@@ -231,6 +241,7 @@ export function DataTable<Row>({
   reorder
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
+  const frameFoot = useFrameFoot();
   const listFiltered = useListFiltered();
   const filtered = filteredProp ?? listFiltered;
   const [ownSelected, setOwnSelected] = React.useState<readonly string[]>(defaultSelectedIds);
@@ -324,11 +335,15 @@ export function DataTable<Row>({
     const head = container?.querySelector("thead");
     if (!height || !windowed || !container || !head) return;
     const measure = () => {
-      const band = container.querySelector<HTMLElement>("[data-slot='data-table-pagination']");
+      const bands = container.querySelectorAll<HTMLElement>(
+        "[data-slot='data-table-pagination'], [data-slot='data-table-more']"
+      );
       const next = {
         head: head.getBoundingClientRect().height,
         rest:
-          container.offsetHeight - container.clientHeight + (band?.getBoundingClientRect().height ?? 0)
+          container.offsetHeight -
+          container.clientHeight +
+          [...bands].reduce((sum, band) => sum + band.getBoundingClientRect().height, 0)
       };
       setChrome((current) =>
         current.head === next.head && current.rest === next.rest ? current : next
@@ -481,17 +496,41 @@ export function DataTable<Row>({
   const more = loadMore ? (
     <Button
       type="button"
-      variant="outline"
+      variant="ghost"
       loading={Boolean(loadMore.loading)}
       onClick={() => {
         setLanding(rows.length);
         loadMore.onClick();
       }}
     >
-      {loadMore.label}
+      {loadMore.label ?? "Show more"}
     </Button>
   ) : (
     rows.length > 0 && end
+  );
+  const hasFoot = Boolean(persistentStatus || more || showFewer);
+  const pinnedFoot = Boolean(persistentStatus || loadMore || showFewer);
+  const footTarget = embedded && frameFoot?.target ? frameFoot.target : null;
+  const claimFoot = frameFoot?.claim;
+  React.useLayoutEffect(() => {
+    if (!claimFoot || !embedded || !hasFoot) return undefined;
+    claimFoot(true);
+    return () => claimFoot(false);
+  }, [claimFoot, embedded, hasFoot]);
+  const foot = hasFoot && (
+    <div className={styles.tableFootRow} data-slot="data-table-status">
+      <span className={styles.tableFootStatus}>{persistentStatus}</span>
+      {(showFewer || more) && (
+        <span className={styles.tableFootActions}>
+          {showFewer && (
+            <Button type="button" variant="ghost" onClick={showFewer.onClick}>
+              {showFewer.label ?? "Show fewer"}
+            </Button>
+          )}
+          {more}
+        </span>
+      )}
+    </div>
   );
   const sortRows = useSortable({
     items: flatRows ?? [],
@@ -706,7 +745,7 @@ export function DataTable<Row>({
       data-scroll-fade="x"
       data-has-start-pin={leading || undefined}
       data-has-end-pin={trailing || undefined}
-      data-frame-foot={Boolean(((height || flowing) && more) || pagination) || undefined}
+      data-frame-foot={Boolean((foot && !footTarget) || pagination) || undefined}
       className={cn(!embedded && frame.frame, styles.tableScroll, containerClassName)}
       data-virtual={windowed || undefined}
       data-flow={flowing || undefined}
@@ -930,8 +969,13 @@ export function DataTable<Row>({
           </TableFooter>
         )}
       </Table>
-      {(height || flowing) && more && (
-        <div className={cn(frame.frameFoot, styles.tableMore)}>{more}</div>
+      {foot && !footTarget && (
+        <div
+          className={cn(frame.frameFoot, styles.tableMore)}
+          data-slot={pinnedFoot ? "data-table-more" : "data-table-end"}
+        >
+          {foot}
+        </div>
       )}
       {pagination && (
         <div
@@ -954,8 +998,7 @@ export function DataTable<Row>({
         <span className={styles.refreshing} data-slot="data-table-refreshing" aria-hidden />
       )}
       <FrameScope framed>{scrollFrame}</FrameScope>
-      {!height && !flowing && more && <div className={styles.actions}>{more}</div>}
-      {persistentStatus && <div className={styles.status}>{persistentStatus}</div>}
+      {foot && footTarget && createPortal(foot, footTarget)}
       <span className={styles.sr} role="status">
         {loading ? (
           "Loading rows"

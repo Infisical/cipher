@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { Checkbox as CheckboxPrimitive, RadioGroup as RadioGroupPrimitive } from "radix-ui";
 
 import { useDescendantFlags } from "../lib/descendant-flags";
-import { FrameScope, useInFrame } from "../lib/frame-context";
+import { FrameFootSlot, FrameScope, useInFrame } from "../lib/frame-context";
 import { CipherLink, type CipherLinkProps } from "../lib/link";
 import { exit, spring } from "../lib/motion";
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
@@ -32,7 +32,7 @@ const cardFlags = {
   "data-has-slots":
     ':scope > :is([data-slot="card-header"], [data-slot="card-content"], [data-slot="card-footer"])',
   "data-frame-head": `:scope > .${frameStyles.frameHead}`,
-  "data-frame-foot": `:scope > .${frameStyles.frameFoot}`
+  "data-frame-foot": `:scope > .${frameStyles.frameFoot}:not([hidden])`
 };
 const cardWatch = {
   subtree: false,
@@ -118,6 +118,9 @@ function Card({
   const [hasLink, reportLink] = useStretchedLinkHost();
   const [choiceChecked, reportChoice] = usePresenceCount();
   const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
+  const [foot, setFoot] = React.useState<HTMLDivElement | null>(null);
+  const [footClaimed, setFootClaimed] = React.useState(false);
+  const footSlot = React.useMemo(() => ({ target: foot, claim: setFootClaimed }), [foot]);
   const titleParts = React.Children.toArray(
     React.isValidElement<{ children?: React.ReactNode }>(title) && title.type === React.Fragment
       ? title.props.children
@@ -186,10 +189,7 @@ function Card({
           <FrameScope framed={inFrame || variant !== "plain"}>
             <EmptyScope size="sm" fill={flush}>
               <FramedContext value={variant !== "plain"}>
-                {convenience &&
-                variant !== "plain" &&
-                footer !== undefined &&
-                footerPlacement === "frame" ? (
+                {convenience && variant !== "plain" && footerPlacement === "frame" ? (
                   <>
                     {!backdrop && header}
                     {(hasBody || backdrop) && (
@@ -200,11 +200,21 @@ function Card({
                         {backdrop}
                         <FramedContext value={false}>
                           {backdrop && header}
-                          {hasBody && <CardContent>{children}</CardContent>}
+                          {hasBody && (
+                            <CardContent>
+                              <FrameFootSlot value={footer === undefined ? footSlot : null}>
+                                {children}
+                              </FrameFootSlot>
+                            </CardContent>
+                          )}
                         </FramedContext>
                       </div>
                     )}
-                    <CardFooter placement="frame">{footer}</CardFooter>
+                    {footer !== undefined ? (
+                      <CardFooter placement="frame">{footer}</CardFooter>
+                    ) : (
+                      <CardFooter placement="frame" ref={setFoot} hidden={!footClaimed} />
+                    )}
                   </>
                 ) : convenience ? (
                   <>
