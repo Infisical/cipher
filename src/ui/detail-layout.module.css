@@ -26,7 +26,7 @@
     grid-template-columns: minmax(0, 1fr) var(--cipher-size-sidecar);
     grid-template-areas: "main aside";
   }
-  .root[data-aside-width="narrow"] .columns {
+  .root[data-aside-width="narrow"] > .columns {
     grid-template-columns: minmax(0, 1fr) var(--cipher-size-pane-aside);
   }
   .aside {
