@@ -44,6 +44,7 @@ export function PageHeader({
   React.useEffect(() => {
     const element = titleRef.current;
     if (!element || truncateTitle) return;
+    setTitleExpanded(false);
     const measure = () => {
       const style = getComputedStyle(element);
       if (style.getPropertyValue("--cipher-page-header-title-clamp").trim() !== "2") {
