@@ -429,6 +429,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.badgeText svg {
+  display: inline-block;
+  width: var(--cipher-badge-glyph);
+  height: var(--cipher-badge-glyph);
+  vertical-align: middle;
+}
 .badge.mono {
   font-family: var(--cipher-type-mono-sm-font-family);
 }
