@@ -1031,7 +1031,7 @@ button.rowTitle::after {
   text-align: start;
 }
 .dataPair dd:has(> [data-slot="badge"] + [data-slot="badge"]),
-:where(.dataPair dd, .nativeTableCell) :where(:has(> [data-slot="badge"] + [data-slot="badge"])) {
+:where(.dataPair dd) :where(:has(> [data-slot="badge"] + [data-slot="badge"])) {
   display: flex;
   flex-wrap: wrap;
   gap: var(--cipher-space-4);

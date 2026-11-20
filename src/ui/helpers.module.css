@@ -435,6 +435,41 @@
   height: var(--cipher-badge-glyph);
   vertical-align: middle;
 }
+.badgeGroup {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--cipher-space-4);
+  min-width: 0;
+}
+.badgeGroup > [data-slot="badge"]:first-child {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.badgeGroupMeasure {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: inherit;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+.badgeGroupMore {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cipher-space-4);
+}
+.badgeGroupMore > [data-slot="badge"] {
+  height: auto;
+  min-height: var(--cipher-size-badge);
+  white-space: normal;
+}
+.badgeGroupMore .badgeText {
+  overflow-wrap: anywhere;
+}
 .badge.mono {
   font-family: var(--cipher-type-mono-sm-font-family);
 }

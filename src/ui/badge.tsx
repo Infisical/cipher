@@ -6,6 +6,7 @@ import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -169,7 +170,112 @@ function Badge({
 }
 Badge.displayName = "Badge";
 
-export { Badge, badgeVariants };
+/** A row of badges that never wraps: badges that don't fit collapse into a trailing +N that opens the rest. For table cells, where every row keeps one height. */
+function flatten(children: React.ReactNode, prefix = ""): React.ReactNode[] {
+  return React.Children.toArray(children).flatMap((child) => {
+    if (!React.isValidElement<{ children?: React.ReactNode }>(child)) return [child];
+    const key = `${prefix}${child.key}`;
+    return child.type === React.Fragment
+      ? flatten(child.props.children, `${key}/`)
+      : [prefix ? React.cloneElement(child, { key }) : child];
+  });
+}
+
+function BadgeGroup({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+  const items = flatten(children);
+  const groupRef = React.useRef<HTMLDivElement>(null);
+  const measureRef = React.useRef<HTMLDivElement>(null);
+  const measured = React.useRef("");
+  const [shown, setShown] = React.useState(items.length);
+  React.useImperativeHandle(ref, () => groupRef.current as HTMLDivElement);
+  React.useLayoutEffect(() => {
+    const group = groupRef.current;
+    const measure = measureRef.current;
+    if (!group || !measure) return;
+    const fit = () => {
+      const nodes = Array.from(measure.children);
+      const more = nodes.pop()?.getBoundingClientRect().width ?? 0;
+      const widths = nodes.map((node) => node.getBoundingClientRect().width);
+      const signature = widths.join();
+      if (signature !== measured.current) {
+        measured.current = signature;
+        if (visible < widths.length) {
+          setShown(widths.length);
+          return;
+        }
+      }
+      const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+      const room = group.clientWidth + 0.5;
+      const whole = widths.reduce((sum, width) => sum + width, 0) + gap * (widths.length - 1);
+      let used = 0;
+      let count = widths.length;
+      for (let index = 0; whole > room && index < widths.length; index++) {
+        used += (index ? gap : 0) + widths[index];
+        const tail = index < widths.length - 1 ? gap + more : 0;
+        if (used + tail > room) {
+          count = Math.max(1, index);
+          break;
+        }
+      }
+      setShown(count);
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(group);
+    Array.from(measure.children).forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  });
+  const visible = Math.min(shown, items.length);
+  const rest = items.length - visible;
+  return (
+    <div
+      ref={groupRef}
+      data-slot="badge-group"
+      className={cn(helperStyles.badgeGroup, className)}
+      {...props}
+    >
+      {items.slice(0, visible)}
+      {rest > 0 && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Badge asChild>
+              <button
+                type="button"
+                aria-label={`${rest} more`}
+                onClick={(event) => event.stopPropagation()}
+              >
+                +{rest}
+              </button>
+            </Badge>
+          </PopoverTrigger>
+          <PopoverContent
+            align="start"
+            data-width="content"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={helperStyles.badgeGroupMore}>{items.slice(visible)}</div>
+          </PopoverContent>
+        </Popover>
+      )}
+      <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
+        {items.map((item) =>
+          React.isValidElement(item)
+            ? React.cloneElement(item, { ref: null, id: undefined } as object)
+            : item
+        )}
+        <Badge>+{items.length}</Badge>
+      </div>
+    </div>
+  );
+}
+BadgeGroup.displayName = "BadgeGroup";
+
+export { Badge, BadgeGroup, badgeVariants };
 
 export function Count({
   tone = "accent",
