@@ -2,6 +2,36 @@
 
 All notable changes to `@infisical/cipher` are listed here. Versions follow semver; while Cipher is on 0.x, a minor bump can include breaking changes.
 
+## 0.1.19 (2026-11-20)
+
+### Added
+
+- `Tabs` take a per-tab `countTone` (`"neutral"`, `"warn"` or `"bad"`), and `Count` gains `warn` and `bad` tones. `List` and `ListHeader` take `countPlacement="title"` to show the count beside the title. ([#153](https://github.com/Infisical/cipher/pull/153))
+- `DataTable` takes `isRowActivatable`. A row that returns `false` keeps the default cursor, gets no tab stop and ignores click and Enter. ([#162](https://github.com/Infisical/cipher/pull/162))
+- `CopyValue` shows a value with an icon-only copy button on its first line. `DataList` items take `{ action }`, a trailing action on the value's first line. ([#175](https://github.com/Infisical/cipher/pull/175))
+- `Button` takes `applied`, a square dot on a search or filter trigger that keeps the icon at full ink. `HeaderSearch` uses the same dot. ([#176](https://github.com/Infisical/cipher/pull/176), [#180](https://github.com/Infisical/cipher/pull/180))
+
+### Changed
+
+- A framed `Card` whose body holds only a `DataTable` or table container goes flush on its own, in every state, without `flush`. An empty flush table card is about 24px taller than the old inset empty state. ([#165](https://github.com/Infisical/cipher/pull/165))
+- On a narrow `PageHeader`, a long title clamps to two lines with an ellipsis and expands on tap. ([#167](https://github.com/Infisical/cipher/pull/167))
+- On a narrow `PageHeader`, a single `collapse` badge stays beside the title and truncates before the title line wraps. ([#177](https://github.com/Infisical/cipher/pull/177))
+- `Badge` is never wider than its container. Long text ends in an ellipsis with the full value on hover, and several badges in a `DataList` value, a wrapping table cell or `Item` meta wrap with a 4px gap. ([#179](https://github.com/Infisical/cipher/pull/179))
+- `CipherScope` renders on the server, and every client entry is marked `"use client"`. ([#164](https://github.com/Infisical/cipher/pull/164))
+
+### Fixed
+
+- `writeClipboard` falls back to a selection copy outside secure contexts, and `SecretValue` and `SensitiveEditor` use it. ([#159](https://github.com/Infisical/cipher/pull/159))
+- `AccordionTrigger` truncates a long title so trailing badges stay visible. ([#161](https://github.com/Infisical/cipher/pull/161))
+- A focus ring around a bare icon button inside a wrapped card band action, such as a `HeaderSearch` trigger, is no longer clipped. ([#178](https://github.com/Infisical/cipher/pull/178))
+- `Dialog` and `AlertDialog` content no longer shows scrollbars with classic, always-visible scrollbars when its content fits. ([#181](https://github.com/Infisical/cipher/pull/181))
+
+### Project
+
+- A README for users, `RELEASING.md`, a contributing guide, code of conduct, security policy, issue and PR templates, and this changelog. ([#166](https://github.com/Infisical/cipher/pull/166), [#169](https://github.com/Infisical/cipher/pull/169), [#171](https://github.com/Infisical/cipher/pull/171))
+- Workflow actions are pinned to commit SHAs, the Release workflow can publish to npm, and showcase examples use obviously fake values. ([#163](https://github.com/Infisical/cipher/pull/163), [#168](https://github.com/Infisical/cipher/pull/168), [#170](https://github.com/Infisical/cipher/pull/170))
+- Visual checks run in CI, including a check that open overlays fit their scroll box with classic scrollbars. ([#174](https://github.com/Infisical/cipher/pull/174), [#183](https://github.com/Infisical/cipher/pull/183))
+
 ## 0.1.18 (2026-11-20)
 
 ### Added
