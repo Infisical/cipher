@@ -136,11 +136,10 @@
   .title {
     --cipher-page-header-title-clamp: 2;
   }
-  .titleLine:has(> .badges > [data-collapse]):not(:has(> .badges > :not([data-collapse]))) {
+  .titleLine:has(> .badges > [data-collapse]:only-child) {
     flex-wrap: nowrap;
   }
-  .titleLine:has(> .badges > [data-collapse]):not(:has(> .badges > :not([data-collapse])))
-    > .badges {
+  .titleLine:has(> .badges > [data-collapse]:only-child) > .badges {
     display: contents;
   }
   .title:not([data-truncate], [data-expanded]) {
