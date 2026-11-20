@@ -40,6 +40,8 @@ export interface SidebarLink {
   href?: string;
   onClick?: () => void;
   count?: number;
+  /** A Badge after the label, such as Preview. Give it collapse so the label keeps its room in a narrow sidebar. Hidden in the rail. */
+  badge?: React.ReactNode;
   external?: boolean;
   disabled?: boolean;
   drillIn?: boolean;
@@ -154,6 +156,7 @@ const RowContent = ({
         </span>
       ))}
     <span className={styles.label}>{item.label}</span>
+    {item.badge !== undefined && <span className={styles.badge}>{item.badge}</span>}
     {count ? (
       <>
         <Count className={styles.count}>{count}</Count>
@@ -302,6 +305,7 @@ const SidebarGroup = ({
                   data-current={childItem.id === current || undefined}
                 >
                   {childItem.label}
+                  {childItem.badge}
                   {childItem.count ? <Count>{childItem.count}</Count> : null}
                 </CipherLink>
               ) : childItem.href ? (
@@ -311,13 +315,15 @@ const SidebarGroup = ({
                   rel={childItem.external ? "noreferrer" : undefined}
                 >
                   {childItem.label}
+                  {childItem.badge}
                   {childItem.count ? <Count>{childItem.count}</Count> : null}
                 </a>
               ) : (
-                <span>
-                  {childItem.label}
-                  {childItem.count ? <Count>{childItem.count}</Count> : null}
-                </span>
+                [
+                  childItem.label,
+                  <React.Fragment key="badge">{childItem.badge}</React.Fragment>,
+                  childItem.count ? <Count key="count">{childItem.count}</Count> : null
+                ]
               )}
             </DropdownMenuItem>
           ))}

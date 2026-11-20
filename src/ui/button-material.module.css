@@ -246,8 +246,27 @@
     background-color: var(--cipher-bad-hover);
   }
 }
+.success {
+  border-color: var(--cipher-ok-fill);
+  background-color: var(--cipher-ok-fill);
+  color: var(--cipher-on-ok);
+  font-weight: 600;
+}
+@media (hover: hover) {
+  .success:hover:not(:disabled, [aria-disabled="true"]) {
+    border-color: var(--cipher-ok-hover);
+    background-color: var(--cipher-ok-hover);
+  }
+}
+.success:active:not(:disabled, [aria-disabled="true"]) {
+  border-color: var(--cipher-ok-hover);
+  background-color: var(--cipher-ok-hover);
+  transition-duration: 0ms;
+}
 .danger.danger:disabled,
-.danger.danger[aria-disabled="true"]:not([aria-busy="true"]) {
+.danger.danger[aria-disabled="true"]:not([aria-busy="true"]),
+.success.success:disabled,
+.success.success[aria-disabled="true"]:not([aria-busy="true"]) {
   border-color: var(--cipher-line-soft);
   background-color: var(--cipher-line-soft);
   color: var(--cipher-faint);

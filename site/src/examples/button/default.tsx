@@ -48,6 +48,12 @@ export default function Example() {
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col items-center gap-3 text-center">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-center gap-3">
+          <Button variant="success">Merge</Button>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"success"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col items-center gap-3 text-center">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-center gap-3">
           <Button variant="link" asChild>
             <a href="#input">Input guide</a>
           </Button>

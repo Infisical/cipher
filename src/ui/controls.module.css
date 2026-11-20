@@ -397,6 +397,16 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .cardHeader + .cardBody {
   padding-top: 0;
 }
+.cardToolbar {
+  margin: calc(-1 * var(--cipher-card-body-inset));
+  margin-inline-start: calc(-1 * (var(--cipher-card-body-inset) + var(--cipher-card-lead)));
+  margin-bottom: var(--cipher-card-body-inset);
+  padding: var(--cipher-space-8) var(--cipher-card-inset);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.cardPlain > .cardHeader + .cardBody > .cardToolbar:first-child {
+  margin-top: 0;
+}
 .cardPlain {
   background: var(--cipher-surface);
 }
@@ -500,10 +510,17 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card[data-variant="framed"]:is(
     [data-flush],
     :has(
-      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
+      > .cardBody
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        ),
       > .cardInset
         > .cardBody
-        > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        )
     )
   )
   > .cardHeader {
@@ -512,10 +529,17 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card[data-variant="framed"]:is(
     [data-flush],
     :has(
-      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
+      > .cardBody
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        ),
       > .cardInset
         > .cardBody
-        > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        )
     )
   )
   > :is(.cardBody, .cardInset > .cardBody) {
@@ -1214,10 +1238,17 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card:is(
   [data-flush],
   [data-variant="framed"]:has(
-    > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
+    > .cardBody
+      > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+        :only-child,
+        [data-slot="card-toolbar"]:first-child + :last-child
+      ),
     > .cardInset
       > .cardBody
-      > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
+      > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+        :only-child,
+        [data-slot="card-toolbar"]:first-child + :last-child
+      )
   )
 ) {
   --cipher-card-body-inset: 0px;
