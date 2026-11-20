@@ -51,7 +51,7 @@ function Badge({
   icon?: IconSource;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;
-  /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. Hovering shows the full text. */
+  /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. */
   collapse?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
@@ -75,14 +75,34 @@ function Badge({
     },
     [fitsWhole]
   );
-  const text = (content: React.ReactNode) =>
-    collapse ? (
-      <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
-        {content}
-      </span>
-    ) : (
-      content
-    );
+  const text = (content: React.ReactNode) => {
+    if (collapse)
+      return (
+        <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
+          {content}
+        </span>
+      );
+    const nodes: React.ReactNode[] = [];
+    let run: React.ReactNode[] = [];
+    const flush = () => {
+      if (!run.length) return;
+      nodes.push(
+        <span key={nodes.length} data-badge-text="" className={helperStyles.badgeText}>
+          {run}
+        </span>
+      );
+      run = [];
+    };
+    React.Children.forEach(content, (child) => {
+      if (typeof child === "string" || typeof child === "number") run.push(child);
+      else {
+        flush();
+        nodes.push(child);
+      }
+    });
+    flush();
+    return nodes;
+  };
   const dotNode = (
     <>
       {dot && <span aria-hidden="true" className={helperStyles.badgeDot} />}
@@ -117,7 +137,7 @@ function Badge({
       onPointerEnter={(event: React.PointerEvent<HTMLSpanElement>) => {
         onPointerEnter?.(event);
         const badge = event.currentTarget;
-        const label = collapse && badge.querySelector<HTMLElement>("[data-badge-text]");
+        const label = badge.querySelector<HTMLElement>("[data-badge-text]");
         if (!label) return;
         if (props.title !== undefined) {
           delete badge.dataset.autoTitle;
@@ -125,7 +145,9 @@ function Badge({
         }
         const automatic = badge.dataset.autoTitle !== undefined;
         if (badge.title && !automatic) return;
-        if (label.scrollWidth > label.clientWidth + 1) {
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        if (range.getBoundingClientRect().width > label.getBoundingClientRect().width + 0.1) {
           badge.title = label.textContent ?? "";
           badge.dataset.autoTitle = "";
         } else if (automatic) {

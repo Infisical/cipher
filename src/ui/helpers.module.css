@@ -395,25 +395,25 @@
   font-weight: var(--cipher-type-caption-font-weight);
   letter-spacing: var(--cipher-type-caption-letter-spacing);
   --cipher-badge-pad: var(--cipher-space-8);
+  box-sizing: border-box;
+  max-width: 100%;
   height: var(--cipher-size-badge);
   padding: 0 var(--cipher-badge-pad);
   border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   border-radius: 0;
 }
 .badge[data-collapse] {
-  box-sizing: border-box;
   flex-shrink: 1000;
   justify-content: flex-start;
   min-width: calc(
     min(6ch, 100%) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
   );
-  max-width: 100%;
 }
 .badge[data-collapse][data-fit] {
   flex-shrink: 0;
   min-width: auto;
 }
-.badge[data-collapse] > :is(svg, .badgeDot) {
+.badge > :is(svg, .badgeDot) {
   flex: none;
 }
 .badge[data-collapse]:has(> svg, > .badgeDot) {
