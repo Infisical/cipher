@@ -556,7 +556,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",

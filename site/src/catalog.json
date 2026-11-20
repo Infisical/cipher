@@ -2110,6 +2110,10 @@
         "module": "table/narrow-cells"
       },
       {
+        "title": "Badge groups that collapse to +N",
+        "module": "table/badge-group"
+      },
+      {
         "title": "Grouped rows",
         "module": "table/grouped-rows"
       },

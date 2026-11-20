@@ -6,6 +6,7 @@ import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
+import { Tooltip } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -169,7 +170,73 @@ function Badge({
 }
 Badge.displayName = "Badge";
 
-export { Badge, badgeVariants };
+/** A row of badges that never wraps: badges that don't fit collapse into a trailing +N whose tooltip lists them. For table cells, where every row keeps one height. */
+function BadgeGroup({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+  const items = React.Children.toArray(children);
+  const groupRef = React.useRef<HTMLDivElement>(null);
+  const measureRef = React.useRef<HTMLDivElement>(null);
+  const [shown, setShown] = React.useState(items.length);
+  const [hidden, setHidden] = React.useState<string[]>([]);
+  React.useImperativeHandle(ref, () => groupRef.current as HTMLDivElement);
+  React.useLayoutEffect(() => {
+    const group = groupRef.current;
+    const measure = measureRef.current;
+    if (!group || !measure) return;
+    const fit = () => {
+      const nodes = Array.from(measure.children);
+      const more = nodes.pop()?.getBoundingClientRect().width ?? 0;
+      const widths = nodes.map((node) => node.getBoundingClientRect().width);
+      const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+      let used = 0;
+      let count = widths.length;
+      for (let index = 0; index < widths.length; index++) {
+        used += (index ? gap : 0) + widths[index];
+        const tail = index < widths.length - 1 ? gap + more : 0;
+        if (used + tail > group.clientWidth + 0.5) {
+          count = Math.max(1, index);
+          break;
+        }
+      }
+      setShown(count);
+      setHidden(nodes.slice(count).map((node) => (node.textContent ?? "").trim()));
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(group);
+    observer.observe(measure);
+    return () => observer.disconnect();
+  }, [items.length]);
+  const rest = items.length - shown;
+  return (
+    <div
+      ref={groupRef}
+      data-slot="badge-group"
+      className={cn(helperStyles.badgeGroup, className)}
+      {...props}
+    >
+      {items.slice(0, shown)}
+      {rest > 0 && (
+        <Tooltip content={hidden.join(", ")}>
+          <Badge tabIndex={0} aria-label={`${rest} more: ${hidden.join(", ")}`}>
+            +{rest}
+          </Badge>
+        </Tooltip>
+      )}
+      <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
+        {items}
+        <Badge>+{items.length}</Badge>
+      </div>
+    </div>
+  );
+}
+BadgeGroup.displayName = "BadgeGroup";
+
+export { Badge, BadgeGroup, badgeVariants };
 
 export function Count({
   tone = "accent",
