@@ -238,13 +238,9 @@ export function Halftone({
         gamma: readNumber(element, "--cipher-halftone-gamma", 1),
         cell,
         limitWidth: Math.min(parent.clientWidth, cap, wholeCells(width, cell)),
-        limitHeight: Math.round(
-          Math.min(
-            parent.clientHeight,
-            cap,
-            wholeCells(height, cell),
-            headerBottom,
-          ),
+        limitHeight: Math.min(
+          Math.round(Math.min(parent.clientHeight, cap, headerBottom)),
+          wholeCells(height, cell),
         ),
       };
       setBox((previous) =>
