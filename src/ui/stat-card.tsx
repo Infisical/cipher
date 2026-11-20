@@ -1,10 +1,8 @@
 import * as React from "react";
-import { Area, AreaChart, YAxis } from "recharts";
 
 import type { CipherLinkProps } from "../lib/link";
 import { cn } from "../lib/utils";
 import { Card, CardContent, CardLink } from "./card";
-import { ChartContainer } from "./chart";
 import { Icon, type IconSource } from "./icon";
 import { Media } from "./item";
 import { Skeleton } from "./skeleton";
@@ -19,10 +17,9 @@ const trendIcon = {
 } as const;
 const trendTone = { up: "ok", down: "bad", flat: "neutral" } as const;
 const chartHeight = { sm: 92, md: 168 } as const;
-const chartHeadroom = 12;
-const chartFootroom = 6;
 
-const StatCardChartContext = React.createContext<number>(chartHeight.sm);
+/** The pixel height of the StatCard chart band the chart sits in, for chart components that fill it. */
+export const StatCardChartHeight = React.createContext<number>(chartHeight.sm);
 
 export type StatCardProps = Omit<
   React.ComponentProps<typeof Card>,
@@ -129,7 +126,7 @@ export function StatCard({
           className={styles.chart}
           style={{ height: chartHeight[chartSize] }}
         >
-          <StatCardChartContext value={chartHeight[chartSize]}>{chart}</StatCardChartContext>
+          <StatCardChartHeight value={chartHeight[chartSize]}>{chart}</StatCardChartHeight>
         </div>
       )}
     </>
@@ -152,49 +149,5 @@ export function StatCard({
         <div className={styles.body}>{body}</div>
       )}
     </Card>
-  );
-}
-
-export type StatCardChartProps = {
-  /** One number per point, oldest first. The last point sits on the card's right edge. */
-  data: readonly number[];
-  /** Names the series for assistive tech, such as Secret reads. */
-  label: string;
-  /** step holds each value until the next point, for counts that change in jumps. */
-  curve?: "linear" | "step";
-};
-
-/** An area chart for a StatCard's chart slot. Its fill reaches the band's bottom edge, the line keeps 12px of headroom and stays 6px above the bottom, and it takes the band's height. Inside hueScope it draws in the product's hue. */
-export function StatCardChart({ data, label, curve = "linear" }: StatCardChartProps) {
-  const height = React.useContext(StatCardChartContext);
-  const points = data.map((value) => ({ value }));
-  const max = Math.max(...data, 0);
-  const min = Math.min(...data, 0);
-  const plot = height - chartHeadroom;
-  const floor =
-    max === min ? min - 1 : min - ((max - min) * chartFootroom) / (plot - chartFootroom);
-  return (
-    <ChartContainer
-      config={{ value: { label, color: "var(--cipher-hue-icon, var(--chart-1))" } }}
-      height={height}
-      role="img"
-      aria-label={label}
-    >
-      <AreaChart data={points} margin={{ top: chartHeadroom, right: 0, bottom: 0, left: 0 }}>
-        <YAxis hide type="number" allowDataOverflow domain={[floor, max === min ? max + 1 : max]} />
-        <Area
-          dataKey="value"
-          type={curve === "step" ? "stepAfter" : "linear"}
-          stroke="var(--color-value)"
-          strokeWidth={1.6}
-          fill="var(--cipher-hue-fill, var(--chart-1))"
-          fillOpacity={0.14}
-          baseValue={floor}
-          dot={false}
-          activeDot={false}
-          isAnimationActive={false}
-        />
-      </AreaChart>
-    </ChartContainer>
   );
 }

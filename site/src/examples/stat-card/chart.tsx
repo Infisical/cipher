@@ -1,6 +1,7 @@
 import { hueScope } from "@infisical/cipher/lib/hue";
 import { Button } from "@infisical/cipher/ui/button";
-import { StatCard, StatCardChart } from "@infisical/cipher/ui/stat-card";
+import { StatCard } from "@infisical/cipher/ui/stat-card";
+import { StatCardChart } from "@infisical/cipher/ui/stat-card-chart";
 
 const reads = [8120, 9340, 8710, 10220, 11890, 10940, 12480];
 const expiring = [2, 2, 3, 3, 5, 5, 4, 6, 6, 9, 9, 11];
