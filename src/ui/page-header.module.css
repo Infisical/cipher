@@ -136,6 +136,12 @@
   .title {
     --cipher-page-header-title-clamp: 2;
   }
+  .titleLine:has(> .badges > [data-collapse]:only-child) {
+    flex-wrap: nowrap;
+  }
+  .titleLine:has(> .badges > [data-collapse]:only-child) > .badges {
+    display: contents;
+  }
   .title:not([data-truncate], [data-expanded]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;

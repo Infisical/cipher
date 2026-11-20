@@ -22,6 +22,7 @@ const Figure = ({ caption, children }: { caption: string; children: React.ReactN
 
 export default function Example() {
   const [search, setSearch] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("payments");
   return (
     <div className="grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,24rem),1fr))] items-start gap-x-6 gap-y-8">
       <Figure caption="Title only: the title keeps its own start inset">
@@ -74,6 +75,36 @@ export default function Example() {
           }
         >
           kms-keys, payments-api
+        </Card>
+      </Figure>
+      <Figure caption="An applied search or filter is a square dot on the bare trigger, with any count in its label">
+        <Card
+          variant="framed"
+          title="Policies"
+          action={
+            <>
+              <HeaderSearch
+                label="Search rules"
+                placeholder="Search rules"
+                value={appliedSearch}
+                onValueChange={setAppliedSearch}
+              />
+              <Button
+                variant="bare"
+                icon="funnel"
+                iconOnly
+                applied
+                aria-label="Filter by policy: 4 applied"
+              >
+                Filter by policy
+              </Button>
+              <Button variant="accent" icon="plus">
+                Add rule
+              </Button>
+            </>
+          }
+        >
+          Secrets, Secret folders, Secret imports, Dynamic secrets
         </Card>
       </Figure>
       <Figure caption="Badges keep their text height">

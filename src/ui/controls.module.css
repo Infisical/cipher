@@ -495,12 +495,30 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-start-start-radius: 0;
   border-start-end-radius: 0;
 }
-.card[data-variant="framed"][data-flush] > .cardHeader {
+.card[data-variant="framed"]:is(
+    [data-flush],
+    :has(
+      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
+      > .cardInset
+        > .cardBody
+        > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
+    )
+  )
+  > .cardHeader {
   border-bottom: 0;
 }
-.card[data-variant="framed"][data-flush] > .cardBody {
+.card[data-variant="framed"]:is(
+    [data-flush],
+    :has(
+      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
+      > .cardInset
+        > .cardBody
+        > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
+    )
+  )
+  > :is(.cardBody, .cardInset > .cardBody) {
   padding: 0;
-  overflow: hidden;
+  overflow: clip;
 }
 .cardTitleGroup {
   display: flex;
@@ -1189,7 +1207,15 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   letter-spacing: var(--cipher-type-caption-letter-spacing);
 }
 
-.card[data-flush] {
+.card:is(
+  [data-flush],
+  [data-variant="framed"]:has(
+    > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
+    > .cardInset
+      > .cardBody
+      > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
+  )
+) {
   --cipher-card-body-inset: 0px;
   --cipher-card-lead: 0px;
 }

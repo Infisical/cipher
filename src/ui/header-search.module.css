@@ -4,23 +4,8 @@
   flex: none;
   align-items: center;
 }
-[data-cipher-button].trigger:is([data-state="open"], :hover),
-.root[data-applied] > [data-cipher-button].trigger {
+[data-cipher-button].trigger:is([data-state="open"], :hover) {
   color: var(--cipher-ink);
-}
-.dot {
-  position: absolute;
-  top: var(--cipher-space-4);
-  right: var(--cipher-space-4);
-  width: var(--cipher-size-unread);
-  height: var(--cipher-size-unread);
-  border-radius: 0;
-  background: var(--cipher-accent-fg);
-  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-surface);
-  pointer-events: none;
-}
-[data-framed] .dot {
-  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-tint);
 }
 .panel.panel {
   width: min(var(--cipher-size-menu-max), var(--radix-popper-available-width, 100vw));
