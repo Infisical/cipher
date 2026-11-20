@@ -447,9 +447,15 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   min-width: 0;
 }
 .card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
-  overflow: hidden;
+  overflow: clip;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.card[data-variant="framed"]
+  > .cardHeader
+  > .cardAction
+  > :not([data-cipher-button]):has(:focus-visible) {
+  overflow-clip-margin: var(--cipher-space-4);
 }
 .card[data-variant="framed"]
   > .cardHeader
