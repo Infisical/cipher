@@ -30,7 +30,7 @@ With `--merged`, name each pull request's commit on main, in merge order. The re
 
 ## Cut the release
 
-1. Bump `version` in `package.json` in a pull request and merge it.
+1. In one pull request, bump `version` in `package.json` and add the release's entry to the top of `CHANGELOG.md`, then merge it.
 2. Run the Release workflow with `commit` set to that merge's full sha. It builds exactly that commit, even if main has moved since, and refuses a commit that isn't on main.
 
    ```bash
