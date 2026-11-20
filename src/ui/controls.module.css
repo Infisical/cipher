@@ -308,19 +308,22 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* Every item after the first slides back one border width so neighbours share a single seam line; the item drawn on top owns the seam, so fields and hovered, pressed and focused items rise above their neighbours to keep their border and focus ring whole. */
-.group[data-variant="attached"]:not([data-has-group]) > * {
+/* Every item after the first slides back one border width so neighbours share a single seam line; the item drawn on top owns the seam, so fields and hovered, pressed and focused items rise above their neighbours to keep their border and focus ring whole. A visible separator keeps its own width. */
+.group[data-variant="attached"]:not([data-has-group]) > :not(:global(.sr-only)) {
   position: relative;
 }
-.group[data-variant="attached"][data-orientation="horizontal"]:not([data-has-group]) > * + * {
+.group[data-variant="attached"][data-orientation="horizontal"]:not([data-has-group])
+  > :is(* + :not(.groupSeparator, .groupSeparator + *), [data-between-outlines] + *) {
   margin-inline-start: calc(-1 * var(--cipher-size-control-border));
 }
-.group[data-variant="attached"][data-orientation="vertical"]:not([data-has-group]) > * + * {
+.group[data-variant="attached"][data-orientation="vertical"]:not([data-has-group])
+  > :is(* + :not(.groupSeparator, .groupSeparator + *), [data-between-outlines] + *) {
   margin-block-start: calc(-1 * var(--cipher-size-control-border));
 }
 .group[data-variant="attached"]:not([data-has-group])
-  > :is(
+  > :where(
     [data-slot="input"],
+    [data-field-box],
     [data-slot="select-trigger"],
     :hover:not(:disabled, [aria-disabled="true"]),
     :active,
