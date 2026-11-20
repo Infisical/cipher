@@ -1213,16 +1213,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   --cipher-card-body-inset: 0px;
   --cipher-card-lead: 0px;
 }
-.card:is(
-    [data-flush],
-    [data-variant="framed"]:has(
-      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):only-child,
-      > .cardInset
-        > .cardBody
-        > :is([data-slot="data-table"], [data-slot="table-container"]):only-child
-    )
-  )
-  > .cardHeader {
+.card[data-flush] > .cardHeader {
   border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 
