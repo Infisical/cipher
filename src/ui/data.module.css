@@ -58,6 +58,14 @@
 .tableScroll {
   scroll-padding-block: var(--cipher-focus-clearance);
 }
+.tableScroll:has(> :is([data-slot="data-table-more"], [data-slot="data-table-pagination"])) {
+  scroll-padding-block-end: calc(var(--cipher-space-40) + var(--cipher-focus-clearance));
+}
+.tableScroll[data-flow]:has(> :is([data-slot="data-table-more"], [data-slot="data-table-pagination"]))
+  tbody
+  :where(tr, tr *) {
+  scroll-margin-block-end: calc(var(--cipher-space-40) + var(--cipher-focus-clearance));
+}
 .tableScroll[data-flow] {
   overflow-x: clip;
   overflow-y: visible;
@@ -1071,9 +1079,37 @@ button.rowTitle::after {
 .tableMore {
   position: sticky;
   inset-inline-start: 0;
+  background: var(--cipher-tint);
+}
+.tableMore[data-slot="data-table-more"] {
+  inset-block-end: 0;
+  z-index: 4;
+}
+.tableShell[data-embedded] .tableMore {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  background: var(--cipher-surface);
+}
+.tableFootRow {
   display: flex;
+  flex-wrap: wrap;
+  width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: var(--cipher-space-12);
+  min-width: 0;
+}
+.tableFootStatus {
+  flex: 1 1 calc(12 * var(--cipher-space-16));
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tableFootActions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--cipher-space-4);
+  margin-inline-start: auto;
+  margin-inline-end: calc(-1 * var(--cipher-space-control-inline-sm));
 }
 .nativeTableRow:is(:focus, :focus-visible) {
   outline: none;

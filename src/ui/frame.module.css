@@ -13,6 +13,9 @@
 .frame[data-frame-foot] {
   padding-bottom: 0;
 }
+.frameFoot[hidden] {
+  display: none;
+}
 .frameHead,
 .frameFoot.frameFoot,
 .frameToolbar {

@@ -2078,6 +2078,10 @@
         "module": "table/load-more"
       },
       {
+        "title": "Show more in a framed Card",
+        "module": "table/show-more-card"
+      },
+      {
         "title": "Scroll container ref",
         "module": "table/scroll-container"
       },

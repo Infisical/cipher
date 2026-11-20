@@ -77,7 +77,7 @@ export default function States() {
             columns={columns}
             getRowId={(row) => row.id}
             rowLabel={(row) => row.name}
-            loadMore={{ label: "Load more identities", loading: true, onClick: () => undefined }}
+            loadMore={{ loading: true, onClick: () => undefined }}
           />
         </div>
         <figcaption className="text-muted-foreground text-xs">
