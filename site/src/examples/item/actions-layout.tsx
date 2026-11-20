@@ -101,6 +101,21 @@ export default function Example() {
           actionsBreakpoint={720}
         />
       </Case>
+      <Case
+        id="breakpoint-low"
+        width={480}
+        caption="actionsBreakpoint 360: from 360px the button sits beside the copy, under 36rem"
+      >
+        <Row
+          media={<Media icon="key" tone="ok" />}
+          subject="Rotate"
+          rest=" DB_PASSWORD"
+          meta="2m"
+          description="rotation-bot. ledger-core, production."
+          single
+          actionsBreakpoint={360}
+        />
+      </Case>
       <Case id="timestamp-widths" caption="Timestamp widths: the slot sizes to its text">
         {(["4m", "12m", "3h", "2d", "Nov 4"] as const).map((meta) => (
           <Row
