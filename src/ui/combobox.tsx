@@ -233,6 +233,11 @@ export function Combobox({
   const selectedOption =
     options.find((option) => option.value === selected[0]) ??
     (picked?.value === selected[0] ? picked : undefined);
+  const valueText = React.useRef<HTMLSpanElement>(null);
+  const selectedLabel = selectedOption?.label;
+  React.useLayoutEffect(() => {
+    if (valueText.current) titleIfClamped(valueText.current);
+  }, [selectedLabel]);
   const filtered = onSearch
     ? options
     : options.filter((option) =>
@@ -397,6 +402,7 @@ export function Combobox({
         ) : (
           <span className={controlStyles.triggerValue}>
             <span
+              ref={valueText}
               data-slot="option-text"
               onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
             >

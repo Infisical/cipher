@@ -75,6 +75,11 @@ export function DateRangePicker({
   const id = field.id ?? generatedId;
   const apply = commitMode === "apply";
   const format = (range: CompleteDateRange) => formatRange?.(range) ?? defaultFormat(range, locale);
+  const valueText = React.useRef<HTMLSpanElement>(null);
+  const valueLabel = isComplete(value) ? format(value) : undefined;
+  React.useLayoutEffect(() => {
+    if (valueText.current) titleIfClamped(valueText.current);
+  }, [valueLabel]);
   const commit = (next: DateRange | undefined) => {
     onValueChange(next);
     setOpen(false);
@@ -113,6 +118,7 @@ export function DateRangePicker({
           {isComplete(value) && badge !== undefined ? (
             <span className={controlStyles.triggerValue}>
               <span
+                ref={valueText}
                 data-slot="option-text"
                 onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
               >
