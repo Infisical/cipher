@@ -64,6 +64,27 @@ export default function Example() {
           {"On a narrow header, actions move below the title and description"}
         </figcaption>
       </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <PageHeader
+            breadcrumb={[{ label: "Gateways", href: "#page-header" }]}
+            title="gateway-eu-central-1"
+            badges={
+              <Badge tone="info" collapse>
+                Privileged Access Management · Enterprise
+              </Badge>
+            }
+            actions={
+              <Button variant="outline" icon="more">
+                Options
+              </Button>
+            }
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"On a narrow header, a collapsible badge shortens beside the title before it wraps"}
+        </figcaption>
+      </figure>
     </div>
   );
 }
