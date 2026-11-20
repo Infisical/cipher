@@ -114,6 +114,24 @@ a.button[href]:not([aria-busy="true"]) {
   background: var(--cipher-surface);
   pointer-events: none;
 }
+.applied[data-cipher-button] {
+  position: relative;
+  color: var(--cipher-ink);
+}
+.appliedDot {
+  position: absolute;
+  top: var(--cipher-space-4);
+  right: var(--cipher-space-4);
+  width: var(--cipher-size-unread);
+  height: var(--cipher-size-unread);
+  border-radius: 0;
+  background: var(--cipher-accent-fg);
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-surface);
+  pointer-events: none;
+}
+[data-framed] .appliedDot {
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-tint);
+}
 .triggerLayout {
   justify-content: flex-start;
   text-align: start;

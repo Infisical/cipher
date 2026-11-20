@@ -82,6 +82,7 @@ function Button({
   cornerBadge,
   layout,
   underline,
+  applied = false,
   children,
   onClickCapture,
   onPointerDownCapture,
@@ -112,6 +113,8 @@ function Button({
     layout?: "trigger";
     /** For variant link: always (the default) keeps the underline at rest; hover draws it only on hover and keyboard focus, for a record name in a table row. */
     underline?: "always" | "hover";
+    /** A square dot on an icon-only trigger whose search or filter is in effect. Put any count in the label or tooltip, not in the button. */
+    applied?: boolean;
   } & { ref?: React.Ref<React.ComponentRef<"button">> }) {
   const Comp = asChild ? Slot.Root : "button";
   const loading = loadingProp ?? false;
@@ -202,6 +205,9 @@ function Button({
       {cornerBadge}
     </span>
   ) : null;
+  const marker = applied ? (
+    <span aria-hidden data-slot="button-applied" className={geometry.appliedDot} />
+  ) : null;
   const child =
     asChild &&
     React.isValidElement<{
@@ -225,12 +231,14 @@ function Button({
         <>
           <span data-press="">{content(children.props.children)}</span>
           {badge}
+          {marker}
         </>
       )
     ) : (
       <>
         <span data-press="">{content(children)}</span>
         {badge}
+        {marker}
       </>
     );
 
@@ -241,6 +249,7 @@ function Button({
       data-variant={resolvedVariant}
       data-size={size}
       data-layout={layout}
+      data-applied={applied || undefined}
       data-underline={variant === "link" ? (underline ?? "always") : undefined}
       type={asChild ? type : (type ?? "button")}
       {...props}
@@ -258,6 +267,7 @@ function Button({
         buttonVariants({ variant: resolvedVariant, size }),
         iconOnly && geometry.iconOnly,
         badge && geometry.badged,
+        applied && geometry.applied,
         trigger && geometry.triggerLayout,
         loadingProp !== undefined && !iconOnly && loadingLabel === undefined && styles.pendable,
         loading && loadingLabel === undefined && styles.pending,

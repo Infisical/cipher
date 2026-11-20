@@ -102,13 +102,13 @@ export function HeaderSearch({
               icon="search"
               iconOnly
               aria-label={applied ? `${label}: ${value}` : label}
+              applied={applied}
               className={styles.trigger}
             >
               {label}
             </Button>
           </PopoverTrigger>
         </Tooltip>
-        {applied && <span aria-hidden className={styles.dot} />}
       </span>
       <PopoverContent
         align="end"
