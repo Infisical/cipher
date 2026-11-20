@@ -17,7 +17,13 @@ export default function Example() {
           note="Last 7 days"
           link={{ href: "#/components/stat-card" }}
           chartPlacement="bleed"
-          chart={<StatCardChart data={reads} label="Secret reads per day" />}
+          chart={
+            <StatCardChart
+              data={reads}
+              label="Secret reads per day"
+              summary="Up from 8,120 to 12,480 over 7 days"
+            />
+          }
         />
         <StatCard
           {...hueScope(25)}
