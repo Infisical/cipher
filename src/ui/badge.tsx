@@ -13,20 +13,18 @@ import helperStyles from "./helpers.module.css";
 const badgeVariants = cva([
   controlStyles.focusOutline,
   helperStyles.badge,
-  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-(--cipher-badge-glyph)!",
+  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-(--cipher-badge-glyph)!"
 ]);
 
-export type BadgeTone =
-  "outline" | "soft" | "ok" | "warn" | "bad" | "info" | "solid" | "accent";
-type LegacyBadgeVariant =
-  "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+export type BadgeTone = "outline" | "soft" | "ok" | "warn" | "bad" | "info" | "solid" | "accent";
+type LegacyBadgeVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
 const legacyTone: Record<LegacyBadgeVariant, BadgeTone> = {
   default: "solid",
   secondary: "soft",
   destructive: "bad",
   outline: "outline",
   ghost: "outline",
-  link: "outline",
+  link: "outline"
 };
 
 function Badge({
@@ -63,8 +61,7 @@ function Badge({
       const root = label?.parentElement;
       if (!label || !root) return;
       const measure = () => {
-        if (fitsWhole && (label.textContent ?? "").length <= 6)
-          root.setAttribute("data-fit", "");
+        if (fitsWhole && (label.textContent ?? "").length <= 6) root.setAttribute("data-fit", "");
         else root.removeAttribute("data-fit");
       };
       measure();
@@ -72,11 +69,11 @@ function Badge({
       observer.observe(label, {
         subtree: true,
         childList: true,
-        characterData: true,
+        characterData: true
       });
       return () => observer.disconnect();
     },
-    [fitsWhole],
+    [fitsWhole]
   );
   const text = (content: React.ReactNode) =>
     collapse ? (
@@ -93,15 +90,14 @@ function Badge({
     </>
   );
   const body =
-    asChild &&
-    React.isValidElement<{ children?: React.ReactNode }>(children) ? (
+    asChild && React.isValidElement<{ children?: React.ReactNode }>(children) ? (
       React.cloneElement(
         children,
         undefined,
         <>
           {dotNode}
           {text(children.props.children)}
-        </>,
+        </>
       )
     ) : (
       <>
@@ -121,8 +117,7 @@ function Badge({
       onPointerEnter={(event: React.PointerEvent<HTMLSpanElement>) => {
         onPointerEnter?.(event);
         const badge = event.currentTarget;
-        const label =
-          collapse && badge.querySelector<HTMLElement>("[data-badge-text]");
+        const label = collapse && badge.querySelector<HTMLElement>("[data-badge-text]");
         if (!label) return;
         if (props.title !== undefined) {
           delete badge.dataset.autoTitle;
@@ -168,7 +163,7 @@ export function Count({
         helperStyles.count,
         tone === "ink" && helperStyles.countInk,
         tone === "neutral" && helperStyles.countNeutral,
-        className,
+        className
       )}
       {...props}
     />
