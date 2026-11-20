@@ -22,11 +22,12 @@ import {
   TableRow
 } from "@infisical/cipher/ui/table";
 
-type Cert = { id: string; cn: string; serial: string; expires: string };
+type Cert = { id: string; cn: string; serial: string; expires: string; pending?: boolean };
 const certs: Cert[] = [
   { id: "api", cn: "api.example.com", serial: "4f:1c:9a:02", expires: "2026-12-04" },
   { id: "auth", cn: "auth.example.com", serial: "7b:20:e1:5d", expires: "2027-02-18" },
-  { id: "billing", cn: "billing.example.com", serial: "0e:93:44:c8", expires: "2027-05-30" }
+  { id: "billing", cn: "billing.example.com", serial: "0e:93:44:c8", expires: "2027-05-30" },
+  { id: "pay", cn: "pay.example.com", serial: "Pending", expires: "Pending", pending: true }
 ];
 
 export default function RowActivation() {
@@ -39,11 +40,14 @@ export default function RowActivation() {
       primary: true,
       grow: true,
       text: (row) => row.cn,
-      render: (row) => (
-        <Button variant="link" underline="hover" onClick={() => open(row)}>
-          {row.cn}
-        </Button>
-      )
+      render: (row) =>
+        row.pending ? (
+          row.cn
+        ) : (
+          <Button variant="link" underline="hover" onClick={() => open(row)}>
+            {row.cn}
+          </Button>
+        )
     },
     { id: "serial", header: "Serial", width: 136, render: (row) => row.serial },
     { id: "expires", header: "Expires", width: 120, render: (row) => row.expires },
@@ -81,10 +85,11 @@ export default function RowActivation() {
             selectedIds={selected}
             onSelectionChange={setSelected}
             onRowActivate={open}
+            isRowActivatable={(row) => !row.pending}
           />
         </div>
         <figcaption className="text-muted-foreground text-xs">
-          {"Whole row opens the certificate"}
+          {"Whole row opens the certificate; pending requests don't open"}
         </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">

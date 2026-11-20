@@ -144,6 +144,8 @@ interface DataTableBaseProps<Row> {
    */
   persistentStatus?: React.ReactNode;
   onRowActivate?: (row: Row) => void;
+  /** Rows that return false keep the default cursor, take no row focus stop, and ignore click and Enter. Defaults to every row. */
+  isRowActivatable?: (row: Row) => boolean;
   pagination?: React.ReactNode;
   loading?: boolean;
   loadingRows?: number;
@@ -213,6 +215,7 @@ export function DataTable<Row>({
   end,
   persistentStatus,
   onRowActivate,
+  isRowActivatable,
   pagination,
   loading = false,
   loadingRows = 5,
@@ -560,13 +563,14 @@ export function DataTable<Row>({
     rowIndex: number
   ) => {
     const extra = rowProps?.(row, position);
+    const activate = onRowActivate && (isRowActivatable?.(row) ?? true) ? onRowActivate : undefined;
     const tableRow = (
       <TableRow
         {...extra}
         key={getRowId(row)}
         aria-rowindex={rowIndex}
         data-row-index={position}
-        tabIndex={onRowActivate ? 0 : position === focusRow ? -1 : (extra?.tabIndex ?? undefined)}
+        tabIndex={activate ? 0 : position === focusRow ? -1 : (extra?.tabIndex ?? undefined)}
         onBlur={(event) => {
           extra?.onBlur?.(event);
           if (position === focusRow) setFocusRow(null);
@@ -577,24 +581,24 @@ export function DataTable<Row>({
             ? focusedRowId === getRowId(row)
             : Boolean(focusedRowId?.includes(getRowId(row)))
         }
-        data-activatable={onRowActivate ? "" : undefined}
+        data-activatable={activate ? "" : undefined}
         data-muted={isRowMuted?.(row) || undefined}
         data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
         data-sortable-lifted={sortRows.lift?.key === getRowId(row) || undefined}
         onClick={
-          onRowActivate || extra?.onClick
+          activate || extra?.onClick
             ? (event) => {
                 extra?.onClick?.(event);
-                if (!event.defaultPrevented) onRowActivate?.(row);
+                if (!event.defaultPrevented) activate?.(row);
               }
             : undefined
         }
         onKeyDown={(event) => {
           extra?.onKeyDown?.(event);
           if (event.defaultPrevented || event.target !== event.currentTarget) return;
-          if (event.key === "Enter" && onRowActivate) {
+          if (event.key === "Enter" && activate) {
             event.preventDefault();
-            onRowActivate(row);
+            activate(row);
           } else if (event.key === " " && selectable && isSelectable(row)) {
             event.preventDefault();
             toggle(getRowId(row));
