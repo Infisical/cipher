@@ -44,8 +44,16 @@ export default function Example() {
             rowHeight={48}
             virtual
             loadMore={
-              rows.length < total
-                ? { label: `Load ${page} more`, loading, onClick: () => setLoading(true) }
+              rows.length < total ? { loading, onClick: () => setLoading(true) } : undefined
+            }
+            showFewer={
+              rows.length > page
+                ? {
+                    onClick: () => {
+                      setLoading(false);
+                      setRows(makeRows(0, page));
+                    }
+                  }
                 : undefined
             }
             end="End of events"
@@ -54,7 +62,7 @@ export default function Example() {
         </div>
       </div>
       <figcaption className="text-muted-foreground text-xs">
-        {"Load more after the last row, focus lands on the first new row"}
+        {"Show more after the last row, focus lands on the first new row"}
       </figcaption>
     </figure>
   );

@@ -172,6 +172,21 @@
     );
   }
 }
+.main[data-actions-beside] {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "copy actions";
+  column-gap: var(--cipher-space-32);
+}
+.main[data-actions-beside] .titleLine > .meta {
+  margin-inline-start: 0;
+}
+.main[data-actions-beside] > .actions {
+  flex-wrap: nowrap;
+  min-height: calc(
+    var(--cipher-type-row-title-line-height) + var(--cipher-space-2) +
+      var(--cipher-type-small-line-height)
+  );
+}
 .below {
   flex-basis: 100%;
 }

@@ -38,6 +38,7 @@ const buttonVariants = cva(
         ],
         bare: styles.bare,
         destructive: styles.danger,
+        success: styles.success,
         link: styles.link
       },
       size: {
@@ -58,7 +59,7 @@ const buttonVariants = cva(
         variant: ["primary", "default", "danger-ghost", "outline", "secondary", "ghost", "bare", "link"],
         className: [styles.paintTransition, "disabled:opacity-50", styles.reasonDisabled]
       },
-      { variant: "destructive", className: styles.paintTransition }
+      { variant: ["destructive", "success"], className: styles.paintTransition }
     ],
     defaultVariants: {
       variant: "default",

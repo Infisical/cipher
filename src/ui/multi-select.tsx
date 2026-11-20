@@ -22,6 +22,8 @@ export type MultiSelectOption = {
   description?: string;
   /** A short muted value at the row's end, such as a count. */
   meta?: string;
+  /** A Badge after the label, such as Preview. */
+  badge?: React.ReactNode;
   /** A glyph at the row's start. */
   icon?: IconSource;
   /** A logo or image at the row's start, sized like an icon, such as an app connection's logo. Ignored when icon is set. */
@@ -565,6 +567,7 @@ export function MultiSelect({
                     ) : (
                       <span className={styles.optionLabel}>{option.label}</span>
                     )}
+                    {option.badge}
                     {option.meta && <span className={styles.optionMeta}>{option.meta}</span>}
                     {!multiple && (
                       <span className={styles.optionCheck}>

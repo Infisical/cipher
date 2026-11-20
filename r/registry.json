@@ -2652,6 +2652,25 @@
       ]
     },
     {
+      "name": "stat-card-chart",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "@cipher/chart",
+        "@cipher/cipher-base",
+        "@cipher/stat-card"
+      ],
+      "dependencies": [
+        "recharts@^3.8.1"
+      ],
+      "files": [
+        {
+          "path": "src/components/cipher/ui/stat-card-chart.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/stat-card-chart.tsx"
+        }
+      ]
+    },
+    {
       "name": "stat-card",
       "type": "registry:ui",
       "registryDependencies": [
