@@ -462,6 +462,14 @@
   flex-wrap: wrap;
   gap: var(--cipher-space-4);
 }
+.badgeGroupMore > [data-slot="badge"] {
+  height: auto;
+  min-height: var(--cipher-size-badge);
+  white-space: normal;
+}
+.badgeGroupMore .badgeText {
+  overflow-wrap: anywhere;
+}
 .badge.mono {
   font-family: var(--cipher-type-mono-sm-font-family);
 }
