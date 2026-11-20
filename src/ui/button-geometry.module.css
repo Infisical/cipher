@@ -116,6 +116,8 @@ a.button[href]:not([aria-busy="true"]) {
 }
 .applied[data-cipher-button] {
   position: relative;
+}
+.applied.applied[data-cipher-button] {
   color: var(--cipher-ink);
 }
 .appliedDot {
