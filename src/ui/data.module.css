@@ -61,6 +61,9 @@
 .tableScroll:has(> :is([data-slot="data-table-more"], [data-slot="data-table-pagination"])) {
   scroll-padding-block-end: calc(var(--cipher-space-40) + var(--cipher-focus-clearance));
 }
+.tableScroll[data-flow]:has(> [data-slot="data-table-more"]) tbody :where(tr, tr *) {
+  scroll-margin-block-end: calc(var(--cipher-space-40) + var(--cipher-focus-clearance));
+}
 .tableScroll[data-flow] {
   overflow-x: clip;
   overflow-y: visible;
