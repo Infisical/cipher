@@ -28,6 +28,27 @@
   background: var(--cipher-accent);
   color: var(--cipher-on-accent);
 }
+.titleCount {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  max-width: 100%;
+}
+.titleCount > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.titleCount > [data-slot="count"] {
+  flex: none;
+}
+.titleCount[data-wrap] {
+  display: inline;
+}
+.titleCount[data-wrap] > span:first-child + * {
+  margin-inline-start: var(--cipher-space-8);
+  vertical-align: middle;
+}
 .countInk {
   background: var(--cipher-ink);
   color: var(--cipher-surface);

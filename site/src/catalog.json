@@ -2194,6 +2194,10 @@
         "module": "text/status"
       },
       {
+        "title": "Heading count",
+        "module": "text/count"
+      },
+      {
         "title": "Search highlight",
         "module": "text/highlight"
       }

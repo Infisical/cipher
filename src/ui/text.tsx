@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn, truncateTitle } from "../lib/utils";
+import { TitleCount } from "./badge";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
 
@@ -70,12 +71,16 @@ SmallText.displayName = "SmallText";
 export function Heading({
   level = 2,
   size = "section",
+  count,
   className,
+  children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"h2"> & {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   size?: "page" | "display" | "section" | "subsection";
+  /** Shown right after the title, as List's countPlacement="title" shows it. A number or string becomes the accent Count. */
+  count?: React.ReactNode;
 } & { ref?: React.Ref<HTMLHeadingElement> }) {
   const Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = `h${level}`;
   return (
@@ -85,7 +90,15 @@ export function Heading({
       data-size={size}
       className={cn(styles.heading, className)}
       {...props}
-    />
+    >
+      {count == null ? (
+        children
+      ) : (
+        <TitleCount count={count} wrap>
+          {children}
+        </TitleCount>
+      )}
+    </Tag>
   );
 }
 Heading.displayName = "Heading";

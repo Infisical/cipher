@@ -3,7 +3,7 @@ import * as React from "react";
 import { FrameScope, useInFrame } from "../lib/frame-context";
 import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { cn } from "../lib/utils";
-import { Count } from "./badge";
+import { TitleCount } from "./badge";
 import { Checkbox } from "./checkbox";
 import { EmptyScope } from "./empty";
 import { Icon } from "./icon";
@@ -283,12 +283,6 @@ export function List({
   }
   const { title, count: rawCount, countPlacement = "end", action } = header;
   const countAtTitle = countPlacement === "title" && Boolean(title);
-  const titleCount =
-    countAtTitle && (typeof rawCount === "number" || typeof rawCount === "string") ? (
-      <Count>{rawCount}</Count>
-    ) : (
-      rawCount
-    );
   const headerCount = countAtTitle ? undefined : rawCount;
   const variant = requestedVariant ?? "framed";
   const inFrame = useInFrame("List", requestedVariant);
@@ -411,14 +405,7 @@ export function List({
               )}
               {title && (
                 <div className={framed ? frame.frameTitle : styles.listTitle}>
-                  {countAtTitle ? (
-                    <span className={styles.listTitleCount}>
-                      <span>{title}</span>
-                      {titleCount}
-                    </span>
-                  ) : (
-                    title
-                  )}
+                  {countAtTitle ? <TitleCount count={rawCount}>{title}</TitleCount> : title}
                 </div>
               )}
               {framed
