@@ -14,6 +14,8 @@ export interface ActivityEvent {
   /** What the actor did, written to follow the actor's name: "updated stripe_api_key". */
   summary: React.ReactNode;
   time: string;
+  /** A secondary line under the actor and summary that wraps instead of truncating, such as "Data residency: eu". */
+  description?: React.ReactNode;
   /** Badges beside the summary, such as the environment or the result of the change. */
   badge?: React.ReactNode;
 }
@@ -120,7 +122,13 @@ export const ActivityLog = ({
                   }
                   badge={badges || undefined}
                   meta={event.time}
-                />
+                >
+                  {event.description && (
+                    <p className={styles.activityDescription}>
+                      {event.description}
+                    </p>
+                  )}
+                </ListRow>
               );
             })}
           </ListSection>
