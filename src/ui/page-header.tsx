@@ -39,24 +39,19 @@ export function PageHeader({
   ...props
 }: PageHeaderProps & { ref?: React.Ref<HTMLElement> }) {
   const titleRef = React.useRef<HTMLHeadingElement>(null);
-  const titleText = typeof title === "string" || typeof title === "number" ? title : undefined;
   const [titleClamped, setTitleClamped] = React.useState(false);
   const [titleExpanded, setTitleExpanded] = React.useState(false);
   React.useEffect(() => {
     const element = titleRef.current;
     if (!element || truncateTitle) return;
-    setTitleExpanded(false);
     const measure = () => {
       const style = getComputedStyle(element);
-      if (style.getPropertyValue("--cipher-page-header-title-clamp").trim() !== "2") {
-        setTitleClamped(false);
-        setTitleExpanded(false);
-        return;
-      }
-      if (element.hasAttribute("data-expanded")) return;
-      setTitleClamped(
-        element.scrollHeight - element.clientHeight > parseFloat(style.lineHeight) / 2
-      );
+      const line = parseFloat(style.lineHeight);
+      const clamps =
+        style.getPropertyValue("--cipher-page-header-title-clamp").trim() === "2" &&
+        element.scrollHeight > 2.5 * line;
+      setTitleClamped(clamps);
+      if (!clamps) setTitleExpanded(false);
     };
     const observer = new ResizeObserver(measure);
     observer.observe(element);
@@ -66,7 +61,7 @@ export function PageHeader({
       observer.disconnect();
       mutations.disconnect();
     };
-  }, [truncateTitle, titleText]);
+  }, [truncateTitle]);
   const titleToggle = !truncateTitle && titleClamped;
   return (
     <header
