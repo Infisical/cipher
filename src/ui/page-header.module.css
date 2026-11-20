@@ -133,6 +133,9 @@
       "media description"
       "media actions";
   }
+  .title {
+    --cipher-page-header-title-clamp: 2;
+  }
   .title:not([data-truncate], [data-expanded]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;

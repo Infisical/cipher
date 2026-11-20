@@ -45,22 +45,22 @@ export function PageHeader({
     const element = titleRef.current;
     if (!element || truncateTitle) return;
     const measure = () => {
-      if (element.hasAttribute("data-expanded")) return;
       const style = getComputedStyle(element);
+      if (style.getPropertyValue("--cipher-page-header-title-clamp").trim() !== "2") {
+        setTitleClamped(false);
+        setTitleExpanded(false);
+        return;
+      }
+      if (element.hasAttribute("data-expanded")) return;
       setTitleClamped(
-        style.overflow === "hidden" &&
-          element.scrollHeight - element.clientHeight > parseFloat(style.lineHeight) / 2
+        element.scrollHeight - element.clientHeight > parseFloat(style.lineHeight) / 2
       );
     };
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => observer.disconnect();
-  }, [truncateTitle]);
+  }, [truncateTitle, title]);
   const titleToggle = !truncateTitle && titleClamped;
-  const toggleTitle = () => {
-    if (window.getSelection()?.isCollapsed === false) return;
-    setTitleExpanded(!titleExpanded);
-  };
   return (
     <header
       ref={ref}
@@ -104,11 +104,14 @@ export function PageHeader({
                 tabIndex={0}
                 aria-expanded={titleExpanded}
                 className={styles.titleToggle}
-                onClick={toggleTitle}
+                onClick={() => {
+                  if (window.getSelection()?.isCollapsed !== false)
+                    setTitleExpanded(!titleExpanded);
+                }}
                 onKeyDown={(event) => {
                   if (event.key !== "Enter" && event.key !== " ") return;
                   event.preventDefault();
-                  toggleTitle();
+                  setTitleExpanded(!titleExpanded);
                 }}
               >
                 {title}
