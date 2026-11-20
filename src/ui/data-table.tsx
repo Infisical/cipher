@@ -312,6 +312,9 @@ export function DataTable<Row>({
   const windowed = Boolean(virtual && !groups);
   const flowing = windowed && !height;
   const pinnedFoot = Boolean((persistentStatus || loadMore || showFewer) && !pagination);
+  const wantsFrameFoot = embedded && pinnedFoot;
+  const footOwner = frameFoot?.owner;
+  const footTarget = wantsFrameFoot && footOwner === footId ? (frameFoot?.target ?? null) : null;
   const [viewport, setViewport] = React.useState(0);
   const [chrome, setChrome] = React.useState({ head: 0, rest: 0 });
   const windowSize =
@@ -359,7 +362,7 @@ export function DataTable<Row>({
       .querySelectorAll("[data-slot='data-table-pagination'], [data-slot='data-table-more']")
       .forEach((band) => observer.observe(band));
     return () => observer.disconnect();
-  }, [height, windowed, pinnedFoot, Boolean(pagination)]);
+  }, [height, windowed, pinnedFoot, Boolean(footTarget), Boolean(pagination)]);
   React.useLayoutEffect(() => {
     const container = scroll.current;
     if (!flowing || !container) return;
@@ -514,8 +517,6 @@ export function DataTable<Row>({
     rows.length > 0 && end
   );
   const hasFoot = Boolean(persistentStatus || more || showFewer);
-  const wantsFrameFoot = embedded && pinnedFoot;
-  const footOwner = frameFoot?.owner;
   const claimFoot = frameFoot?.claim;
   const releaseFoot = frameFoot?.release;
   React.useLayoutEffect(() => {
@@ -525,7 +526,6 @@ export function DataTable<Row>({
     if (!wantsFrameFoot || !releaseFoot) return undefined;
     return () => releaseFoot(footId);
   }, [wantsFrameFoot, releaseFoot, footId]);
-  const footTarget = wantsFrameFoot && footOwner === footId ? (frameFoot?.target ?? null) : null;
   const foot = hasFoot && (
     <div className={styles.tableFootRow} data-slot="data-table-status">
       {persistentStatus && <span className={styles.tableFootStatus}>{persistentStatus}</span>}
