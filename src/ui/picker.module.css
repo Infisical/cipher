@@ -221,6 +221,19 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.optionLabel:has([data-slot="option-text"]) {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+.optionLabel > span:has(> [data-slot="option-text"]) {
+  display: contents;
+}
+.optionLabel [data-slot="option-text"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .option[data-disabled] > .optionLabel {
   pointer-events: auto;
 }

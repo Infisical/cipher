@@ -1744,6 +1744,10 @@
       {
         "title": "Named without a Field",
         "module": "select/accessible-name"
+      },
+      {
+        "title": "A badge on the selected option",
+        "module": "select/badge"
       }
     ]
   },
