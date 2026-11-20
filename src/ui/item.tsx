@@ -89,9 +89,11 @@ export type ItemProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> &
     /** A short, predictable value beside the title, such as a time, date, count, status or role. Put an uncapped string in the description instead. */
     meta?: React.ReactNode;
     error?: React.ReactNode;
-    /** Buttons at the row end. They sit beside the copy once the row is 36rem wide and stack below it under that. The width is the content box, so an outline Item needs its padding and border on top (about 39rem outside). */
+    /** Buttons at the row end. They sit beside the copy once the row is 36rem wide (or actionsBreakpoint) and stack below it under that. The width is the content box, so an outline Item needs its padding and border on top (about 39rem outside). */
     actions?: React.ReactNode;
     actionsPlacement?: "end" | "below";
+    /** The content width in pixels at which actions move beside the copy, in place of 36rem, such as 720 for a queue whose buttons need more room. */
+    actionsBreakpoint?: number;
     unread?: boolean;
     resolved?: boolean;
     /**
@@ -182,6 +184,7 @@ function Item({
   error,
   actions,
   actionsPlacement = "end",
+  actionsBreakpoint,
   unread,
   resolved,
   truncate,
@@ -198,6 +201,21 @@ function Item({
   const hasActions = Boolean(actions) && (size === "default" || size === "md");
   const truncated = truncate ?? !hasActions;
   const [actionsIconOnly, actionsRef] = useIconOnly(hasActions);
+  const [main, setMain] = React.useState<HTMLDivElement | null>(null);
+  const [wide, setWide] = React.useState<boolean>();
+  React.useLayoutEffect(() => {
+    const layout = main?.parentElement;
+    if (actionsBreakpoint === undefined || !layout || typeof ResizeObserver === "undefined") {
+      setWide(undefined);
+      return undefined;
+    }
+    const observer = new ResizeObserver(([entry]) =>
+      setWide(entry.contentRect.width >= actionsBreakpoint)
+    );
+    observer.observe(layout);
+    return () => observer.disconnect();
+  }, [actionsBreakpoint, main]);
+  const below = (actionsPlacement === "below" || wide === false) && size !== "sm";
   const metaNode = meta && (
     <span className={cn(itemStyles.meta, typeof meta === "string" && itemStyles.mono)}>{meta}</span>
   );
@@ -211,10 +229,10 @@ function Item({
         </span>
       )}
       <div
+        ref={setMain}
         className={itemStyles.main}
-        data-actions-below={
-          (Boolean(actions || meta) && actionsPlacement === "below" && size !== "sm") || undefined
-        }
+        data-actions-below={(Boolean(actions || meta) && below) || undefined}
+        data-actions-beside={(hasActions && !below && wide) || undefined}
         data-has-actions={hasActions || undefined}
         data-actions-icon-only={(hasActions && actionsIconOnly) || undefined}
       >
@@ -258,13 +276,7 @@ function Item({
           {children && !asChild && <div className={itemStyles.body}>{children}</div>}
         </div>
         {(actions || meta) && (
-          <div
-            ref={actionsRef}
-            className={cn(
-              itemStyles.actions,
-              actionsPlacement === "below" && size !== "sm" && itemStyles.below
-            )}
-          >
+          <div ref={actionsRef} className={cn(itemStyles.actions, below && itemStyles.below)}>
             {!hasActions && metaNode}
             {actions}
           </div>

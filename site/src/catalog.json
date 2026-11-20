@@ -278,6 +278,10 @@
         "module": "button/default"
       },
       {
+        "title": "Success: the action that completes a gated outcome",
+        "module": "button/success"
+      },
+      {
         "title": "Sizes",
         "module": "button/sizes"
       },
@@ -364,6 +368,10 @@
       {
         "title": "Table in a framed card",
         "module": "card/table"
+      },
+      {
+        "title": "Toolbar row above a flush table",
+        "module": "card/toolbar"
       }
     ]
   },
@@ -1992,6 +2000,10 @@
       {
         "title": "Metrics",
         "module": "stat-card/default"
+      },
+      {
+        "title": "Chart, footer and setup action",
+        "module": "stat-card/chart"
       },
       {
         "title": "Loading, error and attention",

@@ -72,6 +72,7 @@ function Card({
   action,
   footer,
   footerPlacement = "inset",
+  toolbar,
   flush = false,
   backdrop,
   selected,
@@ -88,6 +89,8 @@ function Card({
   footer?: React.ReactNode;
   /** "frame" draws the footer in the frame band: its text keeps the title's start inset and its controls take the 28px band tier. */
   footerPlacement?: "inset" | "frame";
+  /** A row of controls at the top of the body, such as a FilterBar or a date range, flush under the head with a rule below. Its controls take the band tier, and a table under it still goes flush. */
+  toolbar?: React.ReactNode;
   flush?: boolean;
   /** Decoration such as a Halftone, painted in the content corners and never on a frame's chrome: the inset of a framed card with a frame footer, the first CardContent of any other framed card, otherwise the card itself. That surface becomes the stacking context; on a linked card a content panel holding it rises above the link overlay and passes clicks through to it, so its controls stay clickable. */
   backdrop?: React.ReactNode;
@@ -108,7 +111,8 @@ function Card({
     badges !== undefined ||
     description !== undefined ||
     action !== undefined ||
-    footer !== undefined;
+    footer !== undefined ||
+    toolbar !== undefined;
   const inFrame = useInFrame("Card", requestedVariant);
   const variant = inFrame ? "plain" : requestedVariant;
   const panelBackdrop = variant !== "plain" && backdrop !== undefined;
@@ -142,6 +146,14 @@ function Card({
     ) : (
       <CardTitle>{title}</CardTitle>
     ));
+  const toolbarRow = toolbar !== undefined && (
+    <div
+      data-slot="card-toolbar"
+      className={cn(controlStyles.cardToolbar, frameStyles.frameToolbar)}
+    >
+      {toolbar}
+    </div>
+  );
   const header = (title !== undefined ||
     badges !== undefined ||
     description !== undefined ||
@@ -192,7 +204,7 @@ function Card({
                 footerPlacement === "frame" ? (
                   <>
                     {!backdrop && header}
-                    {(hasBody || backdrop) && (
+                    {(hasBody || toolbar !== undefined || backdrop) && (
                       <div
                         data-slot="card-inset"
                         className={cn(frameStyles.frameInset, controlStyles.cardInset)}
@@ -200,7 +212,12 @@ function Card({
                         {backdrop}
                         <FramedContext value={false}>
                           {backdrop && header}
-                          {hasBody && <CardContent>{children}</CardContent>}
+                          {(hasBody || toolbar !== undefined) && (
+                            <CardContent>
+                              {toolbarRow}
+                              {children}
+                            </CardContent>
+                          )}
                         </FramedContext>
                       </div>
                     )}
@@ -212,6 +229,7 @@ function Card({
                     {header}
                     <CardContent data-backdrop={panelBackdrop ? "" : undefined}>
                       {panelBackdrop && backdrop}
+                      {toolbarRow}
                       {children}
                     </CardContent>
                     {footer !== undefined && (
