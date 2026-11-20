@@ -7,11 +7,11 @@ type Secret = { id: string; key: string; value: string; comment: string };
 
 const initial: Secret[] = [
   { id: "1", key: "DATABASE_URL", value: "postgres://app@db.internal:5432/app", comment: "" },
-  { id: "2", key: "STRIPE_SECRET_KEY", value: "sk_live_51Hq8x2", comment: "Rotated quarterly" },
+  { id: "2", key: "STRIPE_SECRET_KEY", value: "sk_example_8x2q", comment: "Rotated quarterly" },
   {
     id: "3",
     key: "STRIPE_WEBHOOK_SIGNING_SECRET_FOR_BILLING_RECONCILIATION_JOBS",
-    value: "whsec_9f2c7e1b4a6d8f0e3c5b7a9d1f3e5c7b9a1d3f5e7c9b1a3d5f7e9c1b3a5d7f9e",
+    value: "whsec_example_9f2c7e1b4a6d8f0e3c5b7a9d1f3e5c7b9a1d3f5e7c9b1a3d5f7e9c",
     comment: "Used by the nightly reconciliation export and the EU billing worker"
   },
   { id: "4", key: "SENTRY_DSN", value: "https://3f1a@o12.ingest.sentry.io/41", comment: "" }
