@@ -24,6 +24,10 @@ export type HalftoneProps = Omit<
   bounds?: "surface" | "header";
   /** Caps the corner at this many halftone cells across and down, at rest and on hover. */
   size?: number;
+  /** Caps the corner at this many pixels across, at rest and on hover, such as 160 for a 160x96 box. */
+  width?: number;
+  /** Caps the corner at this many pixels down, at rest and on hover. */
+  height?: number;
   /** hover draws nothing at rest and grows the corner out while the card is hovered or focused. */
   reveal?: "always" | "hover";
   /** Cells shimmer in a slow wave travelling out from the anchor. Off under reduced motion. */
@@ -179,6 +183,8 @@ export function Halftone({
   seed,
   bounds = "surface",
   size,
+  width,
+  height,
   reveal = "always",
   ambient = false,
   className,
@@ -228,9 +234,9 @@ export function Halftone({
         left: Number.parseFloat(parentStyle.paddingLeft) || 0,
         gamma: readNumber(element, "--cipher-halftone-gamma", 1),
         cell,
-        limitWidth: Math.min(parent.clientWidth, cap),
+        limitWidth: Math.min(parent.clientWidth, cap, width ?? Infinity),
         limitHeight: Math.round(
-          Math.min(parent.clientHeight, cap, headerBottom),
+          Math.min(parent.clientHeight, cap, height ?? Infinity, headerBottom),
         ),
       };
       setBox((previous) =>
@@ -248,7 +254,7 @@ export function Halftone({
     observer.observe(parent);
     if (header) observer.observe(header);
     return () => observer.disconnect();
-  }, [scheme, bounds, size, anchor]);
+  }, [scheme, bounds, size, width, height, anchor]);
   const layers = React.useMemo(() => {
     if (!box?.width || !box.height) return undefined;
     const noise = seed === undefined ? undefined : perlin(seed);
