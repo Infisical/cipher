@@ -1994,6 +1994,10 @@
         "module": "stat-card/default"
       },
       {
+        "title": "Chart, footer and setup action",
+        "module": "stat-card/chart"
+      },
+      {
         "title": "Loading, error and attention",
         "module": "stat-card/states"
       },

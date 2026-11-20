@@ -3,6 +3,13 @@
   flex-direction: column;
   gap: var(--cipher-space-4);
 }
+.statCard [data-slot="card-content"]:has(> .body) {
+  display: flex;
+  flex-direction: column;
+}
+[data-slot="card-content"] > .body {
+  flex-grow: 1;
+}
 .head {
   display: flex;
   align-items: center;
@@ -73,4 +80,20 @@
 .note {
   min-width: 0;
   color: var(--cipher-muted);
+}
+.action {
+  margin-top: var(--cipher-space-12);
+}
+.chart {
+  flex: none;
+  margin-top: auto;
+  overflow: clip;
+}
+.chart[data-placement="bleed"] {
+  margin-inline: calc(-1 * (var(--cipher-card-body-inset) + var(--cipher-card-lead)))
+    calc(-1 * var(--cipher-card-body-inset));
+  margin-bottom: calc(-1 * var(--cipher-card-body-inset));
+}
+.chart > [data-slot="chart"] {
+  width: 100%;
 }
