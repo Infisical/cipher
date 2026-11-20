@@ -364,6 +364,10 @@
       {
         "title": "Table in a framed card",
         "module": "card/table"
+      },
+      {
+        "title": "Toolbar row above a flush table",
+        "module": "card/toolbar"
       }
     ]
   },
