@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
@@ -21,6 +22,7 @@ jobs:
       - name: Release only a commit that is on main
         env:
           COMMIT: ${{ inputs.commit }}
+          NPM_PUBLISH: ${{ vars.NPM_PUBLISH }}
         run: |
           if ! [[ "$COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
             echo "Pass the full 40-character sha, not a branch or a short sha."
@@ -31,25 +33,49 @@ jobs:
             echo "$COMMIT is not on main. Merge the Release PR first, then dispatch with its commit."
             exit 1
           fi
+          if [ "$NPM_PUBLISH" = "true" ] && [ "$COMMIT" != "$GITHUB_SHA" ]; then
+            echo "npm provenance records the commit this run was dispatched from ($GITHUB_SHA), not $COMMIT. Dispatch from a branch or tag that points at $COMMIT, for example: git push origin $COMMIT:refs/heads/release-$COMMIT, then gh workflow run release.yml --ref release-$COMMIT -f commit=$COMMIT."
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
+          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run typecheck
       - run: npm run check
       - run: npm run build
       - name: Tag a commit that holds the built package
+        env:
+          COMMIT: ${{ inputs.commit }}
+          NPM_PUBLISH: ${{ vars.NPM_PUBLISH }}
         run: |
-          tag="v$(node -p 'require("./package.json").version')"
+          version="$(node -p 'require("./package.json").version')"
+          tag="v$version"
+          npm pkg delete scripts devDependencies
           if git ls-remote --exit-code --tags origin "refs/tags/$tag"; then
+            git fetch origin "refs/tags/$tag:refs/tags/$tag"
+            if [ "$NPM_PUBLISH" = "true" ] && [ "$(git rev-parse "$tag^")" = "$COMMIT" ] && ! npm view "@infisical/cipher@$version" version >/dev/null 2>&1; then
+              echo "::notice::$tag already exists for this commit but isn't on npm, so this run only publishes it."
+              git checkout -q -f "$tag"
+              git clean -q -fdx dist
+              exit 0
+            fi
             echo "$tag already exists. Bump version in package.json first."
             exit 1
           fi
-          npm pkg delete scripts devDependencies
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f dist package.json
           git commit -m "Release $tag"
           git tag "$tag"
           git push origin "refs/tags/$tag"
+      - name: Publish to npm
+        if: vars.NPM_PUBLISH == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+      - name: Skip npm until access is set up
+        if: vars.NPM_PUBLISH != 'true'
+        run: echo "::notice::Skipped npm publish. Set the NPM_PUBLISH repository variable to true once the npm package and its trusted publisher exist."
