@@ -120,6 +120,30 @@ export function CopyButton({
     </span>
   );
 }
+export interface CopyValueProps {
+  value: string;
+  /** Accessible name for the copy button. */
+  label?: string;
+  /** What to show instead of the raw value, such as a formatted or truncated form. */
+  children?: React.ReactNode;
+  onCopy?: CopyButtonProps["onCopy"];
+  writeClipboard?: CopyButtonProps["writeClipboard"];
+}
+/** A value with a trailing copy button that stays on the first line when the value wraps. */
+export function CopyValue({
+  value,
+  label = "Copy value",
+  children,
+  onCopy,
+  writeClipboard: writer
+}: CopyValueProps) {
+  return (
+    <span className={styles.copyValue} data-slot="copy-value">
+      <span className={styles.copyValueText}>{children ?? value}</span>
+      <CopyButton value={value} label={label} onCopy={onCopy} writeClipboard={writer} iconOnly />
+    </span>
+  );
+}
 export interface SecretValueProps {
   value: string;
   copyable?: boolean;
