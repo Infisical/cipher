@@ -1,4 +1,5 @@
 import { Button } from "@infisical/cipher/ui/button";
+import { Input } from "@infisical/cipher/ui/input";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
@@ -39,6 +40,53 @@ export default function Example() {
           </ButtonGroup>
         </div>
         <figcaption className="text-muted-foreground text-xs">{"xs, truncated"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <ButtonGroup label="Filter" className="w-full">
+            <Input aria-label="Filter secrets" placeholder="Filter" />
+            <Button variant="outline">Apply</Button>
+          </ButtonGroup>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"with input"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <ButtonGroup orientation="vertical" label="Zoom">
+            <Button variant="outline" icon="plus" iconOnly aria-label="Zoom in" />
+            <Button variant="outline" icon="minus" iconOnly aria-label="Zoom out" />
+          </ButtonGroup>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"vertical"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <ButtonGroup label="Version history">
+            <Button variant="outline" icon="chev-left" disabled>
+              Older
+            </Button>
+            <ButtonGroupText>v1</ButtonGroupText>
+            <Button variant="outline" iconRight="chev-right">
+              Newer
+            </Button>
+          </ButtonGroup>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"disabled"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <ButtonGroup label="Editor">
+            <ButtonGroup label="History">
+              <Button variant="outline" icon="chev-left" iconOnly aria-label="Back" />
+              <Button variant="outline" icon="chev-right" iconOnly aria-label="Forward" />
+            </ButtonGroup>
+            <ButtonGroup label="Copy">
+              <Button variant="outline" icon="copy" iconOnly aria-label="Copy" />
+              <Button variant="outline" icon="download" iconOnly aria-label="Download" />
+            </ButtonGroup>
+          </ButtonGroup>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{"nested"}</figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
