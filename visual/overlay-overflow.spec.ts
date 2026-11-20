@@ -37,11 +37,12 @@ for (const id of pages) {
     for (let index = 0; index < count; index += 1) {
       const trigger = triggers.nth(index);
       if (!(await trigger.isVisible()) || !(await trigger.isEnabled())) continue;
+      const before = await overlays.count();
       await trigger
         .click({ timeout: 2_000, button: id === "context-menu" ? "right" : "left" })
         .catch(() => undefined);
       await page.waitForTimeout(400);
-      if ((await overlays.count()) > 0) opened += 1;
+      if ((await overlays.count()) > before) opened += 1;
       const overflow = await overlays.evaluateAll((elements) =>
         elements.flatMap((overlay) =>
           [overlay, ...overlay.querySelectorAll("*")].flatMap((element) => {
