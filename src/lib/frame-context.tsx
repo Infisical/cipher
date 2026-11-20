@@ -4,7 +4,12 @@ import { isDev } from "./dev";
 
 const FrameContext = React.createContext(false);
 
-type FrameFoot = { target: HTMLElement | null; claim: (claimed: boolean) => void };
+type FrameFoot = {
+  target: HTMLElement | null;
+  owner: string | null;
+  claim: (id: string) => void;
+  release: (id: string) => void;
+};
 const FrameFootContext = React.createContext<FrameFoot | null>(null);
 
 /** Marks a subtree as inside a framed container, or, with framed false, starts a fresh surface such as an overlay. */
@@ -16,7 +21,7 @@ export function FrameScope({ framed, children }: { framed: boolean; children: Re
   );
 }
 
-/** Offers a frame's empty footer band to one descendant, which portals its footer into target and claims it while it has one. */
+/** Offers a frame's empty footer band to one descendant: the first to claim it owns it and portals its footer into target until it releases it. */
 export function FrameFootSlot({
   value,
   children

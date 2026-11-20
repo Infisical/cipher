@@ -119,8 +119,16 @@ function Card({
   const [choiceChecked, reportChoice] = usePresenceCount();
   const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
   const [foot, setFoot] = React.useState<HTMLDivElement | null>(null);
-  const [footClaimed, setFootClaimed] = React.useState(false);
-  const footSlot = React.useMemo(() => ({ target: foot, claim: setFootClaimed }), [foot]);
+  const [footOwner, setFootOwner] = React.useState<string | null>(null);
+  const claimFoot = React.useCallback((id: string) => setFootOwner((owner) => owner ?? id), []);
+  const releaseFoot = React.useCallback(
+    (id: string) => setFootOwner((owner) => (owner === id ? null : owner)),
+    []
+  );
+  const footSlot = React.useMemo(
+    () => ({ target: foot, owner: footOwner, claim: claimFoot, release: releaseFoot }),
+    [foot, footOwner, claimFoot, releaseFoot]
+  );
   const titleParts = React.Children.toArray(
     React.isValidElement<{ children?: React.ReactNode }>(title) && title.type === React.Fragment
       ? title.props.children
@@ -213,7 +221,7 @@ function Card({
                     {footer !== undefined ? (
                       <CardFooter placement="frame">{footer}</CardFooter>
                     ) : (
-                      <CardFooter placement="frame" ref={setFoot} hidden={!footClaimed} />
+                      <CardFooter placement="frame" ref={setFoot} hidden={!footOwner} />
                     )}
                   </>
                 ) : convenience ? (

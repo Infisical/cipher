@@ -242,6 +242,7 @@ export function DataTable<Row>({
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
   const frameFoot = useFrameFoot();
+  const footId = React.useId();
   const listFiltered = useListFiltered();
   const filtered = filteredProp ?? listFiltered;
   const [ownSelected, setOwnSelected] = React.useState<readonly string[]>(defaultSelectedIds);
@@ -310,6 +311,7 @@ export function DataTable<Row>({
     update(selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]);
   const windowed = Boolean(virtual && !groups);
   const flowing = windowed && !height;
+  const pinnedFoot = Boolean((persistentStatus || loadMore || showFewer) && !pagination);
   const [viewport, setViewport] = React.useState(0);
   const [chrome, setChrome] = React.useState({ head: 0, rest: 0 });
   const windowSize =
@@ -353,8 +355,11 @@ export function DataTable<Row>({
     const observer = new ResizeObserver(measure);
     observer.observe(head);
     observer.observe(container);
+    container
+      .querySelectorAll("[data-slot='data-table-pagination'], [data-slot='data-table-more']")
+      .forEach((band) => observer.observe(band));
     return () => observer.disconnect();
-  }, [height, windowed]);
+  }, [height, windowed, pinnedFoot, Boolean(pagination)]);
   React.useLayoutEffect(() => {
     const container = scroll.current;
     if (!flowing || !container) return;
@@ -509,17 +514,21 @@ export function DataTable<Row>({
     rows.length > 0 && end
   );
   const hasFoot = Boolean(persistentStatus || more || showFewer);
-  const pinnedFoot = Boolean(persistentStatus || loadMore || showFewer);
-  const footTarget = embedded && frameFoot?.target ? frameFoot.target : null;
+  const wantsFrameFoot = embedded && pinnedFoot;
+  const footOwner = frameFoot?.owner;
   const claimFoot = frameFoot?.claim;
+  const releaseFoot = frameFoot?.release;
   React.useLayoutEffect(() => {
-    if (!claimFoot || !embedded || !hasFoot) return undefined;
-    claimFoot(true);
-    return () => claimFoot(false);
-  }, [claimFoot, embedded, hasFoot]);
+    if (wantsFrameFoot && claimFoot && footOwner === null) claimFoot(footId);
+  }, [wantsFrameFoot, claimFoot, footOwner, footId]);
+  React.useLayoutEffect(() => {
+    if (!wantsFrameFoot || !releaseFoot) return undefined;
+    return () => releaseFoot(footId);
+  }, [wantsFrameFoot, releaseFoot, footId]);
+  const footTarget = wantsFrameFoot && footOwner === footId ? (frameFoot?.target ?? null) : null;
   const foot = hasFoot && (
     <div className={styles.tableFootRow} data-slot="data-table-status">
-      <span className={styles.tableFootStatus}>{persistentStatus}</span>
+      {persistentStatus && <span className={styles.tableFootStatus}>{persistentStatus}</span>}
       {(showFewer || more) && (
         <span className={styles.tableFootActions}>
           {showFewer && (
