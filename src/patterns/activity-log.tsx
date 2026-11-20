@@ -123,7 +123,7 @@ export const ActivityLog = ({
                   badge={badges || undefined}
                   meta={event.time}
                 >
-                  {event.description && (
+                  {event.description != null && event.description !== false && (
                     <p className={styles.activityDescription}>
                       {event.description}
                     </p>
