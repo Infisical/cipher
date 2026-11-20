@@ -1289,6 +1289,44 @@ export const iconShapes = {
       }
     }
   ],
+  list: [
+    {
+      tag: "path",
+      attributes: {
+        d: "M10 6h10M10 12h10M10 18h10"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "4.25",
+        y: "5.25",
+        width: "1.5",
+        height: "1.5",
+        strokeLinejoin: "miter"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "4.25",
+        y: "11.25",
+        width: "1.5",
+        height: "1.5",
+        strokeLinejoin: "miter"
+      }
+    },
+    {
+      tag: "rect",
+      attributes: {
+        x: "4.25",
+        y: "17.25",
+        width: "1.5",
+        height: "1.5",
+        strokeLinejoin: "miter"
+      }
+    }
+  ],
   "layout-grid": [
     {
       tag: "rect",
