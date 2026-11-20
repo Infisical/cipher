@@ -1,5 +1,6 @@
 import type * as React from "react";
 
+import { Button } from "@infisical/cipher/ui/button";
 import { Card } from "@infisical/cipher/ui/card";
 import { DataTable, type DataTableColumn } from "@infisical/cipher/ui/data-table";
 import { EmptyState } from "@infisical/cipher/ui/empty";
@@ -60,10 +61,22 @@ export default function Example() {
               pageSize={2}
             />
           )
+        ],
+        [
+          "Footer on the frame",
+          table(grants),
+          <Button key="add" variant="outline" icon="plus">
+            Add folder access
+          </Button>
         ]
-      ].map(([caption, body]) => (
+      ].map(([caption, body, footer]) => (
         <figure key={caption as string} className="m-0 flex w-full min-w-0 flex-col gap-3">
-          <Card variant="framed" title="Folder access">
+          <Card
+            variant="framed"
+            title="Folder access"
+            footer={footer}
+            footerPlacement={footer ? "frame" : undefined}
+          >
             {body}
           </Card>
           <figcaption className="text-muted-foreground text-xs">{caption}</figcaption>
