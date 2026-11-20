@@ -438,6 +438,7 @@
 .badgeGroup {
   position: relative;
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--cipher-space-4);
   min-width: 0;
@@ -450,10 +451,16 @@
   position: absolute;
   inset: 0 0 auto;
   display: flex;
+  flex-wrap: nowrap;
   gap: inherit;
   height: 0;
   overflow: hidden;
   visibility: hidden;
+}
+.badgeGroupMore {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cipher-space-4);
 }
 .badge.mono {
   font-family: var(--cipher-type-mono-sm-font-family);

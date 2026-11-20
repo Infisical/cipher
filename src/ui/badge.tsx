@@ -6,7 +6,7 @@ import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
-import { Tooltip } from "./tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -170,18 +170,26 @@ function Badge({
 }
 Badge.displayName = "Badge";
 
-/** A row of badges that never wraps: badges that don't fit collapse into a trailing +N whose tooltip lists them. For table cells, where every row keeps one height. */
+/** A row of badges that never wraps: badges that don't fit collapse into a trailing +N that opens the rest. For table cells, where every row keeps one height. */
+function flatten(children: React.ReactNode): React.ReactNode[] {
+  return React.Children.toArray(children).flatMap((child) =>
+    React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment
+      ? flatten(child.props.children)
+      : [child]
+  );
+}
+
 function BadgeGroup({
   className,
   children,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
-  const items = React.Children.toArray(children);
+  const items = flatten(children);
   const groupRef = React.useRef<HTMLDivElement>(null);
   const measureRef = React.useRef<HTMLDivElement>(null);
+  const measured = React.useRef("");
   const [shown, setShown] = React.useState(items.length);
-  const [hidden, setHidden] = React.useState("");
   React.useImperativeHandle(ref, () => groupRef.current as HTMLDivElement);
   React.useLayoutEffect(() => {
     const group = groupRef.current;
@@ -191,11 +199,19 @@ function BadgeGroup({
       const nodes = Array.from(measure.children);
       const more = nodes.pop()?.getBoundingClientRect().width ?? 0;
       const widths = nodes.map((node) => node.getBoundingClientRect().width);
+      const signature = widths.join();
+      if (signature !== measured.current) {
+        measured.current = signature;
+        if (visible < widths.length) {
+          setShown(widths.length);
+          return;
+        }
+      }
       const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
       const room = group.clientWidth + 0.5;
+      const whole = widths.reduce((sum, width) => sum + width, 0) + gap * (widths.length - 1);
       let used = 0;
       let count = widths.length;
-      const whole = widths.reduce((sum, width) => sum + width, 0) + gap * (widths.length - 1);
       for (let index = 0; whole > room && index < widths.length; index++) {
         used += (index ? gap : 0) + widths[index];
         const tail = index < widths.length - 1 ? gap + more : 0;
@@ -205,12 +221,6 @@ function BadgeGroup({
         }
       }
       setShown(count);
-      setHidden(
-        nodes
-          .slice(count)
-          .map((node) => (node.textContent ?? "").trim())
-          .join(", ")
-      );
     };
     fit();
     const observer = new ResizeObserver(fit);
@@ -218,7 +228,8 @@ function BadgeGroup({
     Array.from(measure.children).forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   });
-  const rest = items.length - shown;
+  const visible = Math.min(shown, items.length);
+  const rest = items.length - visible;
   return (
     <div
       ref={groupRef}
@@ -226,16 +237,31 @@ function BadgeGroup({
       className={cn(helperStyles.badgeGroup, className)}
       {...props}
     >
-      {items.slice(0, shown)}
+      {items.slice(0, visible)}
       {rest > 0 && (
-        <Tooltip content={hidden}>
-          <Badge tabIndex={0} aria-label={`${rest} more: ${hidden}`}>
-            +{rest}
-          </Badge>
-        </Tooltip>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Badge asChild>
+              <button
+                type="button"
+                aria-label={`${rest} more`}
+                onClick={(event) => event.stopPropagation()}
+              >
+                +{rest}
+              </button>
+            </Badge>
+          </PopoverTrigger>
+          <PopoverContent align="start" data-width="content">
+            <div className={helperStyles.badgeGroupMore}>{items.slice(visible)}</div>
+          </PopoverContent>
+        </Popover>
       )}
       <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
-        {items}
+        {items.map((item) =>
+          React.isValidElement(item)
+            ? React.cloneElement(item, { ref: null, id: undefined } as object)
+            : item
+        )}
         <Badge>+{items.length}</Badge>
       </div>
     </div>

@@ -557,7 +557,7 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/tooltip"
+        "@cipher/popover"
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
