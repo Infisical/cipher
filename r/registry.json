@@ -2656,11 +2656,15 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/card",
+        "@cipher/chart",
         "@cipher/cipher-base",
         "@cipher/icon",
         "@cipher/item",
         "@cipher/skeleton",
         "@cipher/text"
+      ],
+      "dependencies": [
+        "recharts@^3.8.1"
       ],
       "files": [
         {

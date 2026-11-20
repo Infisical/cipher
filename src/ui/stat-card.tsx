@@ -1,8 +1,10 @@
 import * as React from "react";
+import { Area, AreaChart, YAxis } from "recharts";
 
 import type { CipherLinkProps } from "../lib/link";
 import { cn } from "../lib/utils";
 import { Card, CardContent, CardLink } from "./card";
+import { ChartContainer } from "./chart";
 import { Icon, type IconSource } from "./icon";
 import { Media } from "./item";
 import { Skeleton } from "./skeleton";
@@ -16,10 +18,15 @@ const trendIcon = {
   flat: "minus"
 } as const;
 const trendTone = { up: "ok", down: "bad", flat: "neutral" } as const;
+const chartHeight = { sm: 92, md: 168 } as const;
+const chartHeadroom = 12;
+const chartFootroom = 6;
+
+const StatCardChartContext = React.createContext<number>(chartHeight.sm);
 
 export type StatCardProps = Omit<
   React.ComponentProps<typeof Card>,
-  "title" | "badges" | "description" | "hint" | "action" | "footer" | "footerPlacement" | "children"
+  "title" | "badges" | "description" | "hint" | "action" | "children"
 > & {
   label: React.ReactNode;
   value: React.ReactNode;
@@ -38,6 +45,14 @@ export type StatCardProps = Omit<
   loading?: boolean;
   /** Replaces the value with this message when the metric failed to load. */
   error?: React.ReactNode;
+  /** A control under the note, such as the setup button of a metric that isn't set up yet. */
+  action?: React.ReactNode;
+  /** A chart after the value, usually a StatCardChart. Hidden while loading or failed. */
+  chart?: React.ReactNode;
+  /** "bleed" runs the chart to the card's left, right and bottom edges; "inset" keeps it inside the padding. */
+  chartPlacement?: "inset" | "bleed";
+  /** The chart band's height: sm is 92px, md is 168px. */
+  chartSize?: keyof typeof chartHeight;
 };
 
 export function StatCard({
@@ -52,6 +67,12 @@ export function StatCard({
   link,
   loading = false,
   error,
+  action,
+  chart,
+  chartPlacement = "inset",
+  chartSize = "sm",
+  footer,
+  footerPlacement,
   variant = "framed",
   className,
   ...props
@@ -60,6 +81,59 @@ export function StatCard({
   const labelId = `${id}-label`;
   const valueId = `${id}-value`;
   const failed = error !== undefined && error !== null && error !== false;
+  const body = (
+    <>
+      <div className={styles.head}>
+        <span id={labelId} className={styles.label}>
+          {link ? (
+            <CardLink link={link} aria-describedby={valueId}>
+              {label}
+            </CardLink>
+          ) : (
+            label
+          )}
+        </span>
+        {icon && <Media icon={icon} size="sm" tone={tone} aria-hidden />}
+      </div>
+      {loading ? (
+        <Skeleton className={styles.valueSkeleton} />
+      ) : failed ? (
+        <StatusText tone="bad" icon="alert" className={styles.error}>
+          {error}
+        </StatusText>
+      ) : (
+        <div id={valueId} data-slot="stat-card-value" className={styles.value}>
+          {value}
+        </div>
+      )}
+      {!loading && !failed && (delta !== undefined || note !== undefined) && (
+        <div className={styles.foot}>
+          {delta !== undefined && (
+            <span
+              data-slot="stat-card-delta"
+              data-tone={deltaTone ?? trendTone[trend]}
+              className={styles.delta}
+            >
+              <Icon name={trendIcon[trend]} aria-hidden />
+              {delta}
+            </span>
+          )}
+          {note !== undefined && <span className={styles.note}>{note}</span>}
+        </div>
+      )}
+      {!loading && !failed && action !== undefined && <div className={styles.action}>{action}</div>}
+      {!loading && !failed && chart !== undefined && (
+        <div
+          data-slot="stat-card-chart"
+          data-placement={chartPlacement}
+          className={styles.chart}
+          style={{ height: chartHeight[chartSize] }}
+        >
+          <StatCardChartContext value={chartHeight[chartSize]}>{chart}</StatCardChartContext>
+        </div>
+      )}
+    </>
+  );
   return (
     <Card
       data-slot="stat-card"
@@ -67,49 +141,60 @@ export function StatCard({
       aria-labelledby={labelId}
       aria-busy={loading || undefined}
       variant={variant}
+      footer={footer}
+      footerPlacement={footerPlacement}
       className={cn(styles.statCard, className)}
       {...props}
     >
-      <CardContent className={styles.body}>
-        <div className={styles.head}>
-          <span id={labelId} className={styles.label}>
-            {link ? (
-              <CardLink link={link} aria-describedby={valueId}>
-                {label}
-              </CardLink>
-            ) : (
-              label
-            )}
-          </span>
-          {icon && <Media icon={icon} size="sm" tone={tone} aria-hidden />}
-        </div>
-        {loading ? (
-          <Skeleton className={styles.valueSkeleton} />
-        ) : failed ? (
-          <StatusText tone="bad" icon="alert" className={styles.error}>
-            {error}
-          </StatusText>
-        ) : (
-          <div id={valueId} data-slot="stat-card-value" className={styles.value}>
-            {value}
-          </div>
-        )}
-        {!loading && !failed && (delta !== undefined || note !== undefined) && (
-          <div className={styles.foot}>
-            {delta !== undefined && (
-              <span
-                data-slot="stat-card-delta"
-                data-tone={deltaTone ?? trendTone[trend]}
-                className={styles.delta}
-              >
-                <Icon name={trendIcon[trend]} aria-hidden />
-                {delta}
-              </span>
-            )}
-            {note !== undefined && <span className={styles.note}>{note}</span>}
-          </div>
-        )}
-      </CardContent>
+      {footer === undefined ? (
+        <CardContent className={styles.body}>{body}</CardContent>
+      ) : (
+        <div className={styles.body}>{body}</div>
+      )}
     </Card>
+  );
+}
+
+export type StatCardChartProps = {
+  /** One number per point, oldest first. The last point sits on the card's right edge. */
+  data: readonly number[];
+  /** Names the series for assistive tech, such as Secret reads. */
+  label: string;
+  /** step holds each value until the next point, for counts that change in jumps. */
+  curve?: "linear" | "step";
+};
+
+/** An area chart for a StatCard's chart slot. Its fill reaches the band's bottom edge, the line keeps 12px of headroom and stays 6px above the bottom, and it takes the band's height. Inside hueScope it draws in the product's hue. */
+export function StatCardChart({ data, label, curve = "linear" }: StatCardChartProps) {
+  const height = React.useContext(StatCardChartContext);
+  const points = data.map((value) => ({ value }));
+  const max = Math.max(...data, 0);
+  const min = Math.min(...data, 0);
+  const plot = height - chartHeadroom;
+  const floor =
+    max === min ? min - 1 : min - ((max - min) * chartFootroom) / (plot - chartFootroom);
+  return (
+    <ChartContainer
+      config={{ value: { label, color: "var(--cipher-hue-icon, var(--chart-1))" } }}
+      height={height}
+      role="img"
+      aria-label={label}
+    >
+      <AreaChart data={points} margin={{ top: chartHeadroom, right: 0, bottom: 0, left: 0 }}>
+        <YAxis hide type="number" allowDataOverflow domain={[floor, max === min ? max + 1 : max]} />
+        <Area
+          dataKey="value"
+          type={curve === "step" ? "stepAfter" : "linear"}
+          stroke="var(--color-value)"
+          strokeWidth={1.6}
+          fill="var(--cipher-hue-fill, var(--chart-1))"
+          fillOpacity={0.14}
+          baseValue={floor}
+          dot={false}
+          activeDot={false}
+          isAnimationActive={false}
+        />
+      </AreaChart>
+    </ChartContainer>
   );
 }
