@@ -252,6 +252,7 @@ const scrollParent = (node: HTMLElement) => {
 export function DetailLayout({
   aside,
   asideLabel,
+  asideWidth = "default",
   children,
   className,
   ref,
@@ -259,6 +260,8 @@ export function DetailLayout({
 }: React.ComponentPropsWithoutRef<"div"> & {
   aside: React.ReactNode;
   asideLabel: string;
+  /** "narrow" sets the sidecar to size-pane-aside (320px) instead of size-sidecar (384px), for a page capped narrower than the content measure. A full UUID wraps onto two lines at that width. */
+  asideWidth?: "default" | "narrow";
   ref?: React.Ref<HTMLDivElement>;
 }) {
   const asideRef = React.useRef<HTMLElement>(null);
@@ -291,6 +294,7 @@ export function DetailLayout({
     <div
       ref={ref}
       data-slot="detail-layout"
+      data-aside-width={asideWidth === "narrow" ? "narrow" : undefined}
       className={cn(detailStyles.root, className)}
       {...props}
     >

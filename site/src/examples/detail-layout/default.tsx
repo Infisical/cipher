@@ -5,9 +5,10 @@ import { DetailLayout } from "@infisical/cipher/ui/layout";
 import { DataList, List, ListRow } from "@infisical/cipher/ui/list";
 import { CopyValue } from "@infisical/cipher/ui/sensitive-editor";
 
-const Specimen = () => (
+const Specimen = ({ asideWidth }: { asideWidth?: "narrow" }) => (
   <DetailLayout
     asideLabel="Details"
+    asideWidth={asideWidth}
     aside={
       <Card variant="framed" title="Details">
         <DataList
@@ -109,6 +110,16 @@ export default function Example() {
         </div>
         <figcaption className="text-muted-foreground text-xs">
           {"Narrow container, sidecar stacks above the main cards"}
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <div style={{ maxWidth: 1160 }}>
+            <Specimen asideWidth="narrow" />
+          </div>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"asideWidth narrow: a 320px sidecar on a page capped at 1160px"}
         </figcaption>
       </figure>
     </div>
