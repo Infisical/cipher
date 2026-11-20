@@ -23,17 +23,13 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: calc(100% - 2 * var(--cipher-space-16));
   max-width: var(--cipher-size-dialog);
   max-height: calc(100dvh - 2 * var(--cipher-size-overlay-margin));
-  overflow-y: auto;
-  translate: -50% -50%;
-}
-.dialog[data-sections] {
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
+  translate: -50% -50%;
 }
 .dialog[data-state="open"] {
   animation: dialogIn var(--cipher-duration-slow) var(--cipher-ease-spring-soft) both;

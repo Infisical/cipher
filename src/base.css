@@ -431,13 +431,6 @@
   padding: 0;
   gap: 0;
 }
-/* Without the section slots, the content still paints the surface and an inner scroller holds the
-   edge fade, so its mask never clips the surface's ring and shadow. */
-.cipher :is([data-slot="dialog-content"], [data-slot="alert-dialog-content"]):not([data-sections]) {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
 .cipher [data-slot="overlay-scroll"] {
   display: grid;
   gap: inherit;
