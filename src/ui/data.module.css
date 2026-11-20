@@ -449,19 +449,27 @@
 }
 .copyValue {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: var(--cipher-space-4);
   min-width: 0;
   max-width: 100%;
 }
 .copyValueText {
+  flex: 1 1 0;
   min-width: 0;
   overflow-wrap: anywhere;
 }
-/* The button centres on the first line, so a single-line value reads as centred and a wrapped one keeps the button at the top. */
 .copyValue > .copy {
+  display: contents;
+}
+/* The button centres on the first line, so a single-line value reads as centred and a wrapped one keeps the button at the top. */
+.copyValue > .copy > :global(button) {
   flex: none;
   margin-block: calc((1lh - var(--cipher-nested-action-height)) / 2);
+}
+.copyValue > .copy > [data-copy-feedback]:not(:empty) {
+  flex-basis: 100%;
 }
 .copysm {
   --cipher-nested-action-height: var(--cipher-size-nested-sm);
