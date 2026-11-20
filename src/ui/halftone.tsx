@@ -24,9 +24,9 @@ export type HalftoneProps = Omit<
   bounds?: "surface" | "header";
   /** Caps the corner at this many halftone cells across and down, at rest and on hover. */
   size?: number;
-  /** Caps the corner at this many pixels across, at rest and on hover, such as 160 for a 160x96 box. */
+  /** Caps the corner at this many pixels across, at rest and on hover, such as 160 for a 160x96 box. Rounds down to whole cells. */
   width?: number;
-  /** Caps the corner at this many pixels down, at rest and on hover. */
+  /** Caps the corner at this many pixels down, at rest and on hover. Rounds down to whole cells. */
   height?: number;
   /** hover draws nothing at rest and grows the corner out while the card is hovered or focused. */
   reveal?: "always" | "hover";
@@ -165,6 +165,9 @@ const cellPaths = (
   }));
 };
 
+const wholeCells = (pixels: number | undefined, cell: number) =>
+  pixels === undefined ? Infinity : Math.floor(pixels / cell) * cell;
+
 const readNumber = (element: Element, property: string, fallback: number) => {
   const value = Number.parseFloat(
     getComputedStyle(element).getPropertyValue(property),
@@ -234,9 +237,14 @@ export function Halftone({
         left: Number.parseFloat(parentStyle.paddingLeft) || 0,
         gamma: readNumber(element, "--cipher-halftone-gamma", 1),
         cell,
-        limitWidth: Math.min(parent.clientWidth, cap, width ?? Infinity),
+        limitWidth: Math.min(parent.clientWidth, cap, wholeCells(width, cell)),
         limitHeight: Math.round(
-          Math.min(parent.clientHeight, cap, height ?? Infinity, headerBottom),
+          Math.min(
+            parent.clientHeight,
+            cap,
+            wholeCells(height, cell),
+            headerBottom,
+          ),
         ),
       };
       setBox((previous) =>
