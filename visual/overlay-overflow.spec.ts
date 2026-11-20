@@ -44,12 +44,19 @@ for (const id of pages) {
       if (index > 0) await load(page, id);
       const trigger = triggers.nth(index);
       if (!(await trigger.isVisible()) || !(await trigger.isEnabled())) continue;
-      const before = await overlays.count();
+      await overlays.evaluateAll((elements) =>
+        elements.forEach((element) => element.setAttribute("data-seen", ""))
+      );
       await trigger
         .click({ timeout: 2_000, button: id === "context-menu" ? "right" : "left" })
         .catch(() => undefined);
       await page.waitForTimeout(400);
-      if ((await overlays.count()) > before) opened += 1;
+      if (
+        (await page
+          .locator(overlaySelector.replaceAll(",", ":not([data-seen]),") + ":not([data-seen])")
+          .count()) > 0
+      )
+        opened += 1;
       const overflow = await overlays.evaluateAll((elements) =>
         elements.flatMap((overlay) =>
           [overlay, ...overlay.querySelectorAll("*")].flatMap((element) => {
