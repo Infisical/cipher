@@ -39,6 +39,7 @@ export function PageHeader({
   ...props
 }: PageHeaderProps & { ref?: React.Ref<HTMLElement> }) {
   const titleRef = React.useRef<HTMLHeadingElement>(null);
+  const titleText = typeof title === "string" || typeof title === "number" ? title : undefined;
   const [titleClamped, setTitleClamped] = React.useState(false);
   const [titleExpanded, setTitleExpanded] = React.useState(false);
   React.useEffect(() => {
@@ -59,8 +60,13 @@ export function PageHeader({
     };
     const observer = new ResizeObserver(measure);
     observer.observe(element);
-    return () => observer.disconnect();
-  }, [truncateTitle, title]);
+    const mutations = new MutationObserver(measure);
+    mutations.observe(element, { subtree: true, childList: true, characterData: true });
+    return () => {
+      observer.disconnect();
+      mutations.disconnect();
+    };
+  }, [truncateTitle, titleText]);
   const titleToggle = !truncateTitle && titleClamped;
   return (
     <header
