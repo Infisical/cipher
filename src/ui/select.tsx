@@ -18,7 +18,9 @@ const SelectWrapContext = React.createContext(false);
 
 function titleIfTruncated(element: HTMLElement | null | undefined) {
   if (!element) return;
-  if (element.scrollWidth > element.clientWidth) element.title = element.textContent ?? "";
+  const text = element.querySelector<HTMLElement>('[data-slot="option-text"]') ?? element;
+  if (text.scrollWidth > text.clientWidth || element.scrollWidth > element.clientWidth)
+    element.title = text.textContent ?? "";
   else element.removeAttribute("title");
 }
 
