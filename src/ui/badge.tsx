@@ -93,12 +93,11 @@ function Badge({
       );
       run = [];
     };
-    React.Children.forEach(content, (child) => {
-      if (typeof child === "string" || typeof child === "number") run.push(child);
-      else {
+    React.Children.toArray(content).forEach((child) => {
+      if (React.isValidElement(child) && (child.type === Icon || child.type === "svg")) {
         flush();
         nodes.push(child);
-      }
+      } else run.push(child);
     });
     flush();
     return nodes;
@@ -137,8 +136,8 @@ function Badge({
       onPointerEnter={(event: React.PointerEvent<HTMLSpanElement>) => {
         onPointerEnter?.(event);
         const badge = event.currentTarget;
-        const label = badge.querySelector<HTMLElement>("[data-badge-text]");
-        if (!label) return;
+        const labels = badge.querySelectorAll<HTMLElement>("[data-badge-text]");
+        if (!labels.length) return;
         if (props.title !== undefined) {
           delete badge.dataset.autoTitle;
           return;
@@ -146,9 +145,12 @@ function Badge({
         const automatic = badge.dataset.autoTitle !== undefined;
         if (badge.title && !automatic) return;
         const range = document.createRange();
-        range.selectNodeContents(label);
-        if (range.getBoundingClientRect().width > label.getBoundingClientRect().width + 0.1) {
-          badge.title = label.textContent ?? "";
+        const cut = Array.from(labels).some((label) => {
+          range.selectNodeContents(label);
+          return range.getBoundingClientRect().width > label.getBoundingClientRect().width + 0.1;
+        });
+        if (cut) {
+          badge.title = (badge.textContent ?? "").trim();
           badge.dataset.autoTitle = "";
         } else if (automatic) {
           badge.removeAttribute("title");
