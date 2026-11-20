@@ -1,0 +1,66 @@
+name: Bug report
+description: Something in Cipher doesn't work or look the way it should
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Cipher version
+      placeholder: 0.1.18
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How you installed it
+      options:
+        - Package (@infisical/cipher)
+        - shadcn registry
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: Combobox
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: A minimal code sample or a link to a repository or sandbox.
+      render: tsx
+    validations:
+      required: true
+
+  - type: dropdown
+    id: theme
+    attributes:
+      label: Theme
+      multiple: true
+      options:
+        - Light
+        - Dark
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Browser and environment
+      description: Browser and version, operating system, React version, and whether your app uses Tailwind.
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots

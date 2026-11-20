@@ -1,0 +1,19 @@
+name: Component or feature request
+description: Suggest a new component, a new prop or a new example
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you're trying to build
+      description: The interface you need and why the current components don't cover it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like Cipher to provide
+      description: The component, prop or behavior you have in mind. Sketches and references to other design systems help.
+    validations:
+      required: true
