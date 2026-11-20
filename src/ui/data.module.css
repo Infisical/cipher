@@ -1044,6 +1044,9 @@ button.rowTitle::after {
   :where(:has(> [data-slot="badge"] + [data-slot="badge"])) {
   justify-content: flex-start;
 }
+.nativeTableCell[data-wrap]:has(> [data-slot="badge"] + [data-slot="badge"]) > [data-slot="badge"] {
+  margin-block: calc(var(--cipher-space-4) / 2);
+}
 .dataList[data-variant="stat"] dd {
   font-family: var(--cipher-type-display-font-family);
   font-size: var(--cipher-type-display-font-size);
