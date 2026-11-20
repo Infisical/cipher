@@ -30,6 +30,17 @@ export default function Example() {
               </AccordionTrigger>
               <AccordionContent>Connect a directory to sync groups.</AccordionContent>
             </AccordionItem>
+            <AccordionItem value="skill">
+              <AccordionTrigger>
+                skills/agent-vault/connectors/salesforce/references/oauth-client-credentials.md
+                <Badge tone="soft" size="sm">
+                  3 tools
+                </Badge>
+              </AccordionTrigger>
+              <AccordionContent>
+                Grants the agent read access to Salesforce accounts.
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
         </div>
         <figcaption className="text-muted-foreground text-xs">

@@ -45,20 +45,26 @@ function AccordionTrigger({
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
   return (
-    <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Header className="flex min-w-0">
       <AccordionPrimitive.Trigger
         ref={ref}
         data-slot="accordion-trigger"
         className={cn(
           controlStyles.label,
-          "group/accordion-trigger **:data-[slot=accordion-trigger-icon]:text-muted-foreground relative flex flex-1 items-start justify-between gap-(--cipher-space-8) rounded-lg border border-transparent py-2.5 text-left transition-colors outline-none hover:[&>[data-slot=accordion-trigger-text]]:underline focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-[color:var(--cipher-focus-ring)] focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4",
+          "group/accordion-trigger **:data-[slot=accordion-trigger-icon]:text-muted-foreground relative flex min-w-0 flex-1 items-start justify-between gap-(--cipher-space-8) rounded-lg border border-transparent py-2.5 text-left transition-colors outline-none hover:[&>[data-slot=accordion-trigger-text]]:underline focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-[color:var(--cipher-focus-ring)] focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4",
           className
         )}
         {...props}
       >
         {React.Children.map(children, (child) =>
           typeof child === "string" || typeof child === "number" ? (
-            <span data-slot="accordion-trigger-text">{child}</span>
+            <span
+              data-slot="accordion-trigger-text"
+              className="min-w-0 truncate"
+              title={String(child)}
+            >
+              {child}
+            </span>
           ) : (
             child
           )
