@@ -31,6 +31,13 @@ function AuditCard({ rows }: { rows: Event[] }) {
   const [filters, setFilters] = useState<FilterBarFilter[]>([]);
   const [search, setSearch] = useState("");
   const [range, setRange] = useState("7d");
+  const actors = filters.flatMap((filter) => filter.values);
+  const query = search.trim().toLowerCase();
+  const visible = rows.filter(
+    (row) =>
+      (actors.length === 0 || actors.includes(row.actor)) &&
+      (!query || `${row.event} ${row.actor}`.toLowerCase().includes(query))
+  );
   return (
     <Card
       variant="framed"
@@ -69,7 +76,7 @@ function AuditCard({ rows }: { rows: Event[] }) {
     >
       <DataTable
         label="Audit log"
-        rows={rows}
+        rows={visible}
         columns={columns}
         getRowId={(row) => row.id}
         rowLabel={(row) => `${row.event} by ${row.actor}`}

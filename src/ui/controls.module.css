@@ -404,7 +404,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   padding: var(--cipher-space-8) var(--cipher-card-inset);
   border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
-.cardHeader + .cardBody > .cardToolbar:first-child {
+.cardPlain > .cardHeader + .cardBody > .cardToolbar:first-child {
   margin-top: 0;
 }
 .cardPlain {
@@ -510,10 +510,17 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card[data-variant="framed"]:is(
     [data-flush],
     :has(
-      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):is(:only-child, [data-slot="card-toolbar"]:first-child + :last-child),
+      > .cardBody
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        ),
       > .cardInset
         > .cardBody
-        > :is([data-slot="data-table"], [data-slot="table-container"]):is(:only-child, [data-slot="card-toolbar"]:first-child + :last-child)
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        )
     )
   )
   > .cardHeader {
@@ -522,10 +529,17 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card[data-variant="framed"]:is(
     [data-flush],
     :has(
-      > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):is(:only-child, [data-slot="card-toolbar"]:first-child + :last-child),
+      > .cardBody
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        ),
       > .cardInset
         > .cardBody
-        > :is([data-slot="data-table"], [data-slot="table-container"]):is(:only-child, [data-slot="card-toolbar"]:first-child + :last-child)
+        > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+          :only-child,
+          [data-slot="card-toolbar"]:first-child + :last-child
+        )
     )
   )
   > :is(.cardBody, .cardInset > .cardBody) {
@@ -1224,10 +1238,17 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card:is(
   [data-flush],
   [data-variant="framed"]:has(
-    > .cardBody > :is([data-slot="data-table"], [data-slot="table-container"]):is(:only-child, [data-slot="card-toolbar"]:first-child + :last-child),
+    > .cardBody
+      > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+        :only-child,
+        [data-slot="card-toolbar"]:first-child + :last-child
+      ),
     > .cardInset
       > .cardBody
-      > :is([data-slot="data-table"], [data-slot="table-container"]):is(:only-child, [data-slot="card-toolbar"]:first-child + :last-child)
+      > :is([data-slot="data-table"], [data-slot="table-container"]):is(
+        :only-child,
+        [data-slot="card-toolbar"]:first-child + :last-child
+      )
   )
 ) {
   --cipher-card-body-inset: 0px;
