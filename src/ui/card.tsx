@@ -190,18 +190,21 @@ function Card({
                 footer !== undefined &&
                 footerPlacement === "frame" ? (
                   <>
-                    <div
-                      data-slot="card-inset"
-                      className={cn(frameStyles.frameInset, controlStyles.cardInset)}
-                    >
-                      {backdrop}
-                      <FramedContext value={false}>
-                        {header}
-                        {children !== undefined && children !== null && (
-                          <CardContent>{children}</CardContent>
-                        )}
-                      </FramedContext>
-                    </div>
+                    {!backdrop && header}
+                    {((children !== undefined && children !== null) || backdrop) && (
+                      <div
+                        data-slot="card-inset"
+                        className={cn(frameStyles.frameInset, controlStyles.cardInset)}
+                      >
+                        {backdrop}
+                        <FramedContext value={false}>
+                          {backdrop && header}
+                          {children !== undefined && children !== null && (
+                            <CardContent>{children}</CardContent>
+                          )}
+                        </FramedContext>
+                      </div>
+                    )}
                     <CardFooter placement="frame">{footer}</CardFooter>
                   </>
                 ) : convenience ? (
