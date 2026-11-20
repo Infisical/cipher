@@ -1215,7 +1215,6 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll [data-pin="true"] {
   position: sticky;
   right: 0;
-  border-left: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   --cipher-pin-frame: var(--cipher-frame-pad) 0 0 var(--cipher-tint);
 }
 .tableScroll td[data-pin="true"] {
