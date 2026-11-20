@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
@@ -35,6 +36,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run typecheck
       - run: npm run check
@@ -53,3 +55,11 @@ jobs:
           git commit -m "Release $tag"
           git tag "$tag"
           git push origin "refs/tags/$tag"
+      - name: Publish to npm
+        if: vars.NPM_PUBLISH == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+      - name: Skip npm until access is set up
+        if: vars.NPM_PUBLISH != 'true'
+        run: echo "::notice::Skipped npm publish. Set the NPM_PUBLISH repository variable to true once the npm package and its trusted publisher exist."
