@@ -35,8 +35,8 @@ export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "ti
   actions?: React.ReactNode;
   /**
    * Secondary actions, drawn as outline buttons before `actions` while the header is wide. Below the
-   * narrow breakpoint they move into a "More actions" menu, so the primary actions keep their labels
-   * and the title keeps its room.
+   * narrow breakpoint they move into a "More actions" menu to leave more room for the title.
+   * Existing `actions` keep their usual responsive behavior.
    */
   moreActions?: readonly PageHeaderMoreAction[];
   moreLabel?: string;
@@ -96,6 +96,17 @@ export function PageHeader({
   }, [truncateTitle]);
   const titleToggle = !truncateTitle && titleClamped;
   const more = moreActions && moreActions.length > 0 ? moreActions : null;
+  const moreTriggerRef = React.useRef<HTMLButtonElement>(null);
+  const [moreOpen, setMoreOpen] = React.useState(false);
+  React.useEffect(() => {
+    const trigger = moreTriggerRef.current;
+    if (!moreOpen || !trigger) return;
+    const observer = new ResizeObserver(() => {
+      if (!trigger.getClientRects().length) setMoreOpen(false);
+    });
+    observer.observe(trigger);
+    return () => observer.disconnect();
+  }, [moreOpen]);
   return (
     <header
       ref={ref}
@@ -203,8 +214,8 @@ export function PageHeader({
                     </Button>
                   ))}
                 </span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                <DropdownMenu open={moreOpen} onOpenChange={setMoreOpen}>
+                  <DropdownMenuTrigger ref={moreTriggerRef} asChild>
                     <Button variant="outline" icon="more" iconOnly className={styles.moreMenu}>
                       {moreLabel}
                     </Button>
