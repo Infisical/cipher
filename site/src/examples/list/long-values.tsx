@@ -13,7 +13,7 @@ export default function Example() {
             <MiddleTruncate text="arn:aws:iam::918273645501:role/payments-ledger-replication-readwrite-us-east-1-primary" />
           ],
           ["Created", "Nov 16, 2026"],
-          ["Owner", "andrew@infisical.com"]
+          ["Owner", "jordan.lee@example.com"]
         ]}
       />
     </div>

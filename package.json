@@ -2,18 +2,35 @@
   "name": "@infisical/cipher",
   "version": "0.1.18",
   "description": "Cipher, Infisical's design system: React components, tokens and themes.",
+  "keywords": [
+    "design-system",
+    "react",
+    "components",
+    "ui",
+    "tailwindcss",
+    "shadcn",
+    "infisical"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Infisical/cipher.git"
   },
-  "homepage": "https://github.com/Infisical/cipher#readme",
+  "homepage": "https://infisical.com/cipher",
+  "bugs": {
+    "url": "https://github.com/Infisical/cipher/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "type": "module",
   "sideEffects": [
     "*.css"
   ],
   "files": [
     "dist",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ],
@@ -52,6 +69,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "check": "tsx scripts/tokens.ts --check && tsx scripts/registry.ts --check && tsx scripts/lint-css.ts",
     "build": "npm run tokens && vite build && tsc -p tsconfig.build.json && tsx scripts/finish-build.ts",
+    "prepack": "npm run build",
     "site": "vite --config site/vite.config.ts",
     "site:build": "vite build --config site/vite.config.ts",
     "visual:build": "vite build --config site/vite.visual.config.ts",
@@ -60,6 +78,12 @@
     "visual:update": "bash scripts/visual.sh --update-snapshots=changed"
   },
   "peerDependencies": {
+    "@codemirror/commands": "^6.0.0",
+    "@codemirror/lang-sql": "^6.0.0",
+    "@codemirror/language": "^6.0.0",
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
+    "@lezer/highlight": "^1.0.0",
     "@xterm/addon-fit": "^0.10.0 || ^0.11.0",
     "@xterm/xterm": "^5.5.0 || ^6.0.0",
     "motion": "^13.2.0 || ^14.0.0",
@@ -67,13 +91,7 @@
     "react-dom": "^19.2.0",
     "recharts": "^3.8.1",
     "sonner": "^2.0.7",
-    "tailwindcss": "^4.1.14",
-    "@codemirror/commands": "^6.0.0",
-    "@codemirror/lang-sql": "^6.0.0",
-    "@codemirror/language": "^6.0.0",
-    "@codemirror/state": "^6.0.0",
-    "@codemirror/view": "^6.0.0",
-    "@lezer/highlight": "^1.0.0"
+    "tailwindcss": "^4.1.14"
   },
   "peerDependenciesMeta": {
     "recharts": {

@@ -15,6 +15,7 @@ const CollisionBoundaryContext = React.createContext<HTMLElement | undefined>(un
 const ToastLayerContext = React.createContext<HTMLElement | null>(null);
 const ActionBarReserveContext = React.createContext<PresenceReport | null>(null);
 
+const subscribeNever = () => () => {};
 export const usePortalContainer = () => React.useContext(PortalContainerContext);
 export const useCollisionBoundary = () => React.useContext(CollisionBoundaryContext);
 export const useTheme = () => React.useContext(ThemeContext);
@@ -50,6 +51,11 @@ export function CipherScope({
   ref?: React.Ref<HTMLDivElement>;
 }) {
   const parentTheme = useTheme();
+  const onClient = React.useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false
+  );
   const [wrapper, setWrapper] = React.useState<HTMLDivElement | null>(null);
   const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
   const [toastLayer, setToastLayer] = React.useState<HTMLDivElement | null>(null);
@@ -118,6 +124,7 @@ export function CipherScope({
                   {children}
                 </div>
                 {portalContainer !== null &&
+                  onClient &&
                   createPortal(
                     <>
                       <div

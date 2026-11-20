@@ -168,7 +168,7 @@ outputs.set(
   json({
     $schema: "https://ui.shadcn.com/schema/registry.json",
     name: registryName,
-    homepage: "https://github.com/Infisical/cipher",
+    homepage: "https://infisical.com/cipher",
     items: entries
   })
 );

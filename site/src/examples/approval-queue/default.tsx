@@ -51,7 +51,7 @@ const initial: ApprovalRequest[] = [
 ];
 
 const diffs: Record<string, string> = {
-  stripe: "- stripe_api_key = sk_live_...4f2a\n+ stripe_api_key = sk_live_...9c1e",
+  stripe: "- stripe_api_key = sk_example_...4f2a\n+ stripe_api_key = sk_example_...9c1e",
   db: "- database_url = postgres://primary.internal/payments\n+ database_url = postgres://replica-2.internal/payments",
   sync: "+ SENTRY_DSN\n+ REDIS_URL\n+ FEATURE_FLAGS_KEY"
 };

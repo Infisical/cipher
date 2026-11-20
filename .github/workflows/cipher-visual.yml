@@ -8,12 +8,11 @@ on:
     types: [opened, synchronize, reopened, labeled]
     paths:
       - .github/workflows/cipher-visual.yml
-      - .github/cipher-visual/**
+      - ci/visual/**
   workflow_dispatch:
     inputs:
       base:
-        description: Baseline ref (tag, branch or sha)
-        default: v0.1.15
+        description: Baseline ref (tag, branch or sha). Defaults to the newest release tag.
       candidate:
         description: Candidate ref
         default: main
@@ -27,10 +26,8 @@ permissions:
   contents: read
 
 env:
-  CIPHER_BASE: v0.1.15
-  CIPHER_CANDIDATE: v0.1.16
-  # Any changed pixel counts, antialiasing included: a soft Badge fill moved by 25 per channel, under
-  # pixelmatch's default threshold. Renders are byte-identical run to run, so this adds no noise.
+  # Any changed pixel counts, antialiasing included. Renders are byte-identical run to run, so a zero
+  # threshold adds no noise and catches low-contrast fills that pixelmatch's default would miss.
   PIXEL_THRESHOLD: "0"
 
 jobs:
@@ -42,24 +39,25 @@ jobs:
       candidate: ${{ steps.scope.outputs.candidate }}
       pages: ${{ steps.scope.outputs.pages }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
       - name: Scope
         id: scope
         env:
-          BASE: ${{ inputs.base || env.CIPHER_BASE }}
-          CANDIDATE: ${{ inputs.candidate || env.CIPHER_CANDIDATE }}
+          BASE: ${{ inputs.base }}
+          CANDIDATE: ${{ inputs.candidate || 'main' }}
           MODE: ${{ inputs.scope || (contains(github.event.pull_request.labels.*.name, 'cipher-visual:scoped') && 'scoped' || 'full') }}
         run: |
           git fetch -q --tags origin main
+          [ -n "$BASE" ] || BASE=$(git tag --list 'v*' --sort=-v:refname | head -1)
           resolve() { git rev-parse -q --verify "origin/$1^{commit}" 2>/dev/null || git rev-parse "$1^{commit}"; }
           base=$(resolve "$BASE")
           candidate=$(resolve "$CANDIDATE")
-          node .github/cipher-visual/scope.mjs --cipher . --base "$base" --candidate "$candidate" > /tmp/refs.json
+          node ci/visual/scope.mjs --cipher . --base "$base" --candidate "$candidate" > /tmp/refs.json
           source=$(jq -r .candidate.source /tmp/refs.json)
           git worktree add -q --detach /tmp/cand "$source"
           node -e '
@@ -69,7 +67,7 @@ jobs:
               alias: { "@infisical/cipher/": "/tmp/cand/src/" },
               pages: catalog.map((e) => ({ id: e.id, entries: e.examples.map((x) => "/tmp/cand/site/src/examples/" + x.module + ".tsx") }))
             }));'
-          node .github/cipher-visual/scope.mjs --cipher /tmp/cand --base "$base" --candidate "$source" --pages /tmp/pages.json --showcase \
+          node ci/visual/scope.mjs --cipher /tmp/cand --base "$base" --candidate "$source" --pages /tmp/pages.json --showcase \
             | jq --arg mode "$MODE" --arg b "$BASE" --arg c "$CANDIDATE" '.mode = $mode | .base.ref = $b | .candidate.ref = $c' > scope.json
           pages=""
           if [ "$MODE" = scoped ] && [ "$(jq .full scope.json)" = false ]; then
@@ -80,7 +78,7 @@ jobs:
           echo "candidate=$source" >> "$GITHUB_OUTPUT"
           echo "pages=$pages" >> "$GITHUB_OUTPUT"
           jq -c '{mode, full, fullReasons, changed, icons, pages: (.pages | length)}' scope.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cipher-visual-scope
           path: scope.json
@@ -101,12 +99,12 @@ jobs:
       CI: "1"
       HOME: /root
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ needs.prepare.outputs[matrix.side] }}
           path: side
-      - uses: actions/cache@v4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: /root/.npm
           key: npm2-${{ hashFiles('package-lock.json', 'side/package-lock.json') }}
@@ -131,7 +129,7 @@ jobs:
           for _ in $(seq 60); do curl -sf http://127.0.0.1:4173/visual.html > /dev/null && break; sleep 1; done
           npx playwright test --shard=${{ matrix.shard }}/8 --update-snapshots=all --pass-with-no-tests --reporter=dot
           echo "$(find snapshots -name '*.png' | wc -l) snapshots"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: snapshots-${{ matrix.side }}-${{ matrix.shard }}
           path: snapshots
@@ -143,35 +141,35 @@ jobs:
     if: always() && needs.prepare.result == 'success' && (needs.capture.result == 'success' || needs.capture.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          sparse-checkout: .github/cipher-visual
-      - uses: actions/setup-node@v4
+          sparse-checkout: ci/visual
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: .github/cipher-visual/package-lock.json
+          cache-dependency-path: ci/visual/package-lock.json
       - if: needs.capture.result == 'success'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           pattern: snapshots-base-*
           path: before
           merge-multiple: true
       - if: needs.capture.result == 'success'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           pattern: snapshots-candidate-*
           path: after
           merge-multiple: true
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: cipher-visual-scope
       - name: Diff
         run: |
-          npm ci --prefix .github/cipher-visual --no-audit --no-fund
-          node .github/cipher-visual/compare.mjs before after report scope.json >> "$GITHUB_STEP_SUMMARY"
+          npm ci --prefix ci/visual --no-audit --no-fund
+          node ci/visual/compare.mjs before after report scope.json >> "$GITHUB_STEP_SUMMARY"
           cp scope.json report/
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cipher-visual-report
           path: report
