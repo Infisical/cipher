@@ -2,7 +2,7 @@ import * as React from "react";
 import type { DateRange, Locale, Matcher } from "react-day-picker";
 
 import { useFieldControlAttributes } from "../lib/field-context";
-import { cn } from "../lib/utils";
+import { cn, titleIfClamped } from "../lib/utils";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -29,6 +29,8 @@ export type DateRangePickerProps = Omit<
   align?: "start" | "center" | "end";
   locale?: Partial<Locale>;
   formatRange?: (range: CompleteDateRange) => string;
+  /** A Badge after the range in the trigger, such as "Current" for the period that is still running. */
+  badge?: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;
 };
 
@@ -61,6 +63,7 @@ export function DateRangePicker({
   align = "start",
   locale,
   formatRange,
+  badge,
   className,
   ...props
 }: DateRangePickerProps) {
@@ -72,6 +75,11 @@ export function DateRangePicker({
   const id = field.id ?? generatedId;
   const apply = commitMode === "apply";
   const format = (range: CompleteDateRange) => formatRange?.(range) ?? defaultFormat(range, locale);
+  const valueText = React.useRef<HTMLSpanElement>(null);
+  const valueLabel = isComplete(value) ? format(value) : undefined;
+  React.useLayoutEffect(() => {
+    if (valueText.current) titleIfClamped(valueText.current);
+  }, [valueLabel]);
   const commit = (next: DateRange | undefined) => {
     onValueChange(next);
     setOpen(false);
@@ -107,7 +115,18 @@ export function DateRangePicker({
           id={id}
           aria-labelledby={field["aria-labelledby"] && `${field["aria-labelledby"]} ${id}`}
         >
-          {isComplete(value) ? (
+          {isComplete(value) && badge !== undefined ? (
+            <span className={controlStyles.triggerValue}>
+              <span
+                ref={valueText}
+                data-slot="option-text"
+                onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+              >
+                {format(value)}
+              </span>
+              {badge}
+            </span>
+          ) : isComplete(value) ? (
             format(value)
           ) : (
             <span className="text-muted-foreground">{placeholder}</span>

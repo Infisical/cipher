@@ -308,6 +308,56 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.selectTrigger [data-slot="select-value"]:has(> [data-slot="option-text"]),
+.triggerValue {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.trigger > .triggerValue,
+[data-cipher-button] :has(> .triggerValue) {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+:is(.selectTrigger [data-slot="select-value"], .triggerValue) > [data-slot="option-text"] {
+  flex: 0 1000 auto;
+  min-width: min(6ch, 100%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(.selectTrigger [data-slot="select-value"], .triggerValue)
+  > [data-slot="option-text"]
+  + [data-slot="badge"] {
+  --trigger-badge-height: var(
+    --cipher-field-nested,
+    calc(
+      var(--cipher-action-height) - 2 *
+        (var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border))
+    )
+  );
+  height: var(--trigger-badge-height);
+  margin-block: calc(
+    (
+        var(--cipher-action-line-height, var(--cipher-type-body-line-height)) -
+          var(--trigger-badge-height)
+      ) /
+      2
+  );
+}
+:is(.selectTrigger [data-slot="select-value"], .triggerValue)
+  > [data-slot="option-text"]
+  + [data-slot="badge"][data-collapse] {
+  flex-shrink: 1;
+}
+:is(.selectTrigger [data-slot="select-value"], .triggerValue)
+  > [data-slot="option-text"]
+  + [data-slot="badge"][data-collapse]:not([data-fit], :has(> :not([data-badge-text]))) {
+  min-width: calc(6ch + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border));
+}
 /* Every item after the first slides back one border width so neighbours share a single seam line; the item drawn on top owns the seam, so fields and hovered, pressed and focused items rise above their neighbours to keep their border and focus ring whole. A visible separator keeps its own width. */
 .group[data-variant="attached"]:not([data-has-group]) > :not(:global(.sr-only)) {
   position: relative;
