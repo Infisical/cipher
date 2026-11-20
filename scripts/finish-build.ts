@@ -16,6 +16,17 @@ filesIn(dist)
     const next = text.replace(/^import ["'][^"']+\.css["'];\n/gm, "");
     if (next !== text) writeFileSync(file, next);
   });
+const clientEntries = [path.join(dist, "scope.js")].concat(
+  ...["ui", "patterns", "hooks"].map((folder) =>
+    filesIn(path.join(dist, folder)).filter(
+      (file) => file.endsWith(".js") && !file.endsWith(".module.js")
+    )
+  )
+);
+clientEntries.forEach((file) => {
+  const text = readFileSync(file, "utf8");
+  if (!/^["']use client["']/.test(text)) writeFileSync(file, '"use client";\n' + text);
+});
 cpSync(path.join(root, "src/tokens.json"), path.join(dist, "tokens.json"));
 cpSync(path.join(root, "src/tokens.generated.css"), path.join(dist, "tokens.css"));
 cpSync(path.join(root, "src/THIRD_PARTY_NOTICES.md"), path.join(dist, "THIRD_PARTY_NOTICES.md"));
