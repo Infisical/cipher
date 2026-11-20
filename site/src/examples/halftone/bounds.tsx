@@ -40,6 +40,21 @@ export default function Example() {
           }
         </figcaption>
       </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <Card
+          {...hueScope(25)}
+          title={
+            <CardLink link={{ href: "#/components/halftone" }}>
+              Secret scanning findings
+            </CardLink>
+          }
+          description="23 across 4 data sources"
+          backdrop={<Halftone width={160} height={96} seed="findings" />}
+        />
+        <figcaption className="text-muted-foreground text-xs">
+          {"width 160, height 96: a fixed corner box, at rest and on hover"}
+        </figcaption>
+      </figure>
     </div>
   );
 }
