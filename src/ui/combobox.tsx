@@ -530,12 +530,14 @@ export function Combobox({
                   value={`create:${query}`}
                   data-slot="combobox-create-option"
                   data-highlight-default=""
+                  data-wrap=""
+                  className={styles.createOption}
                   onSelect={() => {
                     creation.create(query.trim());
                   }}
                 >
                   <Icon name="plus" />
-                  <span className={menu.title}>
+                  <span className={styles.optionLabel}>
                     {creating
                       ? "Creating…"
                       : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
