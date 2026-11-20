@@ -75,6 +75,13 @@
   align-items: center;
   gap: var(--cipher-space-6);
 }
+.titleToggle {
+  outline: none;
+}
+.title:has(> .titleToggle:focus-visible) {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
+}
 .title[data-truncate] {
   flex: 0 1 auto;
   overflow: hidden;
