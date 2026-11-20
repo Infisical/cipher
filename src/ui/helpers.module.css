@@ -45,7 +45,7 @@
 .titleCount[data-wrap] {
   display: inline;
 }
-.titleCount[data-wrap] > [data-slot="count"] {
+.titleCount[data-wrap] > span:first-child + * {
   margin-inline-start: var(--cipher-space-8);
   vertical-align: middle;
 }
