@@ -85,6 +85,30 @@ export default function Example() {
           {"On a narrow header, a collapsible badge shortens beside the title before it wraps"}
         </figcaption>
       </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <PageHeader
+            breadcrumb={[{ label: "Secrets", href: "#page-header" }]}
+            title="payments-settlement-reconciliation-backend-worker-eu-west"
+            moreActions={[
+              { label: "Export", icon: "download", onSelect: () => undefined },
+              { label: "View audit log", icon: "history", href: "#page-header" },
+              {
+                label: "Delete secret",
+                icon: "trash",
+                variant: "destructive",
+                onSelect: () => undefined
+              }
+            ]}
+            actions={<Button variant="accent">Rotate now</Button>}
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {
+            "moreActions are buttons on a wide header and move into a More actions menu on a narrow one"
+          }
+        </figcaption>
+      </figure>
     </div>
   );
 }

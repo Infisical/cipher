@@ -2,9 +2,26 @@ import * as React from "react";
 
 import { cn, titleIfClamped } from "../lib/utils";
 import { Breadcrumb, type BreadcrumbCrumb } from "./breadcrumb";
-import { Icon } from "./icon";
+import { Button } from "./button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "./dropdown-menu";
+import { Icon, type IconSource } from "./icon";
 
 import styles from "./page-header.module.css";
+
+export type PageHeaderMoreAction = {
+  label: string;
+  icon?: IconSource;
+  /** Navigates instead of acting in place: renders a link, as a button and as a menu item. */
+  href?: string;
+  onSelect?: () => void;
+  variant?: "default" | "destructive";
+  disabledReason?: string;
+};
 
 export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "title"> & {
   title: React.ReactNode;
@@ -16,6 +33,13 @@ export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "ti
   badges?: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
+  /**
+   * Secondary actions, drawn as outline buttons before `actions` while the header is wide. Below the
+   * narrow breakpoint they move into a "More actions" menu, so the primary actions keep their labels
+   * and the title keeps its room.
+   */
+  moreActions?: readonly PageHeaderMoreAction[];
+  moreLabel?: string;
   tabs?: React.ReactNode;
   media?: React.ReactNode;
   /** Keeps a long title on one line, ending in an ellipsis with the full title on hover, instead of wrapping. */
@@ -31,6 +55,8 @@ export function PageHeader({
   badges,
   description,
   actions,
+  moreActions,
+  moreLabel = "More actions",
   tabs,
   media,
   truncateTitle = false,
@@ -69,6 +95,7 @@ export function PageHeader({
     };
   }, [truncateTitle]);
   const titleToggle = !truncateTitle && titleClamped;
+  const more = moreActions && moreActions.length > 0 ? moreActions : null;
   return (
     <header
       ref={ref}
@@ -133,7 +160,7 @@ export function PageHeader({
             </span>
           )}
         </div>
-        {actions && (
+        {(actions || more) && (
           <div
             data-slot="page-header-actions"
             className={styles.actions}
@@ -160,6 +187,44 @@ export function PageHeader({
               }
             }}
           >
+            {more && (
+              <>
+                <span data-slot="page-header-more-inline" className={styles.moreInline}>
+                  {more.map((action) => (
+                    <Button
+                      key={action.label}
+                      variant="outline"
+                      icon={action.icon}
+                      disabledReason={action.disabledReason}
+                      asChild={Boolean(action.href)}
+                      onClick={action.href ? undefined : action.onSelect}
+                    >
+                      {action.href ? <a href={action.href}>{action.label}</a> : action.label}
+                    </Button>
+                  ))}
+                </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" icon="more" iconOnly className={styles.moreMenu}>
+                      {moreLabel}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {more.map((action) => (
+                      <DropdownMenuItem
+                        key={action.label}
+                        variant={action.variant}
+                        disabledReason={action.disabledReason}
+                        asChild={Boolean(action.href)}
+                        onSelect={action.href ? undefined : action.onSelect}
+                      >
+                        {action.href ? <a href={action.href}>{action.label}</a> : action.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            )}
             {actions}
           </div>
         )}

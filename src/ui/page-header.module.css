@@ -115,10 +115,22 @@
 .header[data-size="md"] .actions {
   min-height: var(--cipher-type-title-lg-line-height);
 }
+.moreInline {
+  display: contents;
+}
+.moreMenu.moreMenu {
+  display: none;
+}
 .tabs {
   margin-top: var(--cipher-space-24);
 }
 @container page-header (max-width: 40rem) {
+  .moreInline {
+    display: none;
+  }
+  .moreMenu.moreMenu {
+    display: inline-flex;
+  }
   .main {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
