@@ -18,7 +18,7 @@ const pages = [
 ];
 
 const triggerSelector =
-  'main :is(button, [role="button"]):is([aria-haspopup], [aria-expanded="false"]), main [data-example] button:not([aria-pressed])';
+  'main :is(button, [role="button"]):is([aria-haspopup], [aria-expanded="false"]), main [data-example] button:not([aria-pressed]), main input[role="combobox"]';
 const overlaySelector =
   '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [data-radix-popper-content-wrapper] > *';
 
