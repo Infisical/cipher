@@ -304,3 +304,23 @@ export function Count({
   );
 }
 Count.displayName = "Count";
+
+/** A title followed by its count, as List and Heading show it. A number or string becomes the accent Count. */
+export function TitleCount({
+  count,
+  wrap = false,
+  children
+}: {
+  count: React.ReactNode;
+  /** Lets the title wrap with the count after its last word, instead of truncating beside a fixed count. */
+  wrap?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <span data-slot="title-count" data-wrap={wrap || undefined} className={helperStyles.titleCount}>
+      <span>{children}</span>
+      {typeof count === "number" || typeof count === "string" ? <Count>{count}</Count> : count}
+    </span>
+  );
+}
+TitleCount.displayName = "TitleCount";
