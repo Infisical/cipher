@@ -2,6 +2,28 @@
 
 All notable changes to `@infisical/cipher` are listed here. Versions follow semver; while Cipher is on 0.x, a minor bump can include breaking changes.
 
+## 0.1.21 (2026-11-20)
+
+### Added
+
+- `Button` takes `variant="success"` for the one action that completes a positive outcome behind a gate, such as Merge on an approved change request. It is a solid green with a white label in both themes, backed by the new `ok-fill`, `on-ok` and `ok-hover` tokens. ([#198](https://github.com/Infisical/cipher/pull/198))
+- A framed `Card` takes `toolbar`, a row of controls flush under the head with a rule below it. Its controls take the band height, and a `DataTable` after it still goes flush. ([#192](https://github.com/Infisical/cipher/pull/192))
+- `StatCard` takes `chart`, `chartPlacement` (`inset` or `bleed`), `chartSize`, `footer` and `action`. `StatCardChart` from `ui/stat-card-chart` draws an area chart sized to that band. ([#194](https://github.com/Infisical/cipher/pull/194))
+- `Halftone` takes `width` and `height`, pixel caps on the corner wash, so a fixed corner box no longer needs a positioned wrapper. ([#195](https://github.com/Infisical/cipher/pull/195))
+- `SidebarLink` takes `badge`, shown after the label in the expanded row and in a rail item's child menu. ([#196](https://github.com/Infisical/cipher/pull/196))
+- `Item` takes `actionsBreakpoint`, the content width in pixels at which its actions move beside the copy. ([#197](https://github.com/Infisical/cipher/pull/197))
+- `Select`, `Combobox` and `DateRangePicker` triggers show the selected option's badge after the value. The value truncates before the badge, and shows its full text on hover. ([#193](https://github.com/Infisical/cipher/pull/193))
+- `DataTable` takes `showFewer`, a "Show fewer" beside "Show more". ([#199](https://github.com/Infisical/cipher/pull/199))
+
+### Changed
+
+- `DataTable`'s `loadMore` is a ghost "Show more" in a footer band, with `persistentStatus` muted at its start, instead of an outline button under the rows. `loadMore.label` is optional. In a framed `Card` with `footerPlacement="frame"` and no footer of its own, the footer moves into the card's frame band. With `height`, the band stays at the bottom of the scroll window. ([#199](https://github.com/Infisical/cipher/pull/199))
+
+### Fixed
+
+- A bare `List`'s footer lines up with its rows' text instead of the list's edge. ([#200](https://github.com/Infisical/cipher/pull/200))
+- `FilterBar` wraps on a narrow bar instead of crushing the search and spilling its actions, and a long applied chip ends in an ellipsis. ([#191](https://github.com/Infisical/cipher/pull/191))
+
 ## 0.1.20 (2026-11-20)
 
 ### Added
