@@ -47,7 +47,14 @@ export default function Example() {
               rows.length < total ? { loading, onClick: () => setLoading(true) } : undefined
             }
             showFewer={
-              rows.length > page ? { onClick: () => setRows(makeRows(0, page)) } : undefined
+              rows.length > page
+                ? {
+                    onClick: () => {
+                      setLoading(false);
+                      setRows(makeRows(0, page));
+                    }
+                  }
+                : undefined
             }
             end="End of events"
             persistentStatus={`Showing ${rows.length} of ${total} events`}

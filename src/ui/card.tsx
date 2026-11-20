@@ -208,60 +208,62 @@ function Card({
         <CardChoiceContext value={reportChoice}>
           <FrameScope framed={inFrame || variant !== "plain"}>
             <EmptyScope size="sm" fill={flush}>
-              <FramedContext value={variant !== "plain"}>
-                {convenience && variant !== "plain" && footerPlacement === "frame" ? (
-                  <>
-                    {!backdrop && header}
-                    {(hasBody || toolbar !== undefined || backdrop) && (
-                      <div
-                        data-slot="card-inset"
-                        className={cn(frameStyles.frameInset, controlStyles.cardInset)}
-                      >
-                        {backdrop}
-                        <FramedContext value={false}>
-                          {backdrop && header}
-                          {(hasBody || toolbar !== undefined) && (
-                            <CardContent>
-                              {toolbarRow}
-                              <FrameFootSlot value={footer === undefined ? footSlot : null}>
-                                {children}
-                              </FrameFootSlot>
-                            </CardContent>
-                          )}
-                        </FramedContext>
-                      </div>
-                    )}
-                    {footer !== undefined ? (
-                      <CardFooter placement="frame">{footer}</CardFooter>
-                    ) : (
-                      <CardFooter placement="frame" ref={setFoot} hidden={!footOwner} />
-                    )}
-                  </>
-                ) : convenience ? (
-                  <>
-                    {!panelBackdrop && backdrop}
-                    {header}
-                    <CardContent data-backdrop={panelBackdrop ? "" : undefined}>
-                      {panelBackdrop && backdrop}
-                      {toolbarRow}
+              <FrameFootSlot value={null}>
+                <FramedContext value={variant !== "plain"}>
+                  {convenience && variant !== "plain" && footerPlacement === "frame" ? (
+                    <>
+                      {!backdrop && header}
+                      {(hasBody || toolbar !== undefined || backdrop) && (
+                        <div
+                          data-slot="card-inset"
+                          className={cn(frameStyles.frameInset, controlStyles.cardInset)}
+                        >
+                          {backdrop}
+                          <FramedContext value={false}>
+                            {backdrop && header}
+                            {(hasBody || toolbar !== undefined) && (
+                              <CardContent>
+                                {toolbarRow}
+                                <FrameFootSlot value={footer === undefined ? footSlot : null}>
+                                  {children}
+                                </FrameFootSlot>
+                              </CardContent>
+                            )}
+                          </FramedContext>
+                        </div>
+                      )}
+                      {footer !== undefined ? (
+                        <CardFooter placement="frame">{footer}</CardFooter>
+                      ) : (
+                        <CardFooter placement="frame" ref={setFoot} hidden={!footOwner} />
+                      )}
+                    </>
+                  ) : convenience ? (
+                    <>
+                      {!panelBackdrop && backdrop}
+                      {header}
+                      <CardContent data-backdrop={panelBackdrop ? "" : undefined}>
+                        {panelBackdrop && backdrop}
+                        {toolbarRow}
+                        {children}
+                      </CardContent>
+                      {footer !== undefined && (
+                        <CardFooter placement={footerPlacement}>{footer}</CardFooter>
+                      )}
+                    </>
+                  ) : composed ? (
+                    <>
+                      {!composed.placed && backdrop}
+                      {composed.content}
+                    </>
+                  ) : (
+                    <>
+                      {backdrop}
                       {children}
-                    </CardContent>
-                    {footer !== undefined && (
-                      <CardFooter placement={footerPlacement}>{footer}</CardFooter>
-                    )}
-                  </>
-                ) : composed ? (
-                  <>
-                    {!composed.placed && backdrop}
-                    {composed.content}
-                  </>
-                ) : (
-                  <>
-                    {backdrop}
-                    {children}
-                  </>
-                )}
-              </FramedContext>
+                    </>
+                  )}
+                </FramedContext>
+              </FrameFootSlot>
             </EmptyScope>
           </FrameScope>
         </CardChoiceContext>
