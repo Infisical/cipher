@@ -51,15 +51,21 @@ export function PageHeader({
         style.getPropertyValue("--cipher-page-header-title-clamp").trim() === "2" &&
         element.scrollHeight > 2.5 * line;
       setTitleClamped(clamps);
-      if (!clamps) setTitleExpanded(false);
+      if (clamps) element.title = element.textContent ?? "";
+      else {
+        element.removeAttribute("title");
+        setTitleExpanded(false);
+      }
     };
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     const mutations = new MutationObserver(measure);
     mutations.observe(element, { subtree: true, childList: true, characterData: true });
+    document.fonts.addEventListener("loadingdone", measure);
     return () => {
       observer.disconnect();
       mutations.disconnect();
+      document.fonts.removeEventListener("loadingdone", measure);
     };
   }, [truncateTitle]);
   const titleToggle = !truncateTitle && titleClamped;
@@ -95,7 +101,6 @@ export function PageHeader({
             data-truncate={truncateTitle || undefined}
             data-expanded={titleExpanded || undefined}
             className={cn(styles.title, mono && styles.mono)}
-            title={titleClamped && typeof title === "string" ? title : undefined}
             onPointerEnter={
               truncateTitle ? (event) => titleIfClamped(event.currentTarget) : undefined
             }
