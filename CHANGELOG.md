@@ -186,7 +186,7 @@ All notable changes to `@infisical/cipher` are listed here. Versions follow semv
 
 ### Breaking changes
 
-- `MultiStep` `onComplete` now returns `MultiStepResult | Promise<MultiStepResult>` instead of `void | Promise<unknown>`. An `onComplete` that returns a value, such as `() => mutation.mutateAsync(dto)`, fails to type-check; wrap it in braces or `await` without returning. ([#78](https://github.com/Infisical/cipher/pull/78))
+- `MultiStep` `onComplete` now returns `MultiStepResult | Promise<MultiStepResult>` instead of `void | Promise<unknown>`. An `onComplete` that returns a value, such as `() => mutation.mutateAsync(dto)`, fails to type-check. Await it without returning the value: `async () => { await mutation.mutateAsync(dto); }`, so `MultiStep` still waits for the save and shows its error if it fails. ([#78](https://github.com/Infisical/cipher/pull/78))
 
 ### Added
 
