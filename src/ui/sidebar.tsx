@@ -319,11 +319,11 @@ const SidebarGroup = ({
                   {childItem.count ? <Count>{childItem.count}</Count> : null}
                 </a>
               ) : (
-                <span>
-                  {childItem.label}
-                  {childItem.badge}
-                  {childItem.count ? <Count>{childItem.count}</Count> : null}
-                </span>
+                [
+                  childItem.label,
+                  childItem.badge,
+                  childItem.count ? <Count key="count">{childItem.count}</Count> : null
+                ]
               )}
             </DropdownMenuItem>
           ))}
