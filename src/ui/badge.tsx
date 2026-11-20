@@ -51,7 +51,7 @@ function Badge({
   icon?: IconSource;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;
-  /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. Hovering shows the full text. */
+  /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. */
   collapse?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
@@ -75,14 +75,37 @@ function Badge({
     },
     [fitsWhole]
   );
-  const text = (content: React.ReactNode) =>
-    collapse ? (
-      <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
-        {content}
-      </span>
-    ) : (
-      content
-    );
+  const text = (content: React.ReactNode) => {
+    if (collapse)
+      return (
+        <span ref={textRef} data-badge-text="" className={helperStyles.badgeText}>
+          {content}
+        </span>
+      );
+    const nodes: React.ReactNode[] = [];
+    let run: React.ReactNode[] = [];
+    const flush = () => {
+      if (!run.length) return;
+      nodes.push(
+        <span key={nodes.length} data-badge-text="" className={helperStyles.badgeText}>
+          {run}
+        </span>
+      );
+      run = [];
+    };
+    React.Children.toArray(content).forEach((child) => {
+      if (
+        React.isValidElement<{ children?: React.ReactNode }>(child) &&
+        (child.type === "svg" ||
+          (child.type !== React.Fragment && child.props.children === undefined))
+      ) {
+        flush();
+        nodes.push(child);
+      } else run.push(child);
+    });
+    flush();
+    return nodes;
+  };
   const dotNode = (
     <>
       {dot && <span aria-hidden="true" className={helperStyles.badgeDot} />}
@@ -117,16 +140,21 @@ function Badge({
       onPointerEnter={(event: React.PointerEvent<HTMLSpanElement>) => {
         onPointerEnter?.(event);
         const badge = event.currentTarget;
-        const label = collapse && badge.querySelector<HTMLElement>("[data-badge-text]");
-        if (!label) return;
+        const labels = badge.querySelectorAll<HTMLElement>("[data-badge-text]");
+        if (!labels.length) return;
         if (props.title !== undefined) {
           delete badge.dataset.autoTitle;
           return;
         }
         const automatic = badge.dataset.autoTitle !== undefined;
         if (badge.title && !automatic) return;
-        if (label.scrollWidth > label.clientWidth + 1) {
-          badge.title = label.textContent ?? "";
+        const range = document.createRange();
+        const cut = Array.from(labels).some((label) => {
+          range.selectNodeContents(label);
+          return range.getBoundingClientRect().width > label.getBoundingClientRect().width + 0.1;
+        });
+        if (cut) {
+          badge.title = (badge.textContent ?? "").trim();
           badge.dataset.autoTitle = "";
         } else if (automatic) {
           badge.removeAttribute("title");

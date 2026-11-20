@@ -37,6 +37,7 @@
   max-width: none;
 }
 .aside :global([data-slot="data-list"]) dd {
+  --cipher-data-list-value-justify: flex-start;
   text-align: start;
 }
 .identity {

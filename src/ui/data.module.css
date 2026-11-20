@@ -1027,7 +1027,18 @@ button.rowTitle::after {
   max-width: none;
 }
 .dataList[data-density="compact"] dd {
+  --cipher-data-list-value-justify: flex-start;
   text-align: start;
+}
+.dataPair dd:has(> [data-slot="badge"] + [data-slot="badge"]),
+:where(.dataPair dd, .nativeTableCell) :where(:has(> [data-slot="badge"] + [data-slot="badge"])) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cipher-space-4);
+}
+.dataPair dd:has(> [data-slot="badge"] + [data-slot="badge"]),
+:where(.dataPair dd) :where(:has(> [data-slot="badge"] + [data-slot="badge"])) {
+  justify-content: var(--cipher-data-list-value-justify, flex-end);
 }
 .dataList[data-variant="stat"] dd {
   font-family: var(--cipher-type-display-font-family);
