@@ -314,6 +314,13 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   gap: var(--cipher-space-8);
   min-width: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.trigger > .triggerValue,
+[data-cipher-button] :has(> .triggerValue) {
+  overflow-x: clip;
+  overflow-y: visible;
 }
 :is(.selectTrigger [data-slot="select-value"], .triggerValue) > [data-slot="option-text"] {
   flex: 0 1000 auto;
