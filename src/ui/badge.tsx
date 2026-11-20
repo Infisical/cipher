@@ -181,7 +181,7 @@ function BadgeGroup({
   const groupRef = React.useRef<HTMLDivElement>(null);
   const measureRef = React.useRef<HTMLDivElement>(null);
   const [shown, setShown] = React.useState(items.length);
-  const [hidden, setHidden] = React.useState<string[]>([]);
+  const [hidden, setHidden] = React.useState("");
   React.useImperativeHandle(ref, () => groupRef.current as HTMLDivElement);
   React.useLayoutEffect(() => {
     const group = groupRef.current;
@@ -192,25 +192,32 @@ function BadgeGroup({
       const more = nodes.pop()?.getBoundingClientRect().width ?? 0;
       const widths = nodes.map((node) => node.getBoundingClientRect().width);
       const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+      const room = group.clientWidth + 0.5;
       let used = 0;
       let count = widths.length;
-      for (let index = 0; index < widths.length; index++) {
+      const whole = widths.reduce((sum, width) => sum + width, 0) + gap * (widths.length - 1);
+      for (let index = 0; whole > room && index < widths.length; index++) {
         used += (index ? gap : 0) + widths[index];
         const tail = index < widths.length - 1 ? gap + more : 0;
-        if (used + tail > group.clientWidth + 0.5) {
+        if (used + tail > room) {
           count = Math.max(1, index);
           break;
         }
       }
       setShown(count);
-      setHidden(nodes.slice(count).map((node) => (node.textContent ?? "").trim()));
+      setHidden(
+        nodes
+          .slice(count)
+          .map((node) => (node.textContent ?? "").trim())
+          .join(", ")
+      );
     };
     fit();
     const observer = new ResizeObserver(fit);
     observer.observe(group);
-    observer.observe(measure);
+    Array.from(measure.children).forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, [items.length]);
+  });
   const rest = items.length - shown;
   return (
     <div
@@ -221,8 +228,8 @@ function BadgeGroup({
     >
       {items.slice(0, shown)}
       {rest > 0 && (
-        <Tooltip content={hidden.join(", ")}>
-          <Badge tabIndex={0} aria-label={`${rest} more: ${hidden.join(", ")}`}>
+        <Tooltip content={hidden}>
+          <Badge tabIndex={0} aria-label={`${rest} more: ${hidden}`}>
             +{rest}
           </Badge>
         </Tooltip>
