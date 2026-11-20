@@ -1,4 +1,12 @@
-import { cpSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync
+} from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -25,7 +33,13 @@ const clientEntries = [path.join(dist, "scope.js")].concat(
 );
 clientEntries.forEach((file) => {
   const text = readFileSync(file, "utf8");
-  if (!/^["']use client["']/.test(text)) writeFileSync(file, '"use client";\n' + text);
+  if (/^["']use client["']/.test(text) || !/from ["']react(-dom)?["'/]/.test(text)) return;
+  writeFileSync(file, '"use client";\n' + text);
+  const mapFile = file + ".map";
+  if (!existsSync(mapFile)) return;
+  const map = JSON.parse(readFileSync(mapFile, "utf8"));
+  map.mappings = ";" + map.mappings;
+  writeFileSync(mapFile, JSON.stringify(map));
 });
 cpSync(path.join(root, "src/tokens.json"), path.join(dist, "tokens.json"));
 cpSync(path.join(root, "src/tokens.generated.css"), path.join(dist, "tokens.css"));
