@@ -473,6 +473,9 @@ a.row[href] {
 .count {
   flex: none;
 }
+.badge {
+  display: contents;
+}
 .dot {
   display: none;
 }
@@ -515,6 +518,7 @@ a.row[href] {
   display: none;
 }
 .sidebar[data-collapsed] .label,
+.sidebar[data-collapsed] .badge,
 .sidebar[data-collapsed] .count,
 .sidebar[data-collapsed] .trailing,
 .sidebar[data-collapsed] .chevron {

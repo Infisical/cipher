@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Badge } from "@infisical/cipher/ui/badge";
 import { Sidebar, type SidebarProps } from "@infisical/cipher/ui/sidebar";
 
 const spaces: SidebarProps["spaces"] = [
@@ -31,7 +32,17 @@ const spaces: SidebarProps["spaces"] = [
           },
           { id: "certificates", label: "Certificates", icon: "cert" },
           { id: "pam", label: "PAM", icon: "terminal" },
-          { id: "kms", label: "KMS", icon: "lock" }
+          { id: "kms", label: "KMS", icon: "lock" },
+          {
+            id: "agent-vault",
+            label: "Agent Vault",
+            icon: "agent",
+            badge: (
+              <Badge size="sm" tone="soft" collapse>
+                Preview
+              </Badge>
+            )
+          }
         ]
       }
     ]
