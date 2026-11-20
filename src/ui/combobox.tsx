@@ -396,7 +396,12 @@ export function Combobox({
           <span>{selectedOption?.label ?? (selected[0] || placeholder)}</span>
         ) : (
           <span className={controlStyles.triggerValue}>
-            <span data-slot="option-text">{selectedOption.label}</span>
+            <span
+              data-slot="option-text"
+              onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+            >
+              {selectedOption.label}
+            </span>
             {selectedOption.badge}
           </span>
         )}

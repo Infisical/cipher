@@ -2,7 +2,7 @@ import * as React from "react";
 import type { DateRange, Locale, Matcher } from "react-day-picker";
 
 import { useFieldControlAttributes } from "../lib/field-context";
-import { cn } from "../lib/utils";
+import { cn, titleIfClamped } from "../lib/utils";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -112,7 +112,12 @@ export function DateRangePicker({
         >
           {isComplete(value) && badge !== undefined ? (
             <span className={controlStyles.triggerValue}>
-              <span data-slot="option-text">{format(value)}</span>
+              <span
+                data-slot="option-text"
+                onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+              >
+                {format(value)}
+              </span>
               {badge}
             </span>
           ) : isComplete(value) ? (
