@@ -112,6 +112,7 @@ function Card({
   const inFrame = useInFrame("Card", requestedVariant);
   const variant = inFrame ? "plain" : requestedVariant;
   const panelBackdrop = variant !== "plain" && backdrop !== undefined;
+  const hasBody = React.Children.toArray(children).length > 0;
   const composed =
     !convenience && variant !== "plain" ? withPanelBackdrop(children, backdrop) : null;
   const [hasLink, reportLink] = useStretchedLinkHost();
@@ -190,18 +191,19 @@ function Card({
                 footer !== undefined &&
                 footerPlacement === "frame" ? (
                   <>
-                    <div
-                      data-slot="card-inset"
-                      className={cn(frameStyles.frameInset, controlStyles.cardInset)}
-                    >
-                      {backdrop}
-                      <FramedContext value={false}>
-                        {header}
-                        {children !== undefined && children !== null && (
-                          <CardContent>{children}</CardContent>
-                        )}
-                      </FramedContext>
-                    </div>
+                    {!backdrop && header}
+                    {(hasBody || backdrop) && (
+                      <div
+                        data-slot="card-inset"
+                        className={cn(frameStyles.frameInset, controlStyles.cardInset)}
+                      >
+                        {backdrop}
+                        <FramedContext value={false}>
+                          {backdrop && header}
+                          {hasBody && <CardContent>{children}</CardContent>}
+                        </FramedContext>
+                      </div>
+                    )}
                     <CardFooter placement="frame">{footer}</CardFooter>
                   </>
                 ) : convenience ? (

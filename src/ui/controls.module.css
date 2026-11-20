@@ -415,7 +415,8 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .card > .cardBody:empty {
   display: none;
 }
-.card > .cardBody:empty + .cardFooter {
+.card > .cardBody:empty + .cardFooter,
+.card[data-variant="framed"]:not(:has(> .cardInset)) > .cardFooter[data-placement="frame"] {
   margin-top: auto;
 }
 .card[data-variant="framed"] > .cardHeader {
@@ -569,7 +570,9 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 }
 .card[data-selected]:not([data-variant="framed"][data-has-slots]),
 .card[data-variant="framed"][data-selected]
-  > :is(.cardBody, .cardInset, .cardFooter:not([data-placement="frame"])) {
+  > :is(.cardBody, .cardInset, .cardFooter:not([data-placement="frame"])),
+.card[data-variant="framed"][data-selected]:not(:has(> .cardInset, > .cardBody))
+  > .cardFooter[data-placement="frame"] {
   border-color: var(--cipher-choice-selected-border);
   background-image: linear-gradient(
     var(--cipher-choice-selected-surface),
