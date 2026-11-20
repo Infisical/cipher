@@ -2,6 +2,26 @@
 
 All notable changes to `@infisical/cipher` are listed here. Versions follow semver; while Cipher is on 0.x, a minor bump can include breaking changes.
 
+## 0.1.20 (2026-11-20)
+
+### Added
+
+- `BadgeGroup` keeps a row of badges on one line. Badges that don't fit collapse into a `+N` button that opens a popover listing them, and a single badge that is still too wide truncates. ([#186](https://github.com/Infisical/cipher/pull/186))
+- `ActivityLog` events take `description`, a muted second line under the actor and summary that wraps instead of truncating. ([#189](https://github.com/Infisical/cipher/pull/189))
+
+### Changed
+
+- A framed `Card` with `footerPlacement="frame"` puts its title in the band like other framed cards, and leaves out the inset when it has no body. A card with a backdrop keeps its title over the backdrop. ([#187](https://github.com/Infisical/cipher/pull/187))
+
+### Fixed
+
+- Several badges in a table cell stay on one line again. Since 0.1.19 they could wrap, which narrowed a column sized to its content and made the row taller. Badges now wrap only in a `DataList` value and `Item` meta. ([#186](https://github.com/Infisical/cipher/pull/186))
+
+### Project
+
+- The showcase opens a page from a short link such as `#/table` and switches the address to the full route. ([#188](https://github.com/Infisical/cipher/pull/188))
+- The overlay overflow check also opens combobox inputs, so it covers `SecretPathInput` suggestions. ([#185](https://github.com/Infisical/cipher/pull/185))
+
 ## 0.1.19 (2026-11-20)
 
 ### Added

@@ -55,10 +55,6 @@
   flex-shrink: 1;
   min-width: 0;
 }
-.chips > li > * > button:first-child > span:has(> .value) {
-  display: flex;
-  min-width: 0;
-}
 .field {
   flex: none;
   color: var(--cipher-text2);
