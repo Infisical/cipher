@@ -1,6 +1,9 @@
+import type * as React from "react";
+
 import { Card } from "@infisical/cipher/ui/card";
 import { DataTable, type DataTableColumn } from "@infisical/cipher/ui/data-table";
 import { EmptyState } from "@infisical/cipher/ui/empty";
+import { Pagination } from "@infisical/cipher/ui/pagination";
 
 type Grant = { id: string; folder: string; environment: string; access: string };
 
@@ -21,7 +24,7 @@ const columns: DataTableColumn<Grant>[] = [
   { id: "access", header: "Access", width: 96, render: (row) => row.access }
 ];
 
-const table = (rows: Grant[], loading = false) => (
+const table = (rows: Grant[], loading = false, pagination?: React.ReactNode) => (
   <DataTable
     label="Folder access"
     rows={rows}
@@ -30,6 +33,7 @@ const table = (rows: Grant[], loading = false) => (
     rowLabel={(row) => row.folder}
     loading={loading}
     loadingRows={2}
+    pagination={pagination}
     empty={<EmptyState size="sm" icon="folder" title="This user has no folder access" />}
   />
 );
@@ -41,7 +45,22 @@ export default function Example() {
         ["Empty", table([])],
         ["Loading", table([], true)],
         ["Rows", table(grants)],
-        ["Many rows, long values", table(stressed)]
+        ["Many rows, long values", table(stressed)],
+        [
+          "Paginated",
+          table(
+            grants,
+            false,
+            <Pagination
+              label="Folder access pages"
+              variant="compact"
+              page={1}
+              onPageChange={() => {}}
+              total={42}
+              pageSize={2}
+            />
+          )
+        ]
       ].map(([caption, body]) => (
         <figure key={caption as string} className="m-0 flex w-full min-w-0 flex-col gap-3">
           <Card variant="framed" title="Folder access">
