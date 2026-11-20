@@ -36,6 +36,14 @@
   background: var(--cipher-tint);
   color: var(--cipher-text2);
 }
+.count[data-tone="warn"] {
+  background: var(--cipher-warn-bg);
+  color: var(--cipher-warn);
+}
+.count[data-tone="bad"] {
+  background: var(--cipher-bad-bg);
+  color: var(--cipher-bad);
+}
 .identity {
   display: flex;
   align-items: center;

@@ -3,6 +3,7 @@ import * as React from "react";
 import { FrameScope, useInFrame } from "../lib/frame-context";
 import { CipherLink, type CipherLinkTarget } from "../lib/link";
 import { cn } from "../lib/utils";
+import { Count } from "./badge";
 import { Checkbox } from "./checkbox";
 import { EmptyScope } from "./empty";
 import { Icon } from "./icon";
@@ -212,6 +213,8 @@ export function ListRow({
 export interface ListHeaderProps {
   title?: React.ReactNode;
   count?: React.ReactNode;
+  /** title puts the count right after the title, a number on the accent Count; end keeps it at the far right. */
+  countPlacement?: "end" | "title";
   action?: React.ReactNode;
 }
 export const ListHeader: React.FC<ListHeaderProps> = () => null;
@@ -239,6 +242,7 @@ export function List({
   children: content,
   title: titleProp,
   count: countProp,
+  countPlacement: countPlacementProp,
   action: actionProp,
   label,
   variant: requestedVariant,
@@ -254,7 +258,12 @@ export function List({
   empty = "No items",
   footer: footerProp
 }: ListProps) {
-  let header: ListHeaderProps = { title: titleProp, count: countProp, action: actionProp };
+  let header: ListHeaderProps = {
+    title: titleProp,
+    count: countProp,
+    countPlacement: countPlacementProp,
+    action: actionProp
+  };
   let footer = footerProp;
   let children = content;
   const parts = React.Children.toArray(content);
@@ -272,7 +281,15 @@ export function List({
       return false;
     });
   }
-  const { title, count: headerCount, action } = header;
+  const { title, count: rawCount, countPlacement = "end", action } = header;
+  const countAtTitle = countPlacement === "title" && Boolean(title);
+  const titleCount =
+    countAtTitle && (typeof rawCount === "number" || typeof rawCount === "string") ? (
+      <Count>{rawCount}</Count>
+    ) : (
+      rawCount
+    );
+  const headerCount = countAtTitle ? undefined : rawCount;
   const variant = requestedVariant ?? "framed";
   const inFrame = useInFrame("List", requestedVariant);
   const embedded = inFrame && variant === "framed";
@@ -361,7 +378,7 @@ export function List({
         <div
           className={cn(styles.listShell, framed && frame.frame)}
           data-slot="list"
-          data-frame-head={(framed && Boolean(title || headerCount || action)) || undefined}
+          data-frame-head={(framed && Boolean(title || rawCount || action)) || undefined}
           data-variant={variant}
           data-embedded={embedded || undefined}
           data-size={size}
@@ -369,7 +386,7 @@ export function List({
           {refreshing && !loading && (
             <span className={styles.refreshing} data-slot="list-refreshing" aria-hidden />
           )}
-          {(title || headerCount || action) && (
+          {(title || rawCount || action) && (
             <div
               className={framed ? frame.frameHead : styles.listHeader}
               data-select={selection === "multiple" || undefined}
@@ -392,7 +409,18 @@ export function List({
                   }
                 />
               )}
-              {title && <div className={framed ? frame.frameTitle : styles.listTitle}>{title}</div>}
+              {title && (
+                <div className={framed ? frame.frameTitle : styles.listTitle}>
+                  {countAtTitle ? (
+                    <span className={styles.listTitleCount}>
+                      <span>{title}</span>
+                      {titleCount}
+                    </span>
+                  ) : (
+                    title
+                  )}
+                </div>
+              )}
               {framed
                 ? (headerCount || action) && (
                     <div className={frame.frameAction}>

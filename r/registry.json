@@ -1820,6 +1820,7 @@
       "name": "list",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/badge",
         "@cipher/checkbox",
         "@cipher/cipher-base",
         "@cipher/empty",

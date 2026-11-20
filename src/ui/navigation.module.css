@@ -128,6 +128,18 @@
 [data-state="active"] > .tabCount[data-slot="count"] {
   color: var(--cipher-ink);
 }
+.tabCount[data-slot="count"]:is([data-tone="warn"], [data-tone="bad"]) {
+  min-width: var(--cipher-size-count);
+  padding-inline: var(--cipher-space-4);
+}
+.tabCount[data-slot="count"][data-tone="warn"] {
+  background: var(--cipher-warn-bg);
+  color: var(--cipher-warn);
+}
+.tabCount[data-slot="count"][data-tone="bad"] {
+  background: var(--cipher-bad-bg);
+  color: var(--cipher-bad);
+}
 .tabs {
   display: flex;
   gap: var(--cipher-space-content-group);

@@ -580,6 +580,20 @@
   padding-inline: calc(var(--cipher-space-surface-inset-sm) + var(--cipher-size-control-border));
   color: var(--cipher-ink);
 }
+.listTitleCount {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  max-width: 100%;
+}
+.listTitleCount > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.listTitleCount > [data-slot="count"] {
+  flex: none;
+}
 .listTitle {
   flex: 1;
   min-width: 0;
