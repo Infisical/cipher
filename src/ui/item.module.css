@@ -292,6 +292,12 @@
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+.meta:has(> [data-slot="badge"] + [data-slot="badge"]),
+:where(.meta) :where(:has(> [data-slot="badge"] + [data-slot="badge"])) {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--cipher-space-4);
+}
 
 .partDescription {
   font-family: var(--cipher-type-small-font-family);
