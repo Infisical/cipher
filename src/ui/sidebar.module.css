@@ -514,9 +514,6 @@ a.row[href] {
   background: var(--cipher-line);
   pointer-events: none;
 }
-.children[hidden] {
-  display: none;
-}
 .sidebar[data-collapsed] .label,
 .sidebar[data-collapsed] .badge,
 .sidebar[data-collapsed] .count,

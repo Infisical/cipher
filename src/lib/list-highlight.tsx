@@ -99,8 +99,14 @@ export function ListHighlight() {
       element instanceof HTMLElement && element.closest("[data-list-highlight]") === list
         ? element
         : null;
+    const shut = (element: HTMLElement) => {
+      const blocker = element.closest("[inert], [hidden]");
+      return Boolean(blocker && list.contains(blocker));
+    };
     const items = () =>
-      [...list.querySelectorAll(LIST_HIGHLIGHT_ITEM)].map(own).filter(Boolean) as HTMLElement[];
+      (
+        [...list.querySelectorAll(LIST_HIGHLIGHT_ITEM)].map(own).filter(Boolean) as HTMLElement[]
+      ).filter((item) => !shut(item));
     const first = (selector: string) => items().find((item) => item.matches(selector)) ?? null;
     const measureOne = (
       target: HTMLElement | null,
@@ -132,7 +138,8 @@ export function ListHighlight() {
       const expanded = first(EXPANDED);
       let hoverTarget: HTMLElement | null = expanded && !blocked(expanded) ? expanded : null;
       if (!hoverTarget && keyboard) hoverTarget = first(ACTIVE) ?? current;
-      else if (!hoverTarget && inside && hovered?.isConnected) hoverTarget = hovered;
+      else if (!hoverTarget && inside && hovered?.isConnected && !shut(hovered))
+        hoverTarget = hovered;
       hoverTarget ??= first(SHOWN_ACTIVE);
       measureOne(hoverTarget, setHover);
       measureOne(hoverTarget ? null : current, setSelection);
@@ -186,7 +193,11 @@ export function ListHighlight() {
     list.addEventListener("transitionend", schedule);
     document.addEventListener("keydown", key, true);
     const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
-    const sized = () => [list, ...items()];
+    const sized = () => [
+      list,
+      ...items(),
+      ...list.querySelectorAll<HTMLElement>('[data-slot="animated-collapse"]')
+    ];
     sized().forEach((item) => resize?.observe(item));
     const mutations = new MutationObserver((records) => {
       if (resize && records.some((record) => record.type === "childList")) {

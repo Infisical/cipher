@@ -2465,6 +2465,7 @@
       "name": "sidebar",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/animated-collapse",
         "@cipher/badge",
         "@cipher/button",
         "@cipher/cipher-base",
