@@ -2288,6 +2288,10 @@
       {
         "title": "Variants",
         "module": "toggle/variants"
+      },
+      {
+        "title": "Beside a full-width Input",
+        "module": "toggle/beside-input"
       }
     ]
   },

@@ -17,7 +17,7 @@ const toggleVariants = cva(
     controlStyles.toggle,
     material.paintTransition,
     material.neutralSelection,
-    "group/toggle inline-flex items-center justify-center whitespace-nowrap [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    "group/toggle inline-flex shrink-0 items-center justify-center whitespace-nowrap [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ],
   {
     variants: {
