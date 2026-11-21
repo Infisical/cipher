@@ -4,7 +4,7 @@
   --cipher-action-font-size: var(--cipher-type-label-font-size);
   --cipher-action-line-height: var(--cipher-type-label-line-height);
   --cipher-action-inset: var(--cipher-space-control-inline);
-  --cipher-action-icon-size: var(--cipher-size-icon);
+  --cipher-action-icon-size: var(--cipher-size-icon-label);
   --cipher-kbd-host-block: calc(var(--cipher-action-height) - 2 * var(--cipher-size-control-border));
   --cipher-kbd-host-end: var(--cipher-action-inset);
   box-sizing: border-box;
@@ -27,7 +27,6 @@ a.button[href]:not([aria-busy="true"]) {
   cursor: pointer;
 }
 .default {
-  --cipher-action-icon-size: var(--cipher-size-icon-sm);
   --cipher-action-requested-height: var(--cipher-size-control-default);
   --cipher-action-inset: var(--cipher-space-control-inline-sm);
 }
@@ -41,7 +40,7 @@ a.button[href]:not([aria-busy="true"]) {
 .extraSmall,
 .iconExtraSmall {
   --cipher-action-requested-height: var(--cipher-size-control-xs);
-  --cipher-action-icon-size: var(--cipher-size-icon-xs);
+  --cipher-action-icon-size: var(--cipher-size-icon-caption);
   --cipher-action-font-size: var(--cipher-type-caption-font-size);
   --cipher-action-line-height: var(--cipher-type-caption-line-height);
   --cipher-action-inset: var(--cipher-space-6);

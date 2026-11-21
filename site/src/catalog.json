@@ -1284,6 +1284,10 @@
       {
         "title": "Tiles as links, internal and external",
         "module": "item/tile-links"
+      },
+      {
+        "title": "Icon beside a wrapping title",
+        "module": "item/icon-wrap"
       }
     ]
   },

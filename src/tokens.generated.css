@@ -97,6 +97,9 @@
   --cipher-size-icon-sm: 14px;
   --cipher-size-icon: 16px;
   --cipher-size-icon-xs: 12px;
+  --cipher-size-icon-label: var(--cipher-size-icon);
+  --cipher-size-icon-small: var(--cipher-size-icon-sm);
+  --cipher-size-icon-caption: var(--cipher-size-icon-xs);
   --cipher-size-icon-lg: 20px;
   --cipher-size-icon-xl: 24px;
   --cipher-size-icon-2xl: 32px;
@@ -122,7 +125,7 @@
   --cipher-size-row-action-step: calc(var(--cipher-size-target-row) + var(--cipher-space-row-actions-gap));
   --cipher-size-glyph: var(--cipher-size-icon);
   --cipher-size-glyph-sm: var(--cipher-size-icon-sm);
-  --cipher-size-badge-glyph: var(--cipher-size-glyph-sm);
+  --cipher-size-badge-glyph: var(--cipher-size-icon-caption);
   --cipher-size-badge-glyph-sm: var(--cipher-size-icon-xs);
   --cipher-size-scroll-fade: 16px;
   --cipher-size-skeleton-text: 12px;

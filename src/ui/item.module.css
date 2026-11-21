@@ -21,6 +21,10 @@
   align-items: center;
   justify-content: center;
 }
+.lead:has(> svg:only-child) {
+  align-self: flex-start;
+  min-height: var(--cipher-type-row-title-line-height);
+}
 /* The media centres on a title plus one description line, then stays put as longer copy grows downward. */
 [data-slot="tile"]:not([data-layout="stacked"])[data-described] {
   --cipher-tile-default-row: calc(
@@ -91,6 +95,10 @@
   gap: var(--cipher-space-6);
   margin-top: var(--cipher-space-4);
   color: var(--cipher-bad);
+}
+.error > svg {
+  flex: none;
+  margin-block: calc((1lh - var(--cipher-size-icon-small)) / 2);
 }
 .actions {
   display: flex;

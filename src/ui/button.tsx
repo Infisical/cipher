@@ -150,7 +150,11 @@ function Button({
   else if (size === "md" || size === "lg") iconSize = 16;
   else if (size === "icon-row") iconSize = undefined;
   const iconDimension =
-    iconSize === undefined ? undefined : `var(--cipher-button-icon-size, ${iconSize}px)`;
+    iconSize === undefined
+      ? undefined
+      : iconOnly || size?.startsWith("icon")
+        ? `var(--cipher-button-icon-size, ${iconSize}px)`
+        : "var(--cipher-action-icon-size)";
   const trigger = layout === "trigger";
   const content = (label: React.ReactNode) => {
     const labelGroup = trigger ? (

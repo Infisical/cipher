@@ -1480,13 +1480,13 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 }
 .groupText svg {
   flex: none;
-  width: var(--cipher-size-icon-sm);
-  height: var(--cipher-size-icon-sm);
+  width: var(--cipher-size-icon-label);
+  height: var(--cipher-size-icon-label);
   pointer-events: none;
 }
 .groupText[data-size="xs"] svg {
-  width: var(--cipher-size-icon-xs);
-  height: var(--cipher-size-icon-xs);
+  width: var(--cipher-size-icon-caption);
+  height: var(--cipher-size-icon-caption);
 }
 .groupSeparator[data-slot="button-group-separator"] {
   flex: none;
