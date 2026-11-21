@@ -2,6 +2,18 @@
 
 All notable changes to `@infisical/cipher` are listed here. Versions follow semver; while Cipher is on 0.x, a minor bump can include breaking changes.
 
+## 0.1.22 (2026-11-21)
+
+### Added
+
+- `DetailLayout` takes `asideWidth="narrow"`, a 320px sidecar for a narrower aside. The default width is unchanged. ([#202](https://github.com/Infisical/cipher/pull/202))
+- `PageHeader` takes `moreActions` and `moreLabel`. Secondary actions show as outline buttons before `actions` on a wide header and move into a "More actions" menu below 40rem. ([#203](https://github.com/Infisical/cipher/pull/203))
+- `Heading` takes `count`, shown after the title the way `List`'s `countPlacement="title"` shows it. On a wrapping heading the count follows the last word. `TitleCount` from `ui/badge` is the shared piece. ([#205](https://github.com/Infisical/cipher/pull/205))
+
+### Fixed
+
+- `Combobox`'s inline Create row wraps a long label instead of truncating it. ([#204](https://github.com/Infisical/cipher/pull/204))
+
 ## 0.1.21 (2026-11-20)
 
 ### Added
