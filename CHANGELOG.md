@@ -2,6 +2,22 @@
 
 All notable changes to `@infisical/cipher` are listed here. Versions follow semver; while Cipher is on 0.x, a minor bump can include breaking changes.
 
+## 0.1.24 (2026-11-21)
+
+### Added
+
+- `--cipher-size-icon-label` (16px), `--cipher-size-icon-small` (14px) and `--cipher-size-icon-caption` (12px) size an icon beside text: the text's line height minus 4px, for 14px, 13px and 12px text. A leading icon centers on the first line of its text and stays there when the text wraps. ([#215](https://github.com/Infisical/cipher/pull/215))
+- `Stack` takes `gap="toolbar"`, the 24px `--cipher-space-toolbar-gap` between a list toolbar and the list, table or results it filters. ([#216](https://github.com/Infisical/cipher/pull/216))
+
+### Changed
+
+- **Visible change:** text buttons at the default size and in frame bands show 16px icons instead of 14px, matching the icons in Select, Tabs and menus beside them. Icon-only buttons keep their sizes. ([#215](https://github.com/Infisical/cipher/pull/215))
+- A default `Badge` shows a 12px glyph beside its 12px label, and a control-size `Badge` a 16px glyph. `Banner` and an `Alert` without a title show 14px icons beside their 13px text. `InputGroup` text addons use 16px icons, or 12px at the xs size. `Sidebar` icons stay 18px. ([#215](https://github.com/Infisical/cipher/pull/215))
+
+### Fixed
+
+- An `Item` or `Tile` with a bare icon as media, and the icon on an `Item`'s error line, center on the first line of their text instead of sitting about 2px high. ([#215](https://github.com/Infisical/cipher/pull/215))
+
 ## 0.1.23 (2026-11-21)
 
 ### Added
