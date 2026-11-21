@@ -186,7 +186,11 @@ export function ListHighlight() {
     list.addEventListener("transitionend", schedule);
     document.addEventListener("keydown", key, true);
     const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
-    const sized = () => [list, ...items()];
+    const sized = () => [
+      list,
+      ...items(),
+      ...list.querySelectorAll<HTMLElement>('[data-slot="animated-collapse"]')
+    ];
     sized().forEach((item) => resize?.observe(item));
     const mutations = new MutationObserver((records) => {
       if (resize && records.some((record) => record.type === "childList")) {
