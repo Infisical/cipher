@@ -5,6 +5,7 @@ import { FilterBar } from "@infisical/cipher/patterns/filter-bar";
 import { Button } from "@infisical/cipher/ui/button";
 import { DataTable } from "@infisical/cipher/ui/data-table";
 import { EmptyState } from "@infisical/cipher/ui/empty";
+import { Stack } from "@infisical/cipher/ui/layout";
 
 type Connection = { id: string; name: string; app: string };
 
@@ -19,7 +20,7 @@ function Connections({ all, initialSearch }: { all: Connection[]; initialSearch:
   const rows = all.filter((row) => row.name.toLowerCase().includes(query));
   return (
     <ListQueryScope>
-      <div className="flex w-full min-w-0 flex-col gap-(--cipher-space-toolbar-gap)">
+      <Stack gap="toolbar" className="w-full">
         <FilterBar
           label="App connections"
           searchLabel="Search connections"
@@ -56,7 +57,7 @@ function Connections({ all, initialSearch }: { all: Connection[]; initialSearch:
             )
           }
         />
-      </div>
+      </Stack>
     </ListQueryScope>
   );
 }

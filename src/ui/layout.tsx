@@ -47,7 +47,8 @@ type LayoutProps = React.ComponentPropsWithoutRef<"div"> & {
   align?: "start" | "center" | "end" | "stretch";
   justify?: "start" | "center" | "end" | "between";
 };
-const spacing = (gap: LayoutGap) => (gap === 0 ? 0 : `var(--cipher-space-${gap})`);
+const spacing = (gap: LayoutGap | "toolbar") =>
+  gap === 0 ? 0 : `var(--cipher-space-${gap === "toolbar" ? "toolbar-gap" : gap})`;
 const alignment = (align: LayoutProps["align"] | "baseline") =>
   align === "start" ? "flex-start" : align === "end" ? "flex-end" : align;
 export function Stack({
@@ -58,7 +59,10 @@ export function Stack({
   className,
   ref,
   ...props
-}: LayoutProps & { ref?: React.Ref<HTMLDivElement> }) {
+}: Omit<LayoutProps, "gap"> & {
+  /** "toolbar" is the gap between a list toolbar (a FilterBar or a search row) and the list, table or results it filters. */
+  gap?: LayoutGap | "toolbar";
+} & { ref?: React.Ref<HTMLDivElement> }) {
   return (
     <div
       ref={ref}

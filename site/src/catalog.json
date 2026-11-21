@@ -1340,6 +1340,10 @@
       {
         "title": "Stack, Inline, Grid and measures",
         "module": "layout/default"
+      },
+      {
+        "title": "Toolbar gap",
+        "module": "layout/toolbar-gap"
       }
     ]
   },
