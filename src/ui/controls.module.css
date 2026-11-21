@@ -1028,6 +1028,12 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 .inputGroup {
   padding: 0;
 }
+.inputGroup[data-size="xs"]
+  :is([data-slot="input-group-addon"], [data-slot="input-group-text"])
+  > svg:not([class*="size-"]) {
+  width: var(--cipher-size-icon-caption);
+  height: var(--cipher-size-icon-caption);
+}
 .inputGroup[data-stacked] {
   flex-direction: column;
   align-items: stretch;

@@ -21,7 +21,8 @@
   align-items: center;
   justify-content: center;
 }
-.lead:has(> svg:only-child) {
+.layout > .lead:has(> svg:first-child),
+.layout[data-has-actions] > .lead:has(> svg:first-child) {
   align-self: flex-start;
   min-height: var(--cipher-type-row-title-line-height);
 }

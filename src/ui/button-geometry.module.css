@@ -30,6 +30,9 @@ a.button[href]:not([aria-busy="true"]) {
   --cipher-action-requested-height: var(--cipher-size-control-default);
   --cipher-action-inset: var(--cipher-space-control-inline-sm);
 }
+.iconOnly:where(.default) {
+  --cipher-action-icon-size: var(--cipher-size-icon-sm);
+}
 .regular {
   --cipher-action-requested-height: var(--cipher-size-control-md);
 }

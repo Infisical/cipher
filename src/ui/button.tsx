@@ -260,6 +260,7 @@ function Button({
       {...props}
       disabled={reason ? undefined : props.disabled}
       data-cipher-button=""
+      data-icon-only={iconOnly || undefined}
       data-cipher-button-material={material ? "" : undefined}
       data-disabled-reason={reason ? "" : undefined}
       aria-busy={loading || undefined}
