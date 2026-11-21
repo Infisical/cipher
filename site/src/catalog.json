@@ -566,6 +566,10 @@
         "module": "combobox/async"
       },
       {
+        "title": "Multiple, loading",
+        "module": "combobox/multiple-loading"
+      },
+      {
         "title": "Free-text tags",
         "module": "combobox/tags"
       },
