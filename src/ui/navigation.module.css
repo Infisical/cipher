@@ -18,6 +18,10 @@
 .tabsTrack[data-rule-spans] {
   width: 100%;
 }
+.tabsTrack:is([data-width="full"], [data-rule-spans]):not(:has(> [data-orientation="vertical"])) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
 :global([data-slot="sheet-head"] > [data-slot="sheet-header"]:not(:has(~ :not([data-slot="sheet-view-subheader"]:empty))) > [data-slot="sheet-header-tabs"]) .tabsTrack {
   border-bottom: 0;
 }

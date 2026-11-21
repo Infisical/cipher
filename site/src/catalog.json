@@ -2176,6 +2176,10 @@
       {
         "title": "Count tones",
         "module": "tabs/count-tones"
+      },
+      {
+        "title": "Overflow",
+        "module": "tabs/overflow"
       }
     ]
   },
