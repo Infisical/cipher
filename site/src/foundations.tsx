@@ -15,7 +15,10 @@ const typeStyle = (name: string) => ({
 function TypographyPage() {
   return (
     <>
-      <PageHeader title="Typography" description="Archivo for everything people read, Geist Mono for machine values." />
+      <PageHeader
+        title="Typography"
+        description="Archivo for everything people read, Geist Mono for machine values."
+      />
       {tokens.type.groups.map((group) => (
         <section key={group.name} className="mt-10">
           <h2 className="mb-3 text-sm font-medium">{group.name}</h2>
@@ -36,7 +39,7 @@ function TypographyPage() {
   );
 }
 
-function SpacingRow({ name, value }: { name: string; value: string }) {
+function SpacingRow({ name, value, usage }: { name: string; value: string; usage?: string }) {
   const bar = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState<number>();
   useLayoutEffect(() => {
@@ -46,10 +49,11 @@ function SpacingRow({ name, value }: { name: string; value: string }) {
   }, []);
   const alias = value.includes("{");
   return (
-    <div className="grid grid-cols-[18rem_4rem_1fr] items-center gap-6">
+    <div className="grid grid-cols-[18rem_4rem_1fr] items-start gap-6">
       <div className="flex min-w-0 flex-col">
         <code className="text-sm whitespace-nowrap">{name}</code>
         {alias && <code className="text-muted-foreground text-xs">{value}</code>}
+        {usage && <p className="text-muted-foreground m-0 mt-1 text-xs">{usage}</p>}
       </div>
       <span className="text-muted-foreground text-xs whitespace-nowrap tabular-nums">
         {width === undefined ? value : `${width}px`}
@@ -74,7 +78,12 @@ function SpacingPage() {
         {tokens.spacing.tokens
           .filter((token) => token.name.startsWith("space-"))
           .map((token) => (
-            <SpacingRow key={token.name} name={token.name} value={token.value} />
+            <SpacingRow
+              key={token.name}
+              name={token.name}
+              value={token.value}
+              usage={token.usage}
+            />
           ))}
       </div>
     </>

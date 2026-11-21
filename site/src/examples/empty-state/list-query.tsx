@@ -19,7 +19,7 @@ function Connections({ all, initialSearch }: { all: Connection[]; initialSearch:
   const rows = all.filter((row) => row.name.toLowerCase().includes(query));
   return (
     <ListQueryScope>
-      <div className="flex w-full min-w-0 flex-col gap-3">
+      <div className="flex w-full min-w-0 flex-col gap-(--cipher-space-toolbar-gap)">
         <FilterBar
           label="App connections"
           searchLabel="Search connections"

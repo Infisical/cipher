@@ -70,7 +70,7 @@ const Bar = ({
   );
   return (
     <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
-      <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+      <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-(--cipher-space-toolbar-gap)">
         <FilterBar
           label="Secret filters"
           fields={searchOnly ? [] : fields}
