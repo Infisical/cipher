@@ -22,17 +22,29 @@ CollapsibleTrigger.displayName = "CollapsibleTrigger";
 
 function CollapsibleContent({
   className,
+  onAnimationStart,
+  onAnimationEnd,
   ref,
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
+  const [animating, setAnimating] = React.useState(false);
   return (
     <CollapsiblePrimitive.CollapsibleContent
       ref={ref}
       data-slot="collapsible-content"
       className={cn(
-        "overflow-clip duration-(--cipher-duration-moderate) ease-(--cipher-ease-spring) data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down motion-reduce:animate-none!",
+        "duration-(--cipher-duration-moderate) ease-(--cipher-ease-spring) data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down motion-reduce:animate-none!",
+        animating && "overflow-clip",
         className
       )}
+      onAnimationStart={(event) => {
+        if (event.target === event.currentTarget) setAnimating(true);
+        onAnimationStart?.(event);
+      }}
+      onAnimationEnd={(event) => {
+        if (event.target === event.currentTarget) setAnimating(false);
+        onAnimationEnd?.(event);
+      }}
       {...props}
     />
   );

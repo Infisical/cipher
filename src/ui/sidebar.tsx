@@ -410,7 +410,7 @@ const moveFocus = (event: React.KeyboardEvent<HTMLElement>) => {
     ...event.currentTarget.querySelectorAll<HTMLElement>("[data-sidebar-target]")
   ].filter(
     (target) =>
-      !target.closest("[hidden]") &&
+      !target.closest("[hidden], [inert]") &&
       !target.hasAttribute("disabled") &&
       target.getAttribute("aria-disabled") !== "true"
   );
