@@ -99,8 +99,14 @@ export function ListHighlight() {
       element instanceof HTMLElement && element.closest("[data-list-highlight]") === list
         ? element
         : null;
+    const shut = (element: HTMLElement) => {
+      const blocker = element.closest("[inert], [hidden]");
+      return Boolean(blocker && list.contains(blocker));
+    };
     const items = () =>
-      [...list.querySelectorAll(LIST_HIGHLIGHT_ITEM)].map(own).filter(Boolean) as HTMLElement[];
+      (
+        [...list.querySelectorAll(LIST_HIGHLIGHT_ITEM)].map(own).filter(Boolean) as HTMLElement[]
+      ).filter((item) => !shut(item));
     const first = (selector: string) => items().find((item) => item.matches(selector)) ?? null;
     const measureOne = (
       target: HTMLElement | null,

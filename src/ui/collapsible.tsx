@@ -30,16 +30,17 @@ function CollapsibleContent({
   const [animating, setAnimating] = React.useState(false);
   const attach = React.useCallback(
     (node: HTMLDivElement | null) => {
-      if (typeof ref === "function") ref(node);
-      else if (ref) ref.current = node;
       if (!node) return undefined;
+      const release = typeof ref === "function" ? ref(node) : undefined;
+      if (ref && typeof ref !== "function") ref.current = node;
       const cancel = (event: AnimationEvent) => {
         if (event.target === node) setAnimating(false);
       };
       node.addEventListener("animationcancel", cancel);
       return () => {
         node.removeEventListener("animationcancel", cancel);
-        if (typeof ref === "function") ref(null);
+        if (typeof release === "function") release();
+        else if (typeof ref === "function") ref(null);
         else if (ref) ref.current = null;
       };
     },
