@@ -2,6 +2,31 @@
 
 All notable changes to `@infisical/cipher` are listed here. Versions follow semver; while Cipher is on 0.x, a minor bump can include breaking changes.
 
+## 0.1.23 (2026-11-21)
+
+### Added
+
+- `Combobox` with `multiple` takes `loading`, as single mode does: a spinner in the search field and "Searching…" while there are no options yet. Selected chips stay visible and removable while it loads. ([#210](https://github.com/Infisical/cipher/pull/210))
+- `--cipher-space-toolbar-gap` (24px) is the gap between a list toolbar, such as a `FilterBar` or a search row, and the list, table or results under it on an open page. Set it as the gap of the stack that holds both. A `Card` toolbar band keeps its own inset. ([#213](https://github.com/Infisical/cipher/pull/213))
+
+### Changed
+
+- Sidebar groups open and close with a height animation instead of snapping, and arrow keys skip a closing group's rows. `CollapsibleContent` animates its height on the same timing as `Accordion`. Both snap when the person prefers reduced motion. ([#211](https://github.com/Infisical/cipher/pull/211))
+
+### Removed
+
+- **Breaking:** `Halftone`'s `reveal` prop. `reveal="hover"` no longer type-checks, so drop it. The corner wash shows at rest and grows on hover or focus, which was the `reveal="always"` default. ([#209](https://github.com/Infisical/cipher/pull/209))
+
+### Fixed
+
+- A long underline `Tabs` row inside a flex or grid item scrolls instead of widening its container, so the edge fade shows and the active tab stays in view. ([#207](https://github.com/Infisical/cipher/pull/207))
+- `Toggle` keeps its width in a no-wrap row instead of shrinking below its label. ([#212](https://github.com/Infisical/cipher/pull/212))
+- The list highlight no longer lands on rows inside a closing collapse, and it follows rows as a collapse in the list resizes. ([#211](https://github.com/Infisical/cipher/pull/211))
+
+### Project
+
+- Native table cells drop an `overflow-clip-margin` that browsers ignored. There is no visual change. ([#208](https://github.com/Infisical/cipher/pull/208))
+
 ## 0.1.22 (2026-11-21)
 
 ### Added
