@@ -1663,7 +1663,6 @@ tbody > .nativeTableRow[data-loading] {
   vertical-align: middle;
   white-space: nowrap;
   overflow: clip;
-  overflow-clip-margin: calc(2 * var(--cipher-size-focus-ring));
   text-overflow: ellipsis;
 }
 :is(.nativeTableHead, .nativeTableCell):is([data-pin], .tableActions) {
