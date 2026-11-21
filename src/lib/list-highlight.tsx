@@ -138,7 +138,8 @@ export function ListHighlight() {
       const expanded = first(EXPANDED);
       let hoverTarget: HTMLElement | null = expanded && !blocked(expanded) ? expanded : null;
       if (!hoverTarget && keyboard) hoverTarget = first(ACTIVE) ?? current;
-      else if (!hoverTarget && inside && hovered?.isConnected) hoverTarget = hovered;
+      else if (!hoverTarget && inside && hovered?.isConnected && !shut(hovered))
+        hoverTarget = hovered;
       hoverTarget ??= first(SHOWN_ACTIVE);
       measureOne(hoverTarget, setHover);
       measureOne(hoverTarget ? null : current, setSelection);
