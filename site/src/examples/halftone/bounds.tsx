@@ -32,12 +32,10 @@ export default function Example() {
             </CardLink>
           }
           description="1,284 in the last 30 days"
-          backdrop={<Halftone reveal="hover" size={16} seed="synced" />}
+          backdrop={<Halftone size={16} seed="synced" />}
         />
         <figcaption className="text-muted-foreground text-xs">
-          {
-            "reveal hover, size 16: nothing at rest, the corner grows out on hover"
-          }
+          {"size 16: the corner stops at 16 cells, at rest and on hover"}
         </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">

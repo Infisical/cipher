@@ -31,9 +31,6 @@
     clip-path calc(var(--cipher-duration-slow) * 4) var(--cipher-ease-fade),
     opacity calc(var(--cipher-duration-slow) * 2) var(--cipher-ease-fade);
 }
-.halftone[data-reveal="hover"] {
-  opacity: 0;
-}
 :global([data-slot="card"]):is(:hover, :focus-within) .halftone {
   opacity: calc(var(--cipher-halftone-peak-hover) * var(--halftone-intensity, 1));
 }

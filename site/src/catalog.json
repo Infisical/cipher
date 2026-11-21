@@ -2350,7 +2350,7 @@
         "module": "halftone/strength"
       },
       {
-        "title": "Bounds, size and reveal (hover a card)",
+        "title": "Bounds and size (hover a card)",
         "module": "halftone/bounds"
       },
       {
