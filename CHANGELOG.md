@@ -16,7 +16,7 @@ All notable changes to `@infisical/cipher` are listed here. Versions follow semv
 
 ### Fixed
 
-- An `Item` or `Tile` with a bare icon as media, and the icon on an `Item`'s error line, center on the first line of their text instead of sitting about 2px high. ([#215](https://github.com/Infisical/cipher/pull/215))
+- An `Item` with a bare icon as media, a `Tile` in row or inline layout with a bare icon and no description, and the icon on an `Item`'s error line now center on the first line of their text instead of sitting about 2px high. Described and stacked tiles are unchanged. ([#215](https://github.com/Infisical/cipher/pull/215))
 
 ## 0.1.23 (2026-11-21)
 
