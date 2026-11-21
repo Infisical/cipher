@@ -28,8 +28,6 @@ export type HalftoneProps = Omit<
   width?: number;
   /** Caps the corner at this many pixels down, at rest and on hover. Rounds down to whole cells. */
   height?: number;
-  /** hover draws nothing at rest and grows the corner out while the card is hovered or focused. */
-  reveal?: "always" | "hover";
   /** Cells shimmer in a slow wave travelling out from the anchor. Off under reduced motion. */
   ambient?: boolean;
 };
@@ -188,7 +186,6 @@ export function Halftone({
   size,
   width,
   height,
-  reveal = "always",
   ambient = false,
   className,
   style,
@@ -287,7 +284,7 @@ export function Halftone({
         Math.min(box.height * depth * scale, box.limitHeight) * overshoot +
         box.cell,
     };
-  const rest = reveal === "hover" ? { x: 0, y: 0 } : extent(1);
+  const rest = extent(1);
   const grown = extent(hoverScale);
   return (
     <span
@@ -295,7 +292,6 @@ export function Halftone({
       aria-hidden="true"
       data-slot="halftone"
       data-tone={tone}
-      data-reveal={reveal === "hover" ? "hover" : undefined}
       className={cn(styles.halftone, className)}
       style={{
         ...style,
