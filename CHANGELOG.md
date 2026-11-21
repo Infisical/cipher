@@ -6,7 +6,7 @@ All notable changes to `@infisical/cipher` are listed here. Versions follow semv
 
 ### Added
 
-- `--cipher-size-icon-label` (16px), `--cipher-size-icon-small` (14px) and `--cipher-size-icon-caption` (12px) size an icon beside text: the text's line height minus 4px, for 14px, 13px and 12px text. A leading icon centers on the first line of its text and stays there when the text wraps. ([#215](https://github.com/Infisical/cipher/pull/215))
+- `--cipher-size-icon-label` (16px), `--cipher-size-icon-small` (14px) and `--cipher-size-icon-caption` (12px) size an icon beside text: the text's line height minus 4px, for 14px, 13px and 12px text. An inline leading icon centers on the first line of its text and stays there when the text wraps. Media blocks and described tiles keep centering on a title plus one description line. ([#215](https://github.com/Infisical/cipher/pull/215))
 - `Stack` takes `gap="toolbar"`, the 24px `--cipher-space-toolbar-gap` between a list toolbar and the list, table or results it filters. ([#216](https://github.com/Infisical/cipher/pull/216))
 
 ### Changed
