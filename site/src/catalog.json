@@ -588,6 +588,10 @@
       {
         "title": "Search over keywords and group headings, with a custom search placeholder",
         "module": "combobox/keywords"
+      },
+      {
+        "title": "Multiple, loading",
+        "module": "combobox/multiple-loading"
       }
     ]
   },
