@@ -110,6 +110,8 @@ type SharedComboboxProps = {
   onCreate?: OptionCreateHandler;
   /** The inline Create row's text for the trimmed search, for example (query) => `Create category "${query}"`. */
   createLabel?: (query: string) => string;
+  /** While options are loading: a spinner in the search field, and Searching… in place of the empty text. Selected chips stay visible and removable. */
+  loading?: boolean;
   /** Shows a clear X in place of the chevron while the value holds something the person can remove. Locked (disabled) options stay selected. */
   clearable?: boolean;
   /** The clear X's accessible name, for example Remove usage cap. Defaults to Clear selection, or Clear all selections with multiple. */
@@ -127,7 +129,6 @@ export type ComboboxProps = SharedComboboxProps &
         onChange?: (value: string) => void;
         onValueChange?: (value: string) => void;
         onSearch?: (query: string) => void;
-        loading?: boolean;
         creation?: ComboboxCreation;
       }
     | {
@@ -137,7 +138,6 @@ export type ComboboxProps = SharedComboboxProps &
         onChange?: (value: string[]) => void;
         onValueChange?: (value: string[]) => void;
         onSearch?: never;
-        loading?: never;
         creation?: never;
       }
   );
@@ -159,7 +159,7 @@ export function Combobox({
     className
   } = props;
   const onSearch = props.multiple ? undefined : props.onSearch;
-  const loading = !props.multiple && Boolean(props.loading);
+  const loading = Boolean(props.loading);
   const creationConfig = props.multiple ? undefined : props.creation;
   const dialogCreation = creationConfig?.mode === "dialog" ? creationConfig : undefined;
   const rowCreation = creationConfig?.mode === "inline" ? undefined : creationConfig;
@@ -340,6 +340,7 @@ export function Combobox({
           renderValue={selected.length ? () => null : undefined}
           onCreate={onCreate}
           createLabel={props.createLabel}
+          loading={loading}
           className={className}
           onEmptyBackspace={() => {
             const last = selected[selected.length - 1];
