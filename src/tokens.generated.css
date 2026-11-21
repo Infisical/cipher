@@ -24,6 +24,7 @@
   --cipher-space-field-legend: var(--cipher-space-20);
   --cipher-space-content-group: var(--cipher-space-16);
   --cipher-space-actions-gap: var(--cipher-space-12);
+  --cipher-space-toolbar-gap: var(--cipher-space-24);
   --cipher-space-content-section: var(--cipher-space-32);
   --cipher-space-shell-gap: var(--cipher-space-8);
   --cipher-space-crumb-divider: var(--cipher-space-8);

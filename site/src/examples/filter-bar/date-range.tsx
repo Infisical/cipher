@@ -47,7 +47,7 @@ export default function Example() {
       filters.every((filter) => matches(event, filter))
   );
   return (
-    <div className="flex w-full min-w-0 flex-col items-stretch gap-3">
+    <div className="flex w-full min-w-0 flex-col items-stretch gap-(--cipher-space-toolbar-gap)">
       <FilterBar
         label="Event filters"
         fields={fields}
