@@ -22,7 +22,8 @@
   justify-content: center;
 }
 .layout > .lead:has(> svg:first-child),
-.layout[data-has-actions] > .lead:has(> svg:first-child) {
+.layout[data-has-actions] > .lead:has(> svg:first-child),
+[data-slot="tile"]:not([data-layout="stacked"]) > .lead:has(> svg:first-child) {
   align-self: flex-start;
   min-height: var(--cipher-type-row-title-line-height);
 }
