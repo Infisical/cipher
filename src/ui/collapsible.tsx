@@ -28,9 +28,26 @@ function CollapsibleContent({
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
   const [animating, setAnimating] = React.useState(false);
+  const attach = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+      if (!node) return undefined;
+      const cancel = (event: AnimationEvent) => {
+        if (event.target === node) setAnimating(false);
+      };
+      node.addEventListener("animationcancel", cancel);
+      return () => {
+        node.removeEventListener("animationcancel", cancel);
+        if (typeof ref === "function") ref(null);
+        else if (ref) ref.current = null;
+      };
+    },
+    [ref]
+  );
   return (
     <CollapsiblePrimitive.CollapsibleContent
-      ref={ref}
+      ref={attach}
       data-slot="collapsible-content"
       className={cn(
         "duration-(--cipher-duration-moderate) ease-(--cipher-ease-spring) data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down motion-reduce:animate-none!",
