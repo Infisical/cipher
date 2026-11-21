@@ -98,7 +98,7 @@ function AccordionContent({
       data-slot="accordion-content"
       className={cn(
         controlStyles.body,
-        "overflow-hidden duration-(--cipher-duration-moderate) ease-(--cipher-ease-spring) data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+        "overflow-hidden duration-(--cipher-duration-moderate) ease-(--cipher-ease-spring) data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down motion-reduce:animate-none!"
       )}
       {...props}
     >

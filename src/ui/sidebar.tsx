@@ -7,6 +7,7 @@ import { useReportPresence } from "../lib/presence-count";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
 import { Count } from "./badge";
+import { AnimatedCollapse } from "./animated-collapse";
 import { Button } from "./button";
 import {
   DropdownMenu,
@@ -348,19 +349,21 @@ const SidebarGroup = ({
           trailing={<Icon name="chev-right" size={14} className={styles.chevron} />}
         />
       </button>
-      <ul id={listId} className={styles.children} hidden={!open}>
-        {children.map((childItem) => (
-          <li key={childItem.id}>
-            <SidebarRow
-              item={childItem}
-              current={current}
-              rail={false}
-              child
-              onNavigate={onNavigate}
-            />
-          </li>
-        ))}
-      </ul>
+      <AnimatedCollapse open={open}>
+        <ul id={listId} className={styles.children}>
+          {children.map((childItem) => (
+            <li key={childItem.id}>
+              <SidebarRow
+                item={childItem}
+                current={current}
+                rail={false}
+                child
+                onNavigate={onNavigate}
+              />
+            </li>
+          ))}
+        </ul>
+      </AnimatedCollapse>
     </li>
   );
 };
