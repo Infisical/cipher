@@ -150,7 +150,7 @@ const RowContent = ({
   <>
     {!child &&
       (item.icon ? (
-        <Icon icon={item.icon} size={18} className={styles.icon} />
+        <Icon icon={item.icon} size="var(--cipher-size-sidebar-icon)" className={styles.icon} />
       ) : (
         <span className={styles.monogram} aria-hidden="true">
           {item.label.charAt(0)}

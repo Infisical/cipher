@@ -240,7 +240,9 @@
 }
 .bannerLead > svg {
   flex: 0 0 auto;
-  margin-block: calc((1lh - var(--cipher-size-icon)) / 2);
+  width: var(--cipher-size-icon-small);
+  height: var(--cipher-size-icon-small);
+  margin-block: calc((1lh - var(--cipher-size-icon-small)) / 2);
   color: var(--cipher-accent-fg);
 }
 .bannerText {
@@ -518,7 +520,7 @@
   letter-spacing: var(--cipher-type-body-letter-spacing);
 }
 .badge[data-size="control-sm"] {
-  --cipher-badge-glyph: var(--cipher-size-icon-sm);
+  --cipher-badge-glyph: var(--cipher-size-icon-label);
   --cipher-badge-pad: var(--cipher-space-control-inline-sm);
   height: var(--cipher-size-control-sm);
 }
@@ -828,7 +830,11 @@
 }
 .alert[data-has-icon]:not([data-has-title]) > svg {
   grid-row: 1;
-  transform: translateY(calc(var(--cipher-space-2) / 2));
+  width: var(--cipher-size-icon-small);
+  height: var(--cipher-size-icon-small);
+  transform: translateY(
+    calc((var(--cipher-type-small-line-height) - var(--cipher-size-icon-small)) / 2)
+  );
 }
 .alert[data-has-icon] > :is(.alertTitle, .alertDescription) {
   grid-column: 2;

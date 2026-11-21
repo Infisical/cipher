@@ -35,6 +35,12 @@
   --cipher-action-font-size: var(--cipher-type-label-font-size);
   --cipher-action-line-height: var(--cipher-type-label-line-height);
   --cipher-action-inset: var(--cipher-space-control-inline-sm);
+  --cipher-action-icon-size: var(--cipher-size-icon-label);
+}
+:is(.frameHead, .frameFoot.frameFoot, .frameToolbar)
+  [data-cipher-button][data-icon-only]:is([data-size="xs"], [data-size="md"], [data-size="lg"]):not(
+    :is([data-field-box], [data-slot="input-group"]) *
+  ) {
   --cipher-action-icon-size: var(--cipher-size-icon-sm);
 }
 :is(.frameHead, .frameFoot.frameFoot, .frameToolbar)
