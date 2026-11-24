@@ -923,7 +923,7 @@ function SheetFooter({
       className={cn("mt-auto flex flex-wrap items-center justify-end gap-2 p-4", className)}
       {...props}
     >
-      {start && (
+      {Boolean(start) && (
         <div data-slot="sheet-footer-start" className="me-auto flex flex-wrap items-center gap-2">
           {start}
         </div>

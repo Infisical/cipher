@@ -7,6 +7,8 @@ import * as UI from "@infisical/cipher/ui/sheet";
 
 export default function Example() {
   const [step, setStep] = useState(1);
+  const [region, setRegion] = useState("us-east-1");
+  const [accessKey, setAccessKey] = useState("AKIAIOSFODNN7EXAMPLE");
   return (
     <div className="flex w-full min-w-0 flex-col items-start gap-6">
       <UI.Sheet onOpenChange={(open) => open && setStep(1)}>
@@ -20,11 +22,11 @@ export default function Example() {
           <UI.SheetBody>
             {step === 1 ? (
               <Field key="region" label="Region">
-                <Input defaultValue="us-east-1" />
+                <Input value={region} onChange={(event) => setRegion(event.target.value)} />
               </Field>
             ) : (
               <Field key="access-key" label="Access key ID">
-                <Input defaultValue="AKIAIOSFODNN7EXAMPLE" />
+                <Input value={accessKey} onChange={(event) => setAccessKey(event.target.value)} />
               </Field>
             )}
           </UI.SheetBody>
