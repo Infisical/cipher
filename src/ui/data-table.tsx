@@ -9,6 +9,7 @@ import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { type EmptyGhost, EmptyScope } from "./empty";
 import { Icon, type IconSource } from "./icon";
+import { NameLine } from "./name-line";
 import { SortableAnnouncer, SortableHandle } from "./sortable-list";
 import {
   rowActionSlots,
@@ -48,6 +49,8 @@ export interface DataTableColumn<Row> {
   mono?: boolean;
   /** Wraps long text onto more lines and grows the row, instead of truncating it to one line. */
   wrap?: boolean;
+  /** Badges or icons right after the value, such as a status badge or a description tooltip. The value truncates before they do; at the narrowest widths, once the value is down to 12 characters, they clip. */
+  badges?: (row: Row, index: number) => React.ReactNode;
   /** A muted second line under the cell's value, such as an email under a name or a key under a label. */
   secondary?: (row: Row, index: number) => React.ReactNode;
   /** The column's cell in a summary row under the body, such as a total. Any column with a footer adds the row. */
@@ -693,7 +696,13 @@ export function DataTable<Row>({
                 style={{ maxWidth: column.maxWidth }}
                 title={column.wrap ? undefined : column.text?.(row)}
               >
-                {column.render?.(row, position)}
+                {column.badges ? (
+                  <NameLine badges={column.badges(row, position)}>
+                    {column.render?.(row, position)}
+                  </NameLine>
+                ) : (
+                  column.render?.(row, position)
+                )}
               </div>
             </CellContent>
           );
