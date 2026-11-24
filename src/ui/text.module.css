@@ -10,13 +10,6 @@
 .mono {
   font-family: var(--cipher-font-mono, monospace);
 }
-.measure {
-  position: absolute;
-  width: max-content;
-  visibility: hidden;
-  pointer-events: none;
-  inset-inline-start: 0;
-}
 .collapse {
   display: block;
 }

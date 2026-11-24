@@ -4,6 +4,18 @@ import { cn } from "../lib/utils";
 
 import styles from "./text.module.css";
 
+let ruler: CanvasRenderingContext2D | null | undefined;
+
+function rulerFor(node: HTMLElement) {
+  if (ruler === undefined) ruler = document.createElement("canvas").getContext("2d");
+  if (!ruler) return null;
+  const style = getComputedStyle(node);
+  ruler.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  ruler.letterSpacing = style.letterSpacing === "normal" ? "0px" : style.letterSpacing;
+  ruler.fontKerning = style.fontKerning === "none" ? "none" : "normal";
+  return ruler;
+}
+
 export function MiddleTruncate({
   children,
   text,
@@ -23,25 +35,22 @@ export function MiddleTruncate({
 } & { ref?: React.Ref<HTMLSpanElement> }) {
   const value = text ?? children ?? "";
   const host = React.useRef<HTMLSpanElement>(null);
-  const measure = React.useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = React.useState(value);
   React.useImperativeHandle(ref, () => host.current!, []);
   React.useLayoutEffect(() => {
     const node = host.current;
-    const ruler = measure.current;
-    if (!node || !ruler) return;
+    if (!node) return;
     let alive = true;
-    const fit = () => {
-      if (!alive) return;
-      const width = node.clientWidth;
-      if (!width) {
+    let fitted = -1;
+    const fit = (width: number) => {
+      if (!alive || width === fitted) return;
+      fitted = width;
+      const context = width ? rulerFor(node) : null;
+      if (!context) {
         setVisible(value);
         return;
       }
-      const fits = (candidate: string) => {
-        ruler.textContent = candidate;
-        return ruler.offsetWidth <= width;
-      };
+      const fits = (candidate: string) => context.measureText(candidate).width <= width;
       if (fits(value)) {
         setVisible(value);
         return;
@@ -61,10 +70,16 @@ export function MiddleTruncate({
       }
       setVisible(result);
     };
-    fit();
-    const observer = new ResizeObserver(fit);
+    const observer = new ResizeObserver(([entry]) => fit(entry.contentRect.width));
     observer.observe(node);
-    document.fonts?.ready.then(fit).catch(() => undefined);
+    if (document.fonts && document.fonts.status !== "loaded")
+      document.fonts.ready
+        .then(() => {
+          const width = fitted;
+          fitted = -1;
+          if (width >= 0) fit(width);
+        })
+        .catch(() => undefined);
     return () => {
       alive = false;
       observer.disconnect();
@@ -87,7 +102,6 @@ export function MiddleTruncate({
     >
       <span className="sr-only">{value}</span>
       <span aria-hidden="true">{visible}</span>
-      <span ref={measure} aria-hidden="true" className={styles.measure} />
     </span>
   );
 }
