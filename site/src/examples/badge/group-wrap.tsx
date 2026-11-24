@@ -1,7 +1,7 @@
 import { Badge, BadgeGroup } from "@infisical/cipher/ui/badge";
 import { DataList } from "@infisical/cipher/ui/list";
 
-const sets: { caption: string; roles: string[] }[] = [
+const sets: { caption: string; roles: string[]; size?: "control-sm" }[] = [
   { caption: "One role", roles: ["Admin"] },
   { caption: "Several roles", roles: ["Viewer", "Member", "Billing", "Developer"] },
   {
@@ -11,7 +11,8 @@ const sets: { caption: string; roles: string[] }[] = [
       "Secret rotation operator",
       "Viewer"
     ]
-  }
+  },
+  { caption: "Control size", roles: ["Production", "Staging", "Development"], size: "control-sm" }
 ];
 
 export default function Example() {
@@ -27,7 +28,9 @@ export default function Example() {
                 "Roles",
                 <BadgeGroup key="roles" wrap>
                   {set.roles.map((role) => (
-                    <Badge key={role}>{role}</Badge>
+                    <Badge key={role} size={set.size}>
+                      {role}
+                    </Badge>
                   ))}
                 </BadgeGroup>
               ]
