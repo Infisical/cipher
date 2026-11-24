@@ -13,7 +13,7 @@ const values = (items: string[]) => (
 
 export default function Example() {
   return (
-    <div className="w-full max-w-xl min-w-0">
+    <div className="flex w-full max-w-xl min-w-0 flex-col gap-8">
       <DataList
         variant="props"
         items={[
@@ -45,6 +45,24 @@ export default function Example() {
             />,
           ],
           ["Email", "None"],
+        ]}
+      />
+      <DataList
+        variant="meta"
+        density="compact"
+        items={[
+          [
+            "Key usage",
+            <DataList
+              key="ku"
+              variant="inline"
+              items={[
+                ["Required", values(["Digital signature"])],
+                ["Allowed", values(["Key encipherment", "Data encipherment"])],
+              ]}
+            />,
+          ],
+          ["Validity", "90 days"],
         ]}
       />
     </div>

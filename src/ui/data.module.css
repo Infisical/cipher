@@ -1061,7 +1061,10 @@ button.rowTitle::after {
   text-align: start;
 }
 .dataPair dd > .dataList[data-variant="inline"] {
-  justify-content: end;
+  justify-content: var(--cipher-data-list-value-justify, end);
+}
+.dataList[data-variant="inline"] > .dataPair > .dataValueWithAction {
+  justify-content: flex-start;
 }
 .dataPair:has(> dd > .dataList[data-variant="inline"]) > dt {
   flex: none;
