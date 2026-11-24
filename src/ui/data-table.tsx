@@ -696,13 +696,13 @@ export function DataTable<Row>({
                 style={{ maxWidth: column.maxWidth }}
                 title={column.wrap ? undefined : column.text?.(row)}
               >
-                {column.badges ? (
-                  <NameLine badges={column.badges(row, position)}>
-                    {column.render?.(row, position)}
-                  </NameLine>
-                ) : (
-                  column.render?.(row, position)
-                )}
+                <CellValue
+                  badges={column.badges?.(row, position)}
+                  wrap={column.wrap}
+                  align={column.align}
+                >
+                  {column.render?.(row, position)}
+                </CellValue>
               </div>
             </CellContent>
           );
@@ -1036,6 +1036,31 @@ export function DataTable<Row>({
     </div>
   );
 }
+function CellValue({
+  badges,
+  wrap,
+  align,
+  children
+}: {
+  badges: React.ReactNode;
+  wrap?: boolean;
+  align?: DataTableColumn<unknown>["align"];
+  children: React.ReactNode;
+}) {
+  if (badges === undefined || badges === null || badges === false) return children;
+  if (wrap)
+    return (
+      <>
+        {children} {badges}
+      </>
+    );
+  return (
+    <NameLine badges={badges} data-align={align}>
+      {children}
+    </NameLine>
+  );
+}
+
 function CellContent({
   shrink,
   secondary,
