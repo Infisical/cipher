@@ -906,14 +906,30 @@ function SheetBody({
 }
 SheetBody.displayName = "SheetBody";
 
-function SheetFooter({ className, ref, ...props }: React.ComponentProps<"div">) {
+function SheetFooter({
+  className,
+  start,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<"div"> & {
+  /** Held at the start edge while the children stay at the end, such as Back in a multi-step sheet. */
+  start?: React.ReactNode;
+}) {
   return (
     <div
       ref={ref}
       data-slot="sheet-footer"
       className={cn("mt-auto flex flex-wrap items-center justify-end gap-2 p-4", className)}
       {...props}
-    />
+    >
+      {start && (
+        <div data-slot="sheet-footer-start" className="me-auto flex flex-wrap items-center gap-2">
+          {start}
+        </div>
+      )}
+      {children}
+    </div>
   );
 }
 SheetFooter.displayName = "SheetFooter";
