@@ -30,7 +30,7 @@ function measurerFor(node: HTMLElement) {
   context.fontKerning = style.fontKerning === "none" ? "none" : "normal";
   const transform = transforms[style.textTransform];
   return (text: string) => {
-    const collapsed = text.replace(/\s+/g, " ");
+    const collapsed = text.replace(/[ \t\n\r\f]+/g, " ");
     return context.measureText(transform ? transform(collapsed) : collapsed)
       .width;
   };
