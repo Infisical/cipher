@@ -764,6 +764,10 @@
       {
         "title": "Overflowing content",
         "module": "dialog/overflow"
+      },
+      {
+        "title": "Sizes: sm, md and lg",
+        "module": "dialog/sizes"
       }
     ]
   },

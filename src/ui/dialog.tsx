@@ -70,6 +70,7 @@ DialogOverlay.displayName = "DialogOverlay";
 function DialogContent({
   className,
   children,
+  size = "sm",
   showCloseButton = true,
   pending = false,
   onEscapeKeyDown,
@@ -79,6 +80,8 @@ function DialogContent({
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+  /** Maximum width: sm (440px) for an ordinary form or confirmation, md (560px) for field pairs, lg (672px) for a dialog built around a table or a preview. */
+  size?: "sm" | "md" | "lg";
   showCloseButton?: boolean;
   /** While true, Escape, outside clicks and every close control are blocked, so an in-flight save cannot be abandoned. */
   pending?: boolean;
@@ -105,6 +108,7 @@ function DialogContent({
       <DialogPrimitive.Content
         ref={escape.ref}
         data-slot="dialog-content"
+        data-size={size}
         data-has-close={showCloseButton || undefined}
         data-sections={sections ? "" : undefined}
         aria-busy={pending || undefined}
