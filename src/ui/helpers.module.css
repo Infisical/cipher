@@ -485,12 +485,17 @@
   flex-wrap: wrap;
   gap: var(--cipher-space-4);
 }
-.badgeGroupMore > [data-slot="badge"] {
+.badgeGroup[data-wrap] {
+  flex-wrap: wrap;
+}
+:is(.badgeGroupMore, .badgeGroup[data-wrap]) > [data-slot="badge"] {
+  max-width: 100%;
   height: auto;
   min-height: var(--cipher-size-badge);
   white-space: normal;
+  text-align: start;
 }
-.badgeGroupMore .badgeText {
+:is(.badgeGroupMore, .badgeGroup[data-wrap]) .badgeText {
   overflow-wrap: anywhere;
 }
 .badge.mono {
