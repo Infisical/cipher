@@ -6,14 +6,34 @@ import styles from "./text.module.css";
 
 let ruler: CanvasRenderingContext2D | null | undefined;
 
-function rulerFor(node: HTMLElement) {
-  if (ruler === undefined) ruler = document.createElement("canvas").getContext("2d");
-  if (!ruler) return null;
+const transforms: Record<string, (text: string) => string> = {
+  uppercase: (text) => text.toUpperCase(),
+  lowercase: (text) => text.toLowerCase(),
+  capitalize: (text) =>
+    text.replace(
+      /(^|\s)(\S)/g,
+      (_, space: string, letter: string) => space + letter.toUpperCase(),
+    ),
+};
+
+function measurerFor(node: HTMLElement) {
+  if (ruler === undefined)
+    ruler = document.createElement("canvas").getContext("2d");
+  const context = ruler;
+  if (!context) return null;
   const style = getComputedStyle(node);
-  ruler.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-  ruler.letterSpacing = style.letterSpacing === "normal" ? "0px" : style.letterSpacing;
-  ruler.fontKerning = style.fontKerning === "none" ? "none" : "normal";
-  return ruler;
+  context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  context.letterSpacing =
+    style.letterSpacing === "normal" ? "0px" : style.letterSpacing;
+  context.wordSpacing =
+    style.wordSpacing === "normal" ? "0px" : style.wordSpacing;
+  context.fontKerning = style.fontKerning === "none" ? "none" : "normal";
+  const transform = transforms[style.textTransform];
+  return (text: string) => {
+    const collapsed = text.replace(/\s+/g, " ");
+    return context.measureText(transform ? transform(collapsed) : collapsed)
+      .width;
+  };
 }
 
 export function MiddleTruncate({
@@ -45,17 +65,20 @@ export function MiddleTruncate({
     const fit = (width: number) => {
       if (!alive || width === fitted) return;
       fitted = width;
-      const context = width ? rulerFor(node) : null;
-      if (!context) {
+      const measure = width ? measurerFor(node) : null;
+      if (!measure) {
         setVisible(value);
         return;
       }
-      const fits = (candidate: string) => context.measureText(candidate).width <= width;
+      const fits = (candidate: string) => measure(candidate) <= width;
       if (fits(value)) {
         setVisible(value);
         return;
       }
-      const suffixLength = Math.min(Math.max(0, Math.floor(keepEnd)), value.length);
+      const suffixLength = Math.min(
+        Math.max(0, Math.floor(keepEnd)),
+        value.length,
+      );
       let start = 0;
       let end = value.length;
       let result = "…";
@@ -70,19 +93,20 @@ export function MiddleTruncate({
       }
       setVisible(result);
     };
-    const observer = new ResizeObserver(([entry]) => fit(entry.contentRect.width));
+    const observer = new ResizeObserver(([entry]) =>
+      fit(entry.contentRect.width),
+    );
     observer.observe(node);
-    if (document.fonts && document.fonts.status !== "loaded")
-      document.fonts.ready
-        .then(() => {
-          const width = fitted;
-          fitted = -1;
-          if (width >= 0) fit(width);
-        })
-        .catch(() => undefined);
+    const refit = () => {
+      const width = fitted;
+      fitted = -1;
+      if (width >= 0) fit(width);
+    };
+    document.fonts?.addEventListener("loadingdone", refit);
     return () => {
       alive = false;
       observer.disconnect();
+      document.fonts?.removeEventListener("loadingdone", refit);
     };
   }, [value, keepEnd]);
   return (
