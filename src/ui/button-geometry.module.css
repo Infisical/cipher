@@ -140,6 +140,12 @@ a.button[href]:not([aria-busy="true"]) {
   justify-content: flex-start;
   text-align: start;
 }
+/* An outline trigger shows a chosen value the way a Select does, so it takes the field's body type; ghost triggers stay actions. */
+.triggerLayout[data-variant="outline"] {
+  font-family: var(--cipher-type-body-font-family);
+  font-weight: var(--cipher-type-body-font-weight);
+  letter-spacing: var(--cipher-type-body-letter-spacing);
+}
 .triggerLayout.regular {
   --cipher-action-inset: var(--cipher-space-control-inline-md);
 }

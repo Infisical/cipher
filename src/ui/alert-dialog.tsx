@@ -17,6 +17,10 @@ import { cn } from "../lib/utils";
 
 import overlay from "./overlay.module.css";
 
+const OpeningContext = React.createContext<{
+  current: () => number;
+  close: (opening: number) => void;
+}>({ current: () => 0, close: () => {} });
 const ConfirmContext = React.createContext<{ ready: boolean }>({ ready: true });
 const PendingClaimContext = React.createContext<(delta: number) => void>(() => {});
 const ToneContext = React.createContext<{
@@ -24,8 +28,50 @@ const ToneContext = React.createContext<{
   claimMedia: (claimed: boolean) => void;
 }>({ claimMedia: () => {} });
 
-function AlertDialog({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
-  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
+function AlertDialog({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (openProp === undefined) setUncontrolledOpen(next);
+      onOpenChange?.(next);
+    },
+    [openProp, onOpenChange]
+  );
+  const open = openProp ?? uncontrolledOpen;
+  const openRef = React.useRef(open);
+  const openingRef = React.useRef(0);
+  const setOpenRef = React.useRef(setOpen);
+  React.useLayoutEffect(() => {
+    openRef.current = open;
+    setOpenRef.current = setOpen;
+  });
+  React.useLayoutEffect(() => {
+    if (open) openingRef.current += 1;
+  }, [open]);
+  const opening = React.useMemo(
+    () => ({
+      current: () => openingRef.current,
+      close: (started: number) => {
+        if (openRef.current && openingRef.current === started) setOpenRef.current(false);
+      }
+    }),
+    []
+  );
+  return (
+    <OpeningContext value={opening}>
+      <AlertDialogPrimitive.Root
+        data-slot="alert-dialog"
+        open={open}
+        onOpenChange={setOpen}
+        {...props}
+      />
+    </OpeningContext>
+  );
 }
 
 function AlertDialogTrigger({
@@ -304,24 +350,43 @@ function AlertDialogAction({
   ...props
 }: React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action> &
   Pick<React.ComponentPropsWithoutRef<typeof Button>, "variant" | "size"> & {
-    /** Button's loading: the spinner takes the label's place at the same width and the action stays focusable but cannot fire again. With asChild the composed child gets the same guard, aria-busy and aria-disabled; pass loading to the child too for the spinner. While true, the dialog is pending (Escape and Cancel blocked). Passing loading at all, even false, means the host closes the dialog: a click runs onClick and does not close it. */
+    /** Button's loading: the spinner takes the label's place at the same width and the action stays focusable but cannot fire again. With asChild the composed child gets the same guard, aria-busy and aria-disabled; pass loading to the child too for the spinner. While true, the dialog is pending (Escape and Cancel blocked). Passing loading at all, even false, means the host closes the dialog: a click runs onClick and does not close it. Without loading, an onClick that returns a Promise is loading until it settles: the dialog closes when it resolves, unless onClick called preventDefault or the dialog was closed or reopened meanwhile, and stays open when it rejects. */
     loading?: boolean;
     ref?: React.Ref<React.ComponentRef<typeof AlertDialogPrimitive.Action>>;
   }) {
   const { ready } = React.useContext(ConfirmContext);
   const claimPending = React.useContext(PendingClaimContext);
+  const opening = React.useContext(OpeningContext);
+  const [settling, setSettling] = React.useState(false);
+  const busy = loading ?? settling;
   React.useLayoutEffect(() => {
-    if (!loading) return undefined;
+    if (!busy) return undefined;
     claimPending(1);
     return () => claimPending(-1);
-  }, [loading, claimPending]);
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined =
-    loading === undefined
-      ? onClick
-      : (event) => {
-          event.preventDefault();
-          if (!loading) onClick?.(event);
-        };
+  }, [busy, claimPending]);
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (loading !== undefined || settling) {
+      event.preventDefault();
+      if (!busy) onClick?.(event);
+      return;
+    }
+    const started = opening.current();
+    const result: unknown = onClick?.(event);
+    if (!(result instanceof Promise)) return;
+    const hostKeepsOpen = event.defaultPrevented;
+    event.preventDefault();
+    setSettling(true);
+    result.then(
+      () => {
+        setSettling(false);
+        if (!hostKeepsOpen) opening.close(started);
+      },
+      (error: unknown) => {
+        setSettling(false);
+        throw error;
+      }
+    );
+  };
   if (asChild) {
     const { onClickCapture, onPointerDownCapture, onKeyDownCapture, ...rest } = props;
     const block = (event: React.SyntheticEvent) => {
@@ -336,13 +401,13 @@ function AlertDialogAction({
         className={className}
         disabled={disabled || !ready}
         {...rest}
-        aria-busy={loading || rest["aria-busy"] || undefined}
-        aria-disabled={loading || rest["aria-disabled"] || undefined}
+        aria-busy={busy || rest["aria-busy"] || undefined}
+        aria-disabled={busy || rest["aria-disabled"] || undefined}
         onClick={handleClick}
-        onClickCapture={(event) => (loading ? block(event) : onClickCapture?.(event))}
-        onPointerDownCapture={(event) => (loading ? block(event) : onPointerDownCapture?.(event))}
+        onClickCapture={(event) => (busy ? block(event) : onClickCapture?.(event))}
+        onPointerDownCapture={(event) => (busy ? block(event) : onPointerDownCapture?.(event))}
         onKeyDownCapture={(event) =>
-          loading && (event.key === "Enter" || event.key === " ")
+          busy && (event.key === "Enter" || event.key === " ")
             ? block(event)
             : onKeyDownCapture?.(event)
         }
@@ -350,7 +415,13 @@ function AlertDialogAction({
     );
   }
   return (
-    <Button variant={variant} size={size} disabled={disabled || !ready} loading={loading} asChild>
+    <Button
+      variant={variant}
+      size={size}
+      disabled={disabled || !ready}
+      loading={loading ?? (settling || undefined)}
+      asChild
+    >
       <AlertDialogPrimitive.Action
         ref={ref}
         data-slot="alert-dialog-action"

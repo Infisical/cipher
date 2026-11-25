@@ -420,7 +420,8 @@
   --cipher-badge-pad: var(--cipher-space-8);
   box-sizing: border-box;
   max-width: 100%;
-  height: var(--cipher-size-badge);
+  --cipher-badge-height: var(--cipher-size-badge);
+  height: var(--cipher-badge-height);
   padding: 0 var(--cipher-badge-pad);
   border: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   border-radius: 0;
@@ -485,12 +486,17 @@
   flex-wrap: wrap;
   gap: var(--cipher-space-4);
 }
-.badgeGroupMore > [data-slot="badge"] {
-  height: auto;
-  min-height: var(--cipher-size-badge);
-  white-space: normal;
+.badgeGroup[data-wrap] {
+  flex-wrap: wrap;
 }
-.badgeGroupMore .badgeText {
+:is(.badgeGroupMore, .badgeGroup[data-wrap]) > [data-slot="badge"] {
+  max-width: 100%;
+  height: auto;
+  min-height: var(--cipher-badge-height);
+  white-space: normal;
+  text-align: start;
+}
+:is(.badgeGroupMore, .badgeGroup[data-wrap]) .badgeText {
   overflow-wrap: anywhere;
 }
 .badge.mono {
@@ -507,7 +513,8 @@
 .badge[data-size="sm"] {
   --cipher-badge-glyph: var(--cipher-size-badge-glyph-sm);
   --cipher-badge-pad: var(--cipher-space-6);
-  height: var(--cipher-size-badge-sm);
+  --cipher-badge-height: var(--cipher-size-badge-sm);
+  height: var(--cipher-badge-height);
   line-height: calc(var(--cipher-size-badge-sm) - 2 * var(--cipher-size-control-border));
 }
 .badge:is([data-size="control-sm"], [data-size="control-md"], [data-size="control-lg"]) {
@@ -522,15 +529,18 @@
 .badge[data-size="control-sm"] {
   --cipher-badge-glyph: var(--cipher-size-icon-label);
   --cipher-badge-pad: var(--cipher-space-control-inline-sm);
-  height: var(--cipher-size-control-sm);
+  --cipher-badge-height: var(--cipher-size-control-sm);
+  height: var(--cipher-badge-height);
 }
 .badge[data-size="control-md"] {
   --cipher-badge-pad: var(--cipher-space-control-inline-md);
-  height: var(--cipher-size-control-md);
+  --cipher-badge-height: var(--cipher-size-control-md);
+  height: var(--cipher-badge-height);
 }
 .badge[data-size="control-lg"] {
   --cipher-badge-pad: var(--cipher-space-control-inline);
-  height: var(--cipher-size-control-lg);
+  --cipher-badge-height: var(--cipher-size-control-lg);
+  height: var(--cipher-badge-height);
 }
 .badge[data-slot][data-tone="soft"] {
   background: var(--cipher-badge-soft);

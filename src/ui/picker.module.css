@@ -234,10 +234,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.option[data-disabled] > .optionLabel {
+.option[data-disabled] > .optionLabel,
+.option[data-disabled][data-description="stacked"] > span > .optionLabel {
   pointer-events: auto;
 }
-:is(.option, .createOption)[data-wrap] > .optionLabel {
+:is(.option, .createOption)[data-wrap] > .optionLabel,
+.option[data-wrap][data-description="stacked"] > span > .optionLabel {
   overflow-wrap: anywhere;
   white-space: normal;
 }
@@ -267,6 +269,15 @@
   line-height: var(--cipher-type-caption-line-height);
   font-weight: var(--cipher-type-body-font-weight);
   letter-spacing: var(--cipher-type-caption-letter-spacing);
+}
+.option[data-description="stacked"] {
+  align-items: flex-start;
+}
+.option[data-description="stacked"] > .optionCheck {
+  height: var(--cipher-type-body-line-height);
+}
+.optionDescription {
+  display: block;
 }
 .optionCheck {
   display: flex;

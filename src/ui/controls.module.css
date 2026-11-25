@@ -801,7 +801,8 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   padding-block: 12px;
   border-bottom: 1px solid var(--cipher-line-soft);
 }
-/* Among fields a switch row takes the fields' measure, so its control ends at their right edge. */
+/* In a field set or group, or among fields, a switch row takes the fields' measure, so its control ends at their right edge and holds still when a field below it appears. */
+:global(:is([data-slot="field-set"], [data-slot="field-group"])) > .choiceRow,
 .choiceRow:is(
   :global([data-slot="field"]:not([data-orientation="horizontal"])) ~ *,
   :has(~ :global([data-slot="field"]:not([data-orientation="horizontal"])))
