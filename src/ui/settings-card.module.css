@@ -22,6 +22,7 @@
   padding-bottom: var(--cipher-space-surface-inset);
 }
 .titleRow {
+  position: relative;
   display: flex;
   grid-row: 1;
   grid-column: 1;
@@ -62,6 +63,10 @@
   line-height: var(--cipher-type-small-line-height);
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+/* The idle status stays mounted as a live region but takes no room, so it never wraps onto a line of its own. */
+.saveStatus[data-state="idle"] {
+  position: absolute;
 }
 .description {
   grid-row: 2;
