@@ -18,6 +18,8 @@ export type SettingsCardProps = Omit<
   "title" | "onSubmit"
 > & {
   title: React.ReactNode;
+  /** Badges after the title, such as a plan or status. They drop below the title before it wraps. */
+  badges?: React.ReactNode;
   description?: React.ReactNode;
   action?: React.ReactNode;
   dirty?: boolean;
@@ -202,6 +204,7 @@ function hasFooterContent({
 
 export function SettingsCard({
   title,
+  badges,
   description,
   action,
   dirty = false,
@@ -241,6 +244,7 @@ export function SettingsCard({
         <h3 id={titleId} className={styles.title}>
           {title}
         </h3>
+        {badges && <div className={styles.badges}>{badges}</div>}
         {saveStatus && <SaveStatus status={saveStatus} />}
       </div>
       {action && <div className={styles.action}>{action}</div>}

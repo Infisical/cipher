@@ -1830,6 +1830,10 @@
         "module": "settings-card/autosave"
       },
       {
+        "title": "Badges after the title",
+        "module": "settings-card/badges"
+      },
+      {
         "title": "Embedded table",
         "module": "settings-card/embedded-table"
       }
