@@ -4,6 +4,7 @@ type Project = {
   id: string;
   name: string;
   environment: string;
+  owner: string;
   secrets: number;
   rotations: number;
   members: number;
@@ -13,6 +14,7 @@ const projects: Project[] = [
     id: "api",
     name: "payments-api",
     environment: "Production",
+    owner: "Payments platform",
     secrets: 1284,
     rotations: 42,
     members: 18
@@ -21,6 +23,7 @@ const projects: Project[] = [
     id: "legacy",
     name: "legacy-billing-service-migrated-from-the-previous-region",
     environment: "Staging",
+    owner: "Billing",
     secrets: 38,
     rotations: 0,
     members: 4
@@ -29,6 +32,7 @@ const projects: Project[] = [
     id: "web",
     name: "dashboard-web",
     environment: "Development",
+    owner: "Web",
     secrets: 512,
     rotations: 7,
     members: 31
@@ -37,6 +41,7 @@ const projects: Project[] = [
 
 const columns: DataTableColumn<Project>[] = [
   { id: "name", header: "Project", primary: true, grow: true, render: (row) => row.name },
+  { id: "owner", header: "Owner", grow: true, render: (row) => row.owner },
   { id: "environment", header: "Environment", width: 140, render: (row) => row.environment },
   { id: "secrets", header: "Secrets", width: 100, align: "end", render: (row) => row.secrets },
   {
@@ -64,7 +69,7 @@ export default function Example() {
         </div>
         <figcaption className="text-muted-foreground text-xs">
           {
-            "The primary column keeps size-text-min, so a narrow screen scrolls the number columns instead of squeezing names"
+            "The primary column keeps size-text-min, even beside another growing column, so a narrow screen scrolls the other columns instead of squeezing names"
           }
         </figcaption>
       </figure>
