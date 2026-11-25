@@ -552,10 +552,15 @@ export function DataTable<Row>({
       const truncated = Math.max(
         0,
         ...Array.from(
-          container.querySelectorAll<HTMLElement>(
-            `.${styles.tablePrimary}, .${styles.tablePrimary} [data-slot="name-line-name"]`
-          ),
-          (element) => Math.min(element.scrollWidth, primaryCap) - element.clientWidth
+          container.querySelectorAll<HTMLElement>(`.${styles.tablePrimary}`),
+          (cell) => {
+          const name = cell.querySelector<HTMLElement>('[data-slot="name-line-name"]');
+          const overflow = Math.max(
+            cell.scrollWidth - cell.clientWidth,
+            name ? name.scrollWidth - name.clientWidth : 0
+          );
+          return Math.min(overflow, primaryCap - cell.clientWidth);
+          }
         )
       );
       const needed = container.scrollWidth + truncated;
