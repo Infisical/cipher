@@ -4,6 +4,38 @@ import { cn } from "../lib/utils";
 
 import styles from "./text.module.css";
 
+let ruler: CanvasRenderingContext2D | null | undefined;
+
+const transforms: Record<string, (text: string) => string> = {
+  uppercase: (text) => text.toUpperCase(),
+  lowercase: (text) => text.toLowerCase(),
+  capitalize: (text) =>
+    text.replace(
+      /(^|\s)(\S)/g,
+      (_, space: string, letter: string) => space + letter.toUpperCase(),
+    ),
+};
+
+function measurerFor(node: HTMLElement) {
+  if (ruler === undefined)
+    ruler = document.createElement("canvas").getContext("2d");
+  const context = ruler;
+  if (!context) return null;
+  const style = getComputedStyle(node);
+  context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  context.letterSpacing =
+    style.letterSpacing === "normal" ? "0px" : style.letterSpacing;
+  context.wordSpacing =
+    style.wordSpacing === "normal" ? "0px" : style.wordSpacing;
+  context.fontKerning = style.fontKerning === "none" ? "none" : "normal";
+  const transform = transforms[style.textTransform];
+  return (text: string) => {
+    const collapsed = text.replace(/[ \t\n\r\f]+/g, " ");
+    return context.measureText(transform ? transform(collapsed) : collapsed)
+      .width;
+  };
+}
+
 export function MiddleTruncate({
   children,
   text,
@@ -23,30 +55,30 @@ export function MiddleTruncate({
 } & { ref?: React.Ref<HTMLSpanElement> }) {
   const value = text ?? children ?? "";
   const host = React.useRef<HTMLSpanElement>(null);
-  const measure = React.useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = React.useState(value);
   React.useImperativeHandle(ref, () => host.current!, []);
   React.useLayoutEffect(() => {
     const node = host.current;
-    const ruler = measure.current;
-    if (!node || !ruler) return;
+    if (!node) return;
     let alive = true;
-    const fit = () => {
-      if (!alive) return;
-      const width = node.clientWidth;
-      if (!width) {
+    let fitted = -1;
+    const fit = (width: number) => {
+      if (!alive || width === fitted) return;
+      fitted = width;
+      const measure = width ? measurerFor(node) : null;
+      if (!measure) {
         setVisible(value);
         return;
       }
-      const fits = (candidate: string) => {
-        ruler.textContent = candidate;
-        return ruler.offsetWidth <= width;
-      };
+      const fits = (candidate: string) => measure(candidate) <= width;
       if (fits(value)) {
         setVisible(value);
         return;
       }
-      const suffixLength = Math.min(Math.max(0, Math.floor(keepEnd)), value.length);
+      const suffixLength = Math.min(
+        Math.max(0, Math.floor(keepEnd)),
+        value.length,
+      );
       let start = 0;
       let end = value.length;
       let result = "…";
@@ -61,13 +93,20 @@ export function MiddleTruncate({
       }
       setVisible(result);
     };
-    fit();
-    const observer = new ResizeObserver(fit);
+    const observer = new ResizeObserver(([entry]) =>
+      fit(entry.contentRect.width),
+    );
     observer.observe(node);
-    document.fonts?.ready.then(fit).catch(() => undefined);
+    const refit = () => {
+      const width = fitted;
+      fitted = -1;
+      if (width >= 0) fit(width);
+    };
+    document.fonts?.addEventListener("loadingdone", refit);
     return () => {
       alive = false;
       observer.disconnect();
+      document.fonts?.removeEventListener("loadingdone", refit);
     };
   }, [value, keepEnd]);
   return (
@@ -87,7 +126,6 @@ export function MiddleTruncate({
     >
       <span className="sr-only">{value}</span>
       <span aria-hidden="true">{visible}</span>
-      <span ref={measure} aria-hidden="true" className={styles.measure} />
     </span>
   );
 }

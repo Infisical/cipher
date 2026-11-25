@@ -31,6 +31,12 @@
   overflow: hidden;
   translate: -50% -50%;
 }
+.dialog[data-size="md"] {
+  max-width: var(--cipher-size-dialog-wide);
+}
+.dialog[data-size="lg"] {
+  max-width: var(--cipher-size-dialog-lg);
+}
 .dialog[data-state="open"] {
   animation: dialogIn var(--cipher-duration-slow) var(--cipher-ease-spring-soft) both;
 }

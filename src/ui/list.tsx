@@ -195,9 +195,7 @@ export function ListRow({
           {badge && <span className={styles.rowBadge}>{badge}</span>}
           {meta && <span className={styles.rowMeta}>{meta}</span>}
         </div>
-        {description && context?.size !== "sm" && (
-          <p className={styles.description}>{description}</p>
-        )}
+        {description && <p className={styles.description}>{description}</p>}
         {error && (
           <div className={styles.rowError} role="alert">
             {error}

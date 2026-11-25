@@ -138,7 +138,8 @@ export type ComboboxProps = SharedComboboxProps &
         onChange?: (value: string[]) => void;
         onValueChange?: (value: string[]) => void;
         onSearch?: never;
-        creation?: never;
+        /** Only the action mode: a Create row pinned under the list, visible before anything is typed. */
+        creation?: Extract<ComboboxCreation, { mode: "action" }>;
       }
   );
 export function Combobox({
@@ -339,6 +340,7 @@ export function Combobox({
           closeOnFocusOutside={closeOnFocusOutside}
           renderValue={selected.length ? () => null : undefined}
           onCreate={onCreate}
+          createAction={props.creation}
           createLabel={props.createLabel}
           loading={loading}
           className={className}
