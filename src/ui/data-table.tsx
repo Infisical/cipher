@@ -268,9 +268,8 @@ export function DataTable<Row>({
   );
   const [narrow, setNarrow] = React.useState<number | null>(null);
   const droppable = allColumns.some((column) => column.dropFirst);
-  const primaryCanGrow = allColumns.some(
-    (column) => column.primary && column.width === undefined && column.maxWidth === undefined
-  );
+  const primaryColumn = allColumns.find((column) => column.primary);
+  const primaryCap = primaryColumn?.width ?? primaryColumn?.maxWidth ?? Infinity;
   const columns =
     droppable && narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
   const columnShape = allColumns
@@ -556,10 +555,10 @@ export function DataTable<Row>({
           container.querySelectorAll<HTMLElement>(
             `.${styles.tablePrimary}, .${styles.tablePrimary} [data-slot="name-line-name"]`
           ),
-          (element) => element.scrollWidth - element.clientWidth
+          (element) => Math.min(element.scrollWidth, primaryCap) - element.clientWidth
         )
       );
-      const needed = container.scrollWidth + (primaryCanGrow ? truncated : 0);
+      const needed = container.scrollWidth + truncated;
       setNarrow((current) => {
         if (current === null) return needed > width + 1 ? needed : null;
         return width >= current ? null : current;
@@ -571,7 +570,7 @@ export function DataTable<Row>({
     const table = container.querySelector("table");
     if (table) observer.observe(table);
     return () => observer.disconnect();
-  }, [droppable, narrow, contentSized, primaryWidth, primaryCanGrow]);
+  }, [droppable, narrow, contentSized, primaryWidth, primaryCap]);
   React.useLayoutEffect(() => {
     const table = scroll.current?.querySelector("table");
     if (!contentSized || !table) {
