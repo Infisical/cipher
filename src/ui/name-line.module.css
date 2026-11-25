@@ -12,6 +12,8 @@
   gap: var(--cipher-space-8);
   min-width: 0;
   overflow: hidden;
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
 }
 .media {
   display: inline-flex;
@@ -24,6 +26,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding: var(--cipher-focus-clearance);
+  margin: calc(-1 * var(--cipher-focus-clearance));
 }
 .name[data-floor] {
   min-width: min(100%, 12ch);
