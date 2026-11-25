@@ -2,7 +2,7 @@ import { Button } from "@infisical/cipher/ui/button";
 import { Icon } from "@infisical/cipher/ui/icon";
 import { List, ListRow } from "@infisical/cipher/ui/list";
 
-const panel = "w-full min-w-0 border border-(--cipher-line-soft) bg-(--cipher-surface) py-2";
+const panel = "w-full min-w-0 border border-(--cipher-line-soft) bg-(--cipher-surface)";
 
 export default function Example() {
   return (

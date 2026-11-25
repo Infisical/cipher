@@ -807,6 +807,9 @@
   padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
   min-height: var(--cipher-space-40);
 }
+.listShell[data-inset] > .list {
+  padding-block: var(--cipher-space-8);
+}
 .listShell[data-inset] .listRow {
   margin-inline: var(--cipher-space-8);
   padding: var(--cipher-space-8);
