@@ -702,6 +702,7 @@ export function DataTable<Row>({
                   badges={column.badges ? (column.badges(row, position) ?? null) : undefined}
                   wrap={column.wrap}
                   align={column.align}
+                  title={column.text?.(row)}
                 >
                   {column.render ? column.render(row, position) : column.text?.(row)}
                 </CellValue>
@@ -1042,11 +1043,13 @@ function CellValue({
   badges,
   wrap,
   align,
+  title,
   children
 }: {
   badges: React.ReactNode;
   wrap?: boolean;
   align?: DataTableColumn<unknown>["align"];
+  title?: string;
   children: React.ReactNode;
 }) {
   if (badges === undefined) return children;
@@ -1057,7 +1060,7 @@ function CellValue({
       </>
     );
   return (
-    <NameLine badges={badges} data-align={align}>
+    <NameLine badges={badges} data-align={align} title={title}>
       {children}
     </NameLine>
   );
