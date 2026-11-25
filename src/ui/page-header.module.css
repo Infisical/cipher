@@ -180,6 +180,15 @@
   .titleLine:has(> .badges > [data-collapse]:only-child) > .badges {
     display: contents;
   }
+  .titleLine[data-flow="inline"]:has(> .badges > [data-collapse]:only-child) {
+    display: flex;
+  }
+  .titleLine[data-flow="inline"]:has(> .badges > [data-collapse]:only-child) > .title {
+    display: block;
+  }
+  .titleLine[data-flow="inline"]:has(> .badges > [data-collapse]:only-child) > .titleGap {
+    display: none;
+  }
   .title[data-clamped]:not([data-truncate], [data-expanded]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;
