@@ -43,6 +43,7 @@ export interface DataTableColumn<Row> {
   header: string;
   render?: (row: Row, index: number) => React.ReactNode;
   toggle?: DataTableToggle<Row>;
+  /** The cell's plain text: its hover title when the value truncates, and the value itself when the column has no render. */
   text?: (row: Row) => string;
   primary?: boolean;
   /** Sets the column in mono, for machine values compared character by character: secret keys, key IDs, hashes, hosts. Names people chose stay in the sans. */
@@ -702,7 +703,7 @@ export function DataTable<Row>({
                   wrap={column.wrap}
                   align={column.align}
                 >
-                  {column.render?.(row, position)}
+                  {column.render ? column.render(row, position) : column.text?.(row)}
                 </CellValue>
               </div>
             </CellContent>
