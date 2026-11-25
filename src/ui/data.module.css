@@ -61,7 +61,9 @@
 .tableScroll:has(> :is([data-slot="data-table-more"], [data-slot="data-table-pagination"])) {
   scroll-padding-block-end: calc(var(--cipher-space-40) + var(--cipher-focus-clearance));
 }
-.tableScroll[data-flow]:has(> :is([data-slot="data-table-more"], [data-slot="data-table-pagination"]))
+.tableScroll[data-flow]:has(
+    > :is([data-slot="data-table-more"], [data-slot="data-table-pagination"])
+  )
   tbody
   :where(tr, tr *) {
   scroll-margin-block-end: calc(var(--cipher-space-40) + var(--cipher-focus-clearance));
@@ -805,6 +807,20 @@
   padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
   min-height: var(--cipher-space-40);
 }
+.listShell[data-inset] .listRow {
+  margin-inline: var(--cipher-space-8);
+  padding: var(--cipher-space-8);
+}
+.listShell[data-inset] .listRow > .rowActions > [data-icon-only]:last-child,
+.listShell[data-inset] > .listHeader > .listHeaderAction > [data-icon-only]:last-child {
+  margin-inline-end: calc((var(--cipher-action-icon-size) - var(--cipher-action-height)) / 2);
+}
+.listShell[data-inset] > .listHeader,
+.listShell[data-inset] > .status,
+.listShell[data-inset] .sectionHead,
+.listShell[data-inset] .empty {
+  padding-inline: var(--cipher-space-16);
+}
 .listBody {
   flex: 1;
   min-width: 0;
@@ -1075,6 +1091,9 @@ button.rowTitle::after {
   }
   .rowActions {
     width: 100%;
+  }
+  .listShell[data-inset] .listRow > .rowActions {
+    width: auto;
   }
 }
 .tableScroll .nativeTableContainer {

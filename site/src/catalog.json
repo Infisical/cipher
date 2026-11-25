@@ -1390,6 +1390,10 @@
         "module": "list/icon-media"
       },
       {
+        "title": "Inset rows in a popover",
+        "module": "list/inset"
+      },
+      {
         "title": "DataList default and compact density",
         "module": "list/density"
       },
