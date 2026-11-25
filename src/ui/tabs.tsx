@@ -257,13 +257,47 @@ TabsList.displayName = "TabsList";
 function TabsTrigger({
   className,
   ref,
+  onPointerDown,
+  onFocus,
+  onKeyDown,
+  onBlur,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  const pressed = React.useRef(false);
+  const release = React.useRef<AbortController | null>(null);
+  React.useEffect(() => () => release.current?.abort(), []);
+  const [pointerFocus, setPointerFocus] = React.useState(false);
   return (
     <TabsPrimitive.Trigger
       ref={ref}
       data-slot="tabs-trigger"
+      data-pointer-focus={pointerFocus || undefined}
       className={cn(controlStyles.focusOutline, styles.tabTrigger, className)}
+      onPointerDown={(event) => {
+        onPointerDown?.(event);
+        pressed.current = true;
+        release.current?.abort();
+        const controller = new AbortController();
+        release.current = controller;
+        const end = () => {
+          pressed.current = false;
+          controller.abort();
+        };
+        window.addEventListener("pointerup", end, { signal: controller.signal });
+        window.addEventListener("pointercancel", end, { signal: controller.signal });
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        setPointerFocus(pressed.current);
+      }}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        setPointerFocus(false);
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        setPointerFocus(false);
+      }}
       {...props}
     />
   );
