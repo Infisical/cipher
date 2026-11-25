@@ -6,7 +6,7 @@ import { cn, titleIfClamped } from "../lib/utils";
 
 import styles from "./name-line.module.css";
 
-/** One line of media, name, badges and trailing content. Under pressure the badges give way first (use Badge collapse), then a long name truncates to a 12ch floor, then the badges clip; the trailing content always stays whole. The full name shows on hover, or title when given, such as an unabbreviated value. */
+/** One line of media, name, badges and trailing content. Under pressure the badges give way first (use Badge collapse), then a long name truncates to a 12ch floor, then each badge that no longer fits hides whole; the trailing content always stays whole. The full name shows on hover, or title when given, such as an unabbreviated value. */
 export function NameLine({
   media,
   badges,
@@ -24,6 +24,28 @@ export function NameLine({
   trailing?: React.ReactNode;
 } & { ref?: React.Ref<HTMLDivElement> }) {
   const nameRef = React.useRef<HTMLSpanElement>(null);
+  const mainRef = React.useRef<HTMLSpanElement>(null);
+  const badgesRef = React.useRef<HTMLSpanElement>(null);
+  const hasBadges = Boolean(badges);
+  React.useLayoutEffect(() => {
+    const main = mainRef.current;
+    const group = badgesRef.current;
+    if (!main || !group) return;
+    const fit = () => {
+      const edge = main.getBoundingClientRect().right;
+      for (const badge of Array.from(group.children))
+        badge.toggleAttribute("data-clipped", badge.getBoundingClientRect().right > edge + 0.5);
+    };
+    fit();
+    const resize = new ResizeObserver(fit);
+    resize.observe(main);
+    const mutation = new MutationObserver(fit);
+    mutation.observe(group, { subtree: true, childList: true, characterData: true });
+    return () => {
+      resize.disconnect();
+      mutation.disconnect();
+    };
+  }, [hasBadges]);
   React.useLayoutEffect(() => {
     const name = nameRef.current;
     if (!name) return;
@@ -42,7 +64,7 @@ export function NameLine({
   }, []);
   return (
     <div ref={ref} data-slot="name-line" className={cn(styles.line, className)} {...props}>
-      <span className={styles.main}>
+      <span ref={mainRef} className={styles.main}>
         {media && (
           <span data-slot="name-line-media" className={styles.media}>
             {media}
@@ -58,7 +80,11 @@ export function NameLine({
         >
           {children}
         </span>
-        {badges && <span className={styles.badges}>{badges}</span>}
+        {badges && (
+          <span ref={badgesRef} data-slot="name-line-badges" className={styles.badges}>
+            {badges}
+          </span>
+        )}
       </span>
       {trailing && (
         <span data-slot="name-line-trailing" className={styles.trailing}>
