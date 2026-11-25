@@ -29,7 +29,8 @@ const added = [
   "users",
   "layout-grid",
   "list",
-  "server"
+  "server",
+  "check-check"
 ] as const;
 
 export default function Example() {
