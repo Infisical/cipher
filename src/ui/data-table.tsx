@@ -514,7 +514,8 @@ export function DataTable<Row>({
       {loadMore.label ?? "Show more"}
     </Button>
   ) : (
-    rows.length > 0 && end
+    rows.length > 0 &&
+    (typeof end === "string" || typeof end === "number" ? end !== "" && <span>{end}</span> : end)
   );
   const hasFoot = Boolean(persistentStatus || more || showFewer);
   const claimFoot = frameFoot?.claim;
