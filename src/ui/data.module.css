@@ -814,9 +814,24 @@
   margin-inline: var(--cipher-space-8);
   padding: var(--cipher-space-8);
 }
-.listShell[data-inset] .listRow > .rowActions > [data-icon-only]:last-child,
-.listShell[data-inset] > .listHeader > .listHeaderAction > [data-icon-only]:last-child {
-  margin-inline-end: calc((var(--cipher-action-icon-size) - var(--cipher-action-height)) / 2);
+.listShell[data-inset] .listRow > .rowActions > :is([data-icon-only], [data-size^="icon"]):last-child,
+.listShell[data-inset]
+  > .listHeader
+  > .listHeaderAction
+  > :is([data-icon-only], [data-size^="icon"]):last-child {
+  margin-inline-end: calc(
+    (var(--cipher-inset-glyph, var(--cipher-button-icon-size, 14px)) - var(--cipher-action-height)) /
+      2
+  );
+}
+.listShell[data-inset] :is([data-size="xs"], [data-size="icon-xs"]):not(li) {
+  --cipher-inset-glyph: var(--cipher-button-icon-size, 12px);
+}
+.listShell[data-inset] :is([data-size="md"], [data-size="lg"]):not(li, .listShell) {
+  --cipher-inset-glyph: var(--cipher-button-icon-size, 16px);
+}
+.listShell[data-inset] [data-size="icon-row"] {
+  --cipher-inset-glyph: var(--cipher-size-glyph);
 }
 .listShell[data-inset] > .listHeader,
 .listShell[data-inset] > .status,
