@@ -10,7 +10,7 @@
       "dependencies": [
         "clsx@^2.1.1",
         "motion@^13.2.0",
-        "radix-ui@^1.6.7",
+        "radix-ui@^1.8.1",
         "tailwind-merge@^2.5.5",
         "tailwindcss@^4.1.14",
         "tw-animate-css@^1.4.0"
@@ -420,7 +420,7 @@
         "@cipher/icon"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -446,7 +446,7 @@
         "@cipher/input"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -536,7 +536,7 @@
         "@cipher/icon"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -561,7 +561,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -611,7 +611,7 @@
         "@cipher/switcher"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -635,7 +635,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -661,7 +661,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -722,7 +722,7 @@
       ],
       "dependencies": [
         "motion@^13.2.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -773,7 +773,7 @@
       ],
       "dependencies": [
         "motion@^13.2.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -880,7 +880,7 @@
         "@cipher/cipher-base"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -900,7 +900,7 @@
         "@cipher/popover"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1004,7 +1004,7 @@
       ],
       "dependencies": [
         "cmdk@^1.1.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1043,7 +1043,7 @@
         "@cipher/menu-content"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1233,7 +1233,7 @@
         "@cipher/icon"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1284,7 +1284,7 @@
         "@cipher/menu-content"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1530,7 +1530,7 @@
         "@cipher/empty"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1671,7 +1671,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -1752,7 +1752,7 @@
         "@cipher/cipher-base"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2047,7 +2047,7 @@
       ],
       "dependencies": [
         "lucide-react@^0.544.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2079,7 +2079,7 @@
         "@cipher/cipher-base"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2102,7 +2102,7 @@
       ],
       "dependencies": [
         "motion@^13.2.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2193,7 +2193,7 @@
         "@cipher/cipher-base"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2282,7 +2282,7 @@
         "@cipher/input"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2344,7 +2344,7 @@
         "@cipher/cipher-base"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2369,7 +2369,7 @@
       ],
       "dependencies": [
         "lucide-react@^0.544.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2446,7 +2446,7 @@
         "@cipher/tabs"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2519,7 +2519,7 @@
         "@cipher/cipher-base"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2706,7 +2706,7 @@
       ],
       "dependencies": [
         "motion@^13.2.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2781,7 +2781,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2932,7 +2932,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2955,7 +2955,7 @@
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {
@@ -2988,7 +2988,7 @@
         "@cipher/kbd"
       ],
       "dependencies": [
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.8.1"
       ],
       "files": [
         {

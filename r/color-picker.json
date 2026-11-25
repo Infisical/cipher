@@ -9,7 +9,7 @@
     "@cipher/popover"
   ],
   "dependencies": [
-    "radix-ui@^1.6.7"
+    "radix-ui@^1.8.1"
   ],
   "files": [
     {
