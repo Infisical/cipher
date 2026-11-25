@@ -558,6 +558,10 @@
         "module": "combobox/multiple"
       },
       {
+        "title": "Multiple with a Create row",
+        "module": "combobox/multiple-create"
+      },
+      {
         "title": "Creation",
         "module": "combobox/creation"
       },
