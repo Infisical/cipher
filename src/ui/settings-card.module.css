@@ -22,14 +22,17 @@
   padding-bottom: var(--cipher-space-surface-inset);
 }
 .titleRow {
+  position: relative;
   display: flex;
   grid-row: 1;
   grid-column: 1;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--cipher-space-8);
+  gap: var(--cipher-space-4) var(--cipher-space-8);
   min-width: 0;
 }
 .title {
+  flex: 0 1 auto;
   min-width: 0;
   margin: 0;
   padding-block: calc((var(--cipher-size-control-sm) - var(--cipher-type-title-sm-line-height)) / 2);
@@ -39,9 +42,18 @@
   font-weight: var(--cipher-type-title-sm-font-weight);
   letter-spacing: var(--cipher-type-title-sm-letter-spacing);
 }
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  min-width: 0;
+  min-height: var(--cipher-size-control-sm);
+}
 .saveStatus {
   display: flex;
   flex: none;
+  margin-inline-start: auto;
   align-items: center;
   gap: var(--cipher-space-6);
   height: var(--cipher-size-control-sm);
@@ -51,6 +63,10 @@
   line-height: var(--cipher-type-small-line-height);
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+/* The idle status stays mounted as a live region but takes no room, so it never wraps onto a line of its own. */
+.saveStatus[data-state="idle"] {
+  position: absolute;
 }
 .description {
   grid-row: 2;

@@ -1830,6 +1830,10 @@
         "module": "settings-card/autosave"
       },
       {
+        "title": "Badges after the title",
+        "module": "settings-card/badges"
+      },
+      {
         "title": "Embedded table",
         "module": "settings-card/embedded-table"
       }
@@ -2160,6 +2164,10 @@
       {
         "title": "Footer totals, secondary lines and muted rows",
         "module": "table/summary-row"
+      },
+      {
+        "title": "Invalid rows",
+        "module": "table/invalid-rows"
       },
       {
         "title": "Row props: drop targets and reorder",

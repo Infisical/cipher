@@ -187,6 +187,10 @@ a.tabTrigger[href] {
 .tabTrigger[data-state="active"] {
   color: var(--cipher-ink);
 }
+/* Radix focuses a tab from script on mousedown, which browsers draw as keyboard focus; a key press on the tab brings the ring back. */
+.tabTrigger[data-pointer-focus]:focus-visible {
+  outline: none;
+}
 .tabTrigger:disabled {
   pointer-events: none;
   opacity: 0.5;
