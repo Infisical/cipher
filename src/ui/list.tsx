@@ -517,7 +517,8 @@ export function DataList({
   density = "default"
 }: {
   items: readonly DataListItem[];
-  variant?: "stat" | "meta" | "props";
+  /** stat for headline numbers, meta and props for label and value rows with dividers, inline for a borderless label column beside wrapping values, such as a short breakdown inside another list's value. */
+  variant?: "stat" | "meta" | "props" | "inline";
   density?: "default" | "compact";
 }) {
   const halves = new Set<number>();

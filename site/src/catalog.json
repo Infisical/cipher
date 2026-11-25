@@ -1402,6 +1402,10 @@
         "module": "list/long-values"
       },
       {
+        "title": "Breakdown inside a value",
+        "module": "list/nested-breakdown"
+      },
+      {
         "title": "Refreshing in the background",
         "module": "list/refreshing"
       },
