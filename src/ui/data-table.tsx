@@ -45,6 +45,7 @@ export interface DataTableColumn<Row> {
   toggle?: DataTableToggle<Row>;
   /** The cell's plain text: its hover title when the value truncates, and the value itself when the column has no render. */
   text?: (row: Row) => string;
+  /** The row's name column. Without a width or minWidth it keeps at least size-text-min, so on a narrow screen the table scrolls sideways instead of squeezing names. A page-scrolling virtual table can't scroll sideways, so there it keeps size-cell-min. */
   primary?: boolean;
   /** Sets the column in mono, for machine values compared character by character: secret keys, key IDs, hashes, hosts. Names people chose stay in the sans. */
   mono?: boolean;
@@ -469,12 +470,18 @@ export function DataTable<Row>({
   const fixedLayout = columns.every(
     (column) => column.width !== undefined || column.grow || column.actions
   );
-  const fixedFloor = columns
-    .filter((column) => column.width === undefined)
-    .map((column) => {
-      if (column.actions) return "var(--cipher-size-row)";
-      return column.minWidth ? `${column.minWidth}px` : "var(--cipher-size-cell-min)";
-    });
+  const primaryMin = flowing ? "var(--cipher-size-cell-min)" : "var(--cipher-size-text-min)";
+  const columnFloor = (column: DataTableColumn<Row>) => {
+    if (column.minWidth) return `${column.minWidth}px`;
+    return column.primary ? primaryMin : "var(--cipher-size-cell-min)";
+  };
+  const sharing = columns.filter((column) => column.width === undefined && !column.actions);
+  const fixedFloor = [
+    ...columns
+      .filter((column) => column.width === undefined && column.actions)
+      .map(() => "var(--cipher-size-row)"),
+    ...(sharing.length > 0 ? [`${sharing.length} * max(${sharing.map(columnFloor).join(", ")})`] : [])
+  ];
   const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
   const trailing =
@@ -495,7 +502,11 @@ export function DataTable<Row>({
     "--cipher-pin-offset"?: string;
   } => ({
     width: column.width ?? (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
-    minWidth: column.width ?? (column.actions ? undefined : (column.minWidth ?? 64)),
+    minWidth:
+      column.width ??
+      (column.actions
+        ? undefined
+        : (column.minWidth ?? (column.primary ? primaryMin : 64))),
     maxWidth: column.maxWidth,
     textAlign: column.align,
     "--cipher-pin-offset": pinOffsets.get(column.id)
