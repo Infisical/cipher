@@ -2162,6 +2162,10 @@
         "module": "table/summary-row"
       },
       {
+        "title": "Invalid rows",
+        "module": "table/invalid-rows"
+      },
+      {
         "title": "Row props: drop targets and reorder",
         "module": "table/drop-targets"
       },

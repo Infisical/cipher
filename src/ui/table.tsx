@@ -183,6 +183,7 @@ const markRow = (row: HTMLTableRowElement): Record<PinKind, boolean> => {
 function TableRow({
   className,
   focused,
+  tone,
   onClick,
   onFocus,
   onBlur,
@@ -192,6 +193,8 @@ function TableRow({
 }: React.ComponentProps<"tr"> & {
   /** The row is being edited: every other row in the same body dims its cell contents until this clears. */
   focused?: boolean;
+  /** Tints the row: bad marks a row that is invalid, such as one an import cannot take. */
+  tone?: "bad";
 }) {
   const node = React.useRef<HTMLTableRowElement | null>(null);
   const reportPin = React.useContext(TablePinContext);
@@ -251,6 +254,7 @@ function TableRow({
           ref={setRef}
           data-slot="table-row"
           data-focused={focused || undefined}
+          data-tone={tone}
           data-contains-focus={containsFocus || undefined}
           data-stretched-link={hasLink || undefined}
           className={cn(
