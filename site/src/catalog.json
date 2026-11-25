@@ -2190,6 +2190,10 @@
         "module": "table/narrow-screen"
       },
       {
+        "title": "Import review: content-sized names, a column that drops first, and an invalid row",
+        "module": "table/import-review"
+      },
+      {
         "title": "Narrow cells",
         "module": "table/narrow-cells"
       },

@@ -51,7 +51,7 @@ export interface DataTableColumn<Row> {
   mono?: boolean;
   /** Wraps long text onto more lines and grows the row, instead of truncating it to one line. */
   wrap?: boolean;
-  /** Badges or icons right after the value, such as a status badge or a description tooltip. The value truncates before they do; at the narrowest widths, once the value is down to 12 characters, they clip. */
+  /** Badges or icons right after the value, such as a status badge or a description tooltip. The value truncates before they do; at the narrowest widths, once the value is down to 12 characters, a badge that no longer fits hides whole. */
   badges?: (row: Row, index: number) => React.ReactNode;
   /** A muted second line under the cell's value, such as an email under a name or a key under a label. */
   secondary?: (row: Row, index: number) => React.ReactNode;
@@ -62,6 +62,8 @@ export interface DataTableColumn<Row> {
   minWidth?: number;
   maxWidth?: number;
   grow?: boolean;
+  /** Hides the column while the table is too narrow to show every column, before names truncate or the table scrolls sideways. For secondary columns such as a usage or a description. */
+  dropFirst?: boolean;
   align?: "start" | "end" | "center";
   actions?: boolean;
   /** true pins the column to the inline end (the actions tail); start pins it to the inline start, after a pinned selection column. */
@@ -180,7 +182,7 @@ interface DataTableBaseProps<Row> {
   getRowChildren?: (row: Row) => readonly Row[] | undefined;
   /** Rows that stay in the table but read as inactive, such as disabled or archived ones: muted text on the done ground. */
   isRowMuted?: (row: Row) => boolean;
-  /** Tints a row by tone: bad marks one that is invalid, such as a row an import cannot take. */
+  /** Tints a row by tone: bad marks one that is invalid, such as a row an import cannot take, and colors the icons in its primary cell, other than its badges. */
   rowTone?: (row: Row) => "bad" | undefined;
   /** Extra attributes and handlers for each data row's tr. Handlers run before DataTable's own, which skip a default-prevented event. */
   rowProps?: (row: Row, index: number) => DataTableRowProps;
@@ -209,7 +211,7 @@ export function DataTable<Row>({
   rows: flatRows,
   groups,
   getRowChildren,
-  columns,
+  columns: allColumns,
   getRowId,
   rowLabel,
   variant = "basic",
@@ -264,6 +266,11 @@ export function DataTable<Row>({
     },
     [containerRef]
   );
+  const [narrow, setNarrow] = React.useState<number | null>(null);
+  const droppable = allColumns.some((column) => column.dropFirst);
+  const columns =
+    droppable && narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
+  const [primaryWidth, setPrimaryWidth] = React.useState<number>();
   const [landing, setLanding] = React.useState<number | null>(null);
   const [focusRow, setFocusRow] = React.useState<number | null>(null);
   const focusPending = React.useRef(false);
@@ -496,12 +503,26 @@ export function DataTable<Row>({
       pinOffsets.set(column.id, `calc(${selectable ? "var(--cipher-size-row)" : "0px"} + ${before}px)`);
       return before + (column.width ?? 0);
     }, 0);
+  const contentSized =
+    fixedLayout && !flowing
+      ? columns.find(
+          (column) =>
+            column.primary &&
+            column.grow &&
+            column.width === undefined &&
+            !column.wrap &&
+            sharing.some((other) => other !== column && other.grow)
+        )?.id
+      : undefined;
   const columnStyle = (
     column: DataTableColumn<Row>
   ): React.CSSProperties & {
     "--cipher-pin-offset"?: string;
   } => ({
-    width: column.width ?? (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
+    width:
+      column.width ??
+      (column.id === contentSized ? primaryWidth : undefined) ??
+      (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
     minWidth:
       column.width ??
       (column.actions
@@ -511,6 +532,98 @@ export function DataTable<Row>({
     textAlign: column.align,
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
+  const otherGrowing = sharing
+    .filter((column) => column.grow && column.id !== contentSized)
+    .map((column) => column.id)
+    .join("\n");
+  React.useLayoutEffect(() => {
+    const container = scroll.current;
+    if (!droppable || !container) return;
+    const measure = () => {
+      const width = container.clientWidth;
+      const needed = container.scrollWidth;
+      setNarrow((current) => {
+        if (current === null) return needed > width + 1 ? needed : null;
+        return width >= current ? null : current;
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    const table = container.querySelector("table");
+    if (table) observer.observe(table);
+    return () => observer.disconnect();
+  }, [droppable]);
+  React.useLayoutEffect(() => {
+    const table = scroll.current?.querySelector("table");
+    if (!contentSized || !table) {
+      setPrimaryWidth(undefined);
+      return;
+    }
+    const header = (id: string) =>
+      table.querySelector<HTMLTableCellElement>(`thead th[data-column="${CSS.escape(id)}"]`);
+    const measure = () => {
+      const head = header(contentSized);
+      if (!head?.parentElement) return;
+      const others = otherGrowing
+        .split("\n")
+        .map(header)
+        .filter((cell): cell is HTMLTableCellElement => Boolean(cell));
+      const width = (cell: Element) => cell.getBoundingClientRect().width;
+      const available = others.reduce((sum, cell) => sum + width(cell), width(head));
+      const floor = others.reduce(
+        (sum, cell) => sum + (parseFloat(getComputedStyle(cell).minWidth) || 0),
+        0
+      );
+      const span = (head.parentElement as HTMLTableRowElement).cells.length;
+      const cells = [
+        head,
+        ...Array.from(table.tBodies).flatMap((body) =>
+          Array.from(body.rows)
+            .filter((row) => row.cells.length === span)
+            .map((row) => row.cells[head.cellIndex])
+        )
+      ];
+      const range = document.createRange();
+      const contentEnd = (cell: HTMLTableCellElement) => {
+        let end = 0;
+        const walker = document.createTreeWalker(cell, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+          if (node instanceof Text) {
+            if (!node.data.trim()) continue;
+            range.selectNodeContents(node);
+            end = Math.max(end, range.getBoundingClientRect().right);
+          } else if (node instanceof SVGSVGElement || node instanceof HTMLImageElement) {
+            end = Math.max(end, node.getBoundingClientRect().right);
+          }
+        }
+        const truncated = Array.from(
+          cell.querySelectorAll<HTMLElement>(
+            `[data-slot="name-line-name"], .${styles.tablePrimary}, .${styles.tableValue}`
+          ),
+          (element) => element.scrollWidth - element.clientWidth
+        );
+        return end + Math.max(0, ...truncated);
+      };
+      const natural = Math.max(
+        ...cells.map((cell) => {
+          const box = cell.getBoundingClientRect();
+          const end = contentEnd(cell);
+          return end > box.left
+            ? end - box.left + parseFloat(getComputedStyle(cell).paddingRight)
+            : 0;
+        })
+      );
+      const next = Math.max(0, Math.min(Math.ceil(natural), Math.floor(available - floor)));
+      setPrimaryWidth((current) =>
+        current !== undefined && Math.abs(current - next) < 1 ? current : next
+      );
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(table);
+    return () => observer.disconnect();
+  }, [contentSized, otherGrowing, rows, loading]);
   const skeletonRows = Math.max(1, Math.floor(loadingRows));
   const showFooter =
     !loading && rows.length > 0 && columns.some((column) => column.footer !== undefined);
@@ -835,6 +948,7 @@ export function DataTable<Row>({
               <TableHead
                 key={column.id}
                 scope="col"
+                data-column={column.id}
                 className={column.actions ? styles.tableActions : undefined}
                 style={columnStyle(column)}
                 data-actions={column.actions || undefined}
