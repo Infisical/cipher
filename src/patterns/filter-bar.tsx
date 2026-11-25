@@ -217,6 +217,7 @@ export const FilterBar = ({
     const index = before.findIndex((filter) => filter.field === key);
     const next = before.filter((filter) => filter.field !== key);
     if (draftRef.current?.filter.field === key) setDraft(null);
+    setOpen((current) => (current === key ? null : current));
     if (latest.current.some((filter) => filter.field === key))
       commit(latest.current.filter((filter) => filter.field !== key));
     setFocusTarget((next[index] ?? next[index - 1])?.field ?? "add");
@@ -440,6 +441,7 @@ export const FilterBar = ({
             variant="link"
             onClick={() => {
               setDraft(null);
+              setOpen(null);
               commit([]);
               setFocusTarget("add");
             }}
