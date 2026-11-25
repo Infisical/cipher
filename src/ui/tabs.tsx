@@ -257,13 +257,30 @@ TabsList.displayName = "TabsList";
 function TabsTrigger({
   className,
   ref,
+  onPointerDown,
+  onKeyDown,
+  onBlur,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  const [pointerFocus, setPointerFocus] = React.useState(false);
   return (
     <TabsPrimitive.Trigger
       ref={ref}
       data-slot="tabs-trigger"
+      data-pointer-focus={pointerFocus || undefined}
       className={cn(controlStyles.focusOutline, styles.tabTrigger, className)}
+      onPointerDown={(event) => {
+        onPointerDown?.(event);
+        setPointerFocus(true);
+      }}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        setPointerFocus(false);
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        setPointerFocus(false);
+      }}
       {...props}
     />
   );
