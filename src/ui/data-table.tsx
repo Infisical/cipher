@@ -268,6 +268,9 @@ export function DataTable<Row>({
   );
   const [narrow, setNarrow] = React.useState<number | null>(null);
   const droppable = allColumns.some((column) => column.dropFirst);
+  const primaryCanGrow = allColumns.some(
+    (column) => column.primary && column.width === undefined && column.maxWidth === undefined
+  );
   const columns =
     droppable && narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
   const columnShape = allColumns
@@ -556,7 +559,7 @@ export function DataTable<Row>({
           (element) => element.scrollWidth - element.clientWidth
         )
       );
-      const needed = container.scrollWidth + truncated;
+      const needed = container.scrollWidth + (primaryCanGrow ? truncated : 0);
       setNarrow((current) => {
         if (current === null) return needed > width + 1 ? needed : null;
         return width >= current ? null : current;
@@ -568,7 +571,7 @@ export function DataTable<Row>({
     const table = container.querySelector("table");
     if (table) observer.observe(table);
     return () => observer.disconnect();
-  }, [droppable, narrow, contentSized, primaryWidth]);
+  }, [droppable, narrow, contentSized, primaryWidth, primaryCanGrow]);
   React.useLayoutEffect(() => {
     const table = scroll.current?.querySelector("table");
     if (!contentSized || !table) {
