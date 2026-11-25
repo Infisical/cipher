@@ -258,10 +258,12 @@ function TabsTrigger({
   className,
   ref,
   onPointerDown,
+  onFocus,
   onKeyDown,
   onBlur,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  const pressed = React.useRef(false);
   const [pointerFocus, setPointerFocus] = React.useState(false);
   return (
     <TabsPrimitive.Trigger
@@ -271,7 +273,16 @@ function TabsTrigger({
       className={cn(controlStyles.focusOutline, styles.tabTrigger, className)}
       onPointerDown={(event) => {
         onPointerDown?.(event);
-        setPointerFocus(true);
+        pressed.current = true;
+        const release = () => {
+          pressed.current = false;
+        };
+        window.addEventListener("pointerup", release, { once: true });
+        window.addEventListener("pointercancel", release, { once: true });
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        setPointerFocus(pressed.current);
       }}
       onKeyDown={(event) => {
         onKeyDown?.(event);

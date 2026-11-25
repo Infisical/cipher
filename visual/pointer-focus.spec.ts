@@ -23,7 +23,9 @@ test("clicking a tab focuses it without drawing a focus ring, and the keyboard s
     await expect(target).toBeFocused();
     expect(await ringDrawn(target), "tablist " + index + " after a click").toBe(false);
   }
-  await lists.first().getByRole("tab").first().click();
+  const firstList = lists.first().getByRole("tab");
+  await firstList.nth(0).click();
   await page.keyboard.press("ArrowRight");
-  await expect.poll(() => ringDrawn(page.locator(":focus"))).toBe(true);
+  await expect(firstList.nth(1)).toBeFocused();
+  await expect.poll(() => ringDrawn(firstList.nth(1))).toBe(true);
 });
