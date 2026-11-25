@@ -35,6 +35,12 @@
 .badges {
   display: contents;
 }
+.badges > :not([data-collapse], [data-slot="badge-group"]) {
+  flex-shrink: 0;
+}
+.badges > [data-clipped] {
+  visibility: hidden;
+}
 .trailing {
   display: inline-flex;
   flex: none;
