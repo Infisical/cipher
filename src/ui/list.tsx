@@ -224,6 +224,8 @@ export interface ListProps extends ListHeaderProps {
   variant?: "framed" | "plain" | "bare" | "segmented" | "divided";
   size?: "md" | "sm";
   actionsPlacement?: "end" | "below";
+  /** Sits rows on a 16px content lane for a list inside a popover or sheet: media and text start on the lane, a trailing icon button aligns its glyph to the lane's end, and the hover and selected fill stays 8px off the container edge. Applies to the bare, segmented and divided variants, which draw no frame or border of their own. */
+  inset?: boolean;
   selection?: "none" | "multiple";
   selectedIds?: readonly string[];
   defaultSelectedIds?: readonly string[];
@@ -246,6 +248,7 @@ export function List({
   variant: requestedVariant,
   size = "md",
   actionsPlacement = "end",
+  inset = false,
   selection = "none",
   selectedIds,
   defaultSelectedIds = [],
@@ -374,6 +377,7 @@ export function List({
           data-variant={variant}
           data-embedded={embedded || undefined}
           data-size={size}
+          data-inset={(inset && !framed && !embedded && variant !== "plain") || undefined}
         >
           {refreshing && !loading && (
             <span className={styles.refreshing} data-slot="list-refreshing" aria-hidden />
