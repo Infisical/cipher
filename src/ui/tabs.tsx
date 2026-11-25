@@ -264,6 +264,8 @@ function TabsTrigger({
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   const pressed = React.useRef(false);
+  const release = React.useRef<AbortController | null>(null);
+  React.useEffect(() => () => release.current?.abort(), []);
   const [pointerFocus, setPointerFocus] = React.useState(false);
   return (
     <TabsPrimitive.Trigger
@@ -274,11 +276,15 @@ function TabsTrigger({
       onPointerDown={(event) => {
         onPointerDown?.(event);
         pressed.current = true;
-        const release = () => {
+        release.current?.abort();
+        const controller = new AbortController();
+        release.current = controller;
+        const end = () => {
           pressed.current = false;
+          controller.abort();
         };
-        window.addEventListener("pointerup", release, { once: true });
-        window.addEventListener("pointercancel", release, { once: true });
+        window.addEventListener("pointerup", end, { signal: controller.signal });
+        window.addEventListener("pointercancel", end, { signal: controller.signal });
       }}
       onFocus={(event) => {
         onFocus?.(event);
