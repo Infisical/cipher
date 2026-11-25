@@ -50,10 +50,16 @@
   min-width: 0;
   min-height: var(--cipher-size-control-sm);
 }
+.header[data-save-status] {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+.header[data-save-status] > .action {
+  grid-column: 3;
+}
 .saveStatus {
   display: flex;
-  flex: none;
-  margin-inline-start: auto;
+  grid-row: 1;
+  grid-column: 2;
   align-items: center;
   gap: var(--cipher-space-6);
   height: var(--cipher-size-control-sm);
@@ -64,9 +70,18 @@
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
-/* The idle status stays mounted as a live region but takes no room, so it never wraps onto a line of its own. */
-.saveStatus[data-state="idle"] {
-  position: absolute;
+/* Every state takes the width of "Saving", so a status change never moves the title or the card below it. */
+.saveLabel {
+  display: grid;
+}
+.saveLabel > * {
+  grid-area: 1 / 1;
+}
+.saveSizer {
+  visibility: hidden;
+}
+.saveStatus[data-state="idle"] .mark {
+  visibility: hidden;
 }
 .description {
   grid-row: 2;
@@ -100,6 +115,12 @@
   }
   .action + .description {
     grid-row: 3;
+  }
+  .header[data-save-status] {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .header[data-save-status] > .action {
+    grid-column: 1 / -1;
   }
 }
 .content {
