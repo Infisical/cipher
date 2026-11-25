@@ -72,10 +72,12 @@ export function PageHeader({
     if (!element || truncateTitle) return;
     const measure = () => {
       const style = getComputedStyle(element);
-      const line = parseFloat(style.lineHeight);
+      const lines =
+        style.display === "inline"
+          ? element.getClientRects().length
+          : element.scrollHeight / parseFloat(style.lineHeight);
       const clamps =
-        style.getPropertyValue("--cipher-page-header-title-clamp").trim() === "2" &&
-        element.scrollHeight > 2.5 * line;
+        style.getPropertyValue("--cipher-page-header-title-clamp").trim() === "2" && lines > 2.5;
       setTitleClamped(clamps);
       if (clamps) element.title = element.textContent ?? "";
       else {
@@ -85,6 +87,7 @@ export function PageHeader({
     };
     const observer = new ResizeObserver(measure);
     observer.observe(element);
+    if (element.parentElement) observer.observe(element.parentElement);
     const mutations = new MutationObserver(measure);
     mutations.observe(element, { subtree: true, childList: true, characterData: true });
     document.fonts.addEventListener("loadingdone", measure);
@@ -133,11 +136,15 @@ export function PageHeader({
       )}
       <div className={styles.main}>
         {media && <span className={styles.media}>{media}</span>}
-        <div className={styles.titleLine}>
+        <div
+          className={styles.titleLine}
+          data-flow={truncateTitle || (titleClamped && !titleExpanded) ? undefined : "inline"}
+        >
           <h1
             ref={titleRef}
             data-truncate={truncateTitle || undefined}
             data-expanded={titleExpanded || undefined}
+            data-clamped={titleClamped || undefined}
             className={cn(styles.title, mono && styles.mono)}
             onPointerEnter={
               truncateTitle ? (event) => titleIfClamped(event.currentTarget) : undefined
@@ -165,6 +172,7 @@ export function PageHeader({
               title
             )}
           </h1>
+          {badges && <span className={styles.titleGap}> </span>}
           {badges && (
             <span data-slot="page-header-badges" className={styles.badges}>
               {badges}
