@@ -259,6 +259,20 @@ export const iconShapes = {
       }
     }
   ],
+  "check-check": [
+    {
+      tag: "path",
+      attributes: {
+        d: "m2.25 13 4 4 8.5-8.5"
+      }
+    },
+    {
+      tag: "path",
+      attributes: {
+        d: "m11.75 15.5 1.5 1.5 8.5-8.5"
+      }
+    }
+  ],
   "check-c": [
     {
       tag: "circle",
