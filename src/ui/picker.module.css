@@ -237,7 +237,8 @@
 .option[data-disabled] > .optionLabel {
   pointer-events: auto;
 }
-:is(.option, .createOption)[data-wrap] > .optionLabel {
+:is(.option, .createOption)[data-wrap] > .optionLabel,
+.option[data-wrap][data-description="stacked"] > span > .optionLabel {
   overflow-wrap: anywhere;
   white-space: normal;
 }
