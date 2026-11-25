@@ -17,7 +17,10 @@ import { cn } from "../lib/utils";
 
 import overlay from "./overlay.module.css";
 
-const CloseContext = React.createContext<() => void>(() => {});
+const OpeningContext = React.createContext<{
+  current: () => number;
+  close: (opening: number) => void;
+}>({ current: () => 0, close: () => {} });
 const ConfirmContext = React.createContext<{ ready: boolean }>({ ready: true });
 const PendingClaimContext = React.createContext<(delta: number) => void>(() => {});
 const ToneContext = React.createContext<{
@@ -39,16 +42,33 @@ function AlertDialog({
     },
     [openProp, onOpenChange]
   );
-  const close = React.useCallback(() => setOpen(false), [setOpen]);
+  const open = openProp ?? uncontrolledOpen;
+  const openRef = React.useRef(open);
+  const openingRef = React.useRef(0);
+  const setOpenRef = React.useRef(setOpen);
+  React.useLayoutEffect(() => {
+    openRef.current = open;
+    setOpenRef.current = setOpen;
+    if (open) openingRef.current += 1;
+  }, [open, setOpen]);
+  const opening = React.useMemo(
+    () => ({
+      current: () => openingRef.current,
+      close: (started: number) => {
+        if (openRef.current && openingRef.current === started) setOpenRef.current(false);
+      }
+    }),
+    []
+  );
   return (
-    <CloseContext value={close}>
+    <OpeningContext value={opening}>
       <AlertDialogPrimitive.Root
         data-slot="alert-dialog"
-        open={openProp ?? uncontrolledOpen}
+        open={open}
         onOpenChange={setOpen}
         {...props}
       />
-    </CloseContext>
+    </OpeningContext>
   );
 }
 
@@ -328,13 +348,13 @@ function AlertDialogAction({
   ...props
 }: React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action> &
   Pick<React.ComponentPropsWithoutRef<typeof Button>, "variant" | "size"> & {
-    /** Button's loading: the spinner takes the label's place at the same width and the action stays focusable but cannot fire again. With asChild the composed child gets the same guard, aria-busy and aria-disabled; pass loading to the child too for the spinner. While true, the dialog is pending (Escape and Cancel blocked). Passing loading at all, even false, means the host closes the dialog: a click runs onClick and does not close it. Without loading, an onClick that returns a Promise is loading until it settles: the dialog closes when it resolves and stays open when it rejects. */
+    /** Button's loading: the spinner takes the label's place at the same width and the action stays focusable but cannot fire again. With asChild the composed child gets the same guard, aria-busy and aria-disabled; pass loading to the child too for the spinner. While true, the dialog is pending (Escape and Cancel blocked). Passing loading at all, even false, means the host closes the dialog: a click runs onClick and does not close it. Without loading, an onClick that returns a Promise is loading until it settles: the dialog closes when it resolves, unless onClick called preventDefault or the dialog was closed or reopened meanwhile, and stays open when it rejects. */
     loading?: boolean;
     ref?: React.Ref<React.ComponentRef<typeof AlertDialogPrimitive.Action>>;
   }) {
   const { ready } = React.useContext(ConfirmContext);
   const claimPending = React.useContext(PendingClaimContext);
-  const close = React.useContext(CloseContext);
+  const opening = React.useContext(OpeningContext);
   const [settling, setSettling] = React.useState(false);
   const busy = loading ?? settling;
   React.useLayoutEffect(() => {
@@ -348,14 +368,16 @@ function AlertDialogAction({
       if (!busy) onClick?.(event);
       return;
     }
+    const started = opening.current();
     const result: unknown = onClick?.(event);
     if (!(result instanceof Promise)) return;
+    const hostKeepsOpen = event.defaultPrevented;
     event.preventDefault();
     setSettling(true);
     result.then(
       () => {
         setSettling(false);
-        close();
+        if (!hostKeepsOpen) opening.close(started);
       },
       (error: unknown) => {
         setSettling(false);
