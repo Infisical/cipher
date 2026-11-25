@@ -1874,6 +1874,10 @@
         "module": "sheet/form"
       },
       {
+        "title": "Back at the start of the footer",
+        "module": "sheet/footer-start"
+      },
+      {
         "title": "Header and footer inside a view component",
         "module": "sheet/wrapped-sections"
       },
