@@ -234,7 +234,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.option[data-disabled] > .optionLabel {
+.option[data-disabled] > .optionLabel,
+.option[data-disabled][data-description="stacked"] > span > .optionLabel {
   pointer-events: auto;
 }
 :is(.option, .createOption)[data-wrap] > .optionLabel,

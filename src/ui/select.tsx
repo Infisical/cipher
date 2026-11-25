@@ -14,7 +14,10 @@ import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
 import picker from "./picker.module.css";
 
-const SelectWrapContext = React.createContext(false);
+const SelectSettingsContext = React.createContext<{
+  wrap: boolean;
+  descriptionLayout: "inline" | "stacked";
+}>({ wrap: false, descriptionLayout: "inline" });
 
 function titleIfTruncated(element: HTMLElement | null | undefined) {
   if (!element) return;
@@ -24,7 +27,6 @@ function titleIfTruncated(element: HTMLElement | null | undefined) {
   else element.removeAttribute("title");
 }
 
-const SelectDescriptionContext = React.createContext<"inline" | "stacked">("inline");
 const SelectNameContext = React.createContext<{
   "aria-label"?: string;
   "aria-labelledby"?: string;
@@ -91,7 +93,7 @@ function Select({
       }}
       {...props}
     >
-      <SelectWrapContext value={wrap ?? false}>
+      <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
         {options ? (
           <>
             <SelectTrigger
@@ -108,7 +110,6 @@ function Select({
             </SelectTrigger>
             <SelectContent
               align={align}
-              descriptionLayout={descriptionLayout}
               style={
                 menuWidth
                   ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
@@ -140,7 +141,7 @@ function Select({
             {children}
           </SelectNameContext>
         )}
-      </SelectWrapContext>
+      </SelectSettingsContext>
     </SelectPrimitive.Root>
   );
 }
@@ -234,18 +235,18 @@ function SelectContent({
   sideOffset = 4,
   style,
   wrap,
-  descriptionLayout = "inline",
+  descriptionLayout,
   ref,
   ...props
 }: Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>, "position"> & {
   /** Wrap long option labels instead of truncating them. Defaults to the Select's `wrap`; items can override it. */
   wrap?: boolean;
-  /** Where option descriptions go: after the label on one line, or stacked below it and wrapping in full. */
+  /** Where option descriptions go: after the label on one line, or stacked below it and wrapping in full. Defaults to the Select's descriptionLayout. */
   descriptionLayout?: "inline" | "stacked";
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Content>>;
 }) {
   const inset = useMenuInset<HTMLDivElement>();
-  const inherited = React.useContext(SelectWrapContext);
+  const inherited = React.useContext(SelectSettingsContext);
   return (
     <SelectPrimitive.Portal container={usePortalContainer()}>
       <SelectPrimitive.Content
@@ -262,11 +263,14 @@ function SelectContent({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport ref={inset} className={menu.inset} data-scroll-fade="y">
-          <SelectWrapContext value={wrap ?? inherited}>
-            <SelectDescriptionContext value={descriptionLayout}>
-              {children}
-            </SelectDescriptionContext>
-          </SelectWrapContext>
+          <SelectSettingsContext
+            value={{
+              wrap: wrap ?? inherited.wrap,
+              descriptionLayout: descriptionLayout ?? inherited.descriptionLayout
+            }}
+          >
+            {children}
+          </SelectSettingsContext>
           <ListHighlight />
         </SelectPrimitive.Viewport>
         <SelectScrollDownButton />
@@ -313,9 +317,9 @@ function SelectItem({
 }) {
   const descriptionId = React.useId();
   const label = React.useRef<HTMLSpanElement>(null);
-  const inherited = React.useContext(SelectWrapContext);
-  const wrapped = wrap ?? inherited;
-  const stacked = React.useContext(SelectDescriptionContext) === "stacked" && Boolean(description);
+  const inherited = React.useContext(SelectSettingsContext);
+  const wrapped = wrap ?? inherited.wrap;
+  const stacked = inherited.descriptionLayout === "stacked" && Boolean(description);
   React.useLayoutEffect(() => {
     const node = label.current;
     if (node?.title && node.title !== node.textContent) titleIfTruncated(node);
