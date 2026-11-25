@@ -84,6 +84,7 @@
   );
 }
 .sheet {
+  --cipher-size-measure-field: 100%;
   --cipher-sheet-from: 100% 0;
   --cipher-sheet-size: var(--cipher-size-sheet-sm);
 }
