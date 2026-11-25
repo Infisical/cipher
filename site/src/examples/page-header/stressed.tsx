@@ -1,5 +1,6 @@
 import { Badge } from "@infisical/cipher/ui/badge";
 import { Button } from "@infisical/cipher/ui/button";
+import { DocumentationLink } from "@infisical/cipher/ui/documentation-link";
 import { PageHeader } from "@infisical/cipher/ui/page-header";
 
 export default function Example() {
@@ -28,6 +29,22 @@ export default function Example() {
           {
             "A long title wraps. On a narrow header it stops at two lines, a tap shows the rest, and icon buttons drop to their glyph"
           }
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <PageHeader
+            title="Machine identity authentication and token renewal settings"
+            badges={
+              <DocumentationLink
+                href="https://infisical.com/docs/documentation/platform/identities/machine-identities"
+                subject="machine identities"
+              />
+            }
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"The docs link stays at the end of a wrapped title's last line"}
         </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">

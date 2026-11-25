@@ -44,6 +44,28 @@
   align-items: center;
   gap: var(--cipher-space-8) var(--cipher-space-12);
 }
+/* The title flows as inline text so badges, such as the docs link, sit at the end of its last line instead of wrapping below it. */
+.titleLine[data-flow="inline"] {
+  display: block;
+}
+.titleLine[data-flow="inline"] > .title {
+  display: inline;
+}
+.titleLine[data-flow="inline"] > .badges {
+  min-height: var(--cipher-type-display-line-height);
+  vertical-align: top;
+}
+/* A space rather than a margin, so the gap drops away when the badges wrap to a line of their own. */
+.titleGap {
+  display: none;
+}
+.titleLine[data-flow="inline"] > .titleGap {
+  display: inline;
+  word-spacing: calc(var(--cipher-space-12) - 0.25em);
+}
+.header[data-size="md"] .titleLine[data-flow="inline"] > .badges {
+  min-height: var(--cipher-type-title-lg-line-height);
+}
 .title {
   min-width: 0;
   margin: 0;
@@ -151,10 +173,23 @@
   .titleLine:has(> .badges > [data-collapse]:only-child) {
     flex-wrap: nowrap;
   }
+  .titleLine:has(> .badges > [data-slot="documentation-link"]:only-child) {
+    flex-wrap: nowrap;
+    align-items: flex-end;
+  }
   .titleLine:has(> .badges > [data-collapse]:only-child) > .badges {
     display: contents;
   }
-  .title:not([data-truncate], [data-expanded]) {
+  .titleLine[data-flow="inline"]:has(> .badges > [data-collapse]:only-child) {
+    display: flex;
+  }
+  .titleLine[data-flow="inline"]:has(> .badges > [data-collapse]:only-child) > .title {
+    display: block;
+  }
+  .titleLine[data-flow="inline"]:has(> .badges > [data-collapse]:only-child) > .titleGap {
+    display: none;
+  }
+  .title[data-clamped]:not([data-truncate], [data-expanded]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
