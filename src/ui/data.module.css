@@ -1043,6 +1043,32 @@ button.rowTitle::after {
   letter-spacing: var(--cipher-type-display-letter-spacing);
   font-variant-numeric: tabular-nums;
 }
+.dataList[data-variant="inline"] {
+  grid-template-columns: max-content auto;
+  align-items: baseline;
+  gap: var(--cipher-space-4) var(--cipher-space-8);
+  justify-content: start;
+}
+.dataList[data-variant="inline"] > .dataPair {
+  display: contents;
+}
+.dataList[data-variant="inline"] > .dataPair > dt {
+  max-width: none;
+  text-align: start;
+}
+.dataList[data-variant="inline"] > .dataPair > dd {
+  --cipher-data-list-value-justify: flex-start;
+  text-align: start;
+}
+.dataPair dd > .dataList[data-variant="inline"] {
+  justify-content: var(--cipher-data-list-value-justify, end);
+}
+.dataList[data-variant="inline"] > .dataPair > .dataValueWithAction {
+  justify-content: flex-start;
+}
+.dataPair:has(> dd > .dataList[data-variant="inline"]) > dt {
+  flex: none;
+}
 @media (max-width: 480px) {
   .listRow {
     flex-wrap: wrap;
