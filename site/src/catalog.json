@@ -2056,6 +2056,10 @@
       {
         "title": "Linked, framed and plain",
         "module": "stat-card/linked"
+      },
+      {
+        "title": "Fixed columns that stack on narrow screens",
+        "module": "stat-card/grid"
       }
     ]
   },
