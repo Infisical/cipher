@@ -88,12 +88,13 @@ export function useAutosave<T>({
 function SaveStatus({ status }: { status: SettingsCardSaveStatus }) {
   return (
     <span className={styles.saveStatus} data-state={status} role="status">
-      {status !== "idle" && (
-        <>
-          <span className={styles.mark} aria-hidden="true" />
-          {status === "saving" ? "Saving" : "Saved"}
-        </>
-      )}
+      <span className={styles.mark} aria-hidden="true" />
+      <span className={styles.saveLabel}>
+        <span className={styles.saveSizer} aria-hidden="true">
+          Saving
+        </span>
+        {status !== "idle" && <span>{status === "saving" ? "Saving" : "Saved"}</span>}
+      </span>
     </span>
   );
 }
@@ -239,14 +240,14 @@ export function SettingsCard({
   };
   const hasFooter = hasFooterContent({ hint, locked, dirty, saving, tone, actions, onSave, onDiscard });
   const header = (
-    <div className={styles.header}>
+    <div className={styles.header} data-save-status={saveStatus ? "" : undefined}>
       <div className={styles.titleRow}>
         <h3 id={titleId} className={styles.title}>
           {title}
         </h3>
         {badges && <div className={styles.badges}>{badges}</div>}
-        {saveStatus && <SaveStatus status={saveStatus} />}
       </div>
+      {saveStatus && <SaveStatus status={saveStatus} />}
       {action && <div className={styles.action}>{action}</div>}
       {description && <p className={styles.description}>{description}</p>}
     </div>
