@@ -30,6 +30,7 @@ const columns: DataTableColumn<Key>[] = [
     header: "Key",
     primary: true,
     grow: true,
+    wrap: true,
     render: (row) => row.name,
     secondary: (row) => row.problem
   },
