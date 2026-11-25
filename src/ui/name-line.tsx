@@ -6,7 +6,7 @@ import { cn, titleIfClamped } from "../lib/utils";
 
 import styles from "./name-line.module.css";
 
-/** One line of media, name, badges and trailing content. Under pressure the badges give way first (use Badge collapse), then a long name truncates to a 12ch floor, then the badges clip; the trailing content always stays whole. The full name shows on hover. */
+/** One line of media, name, badges and trailing content. Under pressure the badges give way first (use Badge collapse), then a long name truncates to a 12ch floor, then the badges clip; the trailing content always stays whole. The full name shows on hover, or title when given, such as an unabbreviated value. */
 export function NameLine({
   media,
   badges,
@@ -52,7 +52,9 @@ export function NameLine({
           data-slot="name-line-name"
           ref={nameRef}
           className={styles.name}
-          onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+          onPointerEnter={
+            props.title === undefined ? (event) => titleIfClamped(event.currentTarget) : undefined
+          }
         >
           {children}
         </span>

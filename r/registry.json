@@ -1122,6 +1122,7 @@
         "@cipher/cipher-base",
         "@cipher/empty",
         "@cipher/icon",
+        "@cipher/name-line",
         "@cipher/sortable-list",
         "@cipher/table",
         "@cipher/tooltip"

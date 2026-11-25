@@ -9,6 +9,7 @@ import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { type EmptyGhost, EmptyScope } from "./empty";
 import { Icon, type IconSource } from "./icon";
+import { NameLine } from "./name-line";
 import { SortableAnnouncer, SortableHandle } from "./sortable-list";
 import {
   rowActionSlots,
@@ -49,6 +50,8 @@ export interface DataTableColumn<Row> {
   mono?: boolean;
   /** Wraps long text onto more lines and grows the row, instead of truncating it to one line. */
   wrap?: boolean;
+  /** Badges or icons right after the value, such as a status badge or a description tooltip. The value truncates before they do; at the narrowest widths, once the value is down to 12 characters, they clip. */
+  badges?: (row: Row, index: number) => React.ReactNode;
   /** A muted second line under the cell's value, such as an email under a name or a key under a label. */
   secondary?: (row: Row, index: number) => React.ReactNode;
   /** The column's cell in a summary row under the body, such as a total. Any column with a footer adds the row. */
@@ -695,7 +698,14 @@ export function DataTable<Row>({
                 style={{ maxWidth: column.maxWidth }}
                 title={column.wrap ? undefined : column.text?.(row)}
               >
-                {column.render ? column.render(row, position) : column.text?.(row)}
+                <CellValue
+                  badges={column.badges ? (column.badges(row, position) ?? null) : undefined}
+                  wrap={column.wrap}
+                  align={column.align}
+                  title={column.text?.(row)}
+                >
+                  {column.render ? column.render(row, position) : column.text?.(row)}
+                </CellValue>
               </div>
             </CellContent>
           );
@@ -1029,6 +1039,33 @@ export function DataTable<Row>({
     </div>
   );
 }
+function CellValue({
+  badges,
+  wrap,
+  align,
+  title,
+  children
+}: {
+  badges: React.ReactNode;
+  wrap?: boolean;
+  align?: DataTableColumn<unknown>["align"];
+  title?: string;
+  children: React.ReactNode;
+}) {
+  if (badges === undefined) return children;
+  if (wrap)
+    return (
+      <>
+        {children} {badges}
+      </>
+    );
+  return (
+    <NameLine badges={badges} data-align={align} title={title}>
+      {children}
+    </NameLine>
+  );
+}
+
 function CellContent({
   shrink,
   secondary,

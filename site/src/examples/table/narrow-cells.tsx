@@ -49,12 +49,13 @@ function Narrow({ environments, rows }: { environments: string[]; rows: Row[] })
       primary: true,
       grow: true,
       mono: true,
-      render: (row) => (
-        <span className="flex min-w-0 items-center gap-2">
-          <span className="truncate">{row.name}</span>
-          {row.source && <Badge icon="link">{row.source}</Badge>}
-        </span>
-      )
+      render: (row) => row.name,
+      badges: (row) =>
+        row.source && (
+          <Badge icon="link" collapse>
+            {row.source}
+          </Badge>
+        )
     },
     ...environments.map((environment, index) => ({
       id: `env-${index}`,

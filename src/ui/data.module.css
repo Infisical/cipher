@@ -1432,6 +1432,12 @@ tbody > .nativeTableRow[data-loading] {
   letter-spacing: var(--cipher-type-row-title-letter-spacing);
   color: var(--cipher-ink);
 }
+:is(.tableValue, .tablePrimary) > [data-slot="name-line"][data-align="end"] > :first-child {
+  justify-content: flex-end;
+}
+:is(.tableValue, .tablePrimary) > [data-slot="name-line"][data-align="center"] > :first-child {
+  justify-content: center;
+}
 .tableValue[data-wrap],
 .tablePrimary[data-wrap] {
   white-space: normal;
