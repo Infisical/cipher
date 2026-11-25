@@ -268,6 +268,15 @@
   font-weight: var(--cipher-type-body-font-weight);
   letter-spacing: var(--cipher-type-caption-letter-spacing);
 }
+.option[data-description="stacked"] {
+  align-items: flex-start;
+}
+.option[data-description="stacked"] > .optionCheck {
+  height: var(--cipher-type-body-line-height);
+}
+.optionDescription {
+  display: block;
+}
 .optionCheck {
   display: flex;
   flex: none;

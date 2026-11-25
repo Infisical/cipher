@@ -24,6 +24,7 @@ function titleIfTruncated(element: HTMLElement | null | undefined) {
   else element.removeAttribute("title");
 }
 
+const SelectDescriptionContext = React.createContext<"inline" | "stacked">("inline");
 const SelectNameContext = React.createContext<{
   "aria-label"?: string;
   "aria-labelledby"?: string;
@@ -49,6 +50,7 @@ function Select({
   menuWidth,
   icon,
   wrap,
+  descriptionLayout = "inline",
   onChange,
   onValueChange,
   children,
@@ -71,6 +73,8 @@ function Select({
   icon?: IconSource;
   /** Wrap long option labels in the list instead of truncating them. The trigger stays on one line. */
   wrap?: boolean;
+  /** inline puts an option's description after its label on one line; stacked puts it on the lines below, wrapping in full, for descriptions longer than a few words such as what a role allows. */
+  descriptionLayout?: "inline" | "stacked";
   onChange?: (value: string) => void;
   id?: string;
   "aria-describedby"?: string;
@@ -104,6 +108,7 @@ function Select({
             </SelectTrigger>
             <SelectContent
               align={align}
+              descriptionLayout={descriptionLayout}
               style={
                 menuWidth
                   ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
@@ -229,11 +234,14 @@ function SelectContent({
   sideOffset = 4,
   style,
   wrap,
+  descriptionLayout = "inline",
   ref,
   ...props
 }: Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>, "position"> & {
   /** Wrap long option labels instead of truncating them. Defaults to the Select's `wrap`; items can override it. */
   wrap?: boolean;
+  /** Where option descriptions go: after the label on one line, or stacked below it and wrapping in full. */
+  descriptionLayout?: "inline" | "stacked";
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Content>>;
 }) {
   const inset = useMenuInset<HTMLDivElement>();
@@ -254,7 +262,11 @@ function SelectContent({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport ref={inset} className={menu.inset} data-scroll-fade="y">
-          <SelectWrapContext value={wrap ?? inherited}>{children}</SelectWrapContext>
+          <SelectWrapContext value={wrap ?? inherited}>
+            <SelectDescriptionContext value={descriptionLayout}>
+              {children}
+            </SelectDescriptionContext>
+          </SelectWrapContext>
           <ListHighlight />
         </SelectPrimitive.Viewport>
         <SelectScrollDownButton />
@@ -303,10 +315,29 @@ function SelectItem({
   const label = React.useRef<HTMLSpanElement>(null);
   const inherited = React.useContext(SelectWrapContext);
   const wrapped = wrap ?? inherited;
+  const stacked = React.useContext(SelectDescriptionContext) === "stacked" && Boolean(description);
   React.useLayoutEffect(() => {
     const node = label.current;
     if (node?.title && node.title !== node.textContent) titleIfTruncated(node);
   });
+  const labelText = (
+    <span
+      ref={label}
+      className={picker.optionLabel}
+      onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
+    >
+      <SelectPrimitive.ItemText>
+        {badge === undefined ? (
+          children
+        ) : (
+          <>
+            <span data-slot="option-text">{children}</span>
+            {badge}
+          </>
+        )}
+      </SelectPrimitive.ItemText>
+    </span>
+  );
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -316,6 +347,7 @@ function SelectItem({
         undefined
       }
       data-wrap={wrapped || undefined}
+      data-description={stacked ? "stacked" : undefined}
       className={cn(menu.row, picker.option, className)}
       onFocus={(event) => {
         onFocus?.(event);
@@ -323,26 +355,22 @@ function SelectItem({
       }}
       {...props}
     >
-      <span
-        ref={label}
-        className={picker.optionLabel}
-        onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
-      >
-        <SelectPrimitive.ItemText>
-          {badge === undefined ? (
-            children
-          ) : (
-            <>
-              <span data-slot="option-text">{children}</span>
-              {badge}
-            </>
-          )}
-        </SelectPrimitive.ItemText>
-      </span>
-      {description && (
-        <span id={descriptionId} className={picker.optionMeta}>
-          {description}
+      {stacked ? (
+        <span className={menu.text}>
+          {labelText}
+          <span id={descriptionId} className={cn(menu.description, picker.optionDescription)}>
+            {description}
+          </span>
         </span>
+      ) : (
+        <>
+          {labelText}
+          {description && (
+            <span id={descriptionId} className={picker.optionMeta}>
+              {description}
+            </span>
+          )}
+        </>
       )}
       <span className={picker.optionCheck}>
         <SelectPrimitive.ItemIndicator>

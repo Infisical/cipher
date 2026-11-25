@@ -1750,6 +1750,10 @@
         "module": "select/metadata"
       },
       {
+        "title": "Stacked descriptions",
+        "module": "select/stacked-descriptions"
+      },
+      {
         "title": "Long option names",
         "module": "select/long-labels"
       },
