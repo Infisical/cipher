@@ -2068,6 +2068,10 @@
       {
         "title": "A row among fields",
         "module": "switch/among-fields"
+      },
+      {
+        "title": "In a field set",
+        "module": "switch/field-set"
       }
     ]
   },
