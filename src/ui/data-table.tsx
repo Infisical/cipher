@@ -62,7 +62,7 @@ export interface DataTableColumn<Row> {
   minWidth?: number;
   maxWidth?: number;
   grow?: boolean;
-  /** Hides the column while the table is too narrow to show every column, before names truncate or the table scrolls sideways. For secondary columns such as a usage or a description. */
+  /** Hides the column while the table is too narrow to show every column, when the primary column's names would truncate or the table would scroll sideways. For secondary columns such as a usage or a description. */
   dropFirst?: boolean;
   align?: "start" | "end" | "center";
   actions?: boolean;
@@ -270,6 +270,12 @@ export function DataTable<Row>({
   const droppable = allColumns.some((column) => column.dropFirst);
   const columns =
     droppable && narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
+  const columnShape = allColumns
+    .map((column) =>
+      [column.id, column.width, column.minWidth, column.grow, column.dropFirst].join(":")
+    )
+    .join("|");
+  React.useLayoutEffect(() => setNarrow(null), [columnShape]);
   const [primaryWidth, setPrimaryWidth] = React.useState<number>();
   const [landing, setLanding] = React.useState<number | null>(null);
   const [focusRow, setFocusRow] = React.useState<number | null>(null);
@@ -538,10 +544,19 @@ export function DataTable<Row>({
     .join("\n");
   React.useLayoutEffect(() => {
     const container = scroll.current;
-    if (!droppable || !container) return;
+    if (!droppable || !container || (contentSized && primaryWidth === undefined)) return;
     const measure = () => {
       const width = container.clientWidth;
-      const needed = container.scrollWidth;
+      const truncated = Math.max(
+        0,
+        ...Array.from(
+          container.querySelectorAll<HTMLElement>(
+            `.${styles.tablePrimary}, .${styles.tablePrimary} [data-slot="name-line-name"]`
+          ),
+          (element) => element.scrollWidth - element.clientWidth
+        )
+      );
+      const needed = container.scrollWidth + truncated;
       setNarrow((current) => {
         if (current === null) return needed > width + 1 ? needed : null;
         return width >= current ? null : current;
@@ -553,7 +568,7 @@ export function DataTable<Row>({
     const table = container.querySelector("table");
     if (table) observer.observe(table);
     return () => observer.disconnect();
-  }, [droppable]);
+  }, [droppable, narrow, contentSized, primaryWidth]);
   React.useLayoutEffect(() => {
     const table = scroll.current?.querySelector("table");
     if (!contentSized || !table) {
@@ -1185,7 +1200,7 @@ function CellValue({
   if (wrap)
     return (
       <>
-        {children} {badges}
+        {children} <span data-slot="cell-badges">{badges}</span>
       </>
     );
   return (

@@ -30,17 +30,24 @@ export function NameLine({
   React.useLayoutEffect(() => {
     const main = mainRef.current;
     const group = badgesRef.current;
-    if (!main || !group) return;
+    const name = nameRef.current;
+    if (!main || !group || !name) return;
     const fit = () => {
-      const edge = main.getBoundingClientRect().right;
-      for (const badge of Array.from(group.children))
-        badge.toggleAttribute("data-clipped", badge.getBoundingClientRect().right > edge + 0.5);
+      const edge = main.getBoundingClientRect();
+      for (const badge of Array.from(group.children)) {
+        const box = badge.getBoundingClientRect();
+        badge.toggleAttribute(
+          "data-clipped",
+          box.right > edge.right + 0.5 || box.left < edge.left - 0.5
+        );
+      }
     };
     fit();
     const resize = new ResizeObserver(fit);
     resize.observe(main);
+    resize.observe(name);
     const mutation = new MutationObserver(fit);
-    mutation.observe(group, { subtree: true, childList: true, characterData: true });
+    mutation.observe(main, { subtree: true, childList: true, characterData: true });
     return () => {
       resize.disconnect();
       mutation.disconnect();
