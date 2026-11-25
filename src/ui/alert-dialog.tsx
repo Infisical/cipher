@@ -49,8 +49,10 @@ function AlertDialog({
   React.useLayoutEffect(() => {
     openRef.current = open;
     setOpenRef.current = setOpen;
+  });
+  React.useLayoutEffect(() => {
     if (open) openingRef.current += 1;
-  }, [open, setOpen]);
+  }, [open]);
   const opening = React.useMemo(
     () => ({
       current: () => openingRef.current,
