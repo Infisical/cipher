@@ -179,6 +179,8 @@ interface DataTableBaseProps<Row> {
   getRowChildren?: (row: Row) => readonly Row[] | undefined;
   /** Rows that stay in the table but read as inactive, such as disabled or archived ones: muted text on the done ground. */
   isRowMuted?: (row: Row) => boolean;
+  /** Tints a row by tone: bad marks one that is invalid, such as a row an import cannot take. */
+  rowTone?: (row: Row) => "bad" | undefined;
   /** Extra attributes and handlers for each data row's tr. Handlers run before DataTable's own, which skip a default-prevented event. */
   rowProps?: (row: Row, index: number) => DataTableRowProps;
   /**
@@ -241,6 +243,7 @@ export function DataTable<Row>({
   containerRef,
   containerClassName,
   isRowMuted,
+  rowTone,
   rowProps,
   reorder
 }: DataTableProps<Row>) {
@@ -636,6 +639,7 @@ export function DataTable<Row>({
         }
         data-activatable={activate ? "" : undefined}
         data-muted={isRowMuted?.(row) || undefined}
+        tone={rowTone?.(row)}
         data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
         data-sortable-lifted={sortRows.lift?.key === getRowId(row) || undefined}
         onClick={
