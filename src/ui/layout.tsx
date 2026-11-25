@@ -185,8 +185,11 @@ export function Grid({
   const filtered = filteredProp ?? listFiltered;
   let gridTemplateColumns = `repeat(auto-fit, minmax(min(100%, var(--cipher-size-${min}-min)), 1fr))`;
   if (columns === "1:2") gridTemplateColumns = "minmax(0, 1fr) minmax(0, 2fr)";
-  else if (columns)
-    gridTemplateColumns = `repeat(auto-fill, minmax(max(min(100%, var(--cipher-size-${min}-min)), calc((100% - ${columns - 1} * ${spacing(gap) || "0px"}) / ${columns})), 1fr))`;
+  else if (columns) {
+    const columnGap = style?.columnGap ?? spacing(gap);
+    const gapWidth = typeof columnGap === "number" ? `${columnGap}px` : columnGap || "0px";
+    gridTemplateColumns = `repeat(auto-fill, minmax(max(min(100%, var(--cipher-size-${min}-min)), calc((100% - ${columns - 1} * ${gapWidth}) / ${columns})), 1fr))`;
+  }
   return (
     <div
       ref={ref}
