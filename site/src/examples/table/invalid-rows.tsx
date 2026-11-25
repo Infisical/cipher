@@ -35,7 +35,7 @@ const columns: DataTableColumn<Key>[] = [
     render: (row) => row.name,
     secondary: (row) => row.problem
   },
-  { id: "algorithm", header: "Algorithm", width: 120, render: (row) => row.algorithm },
+  { id: "algorithm", header: "Algorithm", width: 140, render: (row) => row.algorithm },
   {
     id: "status",
     header: "Status",
