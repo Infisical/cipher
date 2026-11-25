@@ -2174,6 +2174,10 @@
         "module": "table/wrap"
       },
       {
+        "title": "Narrow screens",
+        "module": "table/narrow-screen"
+      },
+      {
         "title": "Narrow cells",
         "module": "table/narrow-cells"
       },
