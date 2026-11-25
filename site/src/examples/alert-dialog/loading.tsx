@@ -13,40 +13,69 @@ export default function Example() {
   if (deleting) label = "Deleting";
   else if (deleted) label = "Deleted in this local example";
   return (
-    <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
-      <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">
-        <UI.AlertDialog open={open} onOpenChange={setOpen}>
-          <UI.AlertDialogTrigger asChild>
-            <Button variant="outline">Delete connection</Button>
-          </UI.AlertDialogTrigger>
-          <UI.AlertDialogContent tone="danger">
-            <UI.AlertDialogHeader>
-              <UI.AlertDialogTitle>Delete production-postgres?</UI.AlertDialogTitle>
-              <UI.AlertDialogDescription>
-                Syncs and rotations that use this connection stop.
-              </UI.AlertDialogDescription>
-            </UI.AlertDialogHeader>
-            <UI.AlertDialogFooter>
-              <UI.AlertDialogCancel>Cancel</UI.AlertDialogCancel>
-              <UI.AlertDialogAction
-                variant="destructive"
-                loading={deleting}
-                onClick={() => {
-                  setDeleting(true);
-                  timer.current = window.setTimeout(() => {
-                    setDeleting(false);
-                    setDeleted(true);
-                    setOpen(false);
-                  }, 2000);
-                }}
-              >
-                Delete connection
-              </UI.AlertDialogAction>
-            </UI.AlertDialogFooter>
-          </UI.AlertDialogContent>
-        </UI.AlertDialog>
-      </div>
-      <figcaption className="text-muted-foreground text-xs">{label}</figcaption>
-    </figure>
+    <div className="flex w-full min-w-0 flex-wrap items-start gap-x-6 gap-y-8">
+      <figure className="m-0 flex min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">
+          <UI.AlertDialog open={open} onOpenChange={setOpen}>
+            <UI.AlertDialogTrigger asChild>
+              <Button variant="outline">Delete connection</Button>
+            </UI.AlertDialogTrigger>
+            <UI.AlertDialogContent tone="danger">
+              <UI.AlertDialogHeader>
+                <UI.AlertDialogTitle>Delete production-postgres?</UI.AlertDialogTitle>
+                <UI.AlertDialogDescription>
+                  Syncs and rotations that use this connection stop.
+                </UI.AlertDialogDescription>
+              </UI.AlertDialogHeader>
+              <UI.AlertDialogFooter>
+                <UI.AlertDialogCancel>Cancel</UI.AlertDialogCancel>
+                <UI.AlertDialogAction
+                  variant="destructive"
+                  loading={deleting}
+                  onClick={() => {
+                    setDeleting(true);
+                    timer.current = window.setTimeout(() => {
+                      setDeleting(false);
+                      setDeleted(true);
+                      setOpen(false);
+                    }, 2000);
+                  }}
+                >
+                  Delete connection
+                </UI.AlertDialogAction>
+              </UI.AlertDialogFooter>
+            </UI.AlertDialogContent>
+          </UI.AlertDialog>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">{label}</figcaption>
+      </figure>
+      <figure className="m-0 flex min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-start gap-3">
+          <UI.AlertDialog>
+            <UI.AlertDialogTrigger asChild>
+              <Button variant="outline">Revoke token</Button>
+            </UI.AlertDialogTrigger>
+            <UI.AlertDialogContent tone="danger">
+              <UI.AlertDialogHeader>
+                <UI.AlertDialogTitle>Revoke deploy-bot?</UI.AlertDialogTitle>
+                <UI.AlertDialogDescription>
+                  Requests signed with this token fail right away.
+                </UI.AlertDialogDescription>
+              </UI.AlertDialogHeader>
+              <UI.AlertDialogFooter>
+                <UI.AlertDialogCancel>Cancel</UI.AlertDialogCancel>
+                <UI.AlertDialogAction
+                  variant="destructive"
+                  onClick={() => new Promise<void>((resolve) => window.setTimeout(resolve, 2000))}
+                >
+                  Revoke token
+                </UI.AlertDialogAction>
+              </UI.AlertDialogFooter>
+            </UI.AlertDialogContent>
+          </UI.AlertDialog>
+        </div>
+        <figcaption className="text-muted-foreground text-xs">onClick returns a Promise</figcaption>
+      </figure>
+    </div>
   );
 }

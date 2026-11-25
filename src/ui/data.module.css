@@ -1122,7 +1122,10 @@ button.rowTitle::after {
   align-items: center;
   gap: var(--cipher-space-4);
   margin-inline-start: auto;
-  margin-inline-end: calc(-1 * var(--cipher-space-control-inline-sm));
+}
+/* A trailing ghost button lines its label up with the status text, but never pulls past the foot's own padding, so it can't overflow the frame. */
+.tableFootActions > [data-cipher-button]:last-child {
+  margin-inline-end: calc(-1 * min(var(--cipher-action-inset), var(--cipher-space-frame-inline)));
 }
 .nativeTableRow:is(:focus, :focus-visible) {
   outline: none;

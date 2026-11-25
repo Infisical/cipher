@@ -170,7 +170,7 @@ function Badge({
 }
 Badge.displayName = "Badge";
 
-/** A row of badges that never wraps: badges that don't fit collapse into a trailing +N that opens the rest. For table cells, where every row keeps one height. */
+/** A row of badges that never wraps: badges that don't fit collapse into a trailing +N that opens the rest. For table cells, where every row keeps one height. With wrap, every badge shows and they wrap onto more lines, a long label wrapping inside its badge, for a details card or a form where the height can grow. */
 function flatten(children: React.ReactNode, prefix = ""): React.ReactNode[] {
   return React.Children.toArray(children).flatMap((child) => {
     if (!React.isValidElement<{ children?: React.ReactNode }>(child)) return [child];
@@ -183,10 +183,13 @@ function flatten(children: React.ReactNode, prefix = ""): React.ReactNode[] {
 
 function BadgeGroup({
   className,
+  wrap = false,
   children,
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  wrap?: boolean;
+} & { ref?: React.Ref<HTMLDivElement> }) {
   const items = flatten(children);
   const groupRef = React.useRef<HTMLDivElement>(null);
   const measureRef = React.useRef<HTMLDivElement>(null);
@@ -230,12 +233,13 @@ function BadgeGroup({
     Array.from(measure.children).forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   });
-  const visible = Math.min(shown, items.length);
+  const visible = wrap ? items.length : Math.min(shown, items.length);
   const rest = items.length - visible;
   return (
     <div
       ref={groupRef}
       data-slot="badge-group"
+      data-wrap={wrap || undefined}
       className={cn(helperStyles.badgeGroup, className)}
       {...props}
     >
@@ -262,14 +266,16 @@ function BadgeGroup({
           </PopoverContent>
         </Popover>
       )}
-      <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
-        {items.map((item) =>
-          React.isValidElement(item)
-            ? React.cloneElement(item, { ref: null, id: undefined } as object)
-            : item
-        )}
-        <Badge>+{items.length}</Badge>
-      </div>
+      {!wrap && (
+        <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
+          {items.map((item) =>
+            React.isValidElement(item)
+              ? React.cloneElement(item, { ref: null, id: undefined } as object)
+              : item
+          )}
+          <Badge>+{items.length}</Badge>
+        </div>
+      )}
     </div>
   );
 }

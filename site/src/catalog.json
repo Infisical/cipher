@@ -216,6 +216,10 @@
       {
         "title": "Collapse in a narrow cell",
         "module": "badge/collapse"
+      },
+      {
+        "title": "Wrapping group in a details card",
+        "module": "badge/group-wrap"
       }
     ]
   },
@@ -554,6 +558,10 @@
         "module": "combobox/multiple"
       },
       {
+        "title": "Multiple with a Create row",
+        "module": "combobox/multiple-create"
+      },
+      {
         "title": "Creation",
         "module": "combobox/creation"
       },
@@ -764,6 +772,10 @@
       {
         "title": "Overflowing content",
         "module": "dialog/overflow"
+      },
+      {
+        "title": "Sizes: sm, md and lg",
+        "module": "dialog/sizes"
       }
     ]
   },
@@ -1754,6 +1766,10 @@
         "module": "select/metadata"
       },
       {
+        "title": "Stacked descriptions",
+        "module": "select/stacked-descriptions"
+      },
+      {
         "title": "Long option names",
         "module": "select/long-labels"
       },
@@ -1872,6 +1888,10 @@
       {
         "title": "Form around the sections",
         "module": "sheet/form"
+      },
+      {
+        "title": "Back at the start of the footer",
+        "module": "sheet/footer-start"
       },
       {
         "title": "Header and footer inside a view component",
@@ -2060,6 +2080,10 @@
       {
         "title": "A row among fields",
         "module": "switch/among-fields"
+      },
+      {
+        "title": "In a field set",
+        "module": "switch/field-set"
       }
     ]
   },
