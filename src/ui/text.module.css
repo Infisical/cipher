@@ -101,6 +101,11 @@
 .grid > * {
   min-width: 0;
 }
+/* A fixed column count fits as many columns as the row's width allows, so the grid takes the row's width even where its parent would shrink it to its content. */
+.gridColumns {
+  align-self: stretch;
+  justify-self: stretch;
+}
 .gridSplit {
   container-type: inline-size;
 }

@@ -169,6 +169,7 @@ export function Grid({
   ref,
   ...props
 }: Omit<LayoutProps, "align" | "justify"> & {
+  /** At most this many equal columns, and fewer once a column would drop below min, down to one on a narrow screen. */
   columns?: 2 | 3 | 4 | "1:2";
   min?: "tile" | "card";
   /** Shown across every column when the grid has no children, such as an EmptyState. */
@@ -184,13 +185,22 @@ export function Grid({
   const filtered = filteredProp ?? listFiltered;
   let gridTemplateColumns = `repeat(auto-fit, minmax(min(100%, var(--cipher-size-${min}-min)), 1fr))`;
   if (columns === "1:2") gridTemplateColumns = "minmax(0, 1fr) minmax(0, 2fr)";
-  else if (columns) gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+  else if (columns) {
+    const columnGap = style?.columnGap ?? spacing(gap);
+    const gapWidth = typeof columnGap === "number" ? `${columnGap}px` : columnGap || "0px";
+    gridTemplateColumns = `repeat(auto-fill, minmax(max(min(100%, var(--cipher-size-${min}-min)), calc((100% - ${columns - 1} * ${gapWidth}) / ${columns})), 1fr))`;
+  }
   return (
     <div
       ref={ref}
       data-slot="grid"
       data-columns={columns}
-      className={cn(styles.grid, columns === "1:2" && styles.gridSplit, className)}
+      className={cn(
+        styles.grid,
+        columns === "1:2" && styles.gridSplit,
+        typeof columns === "number" && styles.gridColumns,
+        className
+      )}
       style={{
         gap: spacing(gap),
         gridTemplateColumns,
