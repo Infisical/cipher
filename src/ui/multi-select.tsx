@@ -600,11 +600,11 @@ export function MultiSelect({
               onClick={create}
             >
               {multiple ? (
-                <span aria-hidden className={styles.optionBox}>
+                <span aria-hidden className={cn(styles.optionBox, "cipher-lead-line")}>
                   <Icon name="plus" />
                 </span>
               ) : (
-                <Icon name="plus" />
+                <Icon name="plus" lead />
               )}
               <span className={styles.optionLabel}>
                 {creating

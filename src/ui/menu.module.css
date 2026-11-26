@@ -257,8 +257,12 @@ a.row[href],
     :global(.cipher-switcher-description)
   )
   > :is(svg, img, [data-menu-icon]):not(.trail) {
+  /* lint-css-allow: lead: the icon is the caller's child, so the row applies the .cipher-lead-line offset itself. */
   align-self: flex-start;
-  margin-block-start: calc((var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2);
+  margin-block-start: max(
+    0px,
+    calc((var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2)
+  );
 }
 :global(.cipher) {
   --overlay-hover: var(--cipher-hover-mix);
