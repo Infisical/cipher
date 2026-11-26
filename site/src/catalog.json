@@ -1572,6 +1572,10 @@
       {
         "title": "Actions collapse to their glyph at 390px",
         "module": "page-header/collapsed-actions"
+      },
+      {
+        "title": "Scope above the title",
+        "module": "page-header/scope"
       }
     ]
   },
