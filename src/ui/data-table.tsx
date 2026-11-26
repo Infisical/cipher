@@ -544,10 +544,17 @@ export function DataTable<Row>({
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
   const headShape = fixedLayout
-    ? columns
-        .filter((column) => column.width !== undefined)
-        .map((column) => `${column.id}:${column.header}`)
-        .join("\n")
+    ? JSON.stringify(
+        columns
+          .filter((column) => column.width !== undefined)
+          .map((column) => [
+            column.id,
+            column.header,
+            Boolean(column.sortable && onSortChange),
+            Boolean(column.hideHeader),
+            Boolean(column.toggle)
+          ])
+      )
     : "";
   React.useLayoutEffect(() => {
     const head = scroll.current?.querySelector("thead tr");
@@ -555,9 +562,7 @@ export function DataTable<Row>({
       setHeadWidths((current) => (Object.keys(current).length ? {} : current));
       return;
     }
-    const ids = new Set(
-      headShape.split("\n").map((entry) => entry.slice(0, entry.lastIndexOf(":")))
-    );
+    const ids = new Set((JSON.parse(headShape) as [string][]).map(([id]) => id));
     let live = true;
     const measure = () => {
       if (!live) return;
