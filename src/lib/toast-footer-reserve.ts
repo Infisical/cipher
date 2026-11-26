@@ -21,11 +21,14 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
     reserves.set(layer, entries);
     const measure = () => {
       const toasts = [...layer.querySelectorAll<HTMLElement>("[data-sonner-toast]")];
-      const gap = parseFloat(getComputedStyle(layer).getPropertyValue("--cipher-space-8")) || 0;
-      const offset =
-        parseFloat(getComputedStyle(layer).getPropertyValue("--cipher-space-action-bar-offset")) ||
-        0;
-      const stack = toasts.reduce((sum, toast) => sum + toast.offsetHeight + gap, offset);
+      const style = getComputedStyle(layer);
+      const size = (token: string) => parseFloat(style.getPropertyValue(token)) || 0;
+      const offset = size("--cipher-space-action-bar-offset");
+      const base = layer.hasAttribute("data-action-bar-reserve")
+        ? size("--cipher-size-action-bar") + 2 * offset
+        : offset;
+      const gap = size("--cipher-space-8");
+      const stack = toasts.reduce((sum, toast) => sum + toast.offsetHeight + gap, base);
       const { top, bottom } = node.getBoundingClientRect();
       const covered = toasts.length > 0 && window.innerHeight - bottom < stack;
       entries.set(key, covered ? Math.max(0, window.innerHeight - top) : 0);
@@ -36,7 +39,11 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
     observer.observe(node);
     observer.observe(panel);
     const toasts = new MutationObserver(measure);
-    toasts.observe(layer, { childList: true, subtree: true });
+    toasts.observe(layer, {
+      childList: true,
+      subtree: true,
+      attributeFilter: ["data-action-bar-reserve"]
+    });
     panel.addEventListener("animationend", measure);
     panel.addEventListener("transitionend", measure);
     window.addEventListener("resize", measure);
