@@ -1026,10 +1026,6 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   line-height: var(--cipher-type-caption-line-height);
   font-weight: 600;
 }
-.stepCount {
-  color: var(--cipher-muted);
-  font-weight: var(--cipher-type-label-font-weight);
-}
 .separatorLabel {
   display: flex;
   align-items: center;

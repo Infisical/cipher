@@ -155,11 +155,6 @@ export const ProgressSteps = ({
       </ol>
       {compact && (
         <p aria-hidden="true" className={styles.stepCompact}>
-          {!showHeading && (
-            <span className={styles.stepCount}>
-              Step {step} of {steps.length} ·{" "}
-            </span>
-          )}
           {steps[current]}
         </p>
       )}
