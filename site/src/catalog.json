@@ -582,6 +582,10 @@
         "module": "combobox/tags"
       },
       {
+        "title": "Tags with a prefilled draft",
+        "module": "combobox/tags-draft"
+      },
+      {
         "title": "Secret path",
         "module": "combobox/secret-path"
       },
