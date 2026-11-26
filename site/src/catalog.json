@@ -2206,6 +2206,10 @@
         "module": "table/wrap"
       },
       {
+        "title": "Virtual scrolling with a secondary line",
+        "module": "table/virtual-secondary"
+      },
+      {
         "title": "Narrow screens",
         "module": "table/narrow-screen"
       },

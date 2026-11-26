@@ -1512,7 +1512,7 @@ tbody > .nativeTableRow[data-loading] {
 .tableScroll .tableSecondary[data-depth="2"] {
   padding-inline-start: calc(var(--cipher-focus-clearance) + 2 * var(--cipher-space-row-indent));
 }
-.tableScroll[data-virtual] .tableLines > * {
+.tableScroll[data-virtual] .tableLines > :is(.tableValue, .tablePrimary) {
   min-height: 0;
 }
 /* The summary row sits on the frame band under the raised body, like the header above it. */
