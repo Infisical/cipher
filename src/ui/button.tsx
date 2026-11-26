@@ -158,7 +158,11 @@ function Button({
         : "var(--cipher-action-icon-size)";
   const trigger = layout === "trigger";
   const collapsible =
-    React.useContext(ActionLabelCollapseContext) && Boolean(icon) && !iconOnly && !trigger && !reason;
+    React.useContext(ActionLabelCollapseContext) &&
+    Boolean(icon) &&
+    !iconOnly &&
+    !trigger &&
+    !reason;
   const gateTooltip =
     <E extends React.SyntheticEvent>(handler?: (event: E) => void) =>
     (event: E) => {
