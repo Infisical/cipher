@@ -423,16 +423,22 @@ function TooltipText({
   const describeRow = React.useContext(RowDescriptionContext);
   const descriptionId = React.useId();
   const trigger = React.useRef<HTMLSpanElement | null>(null);
-  const childDisabled =
-    asChild && React.isValidElement<{ disabled?: unknown }>(props.children)
-      ? Boolean(props.children.props.disabled)
-      : false;
+  const child = asChild && React.isValidElement(props.children) ? props.children : undefined;
+  const own = (child?.props ?? props) as {
+    role?: unknown;
+    onClick?: unknown;
+    onKeyDown?: unknown;
+    disabled?: unknown;
+  };
+  const independent = typeof own.role === "string" || Boolean(own.onClick || own.onKeyDown);
+  const passThrough = Boolean(describeRow) && !independent;
+  const childDisabled = Boolean(own.disabled);
   React.useLayoutEffect(() => {
     const node = trigger.current;
-    if (!describeRow || (node?.matches(interactiveControl) && !node.matches(":disabled")))
-      return undefined;
+    if (!describeRow || independent) return undefined;
+    if (node?.matches(interactiveControl) && !node.matches(":disabled")) return undefined;
     return describeRow(descriptionId);
-  }, [describeRow, descriptionId, childDisabled]);
+  }, [describeRow, descriptionId, independent, childDisabled, child?.type]);
   return (
     <>
       <Tooltip content={content} side={side} align={align}>
@@ -443,13 +449,13 @@ function TooltipText({
             if (ref) ref.current = node;
           }}
           data-slot="tooltip-text"
-          data-tooltip-text=""
-          tabIndex={describeRow ? undefined : 0}
+          data-tooltip-text={independent ? undefined : ""}
+          tabIndex={passThrough ? undefined : 0}
           className={cn(controls.focusOutline, className)}
           {...props}
         />
       </Tooltip>
-      {describeRow && (
+      {passThrough && (
         <span id={descriptionId} hidden>
           {content}
         </span>
