@@ -188,6 +188,12 @@ interface DataTableBaseProps<Row> {
   isRowMuted?: (row: Row) => boolean;
   /** Tints a row by tone: bad marks one that is invalid, such as a row an import cannot take, and colors the icons in its primary cell, other than its badges. */
   rowTone?: (row: Row) => "bad" | undefined;
+  /**
+   * Rows the viewer may not see, such as a member hidden by their permissions: return the reason to
+   * restrict one. It renders muted with a lock and the reason in the primary column, leaves its other
+   * cells empty, and takes no selection, actions, editing or activation.
+   */
+  getRowRestricted?: (row: Row) => string | undefined;
   /** Extra attributes and handlers for each data row's tr. Handlers run before DataTable's own, which skip a default-prevented event. */
   rowProps?: (row: Row, index: number) => DataTableRowProps;
   /**
@@ -251,6 +257,7 @@ export function DataTable<Row>({
   containerClassName,
   isRowMuted,
   rowTone,
+  getRowRestricted,
   rowProps,
   reorder
 }: DataTableProps<Row>) {
@@ -307,7 +314,8 @@ export function DataTable<Row>({
   const entries = sections.flatMap((section) => section.entries);
   const rows = entries.map((entry) => entry.row);
   const indentColumn = (columns.find((column) => column.primary) ?? columns[0])?.id;
-  const isSelectable = (row: Row) => isSelectableProp(row) && !selectionDisabledReason?.(row);
+  const isSelectable = (row: Row) =>
+    !getRowRestricted?.(row) && isSelectableProp(row) && !selectionDisabledReason?.(row);
   const selected = selectedIds ?? ownSelected;
   const eligible = rows.filter(isSelectable).map(getRowId);
   const checked = eligible.filter((id) => selected.includes(id)).length;
@@ -473,7 +481,9 @@ export function DataTable<Row>({
     row.focus({ preventScroll: true });
   }, [focusRow, start]);
   const toggleCounts = (toggle: DataTableToggle<Row>) => {
-    const enabled = rows.filter((row) => !toggle.absent?.(row) && !toggle.disabledReason?.(row));
+    const enabled = rows.filter(
+      (row) => !getRowRestricted?.(row) && !toggle.absent?.(row) && !toggle.disabledReason?.(row)
+    );
     return {
       enabled,
       on: enabled.filter((row) => toggle.checked(row) === true).length,
@@ -781,6 +791,56 @@ export function DataTable<Row>({
     rowIndex: number
   ) => {
     const extra = rowProps?.(row, position);
+    const restricted = getRowRestricted?.(row);
+    if (restricted)
+      return (
+        <TableRow
+          {...extra}
+          key={getRowId(row)}
+          aria-rowindex={rowIndex}
+          data-row-index={position}
+          tabIndex={position === focusRow ? -1 : extra?.tabIndex}
+          onBlur={(event) => {
+            extra?.onBlur?.(event);
+            if (position === focusRow) setFocusRow(null);
+          }}
+          data-muted=""
+          data-restricted=""
+          data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
+          style={{ height: effectiveRowHeight }}
+        >
+          {selectable && <TableCell selection pin={leading ? "start" : undefined} />}
+          {columns.map((column) => (
+            <TableCell
+              key={column.id}
+              className={column.actions ? styles.tableActions : undefined}
+              style={columnStyle(column)}
+              data-actions={column.actions || undefined}
+              data-pin={column.pin ?? column.actions}
+            >
+              {column.id === indentColumn && (
+                <CellContent
+                  shrink={column.id === shrinkColumn}
+                  secondary={undefined}
+                  depth={depth > 0 ? depth : undefined}
+                  maxWidth={column.maxWidth}
+                >
+                  <div
+                    className={styles.tablePrimary}
+                    data-depth={depth > 0 ? depth : undefined}
+                    style={{ maxWidth: column.maxWidth }}
+                  >
+                    <NameLine media={<Icon name="lock" />} title={restricted}>
+                      {restricted}
+                    </NameLine>
+                  </div>
+                </CellContent>
+              )}
+            </TableCell>
+          ))}
+          {rowActions && <TableActionsCell slots={slots} data-pin="true" />}
+        </TableRow>
+      );
     const activate = onRowActivate && (isRowActivatable?.(row) ?? true) ? onRowActivate : undefined;
     const tableRow = (
       <TableRow

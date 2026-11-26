@@ -2242,6 +2242,10 @@
         "module": "table/invalid-rows"
       },
       {
+        "title": "Restricted rows",
+        "module": "table/restricted-rows"
+      },
+      {
         "title": "Row props: drop targets and reorder",
         "module": "table/drop-targets"
       },
