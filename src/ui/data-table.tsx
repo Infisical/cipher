@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 
 import { FrameScope, useFrameFoot, useInFrame } from "../lib/frame-context";
 import { useListFiltered } from "../lib/list-query";
@@ -291,6 +291,7 @@ export function DataTable<Row>({
     .join("|");
   React.useLayoutEffect(() => setNarrow(null), [columnShape]);
   const [primaryWidth, setPrimaryWidth] = React.useState<number>();
+  const [headWidths, setHeadWidths] = React.useState<Record<string, number>>({});
   const [landing, setLanding] = React.useState<number | null>(null);
   const [focusRow, setFocusRow] = React.useState<number | null>(null);
   const focusPending = React.useRef(false);
@@ -500,6 +501,8 @@ export function DataTable<Row>({
   const fixedLayout = columns.every(
     (column) => column.width !== undefined || column.grow || column.actions
   );
+  const explicitWidth = (column: DataTableColumn<Row>) =>
+    column.width === undefined ? undefined : Math.max(column.width, headWidths[column.id] ?? 0);
   const primaryMin = flowing ? "var(--cipher-size-cell-min)" : "var(--cipher-size-text-min)";
   const columnFloor = (column: DataTableColumn<Row>) => {
     if (column.minWidth) return `${column.minWidth}px`;
@@ -512,7 +515,7 @@ export function DataTable<Row>({
       .map(() => "var(--cipher-size-row)"),
     ...(sharing.length > 0 ? [`${sharing.length} * max(${sharing.map(columnFloor).join(", ")})`] : [])
   ];
-  const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
+  const fixedWidth = columns.reduce((sum, column) => sum + (explicitWidth(column) ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
   const headerHidden =
     !selectable &&
@@ -532,7 +535,7 @@ export function DataTable<Row>({
     .filter((column) => column.pin === "start")
     .reduce((before, column) => {
       pinOffsets.set(column.id, `calc(${selectable ? "var(--cipher-size-row)" : "0px"} + ${before}px)`);
-      return before + (column.width ?? 0);
+      return before + (explicitWidth(column) ?? 0);
     }, 0);
   const contentSized =
     fixedLayout && !flowing
@@ -554,11 +557,11 @@ export function DataTable<Row>({
     "--cipher-pin-offset"?: string;
   } => ({
     width:
-      column.width ??
+      explicitWidth(column) ??
       (column.id === contentSized ? primaryWidth : undefined) ??
       (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
     minWidth:
-      column.width ??
+      explicitWidth(column) ??
       (column.actions
         ? undefined
         : (column.minWidth ?? (column.primary ? primaryMin : 64))),
@@ -566,6 +569,66 @@ export function DataTable<Row>({
     textAlign: column.align,
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
+  const headShape =
+    fixedLayout && !flowing
+      ? JSON.stringify(
+          columns
+            .filter((column) => column.width !== undefined)
+            .map((column) => [
+              column.id,
+              column.header,
+              Boolean(column.sortable && onSortChange),
+              Boolean(column.hideHeader),
+              Boolean(column.toggle)
+            ])
+        )
+      : "";
+  React.useLayoutEffect(() => {
+    const head = scroll.current?.querySelector("thead tr");
+    if (!headShape || !head) {
+      setHeadWidths((current) => (Object.keys(current).length ? {} : current));
+      return;
+    }
+    const ids = new Set((JSON.parse(headShape) as [string][]).map(([id]) => id));
+    let live = true;
+    const measure = () => {
+      if (!live) return;
+      const next: Record<string, number> = {};
+      for (const cell of head.querySelectorAll<HTMLTableCellElement>("th[data-column]")) {
+        const id = cell.dataset.column;
+        if (!id || !ids.has(id)) continue;
+        const probe = document.createElement("div");
+        probe.style.cssText =
+          "position:absolute;visibility:hidden;width:max-content;white-space:nowrap";
+        probe.append(...Array.from(cell.childNodes, (node) => node.cloneNode(true)));
+        cell.append(probe);
+        const style = getComputedStyle(cell);
+        next[id] = Math.ceil(
+          probe.getBoundingClientRect().width +
+            parseFloat(style.paddingLeft) +
+            parseFloat(style.paddingRight) +
+            parseFloat(style.borderLeftWidth) +
+            parseFloat(style.borderRightWidth)
+        );
+        probe.remove();
+      }
+      setHeadWidths((current) =>
+        Object.keys(next).length === Object.keys(current).length &&
+        Object.entries(next).every(([id, width]) => current[id] === width)
+          ? current
+          : next
+      );
+    };
+    measure();
+    const remeasure = () => flushSync(measure);
+    void document.fonts?.ready.then(remeasure);
+    const observer = new ResizeObserver(remeasure);
+    observer.observe(head);
+    return () => {
+      live = false;
+      observer.disconnect();
+    };
+  }, [headShape]);
   const otherGrowing = sharing
     .filter((column) => column.grow && column.id !== contentSized)
     .map((column) => column.id)

@@ -2348,6 +2348,10 @@
       {
         "title": "Every header hidden",
         "module": "table/hidden-header"
+      },
+      {
+        "title": "Explicit widths are a floor: headers keep their text and the table scrolls",
+        "module": "table/fixed-widths"
       }
     ]
   },
