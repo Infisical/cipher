@@ -187,6 +187,7 @@ const markRow = (row: HTMLTableRowElement): Record<PinKind, boolean> => {
 function TableRow({
   className,
   focused,
+  expanded,
   tone,
   onClick,
   onFocus,
@@ -198,6 +199,8 @@ function TableRow({
 }: React.ComponentProps<"tr"> & {
   /** The row is being edited: every other row in the same body dims its cell contents until this clears. */
   focused?: boolean;
+  /** The row's detail is open below it: the row takes the table-row-expanded ground. */
+  expanded?: boolean;
   /** Tints the row: bad marks a row that is invalid, such as one an import cannot take. */
   tone?: "bad";
 }) {
@@ -263,6 +266,7 @@ function TableRow({
             ref={setRef}
             data-slot="table-row"
             data-focused={focused || undefined}
+            data-expanded={expanded || undefined}
             data-tone={tone}
             data-contains-focus={containsFocus || undefined}
             data-stretched-link={hasLink || undefined}

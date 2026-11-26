@@ -178,6 +178,7 @@
   --cipher-row-done-card: color-mix(in oklab, var(--cipher-tint) 50%, transparent);
   --cipher-row-done-divided: color-mix(in oklab, var(--cipher-ink) 4%, transparent);
   --cipher-select: #eeede6;
+  --cipher-table-row-expanded: var(--cipher-select);
   --cipher-line-soft: #e4ded5;
   --cipher-badge-soft: var(--cipher-paper);
   --cipher-line: #d5cdc2;
@@ -419,6 +420,7 @@
   --cipher-row-done-card: color-mix(in oklab, var(--cipher-tint) 50%, transparent);
   --cipher-row-done-divided: color-mix(in oklab, var(--cipher-ink) 6%, transparent);
   --cipher-select: #262626;
+  --cipher-table-row-expanded: var(--cipher-tint);
   --cipher-line-soft: var(--cipher-neutral-900);
   --cipher-badge-soft: var(--cipher-line-soft);
   --cipher-line: var(--cipher-neutral-800);
