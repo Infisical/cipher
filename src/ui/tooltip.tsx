@@ -529,6 +529,11 @@ const interactiveRoles = new Set([
   "tab"
 ]);
 
+/** True inside a TooltipScope, such as Table rows, where a trigger stays pass-through and needs no tab stop of its own. */
+function useInTooltipScope() {
+  return React.useContext(TooltipScopeContext) !== null;
+}
+
 function TooltipText({
   content,
   side,
@@ -670,6 +675,7 @@ function useReason(reason: React.ReactNode) {
   };
 }
 
+
 export {
   Tooltip,
   TooltipContent,
@@ -677,5 +683,6 @@ export {
   TooltipScope,
   TooltipText,
   TooltipTrigger,
+  useInTooltipScope,
   useReason
 };

@@ -4,6 +4,7 @@ const identities = [
   { kind: "person", name: "Ada Morgan" },
   { kind: "machine", name: "Deployment service" },
   { kind: "agent", name: "Rotation agent" },
+  { kind: "group", name: "Platform admins" },
   { kind: "fallback", name: "Unknown member" }
 ] as const;
 export default function Example() {

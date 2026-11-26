@@ -814,6 +814,26 @@
   padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
   min-height: var(--cipher-space-40);
 }
+.listRow[data-flush] {
+  padding-inline: 0;
+}
+.listRow[data-flush][data-interactive]:not([data-selected], [data-current]):is(:hover, [data-pressed]) {
+  background: none;
+  --cipher-list-row-surface: var(--cipher-surface);
+}
+.listRow[data-flush][data-interactive][data-resolved]:not([data-selected], [data-current]):is(
+    :hover,
+    [data-pressed]
+  ) {
+  background: var(--cipher-row-done);
+  --cipher-list-row-surface: var(--cipher-row-done);
+}
+.listShell[data-variant="flush"] > .listHeader,
+.listShell[data-variant="flush"] > .status,
+.listShell[data-variant="flush"] > .list > li > .sectionHead,
+.listShell[data-variant="flush"] > .list > .empty {
+  padding-inline: 0;
+}
 .listShell[data-inset] > .list {
   padding-block: var(--cipher-space-8);
 }

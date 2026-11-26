@@ -1506,6 +1506,10 @@
         "module": "list/notifications"
       },
       {
+        "title": "Flush rows under a DataList",
+        "module": "list/approval-step"
+      },
+      {
         "title": "DataList default and compact density",
         "module": "list/density"
       },
