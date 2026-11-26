@@ -308,6 +308,11 @@ export function MultiSelect({
   const keydown = (event: React.KeyboardEvent) => {
     if (event.nativeEvent.isComposing || event.keyCode === 229) return;
     if (
+      event.target instanceof Element &&
+      event.target.closest('[data-slot="multi-select-footer"]')
+    )
+      return;
+    if (
       (event.ctrlKey || event.metaKey) &&
       event.key.toLowerCase() === "a" &&
       props.multiple !== false
@@ -317,11 +322,7 @@ export function MultiSelect({
       else all();
       return;
     }
-    if (
-      event.target instanceof HTMLButtonElement ||
-      (event.target instanceof Element && event.target.closest('[data-slot="multi-select-footer"]'))
-    )
-      return;
+    if (event.target instanceof HTMLButtonElement) return;
     if (event.key === "Backspace" && !query && props.onEmptyBackspace) {
       event.preventDefault();
       props.onEmptyBackspace();

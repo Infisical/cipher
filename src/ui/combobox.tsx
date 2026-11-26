@@ -463,6 +463,7 @@ export function Combobox({
         id={contentId}
         align="start"
         surface="menu"
+        className={styles.panelColumn}
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();
         }}
