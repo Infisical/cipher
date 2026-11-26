@@ -457,7 +457,7 @@ TooltipText.displayName = "TooltipText";
  */
 function useReason(reason: React.ReactNode) {
   const id = React.useId();
-  const active = reason !== undefined && reason !== null && reason !== false && reason !== "";
+  const active = Boolean(reason);
   return {
     active,
     describedBy: (own?: string) => (active ? [own, id].filter(Boolean).join(" ") : own),

@@ -61,6 +61,16 @@ function Badge({
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
   const reasonTooltip = useReason(reason);
+  const describedBy = reasonTooltip.describedBy(
+    [
+      props["aria-describedby"],
+      asChild && React.isValidElement<{ "aria-describedby"?: string }>(children)
+        ? children.props["aria-describedby"]
+        : undefined
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
   const fitsWhole = !icon && !dot;
   const textRef = React.useCallback(
     (label: HTMLSpanElement | null) => {
@@ -119,10 +129,11 @@ function Badge({
     </>
   );
   const body =
-    asChild && React.isValidElement<{ children?: React.ReactNode }>(children) ? (
+    asChild &&
+    React.isValidElement<{ children?: React.ReactNode; "aria-describedby"?: string }>(children) ? (
       React.cloneElement(
         children,
-        undefined,
+        reasonTooltip.active ? { "aria-describedby": describedBy } : undefined,
         <>
           {dotNode}
           {text(children.props.children)}
@@ -170,7 +181,7 @@ function Badge({
         }
       }}
       {...props}
-      aria-describedby={reasonTooltip.describedBy(props["aria-describedby"])}
+      aria-describedby={describedBy}
     >
       {body}
     </Comp>,

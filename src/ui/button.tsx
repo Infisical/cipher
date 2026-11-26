@@ -130,6 +130,16 @@ function Button({
   const loading = loadingProp ?? false;
   const reason = disabledReason || undefined;
   const reasonTooltip = useReason(reason);
+  const describedBy = reasonTooltip.describedBy(
+    [
+      props["aria-describedby"],
+      asChild && React.isValidElement<{ "aria-describedby"?: string }>(children)
+        ? children.props["aria-describedby"]
+        : undefined
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
   const inactive =
     loading ||
     Boolean(reason) ||
@@ -235,6 +245,7 @@ function Button({
         children,
         inactive
           ? {
+              ...(reason && { "aria-describedby": describedBy }),
               onClickCapture: preventActivation,
               onPointerDownCapture: preventActivation,
               onKeyDownCapture: (event: React.KeyboardEvent<HTMLElement>) => {
@@ -279,7 +290,7 @@ function Button({
       aria-disabled={
         loading || Boolean(reason) || props.disabled || props["aria-disabled"] || undefined
       }
-      aria-describedby={reasonTooltip.describedBy(props["aria-describedby"])}
+      aria-describedby={describedBy}
       aria-pressed={selected ?? props["aria-pressed"]}
       className={cn(
         buttonVariants({ variant: resolvedVariant, size }),
