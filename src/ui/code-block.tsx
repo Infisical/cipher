@@ -54,9 +54,10 @@ export const CodeBlock = ({
   const embedded = useInFrame("CodeBlock");
   const labelText = typeof label === "string" ? label : undefined;
   const identityId = React.useId();
+  const revealKey = `${shown}\u0000${source}`;
   const [revealed, setRevealed] = React.useState<string | null>(null);
-  React.useEffect(() => setRevealed(null), [shown]);
-  const masked = sensitive && revealed !== shown;
+  if (revealed !== null && (!sensitive || revealed !== revealKey)) setRevealed(null);
+  const masked = sensitive && revealed !== revealKey;
   return (
     <section
       data-slot="code-block"
@@ -90,7 +91,7 @@ export const CodeBlock = ({
                       iconOnly
                       icon={masked ? "eye" : "eye-off"}
                       aria-pressed={!masked}
-                      onClick={() => setRevealed(masked ? shown : null)}
+                      onClick={() => setRevealed(masked ? revealKey : null)}
                     >
                       Reveal value
                     </Button>
