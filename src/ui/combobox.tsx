@@ -302,9 +302,9 @@ export function Combobox({
           const chipLabel = chipOption?.label ?? value;
           return (
             <span key={value} className={styles.chip} data-locked={isLocked(value) || undefined}>
-              {chipOption?.media && !chipOption.icon && (
+              {Boolean(chipOption?.media) && !chipOption?.icon && (
                 <span data-slot="option-media" className={styles.optionMedia}>
-                  {chipOption.media}
+                  {chipOption?.media}
                 </span>
               )}
               <span title={chipLabel}>{chipLabel}</span>
@@ -408,9 +408,9 @@ export function Combobox({
             <Icon icon={selectedOption.icon} />
           </span>
         )}
-        {selectedOption?.media && !selectedOption.icon && (
+        {Boolean(selectedOption?.media) && !selectedOption?.icon && (
           <span className={cn(controlStyles.leading, styles.optionMedia)} data-slot="option-media">
-            {selectedOption.media}
+            {selectedOption?.media}
           </span>
         )}
         {selectedOption?.badge === undefined ? (

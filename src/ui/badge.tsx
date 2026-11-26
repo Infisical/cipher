@@ -114,7 +114,7 @@ function Badge({
     <>
       {dot && <span aria-hidden="true" className={cn(helperStyles.badgeDot, "cipher-lead-line")} />}
       {icon && <Icon icon={icon} />}
-      {!icon && media && (
+      {!icon && Boolean(media) && (
         <span data-slot="badge-media" className={cn(helperStyles.badgeMedia, "cipher-lead-line")}>
           {media}
         </span>

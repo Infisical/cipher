@@ -300,7 +300,7 @@ export const FilterBar = ({
                   aria-label={`${field.label} ${text.verb} ${text.value}`}
                 >
                   <span className={styles.field}>{`${field.label} ${text.verb}`}</span>
-                  {media && (
+                  {Boolean(media) && (
                     <span data-slot="filter-media" className={cn(styles.media, "cipher-lead-line")}>
                       {media}
                     </span>

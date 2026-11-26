@@ -341,7 +341,7 @@ function SelectItem({
           children
         ) : (
           <>
-            {media && (
+            {Boolean(media) && (
               <span data-slot="option-media" className={cn(picker.optionMedia, "cipher-lead-line")}>
                 {media}
               </span>
