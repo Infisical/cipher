@@ -2292,6 +2292,10 @@
       {
         "title": "Search highlight",
         "module": "text/highlight"
+      },
+      {
+        "title": "Eyebrow",
+        "module": "text/eyebrow"
       }
     ]
   },
