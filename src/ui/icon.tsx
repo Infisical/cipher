@@ -1,6 +1,8 @@
 import * as React from "react";
 import { type LucideIcon } from "lucide-react";
 
+import { cn } from "../lib/utils";
+
 import { iconShapes } from "./icon-data";
 
 export type IconName = keyof typeof iconShapes;
@@ -18,6 +20,8 @@ type IconProps = Omit<React.ComponentPropsWithoutRef<"svg">, "name"> & {
   motion?: "draw";
   /** Fills the glyph, for the on state of a toggle such as a favorite star. The fill takes the product hue inside a hue scope, else the current color. */
   filled?: boolean;
+  /** Keeps the icon on the first line of the text beside it as the text wraps (.cipher-lead-line). The row must be a flex row; an Inline with align first-line does this for its first child. */
+  lead?: boolean;
 };
 
 export function Icon({
@@ -28,7 +32,9 @@ export function Icon({
   label,
   motion,
   filled,
+  lead,
   style,
+  className,
   ref,
   ...props
 }: IconProps & { ref?: React.Ref<SVGSVGElement> }) {
@@ -43,7 +49,14 @@ export function Icon({
     "aria-hidden": label ? undefined : true,
     "data-filled": filled ? "" : undefined,
     focusable: "false" as const,
-    style: { width: dimension, height: dimension, strokeWidth, ...style },
+    className: cn(lead && "cipher-lead-line", className),
+    style: {
+      width: dimension,
+      height: dimension,
+      strokeWidth,
+      ...(dimension ? { "--cipher-lead-size": dimension } : undefined),
+      ...style
+    },
     ...props
   };
   if (name)

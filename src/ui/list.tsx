@@ -129,7 +129,7 @@ export function ListRow({
         </span>
       )}
       {media && (
-        <span className={styles.rowMedia}>
+        <span className={cn(styles.rowMedia, "cipher-lead-block")}>
           {media}
           {unread && <span className={styles.unread} aria-hidden />}
         </span>

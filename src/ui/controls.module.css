@@ -332,18 +332,18 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 :is(.selectTrigger [data-slot="select-value"], .triggerValue)
   > [data-slot="option-text"]
   + [data-slot="badge"] {
-  --trigger-badge-height: var(
+  --cipher-badge-height: var(
     --cipher-field-nested,
     calc(
       var(--cipher-action-height) - 2 *
         (var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border))
     )
   );
-  height: var(--trigger-badge-height);
+  height: var(--cipher-badge-height);
   margin-block: calc(
     (
         var(--cipher-action-line-height, var(--cipher-type-body-line-height)) -
-          var(--trigger-badge-height)
+          var(--cipher-badge-height)
       ) /
       2
   );
@@ -695,17 +695,15 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   overflow-wrap: anywhere;
 }
 .choice {
+  --cipher-lead-line: var(--cipher-type-field-label-line-height);
   display: flex;
   align-items: flex-start;
   gap: 12px;
 }
 .choiceMedia {
   display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
   width: var(--cipher-size-icon);
-  height: var(--cipher-type-field-label-line-height);
+  height: var(--cipher-size-icon);
 }
 .choiceMedia > :is(svg, img) {
   width: var(--cipher-size-icon);
@@ -735,6 +733,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   color: var(--cipher-muted);
 }
 .choiceCard {
+  --cipher-lead-line: var(--cipher-type-field-label-line-height);
   display: flex;
   align-items: flex-start;
   gap: var(--cipher-space-12);
@@ -766,9 +765,6 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 }
 .choiceCardMarkBox {
   display: inline-flex;
-  flex: none;
-  align-items: center;
-  height: var(--cipher-type-field-label-line-height);
 }
 .choiceCardMark {
   position: relative;
