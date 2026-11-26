@@ -4,6 +4,7 @@ import * as React from "react";
 import { cva } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
+import { RowDescriptionContext } from "../lib/row-description";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -296,12 +297,14 @@ function BadgeGroup({
       )}
       {!wrap && (
         <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
-          {items.map((item) =>
-            React.isValidElement(item)
-              ? React.cloneElement(item, { ref: null, id: undefined } as object)
-              : item
-          )}
-          <Badge>+{items.length}</Badge>
+          <RowDescriptionContext value={null}>
+            {items.map((item) =>
+              React.isValidElement(item)
+                ? React.cloneElement(item, { ref: null, id: undefined } as object)
+                : item
+            )}
+            <Badge>+{items.length}</Badge>
+          </RowDescriptionContext>
         </div>
       )}
     </div>

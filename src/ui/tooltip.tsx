@@ -626,7 +626,7 @@ function TooltipText({
   const passThrough = Boolean(describeRow) && !independent;
   React.useLayoutEffect(() => {
     const node = trigger.current;
-    if (!describeRow || node?.closest("[inert]")) return undefined;
+    if (!describeRow) return undefined;
     const nodeDisabled = disabled || Boolean(node?.matches(":disabled"));
     if (independent && !nodeDisabled) return undefined;
     if (!nodeDisabled && node?.matches(interactiveControl)) return undefined;
