@@ -24,10 +24,10 @@ The run summary lists every changed snapshot with its pixel count. The `cipher-v
    $ gh workflow run release.yml -f commit=<merge sha>
    ```
 
-3. When the workflow has pushed the tag, publish the release notes as the GitHub release on it:
+3. Right after it pushes the tag, the workflow creates the GitHub release on it with generated notes, so every tag has a release. Replace that body with the curated release notes:
 
    ```bash
-   $ gh release create vX.Y.Z --verify-tag --title vX.Y.Z --notes-file <notes.md>
+   $ gh release edit vX.Y.Z --notes-file <notes.md>
    ```
 
 4. The Showcase workflow runs when the release succeeds and publishes the source of the newest tag to GitHub Pages, so the showcase matches the package. To publish it without a release, run the Showcase workflow by hand.
