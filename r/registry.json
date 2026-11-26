@@ -570,7 +570,8 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/popover"
+        "@cipher/popover",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
@@ -2911,7 +2912,8 @@
         "@cipher/badge",
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/spinner"
+        "@cipher/spinner",
+        "@cipher/tooltip"
       ],
       "files": [
         {

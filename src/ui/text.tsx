@@ -4,6 +4,7 @@ import { cn, truncateTitle } from "../lib/utils";
 import { TitleCount } from "./badge";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
+import { useReason } from "./tooltip";
 
 import styles from "./text.module.css";
 
@@ -160,6 +161,7 @@ export function StatusText({
   size,
   icon,
   loading = false,
+  reason,
   className,
   children,
   ref,
@@ -170,9 +172,12 @@ export function StatusText({
   size?: "sm" | "md";
   icon?: IconSource;
   loading?: boolean;
+  /** Says why, such as the error behind a failed status: the text becomes a tab stop, shows the reason in a tooltip and exposes it as the accessible description. */
+  reason?: React.ReactNode;
   ref?: React.Ref<HTMLSpanElement>;
 }) {
-  return (
+  const reasonTooltip = useReason(reason);
+  return reasonTooltip.wrap(
     <span
       ref={ref}
       data-slot="status-text"
@@ -181,10 +186,13 @@ export function StatusText({
       data-loading={loading || undefined}
       className={cn(styles.status, "[&>svg]:cipher-lead-line", className)}
       {...props}
+      aria-describedby={reasonTooltip.describedBy(props["aria-describedby"])}
     >
       {loading ? <Spinner /> : icon && <Icon icon={icon} />}
       <span>{children}</span>
-    </span>
+      {reasonTooltip.description}
+    </span>,
+    true
   );
 }
 StatusText.displayName = "StatusText";

@@ -42,22 +42,32 @@ const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
   getComputedStyle(document.body).pointerEvents === "none";
 
-const TooltipProviderContext = React.createContext(false);
+const ProvidedContext = React.createContext(false);
 
 function TooltipProvider({
   delayDuration = 200,
   disableHoverableContent = true,
+  children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
-    <TooltipProviderContext.Provider value>
-      <TooltipPrimitive.Provider
-        data-slot="tooltip-provider"
-        delayDuration={delayDuration}
-        disableHoverableContent={disableHoverableContent}
-        {...props}
-      />
-    </TooltipProviderContext.Provider>
+    <TooltipPrimitive.Provider
+      data-slot="tooltip-provider"
+      delayDuration={delayDuration}
+      disableHoverableContent={disableHoverableContent}
+      {...props}
+    >
+      <ProvidedContext value>{children}</ProvidedContext>
+    </TooltipPrimitive.Provider>
+  );
+}
+
+/** Adds a TooltipProvider only where no ancestor has one, so the app's delay and skip-delay group still apply. */
+function EnsureTooltipProvider({ children }: { children: React.ReactNode }) {
+  return React.useContext(ProvidedContext) ? (
+    children
+  ) : (
+    <TooltipProvider>{children}</TooltipProvider>
   );
 }
 
@@ -262,7 +272,9 @@ function TooltipScope({ children }: { children?: React.ReactNode }) {
   return (
     <TooltipScopeContext.Provider value={store}>
       {children}
-      <SharedTooltipHost store={store} />
+      <EnsureTooltipProvider>
+        <SharedTooltipHost store={store} />
+      </EnsureTooltipProvider>
     </TooltipScopeContext.Provider>
   );
 }
@@ -305,7 +317,6 @@ function Tooltip({
   wrap?: boolean;
 }) {
   const store = React.useContext(TooltipScopeContext);
-  const provided = React.useContext(TooltipProviderContext);
   if (
     store &&
     disableHoverableContent &&
@@ -339,7 +350,7 @@ function Tooltip({
       )}
     </TooltipPrimitive.Root>
   );
-  return provided ? tooltip : <TooltipProvider>{tooltip}</TooltipProvider>;
+  return <EnsureTooltipProvider>{tooltip}</EnsureTooltipProvider>;
 }
 
 /**
@@ -485,4 +496,77 @@ function TooltipText({
 }
 TooltipText.displayName = "TooltipText";
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipScope, TooltipText, TooltipTrigger };
+const stretchedHost =
+  'tr[data-stretched-link], [data-slot="card"][data-stretched-link], [data-slot="stat-card"][data-stretched-link]';
+
+const ownControl =
+  "a[href], button, input, select, textarea, summary, [role=button], [role=checkbox], [role=combobox], [role=link], [role=menuitem], [role=switch], [role=tab]";
+
+/** A reason trigger sits above a row's stretched link so hovering it shows the reason, so it hands clicks on to that link, modifier keys and middle button included. A trigger that is a control of its own keeps its clicks. */
+function forwardToStretchedLink(event: React.MouseEvent<HTMLElement>) {
+  if (event.defaultPrevented) return;
+  const trigger = event.currentTarget;
+  const control = event.target instanceof Element ? event.target.closest(ownControl) : null;
+  if (control && trigger.contains(control)) return;
+  const link = trigger
+    .closest(stretchedHost)
+    ?.querySelector<HTMLElement>('[data-row-link], a[data-slot="card-link"]');
+  if (!link || trigger.contains(link) || link.contains(trigger)) return;
+  const selection = window.getSelection();
+  if (selection && !selection.isCollapsed && trigger.contains(selection.anchorNode)) return;
+  link.dispatchEvent(new MouseEvent("click", event.nativeEvent));
+}
+
+function forwardMiddleClick(event: React.MouseEvent<HTMLElement>) {
+  if (event.button === 1) forwardToStretchedLink(event);
+}
+
+/**
+ * Says why: Button's disabledReason and the reason on Badge and StatusText. wrap shows the reason in a
+ * tooltip with its own provider, and with focusable the element becomes a TooltipText tab stop. Put
+ * description inside the element and pass its aria-describedby through describedBy, so the reason is
+ * its accessible description even while the tooltip is closed.
+ */
+function useReason(reason: React.ReactNode) {
+  const id = React.useId();
+  const active = Boolean(reason);
+  return {
+    active,
+    describedBy: (own?: string) => (active ? [own, id].filter(Boolean).join(" ") : own),
+    description: active ? (
+      <span id={id} hidden>
+        {reason}
+      </span>
+    ) : null,
+    wrap: (element: React.ReactElement, focusable = false) =>
+      active ? (
+        <EnsureTooltipProvider>
+          {focusable ? (
+            <TooltipText
+              asChild
+              content={reason}
+              data-reason-trigger=""
+              onClick={forwardToStretchedLink}
+              onAuxClick={forwardMiddleClick}
+            >
+              {element}
+            </TooltipText>
+          ) : (
+            <Tooltip content={reason}>{element}</Tooltip>
+          )}
+        </EnsureTooltipProvider>
+      ) : (
+        element
+      )
+  };
+}
+
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipScope,
+  TooltipText,
+  TooltipTrigger,
+  useReason
+};

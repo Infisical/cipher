@@ -5,7 +5,7 @@ import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
-import { Tooltip } from "./tooltip";
+import { useReason } from "./tooltip";
 
 import geometry from "./button-geometry.module.css";
 import styles from "./button-material.module.css";
@@ -56,7 +56,16 @@ const buttonVariants = cva(
     },
     compoundVariants: [
       {
-        variant: ["primary", "default", "danger-ghost", "outline", "secondary", "ghost", "bare", "link"],
+        variant: [
+          "primary",
+          "default",
+          "danger-ghost",
+          "outline",
+          "secondary",
+          "ghost",
+          "bare",
+          "link"
+        ],
         className: [styles.paintTransition, "disabled:opacity-50", styles.reasonDisabled]
       },
       { variant: ["destructive", "success"], className: styles.paintTransition }
@@ -120,6 +129,17 @@ function Button({
   const Comp = asChild ? Slot.Root : "button";
   const loading = loadingProp ?? false;
   const reason = disabledReason || undefined;
+  const reasonTooltip = useReason(reason);
+  const describedBy = reasonTooltip.describedBy(
+    [
+      props["aria-describedby"],
+      asChild && React.isValidElement<{ "aria-describedby"?: string }>(children)
+        ? children.props["aria-describedby"]
+        : undefined
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
   const inactive =
     loading ||
     Boolean(reason) ||
@@ -225,6 +245,7 @@ function Button({
         children,
         inactive
           ? {
+              ...(reason && { "aria-describedby": describedBy }),
               onClickCapture: preventActivation,
               onPointerDownCapture: preventActivation,
               onKeyDownCapture: (event: React.KeyboardEvent<HTMLElement>) => {
@@ -237,6 +258,7 @@ function Button({
           <span data-press="">{content(children.props.children)}</span>
           {badge}
           {marker}
+          {reasonTooltip.description}
         </>
       )
     ) : (
@@ -244,6 +266,7 @@ function Button({
         <span data-press="">{content(children)}</span>
         {badge}
         {marker}
+        {reasonTooltip.description}
       </>
     );
 
@@ -267,7 +290,7 @@ function Button({
       aria-disabled={
         loading || Boolean(reason) || props.disabled || props["aria-disabled"] || undefined
       }
-      aria-description={reason ?? props["aria-description"]}
+      aria-describedby={describedBy}
       aria-pressed={selected ?? props["aria-pressed"]}
       className={cn(
         buttonVariants({ variant: resolvedVariant, size }),
@@ -304,7 +327,7 @@ function Button({
       {child}
     </Comp>
   );
-  return reason ? <Tooltip content={reason}>{button}</Tooltip> : button;
+  return reasonTooltip.wrap(button);
 }
 Button.displayName = "Button";
 
