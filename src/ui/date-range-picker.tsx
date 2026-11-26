@@ -52,44 +52,48 @@ const defaultFormat = (range: CompleteDateRange, locale?: Partial<Locale>) => {
   return `${format(range.from)} to ${format(range.to)}`;
 };
 
-export function DateRangePicker({
+export type DateRangePickerContentProps = Pick<
+  DateRangePickerProps,
+  | "value"
+  | "disabled"
+  | "numberOfMonths"
+  | "presets"
+  | "commit"
+  | "align"
+  | "locale"
+  | "formatRange"
+> & {
+  /** The month shown first when value is empty. Defaults to the current month. */
+  defaultMonth?: Date;
+  onValueChange: (value: DateRange | undefined) => void;
+  onClose: () => void;
+  "aria-label"?: string;
+};
+
+type DateRangePanelProps = Omit<DateRangePickerContentProps, "align" | "aria-label"> & {
+  numberOfMonths: number;
+  commit: "immediate" | "apply";
+};
+
+function DateRangePanel({
   value,
   onValueChange,
-  placeholder = "Choose dates",
+  onClose,
   disabled,
-  numberOfMonths = 1,
+  numberOfMonths,
   presets,
-  commit: commitMode = numberOfMonths > 1 || presets?.length ? "apply" : "immediate",
-  align = "start",
+  commit: commitMode,
+  defaultMonth,
   locale,
-  formatRange,
-  badge,
-  className,
-  ...props
-}: DateRangePickerProps) {
-  const [open, setOpen] = React.useState(false);
+  formatRange
+}: DateRangePanelProps) {
   const [draft, setDraft] = React.useState(value);
-  const [month, setMonth] = React.useState(() => value?.from ?? new Date());
-  const field = useFieldControlAttributes(props);
-  const generatedId = React.useId();
-  const id = field.id ?? generatedId;
+  const [month, setMonth] = React.useState(() => value?.from ?? defaultMonth ?? new Date());
   const apply = commitMode === "apply";
   const format = (range: CompleteDateRange) => formatRange?.(range) ?? defaultFormat(range, locale);
-  const valueText = React.useRef<HTMLSpanElement>(null);
-  const valueLabel = isComplete(value) ? format(value) : undefined;
-  React.useLayoutEffect(() => {
-    if (valueText.current) titleIfClamped(valueText.current);
-  }, [valueLabel]);
   const commit = (next: DateRange | undefined) => {
     onValueChange(next);
-    setOpen(false);
-  };
-  const changeOpen = (next: boolean) => {
-    if (next) {
-      setDraft(value);
-      setMonth(value?.from ?? new Date());
-    }
-    setOpen(next);
+    onClose();
   };
   const choosePreset = (range: DateRange) => {
     if (!apply) return commit(range);
@@ -102,7 +106,134 @@ export function DateRangePicker({
   else if (isComplete(draft)) status = format(draft);
 
   return (
-    <Popover open={open} onOpenChange={changeOpen}>
+    <div data-slot="date-range-picker-panel" data-commit={commitMode} className={styles.panel}>
+      {presets?.length ? (
+        <div
+          role="group"
+          aria-label="Presets"
+          data-slot="date-range-picker-presets"
+          className={styles.presets}
+        >
+          {presets.map((preset) => (
+            <Button
+              key={preset.label}
+              variant="ghost"
+              className="justify-start"
+              aria-pressed={
+                sameDay(preset.range.from, shown?.from) && sameDay(preset.range.to, shown?.to)
+              }
+              onClick={() => choosePreset(preset.range)}
+            >
+              {preset.label}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+      <div className={styles.main}>
+        <Calendar
+          mode="range"
+          autoFocus
+          aria-label="Date range"
+          locale={locale}
+          numberOfMonths={numberOfMonths}
+          disabled={disabled}
+          month={month}
+          onMonthChange={setMonth}
+          selected={draft}
+          onSelect={(_range, day) => {
+            const next = pickRange(draft, day);
+            setDraft(next);
+            if (!apply && isComplete(next)) commit(next);
+          }}
+        />
+        <div data-slot="date-range-picker-footer" className={styles.footer}>
+          <span role="status" className={cn(controlStyles.caption, styles.status)}>
+            {status}
+          </span>
+          {apply ? (
+            <div className={styles.actions}>
+              {draft?.from ? (
+                <Button variant="ghost" size="sm" onClick={() => setDraft(undefined)}>
+                  Clear
+                </Button>
+              ) : null}
+              <Button variant="outline" size="sm" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                variant="accent"
+                size="sm"
+                disabled={Boolean(draft?.from) && !isComplete(draft)}
+                onClick={() => commit(draft)}
+              >
+                Apply
+              </Button>
+            </div>
+          ) : value?.from || draft?.from ? (
+            <Button variant="ghost" size="xs" onClick={() => commit(undefined)}>
+              Clear
+            </Button>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** DateRangePicker's popover for your own trigger, such as a filter chip, with the same presets, months and commit rule. Render it inside a Popover. */
+export function DateRangePickerContent({
+  align = "start",
+  numberOfMonths = 1,
+  presets,
+  commit = numberOfMonths > 1 || presets?.length ? "apply" : "immediate",
+  "aria-label": ariaLabel = "Choose a date range",
+  ...props
+}: DateRangePickerContentProps) {
+  return (
+    <PopoverContent
+      align={align}
+      data-width={numberOfMonths > 1 ? undefined : "content"}
+      className={numberOfMonths > 1 ? styles.wide : undefined}
+      aria-label={ariaLabel}
+      onOpenAutoFocus={(event) => event.preventDefault()}
+    >
+      <DateRangePanel
+        {...props}
+        numberOfMonths={numberOfMonths}
+        presets={presets}
+        commit={commit}
+      />
+    </PopoverContent>
+  );
+}
+
+export function DateRangePicker({
+  value,
+  onValueChange,
+  placeholder = "Choose dates",
+  disabled,
+  numberOfMonths,
+  presets,
+  commit,
+  align,
+  locale,
+  formatRange,
+  badge,
+  className,
+  ...props
+}: DateRangePickerProps) {
+  const [open, setOpen] = React.useState(false);
+  const field = useFieldControlAttributes(props);
+  const generatedId = React.useId();
+  const id = field.id ?? generatedId;
+  const format = (range: CompleteDateRange) => formatRange?.(range) ?? defaultFormat(range, locale);
+  const valueText = React.useRef<HTMLSpanElement>(null);
+  const valueLabel = isComplete(value) ? format(value) : undefined;
+  React.useLayoutEffect(() => {
+    if (valueText.current) titleIfClamped(valueText.current);
+  }, [valueLabel]);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           data-slot="date-range-picker"
@@ -133,85 +264,18 @@ export function DateRangePicker({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
+      <DateRangePickerContent
+        value={value}
+        onValueChange={onValueChange}
+        onClose={() => setOpen(false)}
+        disabled={disabled}
+        numberOfMonths={numberOfMonths}
+        presets={presets}
+        commit={commit}
         align={align}
-        data-width={numberOfMonths > 1 ? undefined : "content"}
-        className={numberOfMonths > 1 ? styles.wide : undefined}
-        aria-label="Choose a date range"
-        onOpenAutoFocus={(event) => event.preventDefault()}
-      >
-        <div data-slot="date-range-picker-panel" data-commit={commitMode} className={styles.panel}>
-          {presets?.length ? (
-            <div
-              role="group"
-              aria-label="Presets"
-              data-slot="date-range-picker-presets"
-              className={styles.presets}
-            >
-              {presets.map((preset) => (
-                <Button
-                  key={preset.label}
-                  variant="ghost"
-                  className="justify-start"
-                  aria-pressed={
-                    sameDay(preset.range.from, shown?.from) && sameDay(preset.range.to, shown?.to)
-                  }
-                  onClick={() => choosePreset(preset.range)}
-                >
-                  {preset.label}
-                </Button>
-              ))}
-            </div>
-          ) : null}
-          <div className={styles.main}>
-            <Calendar
-              mode="range"
-              autoFocus
-              aria-label="Date range"
-              locale={locale}
-              numberOfMonths={numberOfMonths}
-              disabled={disabled}
-              month={month}
-              onMonthChange={setMonth}
-              selected={draft}
-              onSelect={(_range, day) => {
-                const next = pickRange(draft, day);
-                setDraft(next);
-                if (!apply && isComplete(next)) commit(next);
-              }}
-            />
-            <div data-slot="date-range-picker-footer" className={styles.footer}>
-              <span role="status" className={cn(controlStyles.caption, styles.status)}>
-                {status}
-              </span>
-              {apply ? (
-                <div className={styles.actions}>
-                  {draft?.from ? (
-                    <Button variant="ghost" size="sm" onClick={() => setDraft(undefined)}>
-                      Clear
-                    </Button>
-                  ) : null}
-                  <Button variant="outline" size="sm" onClick={() => setOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="accent"
-                    size="sm"
-                    disabled={Boolean(draft?.from) && !isComplete(draft)}
-                    onClick={() => commit(draft)}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              ) : value?.from || draft?.from ? (
-                <Button variant="ghost" size="xs" onClick={() => commit(undefined)}>
-                  Clear
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </PopoverContent>
+        locale={locale}
+        formatRange={formatRange}
+      />
     </Popover>
   );
 }
