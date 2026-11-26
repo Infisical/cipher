@@ -1506,6 +1506,10 @@
         "module": "list/long-values"
       },
       {
+        "title": "Block values in a compact list",
+        "module": "list/block-values"
+      },
+      {
         "title": "Breakdown inside a value",
         "module": "list/nested-breakdown"
       },
