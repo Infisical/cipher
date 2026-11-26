@@ -566,6 +566,14 @@
         "module": "combobox/creation"
       },
       {
+        "title": "Create in a dialog",
+        "module": "combobox/dialog-creation"
+      },
+      {
+        "title": "Create in a dialog, no options yet",
+        "module": "combobox/dialog-creation-empty"
+      },
+      {
         "title": "Create through your own MultiStep dialog",
         "module": "combobox/create-flow"
       },

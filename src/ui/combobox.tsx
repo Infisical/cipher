@@ -52,7 +52,7 @@ export type ComboboxOption = {
   disabled?: boolean;
 };
 export type ComboboxCreationFormProps = {
-  /** The trimmed search text when the row was chosen, for prefilling a name. */
+  /** Always empty: the dialog opens blank rather than copying the search text into a field. */
   query: string;
   /** Give the form element this id; the dialog's submit button targets it. */
   formId: string;
@@ -252,10 +252,13 @@ export function Combobox({
     inlineCreate &&
     query.trim() &&
     !options.some((option) => option.label.toLowerCase() === query.trim().toLowerCase());
+  const emptyCreate =
+    !loading && !options.length && (!onSearch || !query.trim()) ? dialogCreation : undefined;
+  const emptyCreateRef = React.useRef<HTMLButtonElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement | null>(null);
   const formId = React.useId();
   const sessionRef = React.useRef(0);
-  const [session, setSession] = React.useState<{ id: number; query: string; open: boolean }>();
+  const [session, setSession] = React.useState<{ id: number; open: boolean }>();
   const [formDirty, setFormDirty] = React.useState(false);
   const [formPending, setFormPending] = React.useState(false);
   const [formSubmitLabel, setFormSubmitLabel] = React.useState<string>();
@@ -268,7 +271,7 @@ export function Combobox({
   const guard = useDiscardChangesGuard({ isDirty: formDirty, onDiscard: closeDialog });
   const openDialog = () => {
     sessionRef.current += 1;
-    setSession({ id: sessionRef.current, query: query.trim(), open: true });
+    setSession({ id: sessionRef.current, open: true });
     setFormDirty(false);
     setFormPending(false);
     setFormSubmitLabel(undefined);
@@ -476,111 +479,131 @@ export function Combobox({
             aria-label={`Search ${label}`}
             onKeyDown={(event) => {
               if (event.nativeEvent.isComposing || event.keyCode === 229) event.stopPropagation();
+              if (!emptyCreate || event.key !== "ArrowDown") return;
+              event.preventDefault();
+              emptyCreateRef.current?.focus();
             }}
             trailing={loading ? <Spinner /> : undefined}
           />
-          <CommandList aria-busy={loading || undefined}>
-            {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
-            {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
-              <p role="status" data-slot="combobox-status" className={menu.empty}>
-                {loading ? "Searching…" : emptyText}
-              </p>
-            )}
-            {groups.map((group) => (
-              <CommandGroup key={group} heading={group || undefined}>
-                {filtered
-                  .filter((option) => (option.group ?? "") === group)
-                  .map((option) => (
-                    <CommandItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.disabled || disabled}
-                      data-checked={selected.includes(option.value)}
-                      onSelect={() => {
-                        setPicked(option);
-                        apply([option.value]);
-                        changeOpen(false);
-                      }}
-                    >
-                      {option.icon && <Icon icon={option.icon} />}
-                      {option.description ? (
-                        <span className={menu.text}>
+          {!emptyCreate && (
+            <CommandList aria-busy={loading || undefined}>
+              {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
+              {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
+                <p role="status" data-slot="combobox-status" className={menu.empty}>
+                  {loading ? "Searching…" : emptyText}
+                </p>
+              )}
+              {groups.map((group) => (
+                <CommandGroup key={group} heading={group || undefined}>
+                  {filtered
+                    .filter((option) => (option.group ?? "") === group)
+                    .map((option) => (
+                      <CommandItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.disabled || disabled}
+                        data-checked={selected.includes(option.value)}
+                        onSelect={() => {
+                          setPicked(option);
+                          apply([option.value]);
+                          changeOpen(false);
+                        }}
+                      >
+                        {option.icon && <Icon icon={option.icon} />}
+                        {option.description ? (
+                          <span className={menu.text}>
+                            <span className={menu.title}>
+                              <Highlight text={option.label} query={query} />
+                            </span>
+                            <span
+                              className={menu.description}
+                              onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+                            >
+                              <Highlight text={option.description} query={query} />
+                            </span>
+                          </span>
+                        ) : (
                           <span className={menu.title}>
                             <Highlight text={option.label} query={query} />
                           </span>
-                          <span
-                            className={menu.description}
-                            onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
-                          >
-                            <Highlight text={option.description} query={query} />
-                          </span>
-                        </span>
-                      ) : (
-                        <span className={menu.title}>
-                          <Highlight text={option.label} query={query} />
-                        </span>
-                      )}
-                      {option.badge}
-                      {option.meta && <span className={menu.meta}>{option.meta}</span>}
-                    </CommandItem>
-                  ))}
-              </CommandGroup>
-            ))}
-            {canCreate && (
-              <CommandGroup>
-                <CommandItem
-                  disabled={creating || loading || disabled || Boolean(creationBlocked)}
-                  value={`create:${query}`}
-                  data-slot="combobox-create-option"
-                  data-highlight-default=""
-                  data-wrap=""
-                  className={styles.createOption}
-                  onSelect={() => {
-                    creation.create(query.trim());
-                  }}
-                >
-                  <Icon name="plus" lead />
-                  <span className={styles.optionLabel}>
-                    {creating
-                      ? "Creating…"
-                      : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
-                  </span>
-                  {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
-                </CommandItem>
-              </CommandGroup>
-            )}
-            {rowCreation && (
-              <>
-                <CommandSeparator alwaysRender />
+                        )}
+                        {option.badge}
+                        {option.meta && <span className={menu.meta}>{option.meta}</span>}
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              ))}
+              {canCreate && (
                 <CommandGroup>
                   <CommandItem
-                    value="combobox-create-dialog"
-                    data-slot="combobox-create"
-                    disabled={disabled || Boolean(creationBlocked)}
+                    disabled={creating || loading || disabled || Boolean(creationBlocked)}
+                    value={`create:${query}`}
+                    data-slot="combobox-create-option"
+                    data-highlight-default=""
+                    data-wrap=""
+                    className={styles.createOption}
                     onSelect={() => {
-                      if (rowCreation.mode === "dialog") {
-                        openDialog();
-                        return;
-                      }
-                      changeOpen(false);
-                      rowCreation.onSelect({
-                        query: query.trim(),
-                        complete: (option) => {
-                          setPicked(option);
-                          latestApply.current([option.value]);
-                        }
-                      });
+                      creation.create(query.trim());
                     }}
                   >
-                    <Icon name="plus" />
-                    <span className={menu.title}>{rowCreation.label}</span>
+                    <Icon name="plus" lead />
+                    <span className={styles.optionLabel}>
+                      {creating
+                        ? "Creating…"
+                        : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
+                    </span>
                     {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
                   </CommandItem>
                 </CommandGroup>
-              </>
-            )}
-          </CommandList>
+              )}
+              {rowCreation && (
+                <>
+                  <CommandSeparator alwaysRender />
+                  <CommandGroup>
+                    <CommandItem
+                      value="combobox-create-dialog"
+                      data-slot="combobox-create"
+                      disabled={disabled || Boolean(creationBlocked)}
+                      onSelect={() => {
+                        if (rowCreation.mode === "dialog") {
+                          openDialog();
+                          return;
+                        }
+                        changeOpen(false);
+                        rowCreation.onSelect({
+                          query: query.trim(),
+                          complete: (option) => {
+                            setPicked(option);
+                            latestApply.current([option.value]);
+                          }
+                        });
+                      }}
+                    >
+                      <Icon name="plus" />
+                      <span className={menu.title}>{rowCreation.label}</span>
+                      {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
+                    </CommandItem>
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          )}
         </Command>
+        {emptyCreate && (
+          <div data-slot="combobox-create-empty" className={cn(menu.empty, styles.createEmpty)}>
+            <p role="status">{emptyText}</p>
+            <Button
+              ref={emptyCreateRef}
+              variant="outline"
+              icon="plus"
+              disabled={disabled || Boolean(creationBlocked)}
+              onClick={openDialog}
+            >
+              {emptyCreate.label}
+            </Button>
+            {creationBlocked && <p>{creationBlocked}</p>}
+          </div>
+        )}
         {error && (
           <p role="alert" className={styles.error}>
             {error}
@@ -611,7 +634,7 @@ export function Combobox({
               </DialogHeader>
               <React.Fragment key={session.id}>
                 {dialogCreation.renderForm({
-                  query: session.query,
+                  query: "",
                   formId,
                   complete: (option) => complete(session.id, option),
                   dismiss: guard.requestDiscard,

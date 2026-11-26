@@ -132,7 +132,8 @@
   height: var(--cipher-field-nested);
   padding-block: 0;
   padding-inline: calc(
-      var(--cipher-field-inline) - var(--cipher-space-control-slot-inset) - var(--cipher-size-control-border)
+      var(--cipher-field-inline) - var(--cipher-space-control-slot-inset) -
+        var(--cipher-size-control-border)
     )
     0;
 }
@@ -362,4 +363,13 @@
 .panelColumn > [data-slot="popover-scroll"] > [role="listbox"] {
   flex: 0 1 auto;
   min-height: 0;
+}
+.createEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cipher-space-12);
+}
+.createEmpty > p {
+  margin: 0;
 }
