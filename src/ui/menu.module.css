@@ -298,6 +298,9 @@ a.row[href],
   display: inline-flex;
   overflow: hidden;
 }
+.row > img {
+  object-fit: contain;
+}
 .row > [data-menu-icon] > :is(img, svg) {
   width: 100%;
   height: 100%;

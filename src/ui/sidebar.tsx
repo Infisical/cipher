@@ -136,30 +136,38 @@ const holds = (sections: readonly SidebarSection[], id?: string) =>
 
 const LevelTrail = React.createContext<readonly string[]>([]);
 
-const textOf = (node: React.ReactNode): string => {
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(textOf).join("");
-  if (!React.isValidElement<{ children?: React.ReactNode; "aria-label"?: string }>(node)) return "";
-  return node.props["aria-label"] ?? textOf(node.props.children);
-};
+const hasContent = (node: React.ReactNode): boolean =>
+  React.Children.toArray(node).some((child) =>
+    React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment
+      ? hasContent(child.props.children)
+      : child !== ""
+  );
 
-const railName = (label: string, badge: React.ReactNode) => {
-  const text = textOf(badge).trim();
-  return text ? `${label}, ${text}` : label;
-};
+const railTip = (tip: string, badge: React.ReactNode) =>
+  hasContent(badge) ? (
+    <>
+      {tip} {badge}
+    </>
+  ) : (
+    tip
+  );
 
 const RowContent = ({
   item,
   count,
   child,
-  trailing
+  trailing,
+  labelId,
+  badgeId
 }: {
   item: SidebarLink;
   count?: number;
   child?: boolean;
   trailing?: React.ReactNode;
+  labelId?: string;
+  badgeId?: string;
 }) => {
-  const hasBadge = React.Children.toArray(item.badge).some((node) => node !== "");
+  const hasBadge = hasContent(item.badge);
   return (
     <>
       {!child &&
@@ -170,8 +178,14 @@ const RowContent = ({
             {item.label.charAt(0)}
           </span>
         ))}
-      <span className={styles.label}>{item.label}</span>
-      {hasBadge && <span className={styles.badge}>{item.badge}</span>}
+      <span id={labelId} className={styles.label}>
+        {item.label}
+      </span>
+      {hasBadge && (
+        <span id={badgeId} className={styles.badge}>
+          {item.badge}
+        </span>
+      )}
       {count ? <Count className={styles.count}>{count}</Count> : null}
       {(count || hasBadge) && (
         <span className={styles.dot} data-count={count ? "" : undefined} aria-hidden="true" />
@@ -200,11 +214,10 @@ const SidebarRow = ({
   onNavigate?: SidebarProps["onNavigate"];
 }) => {
   const isCurrent = !back && item.id === current;
-  const name = back
-    ? `Back to ${item.label}`
-    : rail
-      ? railName(item.label, item.badge)
-      : item.label;
+  const name = back ? `Back to ${item.label}` : item.label;
+  const labelId = React.useId();
+  const badgeId = React.useId();
+  const badged = rail && !back && hasContent(item.badge);
   const drillIn = !back && (item.drillIn || item.level !== undefined);
   const holdsCurrent = React.useContext(LevelTrail).includes(item.level ?? "") && !back;
   const shared = {
@@ -216,7 +229,8 @@ const SidebarRow = ({
     "data-holds-current": (holdsCurrent && !isCurrent) || undefined,
     "data-child": child || undefined,
     "aria-current": isCurrent ? ("page" as const) : undefined,
-    "aria-label": rail || back ? name : undefined,
+    "aria-label": (rail || back) && !badged ? name : undefined,
+    "aria-labelledby": badged ? `${labelId} ${badgeId}` : undefined,
     "aria-description": drillIn ? "Opens section" : undefined,
     onClick: (event: React.MouseEvent) => {
       if (item.disabled) {
@@ -233,6 +247,8 @@ const SidebarRow = ({
       count={item.count}
       child={child}
       trailing={drillIn && !rail ? drill : undefined}
+      labelId={labelId}
+      badgeId={badgeId}
     />
   );
   const row =
@@ -256,7 +272,10 @@ const SidebarRow = ({
       </button>
     );
   return rail ? (
-    <Tooltip content={drillIn ? `${name}, opens section` : name} side="right">
+    <Tooltip
+      content={railTip(drillIn ? `${name}, opens section` : name, back ? undefined : item.badge)}
+      side="right"
+    >
       {row}
     </Tooltip>
   ) : (
@@ -279,26 +298,30 @@ const SidebarGroup = ({
   const holdsCurrent = children.some((childItem) => childItem.id === current);
   const [open, setOpen] = React.useState(item.defaultOpen ?? holdsCurrent);
   const listId = React.useId();
+  const labelId = React.useId();
+  const badgeId = React.useId();
+  const badged = hasContent(item.badge);
   React.useEffect(() => {
     if (holdsCurrent) setOpen(true);
   }, [holdsCurrent]);
   if (rail)
     return (
       <DropdownMenu>
-        <Tooltip content={railName(item.label, item.badge)} side="right">
+        <Tooltip content={railTip(item.label, item.badge)} side="right">
           <DropdownMenuTrigger asChild>
             <button
               type="button"
               className={styles.row}
               data-sidebar-target=""
               data-holds-current={holdsCurrent || undefined}
-              aria-label={railName(item.label, item.badge)}
+              aria-label={badged ? undefined : item.label}
+              aria-labelledby={badged ? `${labelId} ${badgeId}` : undefined}
               disabled={item.disabled}
               onKeyDown={(event) => {
                 if (event.key === "ArrowDown" || event.key === "ArrowUp") event.preventDefault();
               }}
             >
-              <RowContent item={item} count={total(children)} />
+              <RowContent item={item} count={total(children)} labelId={labelId} badgeId={badgeId} />
             </button>
           </DropdownMenuTrigger>
         </Tooltip>
