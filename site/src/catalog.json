@@ -1360,6 +1360,10 @@
       {
         "title": "Toolbar gap",
         "module": "layout/toolbar-gap"
+      },
+      {
+        "title": "Leading media: first line or default row",
+        "module": "layout/leading-media"
       }
     ]
   },

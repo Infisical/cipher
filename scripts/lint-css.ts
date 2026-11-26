@@ -41,7 +41,11 @@ const rules = (css: string) => {
   return found;
 };
 
-const lastCompound = (selector: string) => selector.split(/\s+|>|~/).filter(Boolean).at(-1) ?? "";
+const lastCompound = (selector: string) =>
+  selector
+    .split(/\s+|>|~/)
+    .filter(Boolean)
+    .at(-1) ?? "";
 
 const problems: string[] = [];
 for (const file of cssFiles(join(root, "src"))) {
@@ -64,6 +68,26 @@ for (const file of cssFiles(join(root, "src"))) {
           );
       }
     }
+  }
+}
+
+const leadTarget =
+  /(?:^|[\s>+~(,])(?:svg|img)\b|\[data-menu-icon\]|\.[A-Za-z-]*(?:[Mm]edia|[Ll]ead|[Ii]con)\b/;
+const leadOffset = [
+  /(?:^|;)\s*transform\s*:\s*translateY\(/,
+  /(?:^|;)\s*translate\s*:\s*0\s+[^;]*\d/,
+  /(?:^|;)\s*margin-(?:top|block-start|block)\s*:\s*(?:-?\d*\.?\d+px|var\(--cipher-space-|calc\(|max\()/
+];
+const leadAllow = "lint-css-allow: lead";
+for (const file of cssFiles(join(root, "src"))) {
+  for (const rule of rules(readFileSync(file, "utf8"))) {
+    if (rule.raw.includes(leadAllow)) continue;
+    if (!rule.selector.split(",").some((part) => leadTarget.test(lastCompound(part.trim()))))
+      continue;
+    if (!leadOffset.some((pattern) => pattern.test(rule.body))) continue;
+    problems.push(
+      `${relative(root, file)}:${rule.line} offsets leading media by hand. Use .cipher-lead-line for a glyph no taller than the line, or .cipher-lead-block for media beside a title and description, or mark a deliberate offset with /* ${leadAllow}: <reason> */.`
+    );
   }
 }
 

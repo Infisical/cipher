@@ -80,6 +80,7 @@ function RadioGroupItem({
         "group/radio-group-item peer relative flex aspect-square size-4 shrink-0 rounded-full after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
         controlStyles.focusOutline,
         controlStyles.choiceMark,
+        label && "cipher-lead-line",
         className
       )}
       {...props}
@@ -160,7 +161,7 @@ function RadioGroupCard({
       )}
       {...props}
     >
-      <span className={controlStyles.choiceCardMarkBox}>
+      <span className={cn(controlStyles.choiceCardMarkBox, "cipher-lead-line")}>
         <span
           aria-hidden
           data-state={selected ? "checked" : "unchecked"}

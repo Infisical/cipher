@@ -83,23 +83,28 @@ export function Inline({
   gap = 8,
   align = "center",
   justify = "start",
-  wrap = true,
+  wrap: wrapProp,
   style,
   className,
   ref,
   ...props
 }: Omit<LayoutProps, "align"> & {
-  align?: LayoutProps["align"] | "baseline";
+  /** first-line keeps a leading icon or control on the first line of the text beside it as the text wraps (the first child gets .cipher-lead-line). Use it for an icon before a sentence; center is for rows that never wrap. */
+  align?: LayoutProps["align"] | "baseline" | "first-line";
+  /** Defaults to true, or false with align first-line so the text stays beside its icon. */
   wrap?: boolean;
 } & { ref?: React.Ref<HTMLDivElement> }) {
+  const firstLine = align === "first-line";
+  const wrap = wrapProp ?? !firstLine;
   return (
     <div
       ref={ref}
       data-slot="inline"
-      className={cn(styles.inline, className)}
+      data-align={firstLine ? "first-line" : undefined}
+      className={cn(styles.inline, firstLine && "*:first:cipher-lead-line", className)}
       style={{
         gap: spacing(gap),
-        alignItems: alignment(align),
+        alignItems: firstLine ? "flex-start" : alignment(align),
         justifyContent: justify === "between" ? "space-between" : alignment(justify),
         flexWrap: wrap ? "wrap" : "nowrap",
         ...style
@@ -345,9 +350,13 @@ export type PanesState = {
   setDetailsOpen: (open: boolean) => void;
 };
 
-const PanesIdentityBlock = ({ identity }: { identity: PanesIdentity }) => (
+const PanesIdentityBlock = ({ identity, narrow }: { identity: PanesIdentity; narrow: boolean }) => (
   <div data-slot="panes-identity" className={paneStyles.identity}>
-    {identity.media}
+    {identity.media && narrow ? (
+      <span className={cn(paneStyles.identityMedia, "cipher-lead-block")}>{identity.media}</span>
+    ) : (
+      identity.media
+    )}
     <div className={paneStyles.identityText}>
       {identity.title}
       {identity.description}
@@ -430,7 +439,7 @@ export function Panes({
     },
     [ref]
   );
-  const identityBlock = identity && <PanesIdentityBlock identity={identity} />;
+  const identityBlock = identity && <PanesIdentityBlock identity={identity} narrow={narrow} />;
   const main =
     typeof children === "function" ? (
       children({ narrow, detailsOpen: open, setDetailsOpen })

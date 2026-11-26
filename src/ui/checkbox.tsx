@@ -46,6 +46,7 @@ function Checkbox({
         controlStyles.focusOutline,
         controlStyles.choiceMark,
         controlStyles.check,
+        label && "cipher-lead-line",
         className
       )}
       {...props}
@@ -93,7 +94,7 @@ function Checkbox({
     <label htmlFor={fieldAttributes.id ?? generated} className={controlStyles.choice}>
       {control}
       {media && (
-        <span aria-hidden className={controlStyles.choiceMedia}>
+        <span aria-hidden className={cn(controlStyles.choiceMedia, "cipher-lead-line")}>
           {media}
         </span>
       )}

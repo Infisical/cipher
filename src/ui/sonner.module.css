@@ -28,15 +28,11 @@
   pointer-events: auto;
 }
 .icon[data-icon] {
+  --cipher-lead-row: var(--cipher-type-row-title-line-height);
   grid-column: 1;
   grid-row: 1;
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
   position: relative;
   width: var(--cipher-size-icon);
-  height: var(--cipher-type-row-title-line-height);
   margin-inline-end: var(--cipher-space-8);
   color: var(--cipher-toast-muted);
 }
