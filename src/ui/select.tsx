@@ -3,6 +3,7 @@ import { Select as SelectPrimitive } from "radix-ui";
 
 import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
+import { isDev } from "../lib/dev";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
 import { cn } from "../lib/utils";
@@ -15,10 +16,18 @@ import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
 import picker from "./picker.module.css";
 
-const SelectSettingsContext = React.createContext<{
-  wrap: boolean;
-  descriptionLayout: "inline" | "stacked";
-}>({ wrap: false, descriptionLayout: "inline" });
+const SelectSettingsContext = React.createContext<{ wrap: boolean }>({ wrap: false });
+
+let descriptionLayoutWarned = false;
+function useDescriptionLayoutWarning(descriptionLayout: unknown) {
+  React.useEffect(() => {
+    if (!isDev || descriptionLayout === undefined || descriptionLayoutWarned) return;
+    descriptionLayoutWarned = true;
+    console.warn(
+      "Select: descriptionLayout is deprecated and ignored. Descriptions always stack under the label. Pass short values such as a count, region or version as meta instead."
+    );
+  }, [descriptionLayout]);
+}
 
 function titleIfTruncated(element: HTMLElement | null | undefined) {
   if (!element) return;
@@ -40,7 +49,10 @@ const SelectRootContext = React.createContext<{ open: boolean; disabledReason?: 
 export type SelectOption = {
   value: string;
   label: string;
+  /** Prose under the label, such as what a role allows. It wraps in full. */
   description?: string;
+  /** A short value after the label on the same line, such as a count, region or version. It stays in the menu row, not the trigger, and the label truncates before it does. A string, like ComboboxOption's, so one options array serves both. */
+  meta?: string;
   disabled?: boolean;
   group?: string;
   /** A Badge after the label, in the menu row and in the trigger while this option is selected, such as "Current". */
@@ -59,7 +71,7 @@ function Select({
   menuWidth,
   icon,
   wrap,
-  descriptionLayout = "inline",
+  descriptionLayout,
   disabledReason,
   disabled,
   open: openProp,
@@ -87,7 +99,7 @@ function Select({
   icon?: IconSource;
   /** Wrap long option labels in the list instead of truncating them. The trigger stays on one line. */
   wrap?: boolean;
-  /** inline puts an option's description after its label on one line; stacked puts it on the lines below, wrapping in full, for descriptions longer than a few words such as what a role allows. */
+  /** @deprecated Ignored. Descriptions always stack under the label; pass short values such as a count, region or version as an option's `meta`. */
   descriptionLayout?: "inline" | "stacked";
   /** Blocks choosing and says why: the trigger looks disabled but stays focusable, shows the reason in a tooltip on hover and focus, and exposes it as the accessible description. */
   disabledReason?: string;
@@ -97,6 +109,7 @@ function Select({
   "aria-label"?: string;
   "aria-labelledby"?: string;
 }) {
+  useDescriptionLayoutWarning(descriptionLayout);
   const groups = [...new Set(options?.map((option) => option.group ?? ""))];
   const [localOpen, setLocalOpen] = React.useState(defaultOpen ?? false);
   const reason = disabledReason || undefined;
@@ -119,7 +132,7 @@ function Select({
       {...props}
     >
       <SelectRootContext value={{ open, disabledReason: reason }}>
-        <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
+        <SelectSettingsContext value={{ wrap: wrap ?? false }}>
           {options ? (
             <>
               <SelectTrigger
@@ -154,6 +167,7 @@ function Select({
                           value={option.value}
                           disabled={option.disabled}
                           description={option.description}
+                          meta={option.meta}
                           badge={option.badge}
                           media={option.media}
                         >
@@ -322,12 +336,13 @@ function SelectContent({
 }: Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>, "position"> & {
   /** Wrap long option labels instead of truncating them. Defaults to the Select's `wrap`; items can override it. */
   wrap?: boolean;
-  /** Where option descriptions go: after the label on one line, or stacked below it and wrapping in full. Defaults to the Select's descriptionLayout. */
+  /** @deprecated Ignored. Descriptions always stack under the label; pass short values such as a count, region or version as an item's `meta`. */
   descriptionLayout?: "inline" | "stacked";
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Content>>;
 }) {
   const inset = useMenuInset<HTMLDivElement>();
   const inherited = React.useContext(SelectSettingsContext);
+  useDescriptionLayoutWarning(descriptionLayout);
   return (
     <SelectPrimitive.Portal container={usePortalContainer()}>
       <SelectPrimitive.Content
@@ -344,12 +359,7 @@ function SelectContent({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport ref={inset} className={menu.inset} data-scroll-fade="y">
-          <SelectSettingsContext
-            value={{
-              wrap: wrap ?? inherited.wrap,
-              descriptionLayout: descriptionLayout ?? inherited.descriptionLayout
-            }}
-          >
+          <SelectSettingsContext value={{ wrap: wrap ?? inherited.wrap }}>
             {children}
           </SelectSettingsContext>
           <ListHighlight />
@@ -381,6 +391,7 @@ function SelectItem({
   className,
   children,
   description,
+  meta,
   badge,
   media,
   wrap,
@@ -389,7 +400,10 @@ function SelectItem({
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+  /** Prose under the label, wrapping in full. */
   description?: string;
+  /** A short value after the label on the same line, such as a count, region or version. It stays in the menu row, not the trigger, and the label truncates before it does. */
+  meta?: React.ReactNode;
   /** A Badge after the label, shown in the menu row and in the trigger while this item is selected. The label truncates before the badge does. */
   badge?: React.ReactNode;
   /** A logo or image before the label, sized like an icon, shown in the menu row and in the trigger while this item is selected. */
@@ -403,7 +417,6 @@ function SelectItem({
   const label = React.useRef<HTMLSpanElement>(null);
   const inherited = React.useContext(SelectSettingsContext);
   const wrapped = wrap ?? inherited.wrap;
-  const stacked = inherited.descriptionLayout === "stacked" && Boolean(description);
   React.useLayoutEffect(() => {
     const node = label.current;
     if (node?.title && node.title !== node.textContent) titleIfTruncated(node);
@@ -440,7 +453,7 @@ function SelectItem({
         undefined
       }
       data-wrap={wrapped || undefined}
-      data-description={stacked ? "stacked" : undefined}
+      data-description={description ? "stacked" : undefined}
       className={cn(menu.row, picker.option, className)}
       onFocus={(event) => {
         onFocus?.(event);
@@ -448,7 +461,7 @@ function SelectItem({
       }}
       {...props}
     >
-      {stacked ? (
+      {description ? (
         <span className={menu.text}>
           {labelText}
           <span id={descriptionId} className={cn(menu.description, picker.optionDescription)}>
@@ -456,15 +469,9 @@ function SelectItem({
           </span>
         </span>
       ) : (
-        <>
-          {labelText}
-          {description && (
-            <span id={descriptionId} className={picker.optionMeta}>
-              {description}
-            </span>
-          )}
-        </>
+        labelText
       )}
+      {meta && <span className={picker.optionMeta}>{meta}</span>}
       <span className={picker.optionCheck}>
         <SelectPrimitive.ItemIndicator>
           <Icon name="check" />
