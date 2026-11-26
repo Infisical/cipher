@@ -35,6 +35,8 @@ export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "size" | 
   icon?: IconSource;
   mono?: boolean;
   invalid?: boolean;
+  /** Marks the field invalid and shows this message in a tooltip on hover and while the field has focus, so the field keeps its height, such as an Input in a table cell. Inside a Field, use the Field's error instead. */
+  error?: string;
   kbd?: string;
   trailing?: React.ReactNode;
   /** "/" focuses this field from anywhere on the page, for a page's main search. No hint is drawn. */
@@ -53,6 +55,7 @@ export function Input({
   icon,
   mono = false,
   invalid,
+  error,
   kbd,
   trailing,
   width,
@@ -63,6 +66,8 @@ export function Input({
   placeholderShort,
   onKeyDown,
   onClick,
+  onFocus,
+  onBlur,
   ref,
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
@@ -79,7 +84,11 @@ export function Input({
   });
   const hintId = React.useId();
   const reasonId = React.useId();
+  const errorId = React.useId();
   const reason = disabledReason || undefined;
+  const problem = error || undefined;
+  const [focused, setFocused] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
   const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
     const element = inner.current;
@@ -116,15 +125,23 @@ export function Input({
       disabled={reason ? undefined : props.disabled}
       readOnly={reason ? true : props.readOnly}
       aria-disabled={reason ? true : props["aria-disabled"]}
-      aria-invalid={invalid || field["aria-invalid"] || undefined}
+      aria-invalid={invalid || Boolean(problem) || field["aria-invalid"] || undefined}
       aria-describedby={
-        [field["aria-describedby"], suggesting && hintId, reason && reasonId]
+        [field["aria-describedby"], suggesting && hintId, reason && reasonId, problem && errorId]
           .filter(Boolean)
           .join(" ") || undefined
       }
       onClick={(event) => {
         onClick?.(event);
         if (reason) event.preventDefault();
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        setFocused(true);
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        setFocused(false);
       }}
       onKeyDown={(event) => {
         onKeyDown?.(event);
@@ -193,15 +210,25 @@ export function Input({
   );
   return (
     <>
-      {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same input and its typed value. Its own provider keeps that from requiring one around every Input. */}
+      {/* The tooltip always renders, closed and blank without a reason or an error, so adding or removing one keeps the same input and its typed value. Its own provider keeps that from requiring one around every Input. */}
       <TooltipProvider>
-        <Tooltip content={reason || " "} open={reason ? undefined : false} defaultOpen={false}>
+        <Tooltip
+          content={reason || problem || " "}
+          open={reason ? undefined : Boolean(problem) && (focused || hovered)}
+          onOpenChange={setHovered}
+          defaultOpen={false}
+        >
           {control}
         </Tooltip>
       </TooltipProvider>
       {reason && (
         <span id={reasonId} className="sr-only">
           {reason}
+        </span>
+      )}
+      {problem && (
+        <span id={errorId} className="sr-only">
+          {problem}
         </span>
       )}
     </>

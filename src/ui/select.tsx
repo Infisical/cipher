@@ -9,6 +9,7 @@ import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import type { FieldWidth } from "./input";
 import { useMenuInset } from "./menu-inset";
+import { Tooltip } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
@@ -53,6 +54,8 @@ function Select({
   icon,
   wrap,
   descriptionLayout = "inline",
+  disabledReason,
+  disabled,
   onChange,
   onValueChange,
   children,
@@ -77,6 +80,8 @@ function Select({
   wrap?: boolean;
   /** inline puts an option's description after its label on one line; stacked puts it on the lines below, wrapping in full, for descriptions longer than a few words such as what a role allows. */
   descriptionLayout?: "inline" | "stacked";
+  /** Blocks choosing and says why: the trigger looks disabled but stays focusable, shows the reason in a tooltip on hover and focus, and exposes it as the accessible description. */
+  disabledReason?: string;
   onChange?: (value: string) => void;
   id?: string;
   "aria-describedby"?: string;
@@ -91,6 +96,7 @@ function Select({
         onValueChange?.(value);
         onChange?.(value);
       }}
+      disabled={disabledReason ? undefined : disabled}
       {...props}
     >
       <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
@@ -101,6 +107,7 @@ function Select({
               size={size ?? "default"}
               icon={icon}
               width={width}
+              disabledReason={disabledReason}
               aria-label={ariaLabel ?? label}
               aria-labelledby={labelledBy}
               aria-describedby={describedBy}
@@ -167,9 +174,13 @@ function SelectTrigger({
   size = "default",
   icon,
   width,
+  disabledReason,
   children,
   onPointerEnter,
   onFocus,
+  onPointerDown,
+  onClick,
+  onKeyDown,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
@@ -177,13 +188,17 @@ function SelectTrigger({
   icon?: IconSource;
   /** A fixed token width that doesn't shrink. Unset fills the row. */
   width?: FieldWidth;
+  /** Blocks choosing and says why: the trigger looks disabled but stays focusable, shows the reason in a tooltip on hover and focus, and exposes it as the accessible description. */
+  disabledReason?: string;
 } & { ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Trigger>> }) {
   const name = React.useContext(SelectNameContext);
   const fieldAttributes = useFieldControlAttributes({
     ...props,
     "aria-labelledby": props["aria-labelledby"] ?? name["aria-labelledby"]
   });
-  return (
+  const reasonId = React.useId();
+  const reason = disabledReason || undefined;
+  const trigger = (
     <SelectPrimitive.Trigger
       ref={ref}
       data-slot="select-trigger"
@@ -212,6 +227,27 @@ function SelectTrigger({
       }}
       {...props}
       {...fieldAttributes}
+      disabled={reason ? undefined : props.disabled}
+      aria-disabled={reason ? true : props["aria-disabled"]}
+      aria-describedby={
+        [fieldAttributes["aria-describedby"], reason && reasonId].filter(Boolean).join(" ") ||
+        undefined
+      }
+      onPointerDown={(event) => {
+        onPointerDown?.(event);
+        if (reason) event.preventDefault();
+      }}
+      onClick={(event) => {
+        onClick?.(event);
+        if (reason) event.preventDefault();
+      }}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        const typeahead =
+          event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
+        if (reason && (typeahead || ["Enter", "ArrowUp", "ArrowDown"].includes(event.key)))
+          event.preventDefault();
+      }}
     >
       {icon && (
         <span className={controlStyles.leading} data-slot="select-icon">
@@ -223,6 +259,15 @@ function SelectTrigger({
         <Icon name="chev-down" className={controlStyles.chevron} />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
+  );
+  if (!reason) return trigger;
+  return (
+    <>
+      <Tooltip content={reason}>{trigger}</Tooltip>
+      <span id={reasonId} className="sr-only">
+        {reason}
+      </span>
+    </>
   );
 }
 SelectTrigger.displayName = "SelectTrigger";
