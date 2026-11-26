@@ -2,11 +2,11 @@ import { Field } from "@infisical/cipher/ui/field";
 import { Select } from "@infisical/cipher/ui/select";
 
 const options = [
-  { value: "west", label: "West", description: "2 projects" },
+  { value: "west", label: "West", meta: "2 projects" },
   {
     value: "long",
     label: "Long resource identifier",
-    description: "environment_very_long_identifier_01234567890123456789"
+    meta: "environment_very_long_identifier_01234567890123456789"
   }
 ];
 export default function Example() {

@@ -1954,6 +1954,10 @@
         "module": "select/stacked-descriptions"
       },
       {
+        "title": "Meta and description",
+        "module": "select/meta-and-description"
+      },
+      {
         "title": "Long option names",
         "module": "select/long-labels"
       },

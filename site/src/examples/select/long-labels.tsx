@@ -3,9 +3,9 @@ import { Select, type SelectOption } from "@infisical/cipher/ui/select";
 
 const single: SelectOption[] = [{ value: "dev", label: "Development" }];
 const typical: SelectOption[] = [
-  { value: "dev", label: "Development", description: "138 secrets" },
-  { value: "staging", label: "Staging", description: "96 secrets" },
-  { value: "prod", label: "Production", description: "212 secrets" }
+  { value: "dev", label: "Development", meta: "138 secrets" },
+  { value: "staging", label: "Staging", meta: "96 secrets" },
+  { value: "prod", label: "Production", meta: "212 secrets" }
 ];
 const regions = ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-2"];
 const services = [
@@ -20,7 +20,7 @@ const stressed: SelectOption[] = regions.flatMap((region) =>
   services.map((service, index) => ({
     value: `${service}-${region}`,
     label: `${service} / production / ${region} / primary-postgres-read-replica-connection-string`,
-    description: index === 0 ? "2,481 secrets" : undefined,
+    meta: index === 0 ? "2,481 secrets" : undefined,
     disabled: service.startsWith("legacy"),
     group: region
   }))

@@ -290,6 +290,9 @@
 .option[data-description="stacked"] > .optionCheck {
   height: var(--cipher-type-body-line-height);
 }
+.option[data-description="stacked"] > .optionMeta {
+  line-height: var(--cipher-type-body-line-height);
+}
 .optionDescription {
   display: block;
 }
