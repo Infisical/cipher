@@ -308,7 +308,8 @@ export function MultiSelect({
     if (
       (event.ctrlKey || event.metaKey) &&
       event.key.toLowerCase() === "a" &&
-      props.multiple !== false
+      props.multiple !== false &&
+      !onSearch
     ) {
       event.preventDefault();
       if (allSelected) none();
