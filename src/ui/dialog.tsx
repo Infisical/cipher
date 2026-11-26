@@ -6,6 +6,7 @@ import { Button } from "./button";
 import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
 
+import { ActionBarScroller } from "../lib/action-bar-host";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -131,21 +132,21 @@ function DialogContent({
                     <div data-slot="dialog-head">{sections.pinned}</div>
                   )}
                   {sections.scroll.length > 0 && (
-                    <div
+                    <ActionBarScroller
                       data-slot="dialog-scroll"
                       data-scroll-fade="y"
                       data-before-footer={sections.footer.length > 0 || undefined}
                     >
                       {sections.scroll}
-                    </div>
+                    </ActionBarScroller>
                   )}
                   {sections.footer}
                 </>
               )
             : (
-                <div data-slot="overlay-scroll" data-scroll-fade="y">
+                <ActionBarScroller data-slot="overlay-scroll" data-scroll-fade="y">
                   {children}
-                </div>
+                </ActionBarScroller>
               )}
           {showCloseButton && (
             <DialogPrimitive.Close data-slot="dialog-close" asChild>

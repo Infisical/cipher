@@ -1964,6 +1964,10 @@
       {
         "title": "Tabs on the header",
         "module": "sheet/header-tabs"
+      },
+      {
+        "title": "Bulk actions with a floating action bar",
+        "module": "sheet/bulk-actions"
       }
     ]
   },
