@@ -1044,6 +1044,10 @@
       {
         "title": "Exact-match text field: the chip reads is instead of contains",
         "module": "filter-bar/exact-match"
+      },
+      {
+        "title": "Key-value field: several key=value pairs in one filter",
+        "module": "filter-bar/key-value"
       }
     ]
   },

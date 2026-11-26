@@ -40,11 +40,22 @@ export type FilterBarField =
       placeholder?: string;
       /** How the chip reads the value, such as "is" for an exact match. Defaults to "contains". */
       verb?: string;
+    }
+  | {
+      key: string;
+      label: string;
+      type: "key-value";
+      keyPlaceholder?: string;
+      valuePlaceholder?: string;
+      /** The most pairs a person can add. */
+      max?: number;
+      /** How the chip reads the pairs. Defaults to "has". */
+      verb?: string;
     };
 export type FilterBarFilter = {
   field: string;
   operator?: "before" | "after";
-  /** ISO dates for date fields: one for date, [from, to] for date-range. */
+  /** ISO dates for date fields: one for date, [from, to] for date-range. Key-value fields alternate key and value: [key, value, key, value]. */
   values: string[];
 };
 export type FilterBarProps = {
@@ -99,6 +110,14 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
   }
   if (field.type === "text")
     return { verb: field.verb ?? "contains", value: filter.values[0] ?? "anything" };
+  if (field.type === "key-value") {
+    const pairs = toPairs(filter.values).map((pair) => `${pair.key}=${pair.value}`);
+    let value = "anything";
+    if (pairs.length === 1) [value] = pairs;
+    else if (pairs.length === 2) value = `${pairs[0]} and ${pairs[1]}`;
+    else if (pairs.length > 2) value = `${pairs[0]} and ${pairs.length - 1} more`;
+    return { verb: field.verb ?? "has", value };
+  }
   const labels = filter.values.map(
     (value) => field.options.find((option) => option.value === value)?.label ?? value
   );
@@ -107,6 +126,109 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
   else if (labels.length === 2) value = `${labels[0]} or ${labels[1]}`;
   else if (labels.length > 2) value = `${labels[0]} or ${labels.length - 1} more`;
   return { verb: "is", value };
+};
+
+type Pair = { id: number; key: string; value: string };
+const toPairs = (values: readonly string[]) =>
+  Array.from({ length: Math.floor(values.length / 2) }, (_, index) => ({
+    id: index,
+    key: values[index * 2],
+    value: values[index * 2 + 1]
+  }));
+
+const KeyValuePairs = ({
+  field,
+  values,
+  onChange,
+  onDone
+}: {
+  field: Extract<FilterBarField, { type: "key-value" }>;
+  values: readonly string[];
+  onChange: (values: string[]) => void;
+  onDone: () => void;
+}) => {
+  const nextId = React.useRef(values.length);
+  const fromValues = (source: readonly string[]) => {
+    const applied = toPairs(source).map((pair) => ({ ...pair, id: nextId.current++ }));
+    return applied.length ? applied : [{ id: nextId.current++, key: "", value: "" }];
+  };
+  const [pairs, setPairs] = React.useState<Pair[]>(() => fromValues(values));
+  const signature = values.join("\u0000");
+  const [synced, setSynced] = React.useState(signature);
+  if (signature !== synced) {
+    setSynced(signature);
+    setPairs(fromValues(values));
+  }
+  const focusId = React.useRef<number | null>(null);
+  const change = (next: Pair[]) => {
+    const emitted = next
+      .filter((pair) => pair.key.trim() && pair.value.trim())
+      .flatMap((pair) => [pair.key.trim(), pair.value.trim()]);
+    setPairs(next);
+    setSynced(emitted.join("\u0000"));
+    onChange(emitted);
+  };
+  const edit = (id: number, patch: Partial<Pair>) =>
+    change(pairs.map((pair) => (pair.id === id ? { ...pair, ...patch } : pair)));
+  const full = field.max !== undefined && pairs.length >= field.max;
+
+  return (
+    <div className={styles.pairs}>
+      {pairs.map((pair, index) => {
+        const enter = (event: React.KeyboardEvent) => {
+          if (event.key === "Enter" && !event.nativeEvent.isComposing) onDone();
+        };
+        return (
+          <div key={pair.id} className={styles.pair}>
+            <Input
+              ref={(node) => {
+                if (node && focusId.current === pair.id) {
+                  focusId.current = null;
+                  node.focus();
+                }
+              }}
+              aria-label={`${field.label} key ${index + 1}`}
+              placeholder={field.keyPlaceholder ?? "Key"}
+              value={pair.key}
+              onChange={(event) => edit(pair.id, { key: event.target.value })}
+              onKeyDown={enter}
+            />
+            <Input
+              aria-label={`${field.label} value ${index + 1}`}
+              placeholder={field.valuePlaceholder ?? "Value"}
+              value={pair.value}
+              onChange={(event) => edit(pair.id, { value: event.target.value })}
+              onKeyDown={enter}
+            />
+            <Button
+              variant="ghost"
+              icon="x"
+              iconOnly
+              disabled={pairs.length === 1 && !pair.key && !pair.value}
+              onClick={() => {
+                const rest = pairs.filter((entry) => entry.id !== pair.id);
+                const next = rest.length ? rest : [{ id: nextId.current++, key: "", value: "" }];
+                focusId.current = (next[index] ?? next[index - 1]).id;
+                change(next);
+              }}
+            >{`Remove pair ${index + 1}`}</Button>
+          </div>
+        );
+      })}
+      <Button
+        variant="ghost"
+        icon="plus"
+        disabled={full}
+        onClick={() => {
+          const id = nextId.current++;
+          focusId.current = id;
+          setPairs([...pairs, { id, key: "", value: "" }]);
+        }}
+      >
+        Add pair
+      </Button>
+    </div>
+  );
 };
 
 type Draft = { filter: FilterBarFilter; index: number };
@@ -350,7 +472,13 @@ export const FilterBar = ({
                     <PopoverTrigger asChild>{trigger}</PopoverTrigger>
                     <PopoverContent
                       align="start"
-                      data-width={field.type === "date" ? "content" : undefined}
+                      data-width={
+                        field.type === "date"
+                          ? "content"
+                          : field.type === "key-value"
+                            ? "sm"
+                            : undefined
+                      }
                       aria-label={`${field.label} filter`}
                     >
                       {field.type === "date" && (
@@ -392,6 +520,14 @@ export const FilterBar = ({
                           onKeyDown={(event) => {
                             if (event.key === "Enter") openChange(false);
                           }}
+                        />
+                      )}
+                      {field.type === "key-value" && (
+                        <KeyValuePairs
+                          field={field}
+                          values={filter.values}
+                          onChange={(values) => update(field.key, { values })}
+                          onDone={() => openChange(false)}
                         />
                       )}
                     </PopoverContent>
