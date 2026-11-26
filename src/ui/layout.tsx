@@ -272,6 +272,8 @@ export function DetailLayout({
   aside,
   asideLabel,
   asideWidth = "default",
+  secondary,
+  secondaryLabel = "More details",
   children,
   className,
   ref,
@@ -279,14 +281,19 @@ export function DetailLayout({
 }: React.ComponentPropsWithoutRef<"div"> & {
   aside: React.ReactNode;
   asideLabel: string;
+  /** Bounded key/value summaries (config, flags, IDs, connection, filters) that join the aside in the right column on wide containers and follow the main content on narrow ones. Tables, lists and anything unbounded or actionable stay in children. */
+  secondary?: React.ReactNode;
+  /** Accessible name of the secondary landmark. */
+  secondaryLabel?: string;
   /** "narrow" sets the sidecar to size-pane-aside (320px) instead of size-sidecar (384px), for a page capped narrower than the content measure. A full UUID wraps onto two lines at that width. */
   asideWidth?: "default" | "narrow";
   ref?: React.Ref<HTMLDivElement>;
 }) {
-  const asideRef = React.useRef<HTMLElement>(null);
+  const stickyRef = React.useRef<HTMLElement>(null);
   const [fits, setFits] = React.useState(false);
+  const hasSecondary = secondary != null && secondary !== false;
   React.useLayoutEffect(() => {
-    const node = asideRef.current;
+    const node = stickyRef.current;
     if (!node) return undefined;
     const scroller = scrollParent(node);
     const measure = () => {
@@ -308,7 +315,18 @@ export function DetailLayout({
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, []);
+  }, [hasSecondary]);
+  const asideNode = (
+    <aside
+      ref={hasSecondary ? undefined : stickyRef}
+      data-slot="detail-layout-aside"
+      data-sticky={(!hasSecondary && fits) || undefined}
+      aria-label={asideLabel}
+      className={detailStyles.aside}
+    >
+      {aside}
+    </aside>
+  );
   return (
     <div
       ref={ref}
@@ -318,15 +336,25 @@ export function DetailLayout({
       {...props}
     >
       <div className={detailStyles.columns}>
-        <aside
-          ref={asideRef}
-          data-slot="detail-layout-aside"
-          data-sticky={fits || undefined}
-          aria-label={asideLabel}
-          className={detailStyles.aside}
-        >
-          {aside}
-        </aside>
+        {hasSecondary ? (
+          <div
+            ref={stickyRef as React.Ref<HTMLDivElement>}
+            data-slot="detail-layout-rail"
+            data-sticky={fits || undefined}
+            className={detailStyles.rail}
+          >
+            {asideNode}
+            <aside
+              data-slot="detail-layout-secondary"
+              aria-label={secondaryLabel}
+              className={detailStyles.secondary}
+            >
+              {secondary}
+            </aside>
+          </div>
+        ) : (
+          asideNode
+        )}
         <div data-slot="detail-layout-main" className={detailStyles.main}>
           {children}
         </div>
