@@ -784,6 +784,10 @@
       {
         "title": "Wide and narrow containers",
         "module": "detail-layout/default"
+      },
+      {
+        "title": "Secondary summaries",
+        "module": "detail-layout/secondary"
       }
     ]
   },
