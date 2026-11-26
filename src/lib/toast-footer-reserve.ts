@@ -33,7 +33,10 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
       const { top, bottom } = node.getBoundingClientRect();
       toasts.forEach((toast) => observer.observe(toast));
       const covered =
-        toasts.length > 0 && !node.closest("[inert]") && window.innerHeight - bottom < stack;
+        toasts.length > 0 &&
+        node.getClientRects().length > 0 &&
+        !node.closest("[inert]") &&
+        window.innerHeight - bottom < stack;
       entries.set(key, covered ? Math.max(0, window.innerHeight - top) : 0);
       publish(layer);
     };
