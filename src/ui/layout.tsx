@@ -281,7 +281,7 @@ export function DetailLayout({
 }: React.ComponentPropsWithoutRef<"div"> & {
   aside: React.ReactNode;
   asideLabel: string;
-  /** Bounded key/value summaries (config, flags, IDs, connection, filters) that join the aside in the right column on wide containers and follow the main content on narrow ones. Tables, lists and anything unbounded or actionable stay in children. */
+  /** Bounded key/value summaries (config, flags, IDs, connection, filters) that join the aside in the right column on wide containers and follow the main content on narrow ones. Tables, lists and anything unbounded or actionable stay in children. Adding or removing it remounts the aside, so while summaries load, pass a placeholder rather than nothing. */
   secondary?: React.ReactNode;
   /** Accessible name of the secondary landmark. */
   secondaryLabel?: string;
