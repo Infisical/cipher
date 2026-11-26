@@ -1764,10 +1764,10 @@ tbody > .nativeTableRow[data-loading] {
       var(--cipher-size-control-border)
   );
 }
-.tableScroll td[data-wrap][data-valign="top"]:not([data-secondary]) {
+.tableScroll:not([data-virtual]) td[data-wrap][data-valign="top"]:not([data-secondary]) {
   padding-top: calc((var(--cipher-table-row-height, var(--cipher-size-row)) - 1lh) / 2);
 }
-.tableScroll td[data-wrap][data-valign="top"]:not([data-secondary]) > .tableBand {
+.tableScroll:not([data-virtual]) td[data-wrap][data-valign="top"]:not([data-secondary]) > .tableBand {
   min-height: 1lh;
 }
 .tableSelectionCell > .tableBand {
