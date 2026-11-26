@@ -477,7 +477,9 @@ export function DataTable<Row>({
     row.focus({ preventScroll: true });
   }, [focusRow, start]);
   const toggleCounts = (toggle: DataTableToggle<Row>) => {
-    const enabled = rows.filter((row) => !toggle.absent?.(row) && !toggle.disabledReason?.(row));
+    const enabled = rows.filter(
+      (row) => !getRowRestricted?.(row) && !toggle.absent?.(row) && !toggle.disabledReason?.(row)
+    );
     return {
       enabled,
       on: enabled.filter((row) => toggle.checked(row) === true).length,
@@ -788,6 +790,7 @@ export function DataTable<Row>({
           }}
           data-muted=""
           data-restricted=""
+          data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
           style={{ height: effectiveRowHeight }}
         >
           {selectable && <TableCell selection pin={leading ? "start" : undefined} />}
