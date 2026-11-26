@@ -424,21 +424,22 @@ function TooltipText({
   const descriptionId = React.useId();
   const trigger = React.useRef<HTMLSpanElement | null>(null);
   const child = asChild && React.isValidElement(props.children) ? props.children : undefined;
-  const own = (child?.props ?? props) as {
+  const own = { ...props, ...(child?.props as object | undefined) } as {
     role?: unknown;
     onClick?: unknown;
     onKeyDown?: unknown;
     disabled?: unknown;
   };
   const independent = typeof own.role === "string" || Boolean(own.onClick || own.onKeyDown);
+  const disabled = Boolean(own.disabled);
   const passThrough = Boolean(describeRow) && !independent;
-  const childDisabled = Boolean(own.disabled);
+  const describes = Boolean(describeRow) && (!independent || disabled);
   React.useLayoutEffect(() => {
     const node = trigger.current;
-    if (!describeRow || independent) return undefined;
+    if (!describeRow || !describes) return undefined;
     if (node?.matches(interactiveControl) && !node.matches(":disabled")) return undefined;
     return describeRow(descriptionId);
-  }, [describeRow, descriptionId, independent, childDisabled, child?.type]);
+  }, [describeRow, descriptionId, describes, disabled, child?.type]);
   return (
     <>
       <Tooltip content={content} side={side} align={align}>
@@ -455,7 +456,7 @@ function TooltipText({
           {...props}
         />
       </Tooltip>
-      {passThrough && (
+      {describes && (
         <span id={descriptionId} hidden>
           {content}
         </span>
