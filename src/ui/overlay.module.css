@@ -291,6 +291,7 @@
 }
 .headerActions > [data-cipher-button] > [data-press] {
   min-width: 0;
+  overflow: hidden;
 }
 .headerActions > [data-cipher-button] > [data-press] [data-slot="button-text"] {
   display: block;
@@ -305,7 +306,7 @@
   }
   .headerTabsRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not(
+    [data-cipher-button]:has([data-button-icon]):not(
       [data-layout="trigger"],
       [data-disabled-reason]
     ) {
@@ -315,7 +316,7 @@
   }
   .headerTabsRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not(
+    [data-cipher-button]:has([data-button-icon]):not(
       [data-layout="trigger"],
       [data-disabled-reason]
     )
@@ -335,7 +336,7 @@
   }
   .headerRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not(
+    [data-cipher-button]:has([data-button-icon]):not(
       [data-layout="trigger"],
       [data-disabled-reason]
     ) {
@@ -345,7 +346,7 @@
   }
   .headerRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not(
+    [data-cipher-button]:has([data-button-icon]):not(
       [data-layout="trigger"],
       [data-disabled-reason]
     )

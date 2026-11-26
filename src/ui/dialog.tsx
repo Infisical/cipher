@@ -5,6 +5,7 @@ import { usePortalContainer } from "../scope";
 import { Button } from "./button";
 import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
+import { TooltipProvider } from "./tooltip";
 
 import { ActionLabelCollapseContext } from "../lib/action-label-collapse";
 import { FrameScope } from "../lib/frame-context";
@@ -172,7 +173,8 @@ function DialogHeader({
   /**
    * Header actions beside the title. In a narrow header a Button with a leading icon drops to
    * icon-only, its label becoming the tooltip and accessible name; one without an icon keeps its
-   * label and truncates last.
+   * label and truncates last. Pass Buttons or a ButtonGroup; only Buttons passed directly
+   * shrink.
    */
   actions?: React.ReactNode;
 }) {
@@ -189,7 +191,9 @@ function DialogHeader({
             {children}
           </div>
           <div data-slot="dialog-header-actions" className={overlay.headerActions}>
-            <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
+            <TooltipProvider>
+              <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
+            </TooltipProvider>
           </div>
         </div>
       ) : (

@@ -322,7 +322,10 @@ function Button({
   if (reason) return <Tooltip content={reason}>{button}</Tooltip>;
   if (collapsible)
     return (
+      // An explicit delay keeps this off a surrounding TooltipScope, whose shared host would open it
+      // before the collapse gate runs.
       <Tooltip
+        delayDuration={200}
         content={
           asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
             ? children.props.children

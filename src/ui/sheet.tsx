@@ -8,6 +8,7 @@ import { Button } from "./button";
 import { Icon } from "./icon";
 import { Panes, type PanesState } from "./layout";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
+import { TooltipProvider } from "./tooltip";
 
 import { ActionLabelCollapseContext } from "../lib/action-label-collapse";
 import { FrameScope } from "../lib/frame-context";
@@ -875,14 +876,17 @@ function SheetHeader({
    * Header actions, such as an "Add method" Button. They sit at the end of the tab row when the
    * header has tabs, outside the scrolling tab list, and beside the title otherwise. In a narrow
    * header a Button with a leading icon drops to icon-only, its label becoming the tooltip and
-   * accessible name; one without an icon keeps its label and truncates last.
+   * accessible name; one without an icon keeps its label and truncates last. Pass Buttons or a
+   * ButtonGroup; only Buttons passed directly shrink.
    */
   actions?: React.ReactNode;
 }) {
   const titled = React.Children.toArray(children).length > 0;
   const actionsSlot = Boolean(actions) && (
     <div data-slot="sheet-header-actions" className={overlay.headerActions}>
-      <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
+      <TooltipProvider>
+        <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
+      </TooltipProvider>
     </div>
   );
   return (
