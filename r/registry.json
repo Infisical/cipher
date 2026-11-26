@@ -147,6 +147,11 @@
           "target": "src/components/cipher/lib/radio-value-context.ts"
         },
         {
+          "path": "src/components/cipher/lib/row-description.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/row-description.ts"
+        },
+        {
           "path": "src/components/cipher/lib/scroll-edges.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/scroll-edges.ts"
@@ -180,6 +185,11 @@
           "path": "src/components/cipher/lib/themes.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/themes.ts"
+        },
+        {
+          "path": "src/components/cipher/lib/toast-footer-reserve.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/toast-footer-reserve.ts"
         },
         {
           "path": "src/components/cipher/lib/use-controllable-state.ts",
@@ -1842,6 +1852,11 @@
           "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/frame.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/helpers.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -1963,6 +1978,11 @@
           "path": "src/components/cipher/ui/multi-step.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/ui/multi-step.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/helpers.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/helpers.module.css"
         },
         {
           "path": "src/components/cipher/ui/multi-step.module.css",

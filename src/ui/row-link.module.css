@@ -145,3 +145,7 @@
   z-index: 2;
   pointer-events: none;
 }
+.rowLink:not(.stretched, .cellLink):focus-visible {
+  outline: var(--cipher-size-focus-ring) solid var(--cipher-ink);
+  outline-offset: var(--cipher-size-focus-ring);
+}

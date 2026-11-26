@@ -4,6 +4,7 @@ import { Slot, Tooltip as TooltipPrimitive } from "radix-ui";
 
 import { useCollisionBoundary, usePortalContainer } from "../scope";
 
+import { interactiveControl, RowDescriptionContext } from "../lib/row-description";
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
 
@@ -401,6 +402,16 @@ function TooltipContent({
 }
 TooltipContent.displayName = "TooltipContent";
 
+const interactiveRoles = new Set([
+  "button",
+  "checkbox",
+  "combobox",
+  "link",
+  "menuitem",
+  "switch",
+  "tab"
+]);
+
 function TooltipText({
   content,
   side,
@@ -414,21 +425,56 @@ function TooltipText({
   content: React.ReactNode;
   side?: TooltipSide;
   align?: TooltipAlign;
-  /** Make the child element (StatusText, MiddleTruncate) the focusable text instead of a span. */
+  /** Make the child element (StatusText, MiddleTruncate) the focusable text instead of a span. In an activatable table row non-interactive text is no tab stop of its own: clicks and Enter reach the row, and the row's description carries the tooltip text. */
   asChild?: boolean;
   ref?: React.Ref<HTMLSpanElement>;
 }) {
   const Comp = asChild ? Slot.Root : "span";
+  const describeRow = React.useContext(RowDescriptionContext);
+  const descriptionId = React.useId();
+  const trigger = React.useRef<HTMLSpanElement | null>(null);
+  const child = asChild && React.isValidElement(props.children) ? props.children : undefined;
+  const own = { ...props, ...(child?.props as object | undefined) } as {
+    role?: unknown;
+    onClick?: unknown;
+    onKeyDown?: unknown;
+    disabled?: unknown;
+  };
+  const independent =
+    (typeof own.role === "string" && interactiveRoles.has(own.role)) ||
+    Boolean(own.onClick || own.onKeyDown);
+  const disabled = Boolean(own.disabled);
+  const passThrough = Boolean(describeRow) && !independent;
+  React.useLayoutEffect(() => {
+    const node = trigger.current;
+    if (!describeRow) return undefined;
+    const nodeDisabled = disabled || Boolean(node?.matches(":disabled"));
+    if (independent && !nodeDisabled) return undefined;
+    if (!nodeDisabled && node?.matches(interactiveControl)) return undefined;
+    return describeRow(descriptionId);
+  }, [describeRow, descriptionId, independent, disabled, child?.type]);
   return (
-    <Tooltip content={content} side={side} align={align}>
-      <Comp
-        ref={ref}
-        data-slot="tooltip-text"
-        tabIndex={0}
-        className={cn(controls.focusOutline, className)}
-        {...props}
-      />
-    </Tooltip>
+    <>
+      <Tooltip content={content} side={side} align={align}>
+        <Comp
+          ref={(node: HTMLSpanElement | null) => {
+            trigger.current = node;
+            if (typeof ref === "function") return ref(node);
+            if (ref) ref.current = node;
+          }}
+          data-slot="tooltip-text"
+          data-tooltip-text={independent ? undefined : ""}
+          tabIndex={passThrough ? undefined : 0}
+          className={cn(controls.focusOutline, className)}
+          {...props}
+        />
+      </Tooltip>
+      {describeRow && (
+        <span id={descriptionId} hidden>
+          {content}
+        </span>
+      )}
+    </>
   );
 }
 TooltipText.displayName = "TooltipText";

@@ -102,6 +102,10 @@
         "module": "alert/variants"
       },
       {
+        "title": "Badges after the title, and a docs link without a title",
+        "module": "alert/badges"
+      },
+      {
         "title": "Dismissible banner",
         "module": "alert/banner"
       }
@@ -616,6 +620,10 @@
       {
         "title": "Loading and no results",
         "module": "command-menu/states"
+      },
+      {
+        "title": "Stable height while results change",
+        "module": "command-menu/stable-height"
       }
     ]
   },
@@ -1402,6 +1410,10 @@
         "module": "list/inset"
       },
       {
+        "title": "Notification rows with a media tile and a menu",
+        "module": "list/notifications"
+      },
+      {
         "title": "DataList default and compact density",
         "module": "list/density"
       },
@@ -1424,6 +1436,10 @@
       {
         "title": "Count beside the title",
         "module": "list/title-count"
+      },
+      {
+        "title": "Badges and a docs link after the header title",
+        "module": "list/badges"
       },
       {
         "title": "Long keys and paths",
@@ -1548,6 +1564,10 @@
       {
         "title": "Delete at the start of the footer",
         "module": "multi-step/footer-start"
+      },
+      {
+        "title": "Badges after a step heading",
+        "module": "multi-step/badges"
       }
     ]
   },
@@ -1698,7 +1718,7 @@
   {
     "id": "row-link",
     "title": "Row link",
-    "summary": "A typed route link whose target stretches over its table row or Card, with a disabled fallback.",
+    "summary": "A typed route link whose target stretches over its table row or Card, with a disabled fallback. Outside a row or Card it is an ordinary link.",
     "group": "Navigation",
     "examples": [
       {
@@ -1708,6 +1728,10 @@
       {
         "title": "Cell links in a pricing matrix",
         "module": "row-link/cell-links"
+      },
+      {
+        "title": "Outside a row, in a Sheet",
+        "module": "row-link/no-host"
       }
     ]
   },
@@ -2162,6 +2186,10 @@
         "module": "table/row-actions"
       },
       {
+        "title": "Row action loading",
+        "module": "table/row-action-loading"
+      },
+      {
         "title": "Shared tooltips",
         "module": "table/shared-tooltips"
       },
@@ -2340,6 +2368,10 @@
       {
         "title": "Toast above an open sheet",
         "module": "toast/over-sheet"
+      },
+      {
+        "title": "Toast above an open dialog",
+        "module": "toast/over-dialog"
       }
     ]
   },

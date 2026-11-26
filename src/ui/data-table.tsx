@@ -94,6 +94,8 @@ export interface DataTableRowAction<Row> {
   icon: IconSource;
   onSelect: (row: Row) => void;
   disabledReason?: (row: Row) => string | undefined;
+  /** True while the action runs on this row: the button shows its spinner and is blocked, at the same size. */
+  loading?: (row: Row) => boolean;
 }
 export interface DataTableRowActions<Row> {
   /** At most three icon actions, the same set on every row; a blocked one stays visible and disabled with its reason. */
@@ -757,6 +759,7 @@ export function DataTable<Row>({
       label: typeof action.label === "string" ? action.label : action.label(row),
       icon: action.icon,
       disabledReason: action.disabledReason?.(row),
+      loading: action.loading?.(row),
       onSelect: () => action.onSelect(row)
     })) as UpToThree<RowAction> | undefined;
   const renderRow = (

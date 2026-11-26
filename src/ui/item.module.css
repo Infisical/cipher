@@ -23,7 +23,8 @@
   justify-content: center;
 }
 .layout[data-size="sm"] > .lead {
-  align-self: center;
+  --cipher-lead-row: var(--cipher-type-row-title-line-height);
+  align-self: flex-start;
 }
 .layout > .lead:has(> svg:first-child),
 .layout[data-has-actions] > .lead:has(> svg:first-child),

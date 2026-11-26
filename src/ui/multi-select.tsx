@@ -470,7 +470,7 @@ export function MultiSelect({
             {loading && <Spinner />}
           </div>
         )}
-        {multiple && quickActions ? (
+        {multiple && quickActions && (onSearch || options.length > 0 || selected.length > 0) ? (
           <div className={styles.quickBar} data-slot="multi-select-actions">
             <span role="status" aria-live="polite" className={styles.quickStatus}>
               {onSearch
@@ -478,7 +478,7 @@ export function MultiSelect({
                 : `${chosen.length} of ${options.length} selected`}
             </span>
             {[
-              { text: "Select all", disabled: allSelected, run: all },
+              { text: "Select all", disabled: allSelected || !eligible.length, run: all },
               { text: "Deselect all", disabled: noneSelected, run: none }
             ].map((action) => (
               <Button
