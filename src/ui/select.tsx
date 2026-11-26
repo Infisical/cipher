@@ -9,7 +9,7 @@ import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import type { FieldWidth } from "./input";
 import { useMenuInset } from "./menu-inset";
-import { Tooltip } from "./tooltip";
+import { Tooltip, TooltipProvider } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
@@ -31,8 +31,11 @@ function titleIfTruncated(element: HTMLElement | null | undefined) {
 const SelectNameContext = React.createContext<{
   "aria-label"?: string;
   "aria-labelledby"?: string;
-  disabledReason?: string;
 }>({});
+
+const SelectRootContext = React.createContext<{ open: boolean; disabledReason?: string }>({
+  open: false
+});
 
 export type SelectOption = {
   value: string;
@@ -57,6 +60,9 @@ function Select({
   descriptionLayout = "inline",
   disabledReason,
   disabled,
+  open: openProp,
+  defaultOpen,
+  onOpenChange,
   onChange,
   onValueChange,
   children,
@@ -90,68 +96,77 @@ function Select({
   "aria-labelledby"?: string;
 }) {
   const groups = [...new Set(options?.map((option) => option.group ?? ""))];
+  const [localOpen, setLocalOpen] = React.useState(defaultOpen ?? false);
+  const reason = disabledReason || undefined;
+  const open = !reason && (openProp ?? localOpen);
   return (
     <SelectPrimitive.Root
       data-slot="select"
+      open={open}
+      onOpenChange={(next) => {
+        setLocalOpen(next);
+        onOpenChange?.(next);
+      }}
       onValueChange={(value) => {
+        if (reason) return;
         onValueChange?.(value);
         onChange?.(value);
       }}
-      disabled={disabledReason ? undefined : disabled}
+      disabled={reason ? undefined : disabled}
       {...props}
     >
-      <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
-        {options ? (
-          <>
-            <SelectTrigger
-              id={id}
-              size={size ?? "default"}
-              icon={icon}
-              width={width}
-              disabledReason={disabledReason}
-              aria-label={ariaLabel ?? label}
-              aria-labelledby={labelledBy}
-              aria-describedby={describedBy}
-              aria-invalid={invalid || undefined}
-            >
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-            <SelectContent
-              align={align}
-              style={
-                menuWidth
-                  ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
-                  : undefined
-              }
-            >
-              {groups.map((group) => (
-                <SelectGroup key={group}>
-                  {group && <SelectLabel>{group}</SelectLabel>}
-                  {options
-                    .filter((option) => (option.group ?? "") === group)
-                    .map((option) => (
-                      <SelectItem
-                        key={option.value}
-                        value={option.value}
-                        disabled={option.disabled}
-                        description={option.description}
-                        badge={option.badge}
-                      >
-                        <span data-slot="select-option-label">{option.label}</span>
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              ))}
-            </SelectContent>
-          </>
-        ) : (
-          <SelectNameContext
-            value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy, disabledReason }}
-          >
-            {children}
-          </SelectNameContext>
-        )}
-      </SelectSettingsContext>
+      <SelectRootContext value={{ open, disabledReason: reason }}>
+        <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
+          {options ? (
+            <>
+              <SelectTrigger
+                id={id}
+                size={size ?? "default"}
+                icon={icon}
+                width={width}
+                disabledReason={disabledReason}
+                aria-label={ariaLabel ?? label}
+                aria-labelledby={labelledBy}
+                aria-describedby={describedBy}
+                aria-invalid={invalid || undefined}
+              >
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+              <SelectContent
+                align={align}
+                style={
+                  menuWidth
+                    ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
+                    : undefined
+                }
+              >
+                {groups.map((group) => (
+                  <SelectGroup key={group}>
+                    {group && <SelectLabel>{group}</SelectLabel>}
+                    {options
+                      .filter((option) => (option.group ?? "") === group)
+                      .map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          disabled={option.disabled}
+                          description={option.description}
+                          badge={option.badge}
+                        >
+                          <span data-slot="select-option-label">{option.label}</span>
+                        </SelectItem>
+                      ))}
+                  </SelectGroup>
+                ))}
+              </SelectContent>
+            </>
+          ) : (
+            <SelectNameContext value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy }}>
+              {children}
+            </SelectNameContext>
+          )}
+        </SelectSettingsContext>
+      </SelectRootContext>
     </SelectPrimitive.Root>
   );
 }
@@ -200,11 +215,13 @@ function SelectTrigger({
     "aria-labelledby": props["aria-labelledby"] ?? name["aria-labelledby"]
   });
   const reasonId = React.useId();
-  const reason = (disabledReason ?? name.disabledReason) || undefined;
+  const root = React.useContext(SelectRootContext);
+  const reason = (disabledReason ?? root.disabledReason) || undefined;
   const trigger = (
     <SelectPrimitive.Trigger
       ref={ref}
       data-slot="select-trigger"
+      data-state={root.open ? "open" : "closed"}
       data-size={size}
       data-width={width}
       className={cn(
@@ -263,13 +280,19 @@ function SelectTrigger({
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
-  if (!reason) return trigger;
   return (
     <>
-      <Tooltip content={reason}>{trigger}</Tooltip>
-      <span id={reasonId} className="sr-only">
-        {reason}
-      </span>
+      {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same trigger and its focus. */}
+      <TooltipProvider>
+        <Tooltip content={reason || " "} open={reason ? undefined : false} defaultOpen={false}>
+          {trigger}
+        </Tooltip>
+      </TooltipProvider>
+      {reason && (
+        <span id={reasonId} className="sr-only">
+          {reason}
+        </span>
+      )}
     </>
   );
 }
