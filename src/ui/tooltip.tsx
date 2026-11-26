@@ -437,7 +437,8 @@ function TooltipText({
   React.useLayoutEffect(() => {
     const node = trigger.current;
     if (!describeRow || !describes) return undefined;
-    if (node?.matches(interactiveControl) && !node.matches(":disabled")) return undefined;
+    if (!disabled && node?.matches(interactiveControl) && !node.matches(":disabled"))
+      return undefined;
     return describeRow(descriptionId);
   }, [describeRow, descriptionId, describes, disabled, child?.type]);
   return (
