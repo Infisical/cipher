@@ -1092,6 +1092,10 @@
       {
         "title": "Action blocked with a reason",
         "module": "floating-action-bar/disabled-reason"
+      },
+      {
+        "title": "Select all with a cap and loading",
+        "module": "floating-action-bar/select-all"
       }
     ]
   },
