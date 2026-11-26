@@ -303,14 +303,16 @@
   .headerTabsRow > .headerActions {
     --cipher-action-label-collapsed: 1;
   }
-  .headerTabsRow > .headerActions > [data-cipher-button]:has([data-button-icon]) {
+  .headerTabsRow
+    > .headerActions
+    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"]) {
     width: var(--cipher-action-height);
     min-width: var(--cipher-action-height);
     padding-inline: 0;
   }
   .headerTabsRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon])
+    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"])
     [data-slot="button-text"] {
     position: absolute;
     width: 1px;
@@ -325,14 +327,16 @@
   .headerRow > .headerActions {
     --cipher-action-label-collapsed: 1;
   }
-  .headerRow > .headerActions > [data-cipher-button]:has([data-button-icon]) {
+  .headerRow
+    > .headerActions
+    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"]) {
     width: var(--cipher-action-height);
     min-width: var(--cipher-action-height);
     padding-inline: 0;
   }
   .headerRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon])
+    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"])
     [data-slot="button-text"] {
     position: absolute;
     width: 1px;
