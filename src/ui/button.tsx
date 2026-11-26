@@ -275,7 +275,7 @@ function Button({
         badge && geometry.badged,
         applied && geometry.applied,
         trigger && geometry.triggerLayout,
-        loadingProp !== undefined && !iconOnly && loadingLabel === undefined && styles.pendable,
+        loadingProp !== undefined && loadingLabel === undefined && styles.pendable,
         loading && loadingLabel === undefined && styles.pending,
         className
       )}
