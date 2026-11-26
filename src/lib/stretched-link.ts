@@ -12,8 +12,11 @@ export function useStretchedLinkHost() {
   return usePresenceCount();
 }
 
+/** Reports the link to its host and returns whether one exists, since a link with no host has nothing to cover. */
 export function useStretchedLink(active: boolean) {
-  useReportPresence(React.useContext(StretchedLinkContext), active);
+  const report = React.useContext(StretchedLinkContext);
+  useReportPresence(report, active);
+  return report !== null;
 }
 
 const CellLinkContext = React.createContext<PresenceReport | null>(null);

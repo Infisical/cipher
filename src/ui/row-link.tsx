@@ -18,7 +18,7 @@ function RowLink({
   chevron?: boolean;
 }) {
   const off = disabled ?? (props.link as { disabled?: boolean }).disabled;
-  useStretchedLink(!off);
+  const stretched = useStretchedLink(!off);
   const content = chevron ? (
     <>
       <span className={styles.label}>{children}</span>
@@ -48,7 +48,7 @@ function RowLink({
       data-slot="row-link"
       data-row-link=""
       data-chevron={chevron || undefined}
-      className={cn(styles.rowLink, styles.stretched, className)}
+      className={cn(styles.rowLink, stretched && styles.stretched, className)}
       {...props}
     >
       {content}
