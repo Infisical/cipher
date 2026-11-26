@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { useListFiltered } from "../lib/list-query";
+import { flattenFragments } from "../lib/overlay-sections";
 import { cn, truncateTitle } from "../lib/utils";
 import { type EmptyGhost, EmptyGhostScope } from "./empty";
 
@@ -291,7 +292,7 @@ export function DetailLayout({
 }) {
   const stickyRef = React.useRef<HTMLElement>(null);
   const [fits, setFits] = React.useState(false);
-  const hasSecondary = secondary != null && secondary !== false;
+  const hasSecondary = flattenFragments(secondary).some((child) => child !== "");
   React.useLayoutEffect(() => {
     const node = stickyRef.current;
     if (!node) return undefined;
