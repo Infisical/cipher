@@ -202,7 +202,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   resize: vertical;
 }
 /* field-sizing: content ignores the rows attribute, so rows becomes the starting height: that many lines plus the field's padding and border, and content still grows it. */
-.textarea::placeholder {
+.textarea:not([data-multiline-placeholder])::placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
