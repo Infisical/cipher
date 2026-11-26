@@ -63,6 +63,37 @@
 .palette [cmdk-item] {
   min-height: var(--cipher-size-control-md);
 }
+.palette[data-stable-height] {
+  height: min(
+    var(--cipher-size-palette-height),
+    calc(100dvh - var(--cipher-palette-top) - var(--cipher-space-16))
+  );
+}
+.palette[data-stable-height] > [data-slot="overlay-scroll"] {
+  flex: 1 1 auto;
+  grid-template-rows: minmax(0, 1fr);
+}
+.palette[data-stable-height] [cmdk-root] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+.palette[data-stable-height] [data-slot="command-scroll"] {
+  flex: 1 1 auto;
+  max-height: none;
+}
+.palette[data-stable-height] [cmdk-root] > [data-slot="command-empty"] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.palette[data-stable-height]
+  [cmdk-root]:has(> [data-slot="command-empty"])
+  > [data-slot="command-scroll"] {
+  flex: 0 0 auto;
+}
 .close[data-slot] {
   position: absolute;
   top: calc(

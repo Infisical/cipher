@@ -2,12 +2,7 @@ import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle
-} from "./dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./dialog";
 import { Icon } from "./icon";
 
 import { ListHighlight } from "../lib/list-highlight";
@@ -38,6 +33,7 @@ function CommandDialog({
   children,
   className,
   showCloseButton = false,
+  stableHeight = false,
   onEscapeKeyDown,
   ...props
 }: React.ComponentProps<typeof Dialog> & {
@@ -45,6 +41,13 @@ function CommandDialog({
   description?: string;
   className?: string;
   showCloseButton?: boolean;
+  /**
+   * Holds the palette at size-palette-height while results change, so typing never makes it jump
+   * and the no results state centres in the same space. Use it for a palette a person reopens to
+   * scan results; a short list of fixed commands can fit its content. Render CommandEmpty beside
+   * CommandList, as CommandMenu does, so it can fill the body.
+   */
+  stableHeight?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
 }) {
   const opener = React.useRef<Element | null>(null);
@@ -55,6 +58,7 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogContent
         data-command-dialog=""
+        data-stable-height={stableHeight || undefined}
         className={cn(overlay.palette, className)}
         showCloseButton={showCloseButton}
         onEscapeKeyDown={onEscapeKeyDown}

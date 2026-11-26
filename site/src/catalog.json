@@ -616,6 +616,10 @@
       {
         "title": "Loading and no results",
         "module": "command-menu/states"
+      },
+      {
+        "title": "Stable height while results change",
+        "module": "command-menu/stable-height"
       }
     ]
   },
