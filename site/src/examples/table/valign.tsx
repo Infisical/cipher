@@ -45,7 +45,7 @@ const stacked: DataTableColumn<Rule>[] = [
     header: "Paths",
     mono: true,
     render: (row) => (
-      <div className="flex flex-col gap-1 py-2.5">
+      <div className="flex flex-col gap-1 pt-2.5 pb-2.25 leading-5">
         {row.paths.map((path) => (
           <span key={path}>{path}</span>
         ))}
