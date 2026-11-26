@@ -30,6 +30,41 @@
     "media title actions"
     "media description description";
 }
+.main:has(> .scope) {
+  grid-template-areas:
+    "scope ."
+    "title actions"
+    "description description";
+}
+.main:has(> .media):has(> .scope) {
+  grid-template-areas:
+    "media scope ."
+    "media title actions"
+    "media description description";
+}
+.scope {
+  grid-area: scope;
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  min-width: 0;
+  margin-bottom: var(--cipher-space-6);
+  color: var(--cipher-text2);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.scope > svg {
+  flex: none;
+}
+.scopeLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .media {
   grid-area: media;
   display: inline-flex;
@@ -163,6 +198,20 @@
   .main:has(> .media) {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
+      "media title"
+      "media description"
+      "media actions";
+  }
+  .main:has(> .scope) {
+    grid-template-areas:
+      "scope"
+      "title"
+      "description"
+      "actions";
+  }
+  .main:has(> .media):has(> .scope) {
+    grid-template-areas:
+      "media scope"
       "media title"
       "media description"
       "media actions";
