@@ -7,17 +7,20 @@
 :global([data-slot="page-header-badges"]) {
   --documentation-link-context: var(--cipher-size-icon-2xl);
   --documentation-link-context-pad-y: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
-  --documentation-link-context-pad-x: 0px;
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
 }
 :global([data-slot="page-header"][data-size="md"]) :global([data-slot="page-header-badges"]) {
   --documentation-link-context: var(--cipher-size-icon-lg);
   --documentation-link-context-pad-y: calc((var(--cipher-type-title-lg-line-height) - var(--cipher-size-icon-lg)) / 2);
-  --documentation-link-context-pad-x: 0px;
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
 }
 :global([data-slot="overlay-title-badges"]) {
   --documentation-link-context: var(--cipher-size-icon);
   --documentation-link-context-pad-y: calc((var(--cipher-type-title-line-height) - var(--cipher-size-icon)) / 2);
-  --documentation-link-context-pad-x: 0px;
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
+}
+:global([data-slot="overlay-title-badges"]) > .link {
+  max-width: none;
 }
 :global([data-slot="multi-step-badges"]) {
   --documentation-link-context: var(--cipher-size-icon);
@@ -64,7 +67,7 @@
 .link[data-size="lg"] {
   --documentation-link-size: var(--cipher-size-icon-2xl);
   --documentation-link-pad-y: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
-  --documentation-link-pad-x: 0px;
+  --documentation-link-pad-x: var(--cipher-size-focus-ring);
 }
 .link[data-size="title-lg"] {
   --documentation-link-size: var(--cipher-size-icon-title-lg);

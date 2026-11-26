@@ -223,7 +223,7 @@ function Item({
     <>
       {unread && <span className="sr-only">Unread</span>}
       {(media || icon) && (
-        <span className={itemStyles.lead}>
+        <span className={cn(itemStyles.lead, "cipher-lead-block")}>
           {media ?? <Media icon={icon} size={size === "sm" ? "sm" : "md"} />}
           {unread && <span className={itemStyles.unread} aria-hidden="true" />}
         </span>
@@ -269,7 +269,7 @@ function Item({
           )}
           {error && (
             <div className={itemStyles.error}>
-              <Icon name="alert" size={14} />
+              <Icon name="alert" size={14} lead />
               {error}
             </div>
           )}
@@ -317,14 +317,14 @@ function Item({
 Item.displayName = "Item";
 
 const itemMediaVariants = cva(
-  "flex shrink-0 items-center justify-center gap-2 group-data-[has-description]/item:translate-y-0.5 group-data-[has-description]/item:self-start [&_svg]:pointer-events-none",
+  "flex shrink-0 items-center justify-center gap-2 [--cipher-lead-line:var(--cipher-type-row-title-line-height)] [&_svg]:pointer-events-none",
   {
     variants: {
       variant: {
-        default: "bg-transparent",
-        icon: "[&_svg:not([class*='size-'])]:size-4",
+        default: "bg-transparent group-data-[has-description]/item:cipher-lead-line",
+        icon: "[&_svg:not([class*='size-'])]:size-4 group-data-[has-description]/item:cipher-lead-line",
         image:
-          "size-10 overflow-hidden rounded-sm group-data-[size=sm]/item:size-8 group-data-[size=xs]/item:size-6 [&_img]:size-full [&_img]:object-cover"
+          "group-data-[has-description]/item:self-start size-10 overflow-hidden rounded-sm group-data-[size=sm]/item:size-8 group-data-[size=xs]/item:size-6 [&_img]:size-full [&_img]:object-cover"
       }
     },
     defaultVariants: {
@@ -600,7 +600,7 @@ export function Tile({
               )}
             </span>
           )
-        : media && <span className={itemStyles.lead}>{media}</span>}
+        : media && <span className={cn(itemStyles.lead, "cipher-lead-block")}>{media}</span>}
       <span className={helperStyles.tileBody}>
         {title !== undefined ? (
           <>

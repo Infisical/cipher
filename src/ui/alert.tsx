@@ -52,7 +52,7 @@ function Alert({
       data-variant={variant ?? "default"}
       role={tone === "bad" ? "alert" : "status"}
       data-tone={tone}
-      className={cn(helperStyles.alert, className)}
+      className={cn(helperStyles.alert, "[&>svg]:cipher-lead-line", className)}
       {...props}
     >
       {composed ? (
@@ -175,7 +175,7 @@ export const Banner = ({
 }) => (
   <div data-slot="banner" role="status" className={cn(helperStyles.banner, className)}>
     <span className={helperStyles.bannerLead}>
-      <Icon icon={icon} />
+      <Icon icon={icon} lead />
       <span className={helperStyles.bannerText}>{children}</span>
     </span>
     {action}

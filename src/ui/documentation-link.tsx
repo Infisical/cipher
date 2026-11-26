@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { skipAutoFocus } from "../lib/initial-focus";
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
 import { Tooltip } from "./tooltip";
@@ -38,6 +39,7 @@ export function DocumentationLink({
         aria-label={`Documentation for ${subject} (opens in a new tab)`}
         data-slot="documentation-link"
         data-size={size}
+        {...skipAutoFocus}
         className={cn(controlStyles.focusOutlineInset, styles.link, className)}
       >
         <Icon name="book-open" />

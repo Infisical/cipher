@@ -11,6 +11,7 @@ import {
   useSonner
 } from "sonner";
 
+import { cn } from "../lib/utils";
 import { useScheme, useToastLayer } from "../scope";
 import { Icon } from "./icon";
 import { Spinner } from "./spinner";
@@ -173,7 +174,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           closeButtonAriaLabel: "Dismiss notification",
           classNames: {
             toast: styles.toast,
-            icon: styles.icon,
+            icon: cn(styles.icon, "cipher-lead-block"),
             content: styles.content,
             title: styles.title,
             description: styles.description,

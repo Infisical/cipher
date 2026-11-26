@@ -43,6 +43,8 @@
   height: var(--cipher-type-display-line-height);
 }
 .error {
+  display: flex;
+  align-items: center;
   min-height: var(--cipher-type-display-line-height);
 }
 .foot {
