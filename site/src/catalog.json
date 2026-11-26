@@ -468,6 +468,14 @@
       {
         "title": "Go",
         "module": "code-block/go"
+      },
+      {
+        "title": "Sensitive content with a reveal toggle",
+        "module": "code-block/sensitive"
+      },
+      {
+        "title": "Custom actions in a narrow container",
+        "module": "code-block/narrow-actions"
       }
     ]
   },
