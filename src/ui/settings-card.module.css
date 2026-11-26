@@ -35,7 +35,9 @@
   flex: 0 1 auto;
   min-width: 0;
   margin: 0;
-  padding-block: calc((var(--cipher-size-control-sm) - var(--cipher-type-title-sm-line-height)) / 2);
+  padding-block: calc(
+    (var(--cipher-size-control-sm) - var(--cipher-type-title-sm-line-height)) / 2
+  );
   font-family: var(--cipher-type-title-sm-font-family);
   font-size: var(--cipher-type-title-sm-font-size);
   line-height: var(--cipher-type-title-sm-line-height);
@@ -129,7 +131,8 @@
   gap: var(--cipher-space-field-group);
   min-width: 0;
   margin: 0;
-  padding: var(--cipher-space-16) var(--cipher-space-surface-inset) var(--cipher-space-surface-inset);
+  padding: var(--cipher-space-16) var(--cipher-space-surface-inset)
+    var(--cipher-space-surface-inset);
   border: 0;
 }
 .card[data-flush] > .header {
@@ -149,7 +152,8 @@
   justify-content: space-between;
   gap: var(--cipher-space-12);
   min-height: calc(var(--cipher-size-control-sm) + 2 * var(--cipher-space-12));
-  padding: var(--cipher-space-12) var(--cipher-space-12) var(--cipher-space-12) var(--cipher-space-surface-inset);
+  padding: var(--cipher-space-12) var(--cipher-space-12) var(--cipher-space-12)
+    var(--cipher-space-surface-inset);
   border-top: 1px solid var(--cipher-line-soft);
   background: var(--cipher-paper);
 }
@@ -201,7 +205,10 @@
 }
 .buttons {
   display: flex;
-  flex: none;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
+  min-width: 0;
   gap: var(--cipher-space-12);
 }
