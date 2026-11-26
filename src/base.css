@@ -715,7 +715,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
-.cipher [data-slot="sheet-head"] + [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:first-child {
+.cipher [data-slot="sheet-head"] ~ [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:first-child {
   padding-top: var(--cipher-space-overlay-inset);
 }
 .cipher
