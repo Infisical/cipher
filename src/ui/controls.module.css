@@ -102,6 +102,17 @@
 .field:is([readonly]:not([aria-disabled="true"]), [data-field-box][data-control-readonly]) {
   background-color: var(--cipher-paper);
 }
+.field:is(
+  [readonly]:not([aria-disabled="true"], :disabled),
+  [data-field-box][data-control-readonly]:not([data-control-disabled])
+),
+.bare[readonly]:not([aria-disabled="true"], :disabled) {
+  cursor: default;
+}
+.field[readonly],
+.bare[readonly] {
+  caret-color: transparent;
+}
 .fieldBox {
   display: flex;
   width: 100%;

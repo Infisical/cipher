@@ -1270,6 +1270,10 @@
         "module": "input/disabled-reason"
       },
       {
+        "title": "Error in a table cell",
+        "module": "input/cell-error"
+      },
+      {
         "title": "Short placeholders on narrow fields",
         "module": "input/placeholder-short"
       }
@@ -1836,6 +1840,10 @@
       {
         "title": "Placeholder, disabled and invalid",
         "module": "select/states"
+      },
+      {
+        "title": "Disabled with a reason",
+        "module": "select/disabled-reason"
       },
       {
         "title": "Named without a Field",

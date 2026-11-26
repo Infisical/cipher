@@ -2308,7 +2308,8 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/input"
+        "@cipher/input",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
