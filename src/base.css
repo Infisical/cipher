@@ -46,6 +46,42 @@
   --color-chart-6: var(--chart-6);
 }
 
+/* First-line lead: a glyph no taller than the line centres on the first line of the text beside it
+   and stays there as the text wraps. --cipher-lead-line names the line (1lh of the glyph's own font
+   by default, or a title's line-height token); --cipher-lead-size is the glyph's size. The clamp
+   turns misuse on media taller than the line into plain top alignment. */
+@utility cipher-lead-line {
+  flex: none;
+  align-self: flex-start;
+  margin-block: max(
+    0px,
+    calc(
+      (
+          var(--cipher-lead-line, var(--cipher-type-row-title-line-height)) -
+            var(--cipher-lead-size, var(--cipher-size-icon))
+        ) /
+        2
+    )
+  );
+  @supports (height: 1lh) {
+    margin-block: max(
+      0px,
+      calc((var(--cipher-lead-line, 1lh) - var(--cipher-lead-size, var(--cipher-size-icon))) / 2)
+    );
+  }
+}
+
+/* Default-row lead: media taller than a line centres on a title plus one description line, then
+   stays put as longer copy grows downward. --cipher-lead-row overrides the row for other type roles. */
+@utility cipher-lead-block {
+  display: inline-flex;
+  flex: none;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--cipher-lead-row, var(--cipher-size-default-row));
+}
+
 @font-face {
   font-family: Archivo;
   src: url("./fonts/Archivo-Latin.woff2") format("woff2");

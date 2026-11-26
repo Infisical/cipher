@@ -69,6 +69,7 @@
   --cipher-size-field-xs: 96px;
   --cipher-size-field-sm: 176px;
   --cipher-size-field-md: 256px;
+  --cipher-size-default-row: calc(var(--cipher-type-row-title-line-height) + var(--cipher-space-4) + var(--cipher-type-small-line-height));
   --cipher-size-text-min: 160px;
   --cipher-size-tile-min: 208px;
   --cipher-size-tile-inline-min: 240px;
