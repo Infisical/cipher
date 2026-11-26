@@ -159,7 +159,7 @@ const RowContent = ({
   child?: boolean;
   trailing?: React.ReactNode;
 }) => {
-  const hasBadge = React.Children.toArray(item.badge).length > 0;
+  const hasBadge = React.Children.toArray(item.badge).some((node) => node !== "");
   return (
     <>
       {!child &&
