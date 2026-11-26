@@ -1100,6 +1100,28 @@ button.rowTitle::after {
 .dataPair:has(> dd > .dataList[data-variant="inline"]) > dt {
   flex: none;
 }
+.dataList[data-variant="inline"][data-label-width] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.dataList[data-variant="inline"][data-label-width] > .dataPair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: start;
+  gap: 0 var(--cipher-space-8);
+  padding: 0;
+  border-top: 0;
+}
+.dataList[data-variant="inline"][data-label-width] > .dataPair > dt {
+  flex: 0 0 var(--cipher-data-list-label-width);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dataList[data-variant="inline"][data-label-width] > .dataPair > dd {
+  flex: 1 1 var(--cipher-size-text-min);
+}
 @media (max-width: 480px) {
   .listRow {
     flex-wrap: wrap;

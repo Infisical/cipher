@@ -1418,6 +1418,10 @@
         "module": "list/nested-breakdown"
       },
       {
+        "title": "Inline labels at a fixed width",
+        "module": "list/label-width"
+      },
+      {
         "title": "Refreshing in the background",
         "module": "list/refreshing"
       },

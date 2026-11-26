@@ -515,15 +515,22 @@ export type DataListItem =
 
 const isHalf = (item?: DataListItem) => item?.[2]?.span === "half";
 
+const labelWidthTokens = new Set(["cell-min", "data-list-term", "text-min"]);
+
+export type DataListLabelWidth = "cell-min" | "data-list-term" | "text-min" | (string & {});
+
 export function DataList({
   items,
   variant = "stat",
-  density = "default"
+  density = "default",
+  labelWidth
 }: {
   items: readonly DataListItem[];
   /** stat for headline numbers, meta and props for label and value rows with dividers, inline for a borderless label column beside wrapping values, such as a short breakdown inside another list's value. */
   variant?: "stat" | "meta" | "props" | "inline";
   density?: "default" | "compact";
+  /** Inline only. A fixed label width, as a size token (cell-min, data-list-term, text-min) or a CSS length, so values in every row and in sibling lists start on one edge. A value that can't keep text-min beside the label wraps under it. Without it, the label column fits the longest label. */
+  labelWidth?: DataListLabelWidth;
 }) {
   const halves = new Set<number>();
   if (density === "compact")
@@ -537,6 +544,16 @@ export function DataList({
       data-slot="data-list"
       data-variant={variant}
       data-density={density}
+      data-label-width={labelWidth ? "fixed" : undefined}
+      style={
+        labelWidth
+          ? ({
+              "--cipher-data-list-label-width": labelWidthTokens.has(labelWidth)
+                ? `var(--cipher-size-${labelWidth})`
+                : labelWidth
+            } as React.CSSProperties)
+          : undefined
+      }
     >
       {items.map(([term, value, options], index) => (
         <div
