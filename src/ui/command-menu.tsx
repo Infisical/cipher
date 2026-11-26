@@ -93,6 +93,8 @@ export type CommandMenuProps = {
   footer?: React.ReactNode;
   inline?: boolean;
   label?: string;
+  /** Holds the dialog at size-palette-height while results change, so typing never makes it jump and the no results state centres in the same space. */
+  stableHeight?: boolean;
 };
 export const CommandMenu = ({
   groups,
@@ -108,7 +110,8 @@ export const CommandMenu = ({
   emptyHint,
   footer,
   inline = false,
-  label = "Search workspace"
+  label = "Search workspace",
+  stableHeight = false
 }: CommandMenuProps) => {
   const [open, setOpen] = useControllableState({
     value: controlledOpen,
@@ -364,6 +367,7 @@ export const CommandMenu = ({
       }}
       open={open}
       onOpenChange={setOpen}
+      stableHeight={stableHeight}
       title={label}
       description="Search pages, objects and actions"
     >
