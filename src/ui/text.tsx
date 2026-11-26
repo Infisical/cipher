@@ -158,7 +158,7 @@ export function StatusText({
       data-tone={tone}
       data-size={size}
       data-loading={loading || undefined}
-      className={cn(styles.status, className)}
+      className={cn(styles.status, "[&>svg]:cipher-lead-line", className)}
       {...props}
     >
       {loading ? <Spinner /> : icon && <Icon icon={icon} />}

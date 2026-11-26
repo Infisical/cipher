@@ -47,6 +47,10 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
+/* In the narrow header the media sits beside the title, so it centres on the title's line. */
+.identityMedia {
+  --cipher-lead-row: var(--cipher-type-title-line-height);
+}
 .identityText {
   display: flex;
   flex-direction: column;

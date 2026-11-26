@@ -366,9 +366,6 @@
         "@cipher/popover",
         "@cipher/toggle-group"
       ],
-      "dependencies": [
-        "react-day-picker@^10.0.2"
-      ],
       "files": [
         {
           "path": "src/components/cipher/patterns/filter-bar.tsx",
