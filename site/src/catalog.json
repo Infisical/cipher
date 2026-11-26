@@ -692,6 +692,10 @@
       {
         "title": "Future dates disabled",
         "module": "date-range-picker/disabled-future"
+      },
+      {
+        "title": "With time of day: empty, set with presets and a long range",
+        "module": "date-range-picker/time"
       }
     ]
   },

@@ -1180,6 +1180,8 @@
         "@cipher/button",
         "@cipher/calendar",
         "@cipher/cipher-base",
+        "@cipher/input",
+        "@cipher/label",
         "@cipher/popover"
       ],
       "dependencies": [
