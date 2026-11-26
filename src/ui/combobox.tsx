@@ -137,7 +137,8 @@ export type ComboboxProps = SharedComboboxProps &
         defaultValue?: string[];
         onChange?: (value: string[]) => void;
         onValueChange?: (value: string[]) => void;
-        onSearch?: never;
+        /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. Chips keep the labels of options seen earlier, so include the initially selected options in options on first render. */
+        onSearch?: (query: string) => void;
         /** Only the action mode: a Create row pinned under the list, visible before anything is typed. */
         creation?: Extract<ComboboxCreation, { mode: "action" }>;
       }
@@ -159,7 +160,7 @@ export function Combobox({
     width,
     className
   } = props;
-  const onSearch = props.multiple ? undefined : props.onSearch;
+  const { onSearch } = props;
   const loading = Boolean(props.loading);
   const creationConfig = props.multiple ? undefined : props.creation;
   const dialogCreation = creationConfig?.mode === "dialog" ? creationConfig : undefined;
@@ -201,8 +202,17 @@ export function Combobox({
       chip ?? fieldRef.current?.querySelector<HTMLButtonElement>("[data-slot=multi-select]")
     )?.focus();
   });
-  const isLocked = (value: string) =>
-    disabled || Boolean(options.find((option) => option.value === value)?.disabled);
+  const [seen, setSeen] = React.useState<readonly ComboboxOption[]>([]);
+  const visibleSelected = options.filter((option) => selected.includes(option.value));
+  if (props.multiple && onSearch && visibleSelected.some((option) => !seen.includes(option)))
+    setSeen((known) => [
+      ...known.filter((item) => !visibleSelected.some((option) => option.value === item.value)),
+      ...visibleSelected
+    ]);
+  const findSelected = (value: string) =>
+    options.find((option) => option.value === value) ??
+    (onSearch ? seen.find((option) => option.value === value) : undefined);
+  const isLocked = (value: string) => disabled || Boolean(findSelected(value)?.disabled);
   const remove = (value: string) => {
     const index = selected.indexOf(value);
     refocus.current =
@@ -296,7 +306,7 @@ export function Combobox({
         data-clear={canClear || undefined}
       >
         {selected.map((value) => {
-          const chipLabel = options.find((option) => option.value === value)?.label ?? value;
+          const chipLabel = findSelected(value)?.label ?? value;
           return (
             <span key={value} className={styles.chip} data-locked={isLocked(value) || undefined}>
               <span title={chipLabel}>{chipLabel}</span>
@@ -333,12 +343,14 @@ export function Combobox({
           invalid={invalid}
           searchable
           searchPlaceholder={searchPlaceholder}
+          emptyText={emptyText}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
           onOpenChange={setOpen}
           closeOnFocusOutside={closeOnFocusOutside}
           renderValue={selected.length ? () => null : undefined}
+          onSearch={onSearch}
           onCreate={onCreate}
           createAction={props.creation}
           createLabel={props.createLabel}
@@ -346,8 +358,7 @@ export function Combobox({
           className={className}
           onEmptyBackspace={() => {
             const last = selected[selected.length - 1];
-            if (last && !options.find((option) => option.value === last)?.disabled)
-              apply(selected.slice(0, -1));
+            if (last && !isLocked(last)) apply(selected.slice(0, -1));
           }}
         />
         {canClear && (
