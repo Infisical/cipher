@@ -1,5 +1,9 @@
 import * as React from "react";
 
+/** Elements that act on their own when clicked or pressed, so they never pass a click or Enter through to their row. */
+export const interactiveControl =
+  "a, button, input, select, textarea, summary, [contenteditable], [role=button], [role=checkbox], [role=combobox], [role=link], [role=menuitem], [role=switch], [role=tab]";
+
 type DescribeRow = (id: string) => () => void;
 
 const RowDescriptionContext = React.createContext<DescribeRow | null>(null);

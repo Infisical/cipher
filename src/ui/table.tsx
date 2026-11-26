@@ -4,7 +4,11 @@ import * as React from "react";
 
 import { keyboardModality } from "../lib/input-modality";
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
-import { RowDescriptionContext, useRowDescriptionHost } from "../lib/row-description";
+import {
+  interactiveControl,
+  RowDescriptionContext,
+  useRowDescriptionHost
+} from "../lib/row-description";
 import {
   CellLinkContext,
   StretchedLinkContext,
@@ -131,8 +135,7 @@ function TableFooter({ className, ref, ...props }: React.ComponentProps<"tfoot">
 }
 TableFooter.displayName = "TableFooter";
 
-const interactiveTarget =
-  "a, button, input, select, textarea, label, summary, [contenteditable], [tabindex]:not(tr):not([data-tooltip-text]), [role=button], [role=checkbox], [role=combobox], [role=link], [role=menuitem], [role=switch], [role=tab], [data-row-interactive]";
+const interactiveTarget = `${interactiveControl}, label, [tabindex]:not(tr):not([data-tooltip-text]), [data-row-interactive]`;
 const activatesRow = (event: React.MouseEvent<HTMLTableRowElement>) => {
   const row = event.currentTarget;
   const target = event.target as Element;
