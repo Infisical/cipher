@@ -125,6 +125,7 @@ export default function SharedTooltips() {
         getRowId={(row) => row.id}
         rowLabel={(row) => row.name}
         rowActions={actions}
+        onRowActivate={(row) => toast(`Opened ${row.name}.`)}
       />
     </TooltipProvider>
   );

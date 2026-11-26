@@ -169,6 +169,12 @@
       "content": "import * as React from \"react\";\n\nexport const RadioValueContext = React.createContext<string | undefined>(undefined);\n"
     },
     {
+      "path": "src/components/cipher/lib/row-description.ts",
+      "type": "registry:file",
+      "target": "src/components/cipher/lib/row-description.ts",
+      "content": "import * as React from \"react\";\n\ntype DescribeRow = (id: string) => () => void;\n\nconst RowDescriptionContext = React.createContext<DescribeRow | null>(null);\n\n/**\n * A focusable, activatable table row reads its pass-through content to assistive technology: a TooltipText\n * inside it is no tab stop of its own, so its tooltip text joins the row's description instead.\n */\nexport function useRowDescriptionHost(active: boolean) {\n  const [ids, setIds] = React.useState<string[]>([]);\n  const describe = React.useCallback<DescribeRow>((id) => {\n    setIds((current) => [...current, id]);\n    return () => setIds((current) => current.filter((item) => item !== id));\n  }, []);\n  return [active ? ids : [], active ? describe : null] as const;\n}\n\nexport { RowDescriptionContext };\n"
+    },
+    {
       "path": "src/components/cipher/lib/scroll-edges.ts",
       "type": "registry:file",
       "target": "src/components/cipher/lib/scroll-edges.ts",
