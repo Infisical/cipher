@@ -452,6 +452,10 @@
       {
         "title": "Filename, terminal, line numbers and copy",
         "module": "code-block/default"
+      },
+      {
+        "title": "Go",
+        "module": "code-block/go"
       }
     ]
   },
