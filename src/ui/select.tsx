@@ -98,6 +98,7 @@ function Select({
   const groups = [...new Set(options?.map((option) => option.group ?? ""))];
   const [localOpen, setLocalOpen] = React.useState(defaultOpen ?? false);
   const reason = disabledReason || undefined;
+  if (reason && localOpen) setLocalOpen(false);
   const open = !reason && (openProp ?? localOpen);
   return (
     <SelectPrimitive.Root
