@@ -414,6 +414,7 @@ function SelectItem({
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Item>>;
 }) {
   const descriptionId = React.useId();
+  const metaId = React.useId();
   const label = React.useRef<HTMLSpanElement>(null);
   const inherited = React.useContext(SelectSettingsContext);
   const wrapped = wrap ?? inherited.wrap;
@@ -449,8 +450,9 @@ function SelectItem({
       ref={ref}
       data-slot="select-item"
       aria-describedby={
-        [describedBy, description ? descriptionId : undefined].filter(Boolean).join(" ") ||
-        undefined
+        [describedBy, description && descriptionId, meta ? metaId : undefined]
+          .filter(Boolean)
+          .join(" ") || undefined
       }
       data-wrap={wrapped || undefined}
       data-description={description ? "stacked" : undefined}
@@ -471,7 +473,11 @@ function SelectItem({
       ) : (
         labelText
       )}
-      {meta && <span className={picker.optionMeta}>{meta}</span>}
+      {meta && (
+        <span id={metaId} className={picker.optionMeta}>
+          {meta}
+        </span>
+      )}
       <span className={picker.optionCheck}>
         <SelectPrimitive.ItemIndicator>
           <Icon name="check" />
