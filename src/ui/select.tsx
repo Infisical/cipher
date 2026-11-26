@@ -9,7 +9,7 @@ import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import type { FieldWidth } from "./input";
 import { useMenuInset } from "./menu-inset";
-import { Tooltip, TooltipProvider } from "./tooltip";
+import { Tooltip } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
@@ -33,7 +33,11 @@ const SelectNameContext = React.createContext<{
   "aria-labelledby"?: string;
 }>({});
 
-const SelectRootContext = React.createContext<{ open: boolean; disabledReason?: string }>({
+const SelectRootContext = React.createContext<{
+  open: boolean;
+  disabledReason?: string;
+  setTriggerReason?: (reason: string | undefined) => void;
+}>({
   open: false
 });
 
@@ -99,7 +103,8 @@ function Select({
 }) {
   const groups = [...new Set(options?.map((option) => option.group ?? ""))];
   const [localOpen, setLocalOpen] = React.useState(defaultOpen ?? false);
-  const reason = disabledReason || undefined;
+  const [triggerReason, setTriggerReason] = React.useState<string>();
+  const reason = disabledReason || triggerReason || undefined;
   if (reason && localOpen) setLocalOpen(false);
   const open = !reason && (openProp ?? localOpen);
   return (
@@ -118,7 +123,7 @@ function Select({
       disabled={reason ? undefined : disabled}
       {...props}
     >
-      <SelectRootContext value={{ open, disabledReason: reason }}>
+      <SelectRootContext value={{ open, disabledReason: reason, setTriggerReason }}>
         <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
           {options ? (
             <>
@@ -221,6 +226,12 @@ function SelectTrigger({
   const reasonId = React.useId();
   const root = React.useContext(SelectRootContext);
   const reason = (disabledReason ?? root.disabledReason) || undefined;
+  const { setTriggerReason } = root;
+  React.useLayoutEffect(() => {
+    if (!disabledReason || !setTriggerReason) return undefined;
+    setTriggerReason(disabledReason);
+    return () => setTriggerReason(undefined);
+  }, [disabledReason, setTriggerReason]);
   const [tipOpen, setTipOpen] = React.useState(false);
   if (!reason && tipOpen) setTipOpen(false);
   const trigger = (
@@ -289,15 +300,9 @@ function SelectTrigger({
   return (
     <>
       {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same trigger and its focus. */}
-      <TooltipProvider>
-        <Tooltip
-          content={reason || " "}
-          open={Boolean(reason) && tipOpen}
-          onOpenChange={setTipOpen}
-        >
-          {trigger}
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip content={reason || " "} open={Boolean(reason) && tipOpen} onOpenChange={setTipOpen}>
+        {trigger}
+      </Tooltip>
       {reason && (
         <span id={reasonId} className="sr-only">
           {reason}
