@@ -22,6 +22,7 @@ const navigationKeys = new Set([
 let lastNavigationKeyAt = -Infinity;
 const tapAttribute = "data-tooltip-tap";
 const tapToggles = new WeakMap<Element, () => void>();
+const tapClicks = new WeakSet<Event>();
 let tapped: Element | null = null;
 if (typeof document !== "undefined") {
   document.addEventListener(
@@ -46,13 +47,21 @@ if (typeof document !== "undefined") {
   document.addEventListener(
     "click",
     (event) => {
-      if (tapped && event.target instanceof Node && tapped.contains(event.target))
+      if (tapped && event.target instanceof Node && tapped.contains(event.target)) {
         event.preventDefault();
+        tapClicks.add(event);
+      }
       tapped = null;
     },
     true
   );
 }
+const skipTapClick =
+  (onClick?: React.MouseEventHandler<HTMLElement>) => (event: React.MouseEvent<HTMLElement>) => {
+    if (!tapClicks.has(event.nativeEvent)) onClick?.(event);
+  };
+/** Radix closes every open tooltip on this event when one opens; a tap opens without Radix, so it sends it itself. */
+const closeOtherTooltips = () => document.dispatchEvent(new CustomEvent("tooltip.open"));
 const focusedByKeyboard = () => performance.now() - lastNavigationKeyAt < 1000;
 const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
@@ -128,6 +137,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [open, setOpen] = React.useState(false);
   const openRef = React.useRef(open);
+  const holdOpen = React.useRef(false);
   React.useLayoutEffect(() => {
     openRef.current = open;
   });
@@ -206,8 +216,10 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       if (event.pointerType !== "touch" || !trigger.hasAttribute(tapAttribute)) return;
       if (shown) setOpen(false);
       else {
+        closeOtherTooltips();
         attach(trigger);
         run(() => setOpen(true));
+        holdOpen.current = true;
       }
     };
     const onFocusIn = (event: FocusEvent) => {
@@ -220,6 +232,10 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       if (element.current && find(event.target) === element.current) call("onBlur", event);
     };
     const onClick = (event: MouseEvent) => {
+      if (holdOpen.current)
+        setTimeout(() => {
+          holdOpen.current = false;
+        });
       if (element.current && find(event.target) === element.current) call("onClick", event);
     };
     store.listener = (id) => {
@@ -263,7 +279,10 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       data-slot="tooltip"
       disableHoverableContent
       open={open}
-      onOpenChange={(next) => flushSync(() => setOpen(next))}
+      onOpenChange={(next) => {
+        if (!next && holdOpen.current) return;
+        flushSync(() => setOpen(next));
+      }}
     >
       <TooltipPrimitive.Trigger asChild>
         <SharedAnchor handle={handle} />
@@ -350,8 +369,20 @@ function Tooltip({
   openOnTap?: boolean;
 }) {
   const store = React.useContext(TooltipScopeContext);
-  const [tapOpen, setTapOpen] = React.useState(false);
+  const [tapOpen, setTapOpen] = React.useState(props.defaultOpen ?? false);
+  const tapOpenRef = React.useRef(tapOpen);
+  React.useLayoutEffect(() => {
+    tapOpenRef.current = tapOpen;
+  });
   const tap = openOnTap && props.open === undefined;
+  const changeTapOpen = (next: boolean) => {
+    setTapOpen(next);
+    props.onOpenChange?.(next);
+  };
+  const trigger =
+    openOnTap && React.isValidElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>(children)
+      ? React.cloneElement(children, { onClick: skipTapClick(children.props.onClick) })
+      : children;
   if (
     store &&
     disableHoverableContent &&
@@ -370,7 +401,7 @@ function Tooltip({
         align={align}
         tap={openOnTap}
       >
-        {children}
+        {trigger as React.ReactElement}
       </SharedTooltip>
     );
   return (
@@ -380,10 +411,7 @@ function Tooltip({
       {...props}
       {...(tap && {
         open: tapOpen,
-        onOpenChange: (next: boolean) => {
-          setTapOpen(next);
-          props.onOpenChange?.(next);
-        }
+        onOpenChange: changeTapOpen
       })}
     >
       {content ? (
@@ -393,11 +421,15 @@ function Tooltip({
             {...(tap && {
               [tapAttribute]: "",
               ref: (node: HTMLButtonElement | null) => {
-                if (node) tapToggles.set(node, () => setTapOpen((value) => !value));
+                if (!node) return;
+                tapToggles.set(node, () => {
+                  if (!tapOpenRef.current) closeOtherTooltips();
+                  changeTapOpen(!tapOpenRef.current);
+                });
               }
             })}
           >
-            {children}
+            {trigger}
           </TooltipTrigger>
           <TooltipContent side={side} align={align} data-has-kbd={shortcut ? "" : undefined}>
             <span className={menu.tooltipText}>{content}</span>
@@ -557,7 +589,10 @@ function useReason(reason: React.ReactNode) {
         {reason}
       </span>
     ) : null,
-    wrap: (element: React.ReactElement, focusable = false) =>
+    wrap: (
+      element: React.ReactElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>,
+      focusable = false
+    ) =>
       active ? (
         <EnsureTooltipProvider>
           {focusable ? (
@@ -569,7 +604,7 @@ function useReason(reason: React.ReactNode) {
               onClick={forwardToStretchedLink}
               onAuxClick={forwardMiddleClick}
             >
-              {element}
+              {React.cloneElement(element, { onClick: skipTapClick(element.props.onClick) })}
             </TooltipText>
           ) : (
             <Tooltip content={reason} openOnTap>
