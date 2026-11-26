@@ -155,13 +155,13 @@ export const FilterBar = ({
     setDraftState(next);
   };
   const shown = withDraft(value, draft);
-  const [remembered, setRemembered] = React.useState<Record<string, readonly FilterBarOption[]>>(
-    {}
-  );
+  const [remembered, setRemembered] = React.useState<
+    ReadonlyMap<string, readonly FilterBarOption[]>
+  >(() => new Map());
   const unseen = fields.flatMap((field) => {
     if ((field.type !== "select" && field.type !== "multi-select") || !field.onSearch) return [];
     const values = shown.find((filter) => filter.field === field.key)?.values ?? [];
-    const known = remembered[field.key] ?? [];
+    const known = remembered.get(field.key) ?? [];
     const visible = field.options.filter(
       (option) =>
         values.includes(option.value) &&
@@ -169,18 +169,26 @@ export const FilterBar = ({
     );
     return visible.length ? [{ key: field.key, visible }] : [];
   });
-  if (unseen.length)
+  const remember = (entries: readonly { key: string; visible: readonly FilterBarOption[] }[]) =>
     setRemembered((current) => {
-      const next = { ...current };
-      for (const { key, visible } of unseen)
-        next[key] = [
-          ...(current[key] ?? []).filter(
+      const next = new Map(current);
+      for (const { key, visible } of entries)
+        next.set(key, [
+          ...(current.get(key) ?? []).filter(
             (item) => !visible.some((option) => option.value === item.value)
           ),
           ...visible
-        ];
+        ]);
       return next;
     });
+  if (unseen.length) remember(unseen);
+  const choose = (field: FilterBarChoiceField, values: string[]) => {
+    if (field.onSearch)
+      remember([
+        { key: field.key, visible: field.options.filter((option) => values.includes(option.value)) }
+      ]);
+    update(field.key, { values });
+  };
   const [open, setOpen] = React.useState<string | null>(null);
   const [focusTarget, setFocusTarget] = React.useState<string | null>(null);
   const picked = React.useRef<string | null>(null);
@@ -315,7 +323,7 @@ export const FilterBar = ({
             {shown.map((filter) => {
               const field = fields.find((entry) => entry.key === filter.field);
               if (!field) return null;
-              const text = describeFilter(field, filter, remembered[field.key]);
+              const text = describeFilter(field, filter, remembered.get(field.key));
               const trigger = (
                 <Button
                   ref={(node) => {
@@ -343,7 +351,7 @@ export const FilterBar = ({
                     onSearch={field.onSearch}
                     loading={field.loading}
                     value={filter.values[0] ?? null}
-                    onChange={(next) => update(field.key, { values: next ? [next] : [] })}
+                    onChange={(next) => choose(field, next ? [next] : [])}
                     open={isOpen}
                     onOpenChange={openChange}
                     trigger={trigger}
@@ -358,7 +366,7 @@ export const FilterBar = ({
                     onSearch={field.onSearch}
                     loading={field.loading}
                     value={filter.values}
-                    onChange={(next) => update(field.key, { values: next })}
+                    onChange={(next) => choose(field, next)}
                     open={isOpen}
                     onOpenChange={openChange}
                     trigger={trigger}
