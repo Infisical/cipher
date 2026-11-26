@@ -1,11 +1,6 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  type Variants,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 
 import { type FieldErrorMap } from "../lib/field-context";
 import { formControlSelector, skipAutoFocus } from "../lib/initial-focus";
@@ -21,10 +16,12 @@ import {
   DialogHeader,
   DialogSubheader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "./dialog";
 import { Field, FieldErrors } from "./field";
 import { Icon, type IconName } from "./icon";
+import { Link } from "./link";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ProgressSteps } from "./progress";
 import { toast } from "./sonner";
 import {
@@ -37,7 +34,7 @@ import {
   SheetSubheader,
   SheetTitle,
   SheetTrigger,
-  useSheetView,
+  useSheetView
 } from "./sheet";
 
 import styles from "./multi-step.module.css";
@@ -68,6 +65,14 @@ export interface MultiStepStep {
   /** The final action's look when this is the last step: destructive for an irreversible submit, such as a break-glass request. */
   completeVariant?: "primary" | "destructive";
   completeIcon?: IconName;
+  /** What the step is for, beside the body in layout="aside" and in an "About this step" popover when that column does not fit. The eyebrow reads "Step N · title", title defaulting to the step's. */
+  aside?: {
+    title?: string;
+    description: React.ReactNode;
+    docsHref?: string;
+    /** Defaults to "Documentation". */
+    docsLabel?: string;
+  };
 }
 
 export type StepsProps = {
@@ -86,7 +91,7 @@ export const Steps = ({
   orientation = "horizontal",
   onStepClick,
   label = "Steps",
-  showHeading,
+  showHeading
 }: StepsProps) => {
   if (orientation === "horizontal")
     return (
@@ -100,8 +105,7 @@ export const Steps = ({
   return (
     <ol data-slot="steps" aria-label={label} className={styles.steps}>
       {steps.map((entry, index) => {
-        const state =
-          index < current ? "done" : index === current ? "current" : "upcoming";
+        const state = index < current ? "done" : index === current ? "current" : "upcoming";
         const marker = (
           <>
             <span className={styles.marker} aria-hidden="true">
@@ -109,9 +113,7 @@ export const Steps = ({
             </span>
             <span className={styles.stepText}>
               <span className={styles.stepTitle}>{entry.title}</span>
-              {entry.summary && (
-                <span className={styles.stepSummary}>{entry.summary}</span>
-              )}
+              {entry.summary && <span className={styles.stepSummary}>{entry.summary}</span>}
             </span>
           </>
         );
@@ -144,6 +146,8 @@ export type MultiStepProps = {
   steps: readonly MultiStepStep[];
   /** view renders inside a SheetView: its meter and footer go to the view's slots, Cancel on the first step goes back, and completing returns to the parent view. */
   variant?: "dialog" | "sheet" | "page" | "view";
+  /** aside lays a dialog or sheet out as the steps rail, the step body and each step's aside. It follows the width of the dialog or sheet, not the viewport: the aside becomes a popover first, then the rail becomes the meter above the body. The sheet defaults to size xl and the dialog widens to the same width. */
+  layout?: "stack" | "aside";
   size?: React.ComponentProps<typeof SheetContent>["size"];
   title?: React.ReactNode;
   /** Right after the dialog or sheet title, such as its DocumentationLink. In a view, set badges on the SheetView. */
@@ -170,16 +174,15 @@ const noErrors: FieldErrorMap = {};
 const holdsField = (node: React.ReactNode, name: string): boolean =>
   React.Children.toArray(node).some(
     (child) =>
-      React.isValidElement<{ name?: unknown; children?: React.ReactNode }>(
-        child,
-      ) &&
+      React.isValidElement<{ name?: unknown; children?: React.ReactNode }>(child) &&
       ((child.type === Field && child.props.name === name) ||
-        holdsField(child.props.children, name)),
+        holdsField(child.props.children, name))
   );
 
 export const MultiStep = ({
   steps,
   variant = "dialog",
+  layout = "stack",
   size,
   title,
   badges,
@@ -196,17 +199,17 @@ export const MultiStep = ({
   step,
   defaultStep = 0,
   onStepChange,
-  className,
+  className
 }: MultiStepProps) => {
   const [isOpen, setOpen] = useControllableState({
     value: open,
     defaultValue: defaultOpen,
-    onChange: onOpenChange,
+    onChange: onOpenChange
   });
   const [current, setCurrent] = useControllableState({
     value: step,
     defaultValue: defaultStep,
-    onChange: onStepChange,
+    onChange: onStepChange
   });
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string>();
@@ -216,8 +219,7 @@ export const MultiStep = ({
   const [height, setHeight] = React.useState<number>();
   const viewport = React.useRef<HTMLDivElement | null>(null);
   const activeStep = () =>
-    viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ??
-    null;
+    viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ?? null;
   const moved = React.useRef(false);
   const reduced = useReducedMotion();
   const formId = React.useId();
@@ -227,17 +229,13 @@ export const MultiStep = ({
   React.useLayoutEffect(() => {
     if (!moved.current) return;
     viewport.current
-      ?.closest<HTMLElement>(
-        '[data-slot="sheet-scroll"], [data-slot="dialog-scroll"]',
-      )
+      ?.closest<HTMLElement>('[data-slot="sheet-scroll"], [data-slot="dialog-scroll"]')
       ?.scrollTo({ top: 0 });
   }, [current]);
   React.useEffect(() => {
     if (!moved.current) return;
     moved.current = false;
-    const step = viewport.current?.querySelector<HTMLElement>(
-      `[data-step="${current}"]`,
-    );
+    const step = viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`);
     (
       step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
       step?.querySelector<HTMLElement>(formControlSelector)
@@ -331,22 +329,15 @@ export const MultiStep = ({
       }
       const result = await onComplete?.();
       if (result && typeof result === "object" && current > 0) {
-        const override =
-          result.step !== undefined && steps[result.step]
-            ? result.step
-            : undefined;
+        const override = result.step !== undefined && steps[result.step] ? result.step : undefined;
         const byStep = new Map<number, FieldErrorMap>();
         Object.entries(result.fields ?? noErrors).forEach(([name, message]) => {
           if (!message) return;
-          const found = steps.findIndex((candidate) =>
-            holdsField(candidate.content, name),
-          );
+          const found = steps.findIndex((candidate) => holdsField(candidate.content, name));
           const target = override ?? (found === -1 ? current : found);
           byStep.set(target, { ...byStep.get(target), [name]: message });
         });
-        const earliest = byStep.size
-          ? Math.min(...byStep.keys())
-          : (override ?? current);
+        const earliest = byStep.size ? Math.min(...byStep.keys()) : (override ?? current);
         if ((byStep.size || result.message) && earliest < current) {
           routed.current = byStep;
           move(earliest);
@@ -361,11 +352,7 @@ export const MultiStep = ({
         setOpen(false);
       }
     } catch (failure) {
-      toast.error(
-        failure instanceof Error
-          ? failure.message
-          : "Something went wrong. Try again.",
-      );
+      toast.error(failure instanceof Error ? failure.message : "Something went wrong. Try again.");
     } finally {
       setBusy(false);
     }
@@ -384,25 +371,64 @@ export const MultiStep = ({
     center: {
       opacity: 1,
       ...at(0),
-      transition: reduced ? fade.enter : spring.slow,
+      transition: reduced ? fade.enter : spring.slow
     },
     leave: (sign: number) => ({
       opacity: 0,
       ...at(-sign * travel),
-      transition: reduced ? fade.exit : exit.moderate,
-    }),
+      transition: reduced ? fade.exit : exit.moderate
+    })
   };
-  const titled =
-    variant === "page" || !single || (!title && variant !== "view");
-  const stepHead = (titled || entry.description) && (
+  const titled = variant === "page" || !single || (!title && variant !== "view");
+  const aside = layout === "aside" && (variant === "dialog" || variant === "sheet");
+  const about = aside && entry.aside && (
+    <>
+      <p className={styles.eyebrow}>
+        Step {current + 1} · {entry.aside.title ?? entry.title}
+      </p>
+      <div className={styles.lede}>{entry.aside.description}</div>
+      {entry.aside.docsHref && (
+        <Link
+          href={entry.aside.docsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.docs}
+        >
+          {entry.aside.docsLabel ?? "Documentation"}
+          <Icon name="external" size={12} />
+        </Link>
+      )}
+    </>
+  );
+  const stepHead = (titled || entry.description || about) && (
     <div className={styles.stepHead}>
       {variant === "page" && !single && (
         <p className={styles.eyebrow}>
           Step {current + 1} of {steps.length}
         </p>
       )}
-      {titled && (
-        <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+      {(titled || about) && (
+        <div className={styles.headRow}>
+          {titled && <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>}
+          {about && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="xs"
+                  icon="info"
+                  className={styles.aboutToggle}
+                >
+                  About this step
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className={styles.about}>
+                {about}
+              </PopoverContent>
+            </Popover>
+          )}
+        </div>
       )}
       {entry.description && <p className={styles.lede}>{entry.description}</p>}
     </div>
@@ -441,9 +467,7 @@ export const MultiStep = ({
             >
               {stepHead}
               <FieldErrors errors={fieldErrors}>
-                {entry.render
-                  ? entry.render({ next: () => setQueued(true) })
-                  : entry.content}
+                {entry.render ? entry.render({ next: () => setQueued(true) }) : entry.content}
               </FieldErrors>
             </motion.div>
           </AnimatePresence>
@@ -459,10 +483,7 @@ export const MultiStep = ({
         </div>
       )}
       <p className={cn(styles.status, error && styles.error)} role="status">
-        {error ??
-          (variant === "page" || single
-            ? null
-            : `Step ${current + 1} of ${steps.length}`)}
+        {error ?? (variant === "page" || single ? null : `Step ${current + 1} of ${steps.length}`)}
       </p>
       <div className={styles.buttons}>
         {current === 0 ? (
@@ -503,11 +524,7 @@ export const MultiStep = ({
   const label = typeof title === "string" ? `${title} steps` : "Steps";
   if (variant === "page")
     return (
-      <div
-        data-slot="multi-step"
-        data-variant="page"
-        className={cn(styles.page, className)}
-      >
+      <div data-slot="multi-step" data-variant="page" className={cn(styles.page, className)}>
         <div className={styles.pageGrid} data-single={single || undefined}>
           {!single && (
             <>
@@ -534,34 +551,56 @@ export const MultiStep = ({
   const meter = single ? null : (
     <Steps steps={steps} current={current} label={label} showHeading={false} />
   );
+  const asided = steps.some((candidate) => candidate.aside);
+  const body = aside ? (
+    <div className={styles.asideGrid} data-bare={asided ? undefined : ""}>
+      {!single && (
+        <div className={styles.rail}>
+          <Steps
+            steps={steps}
+            current={current}
+            label={label}
+            orientation="vertical"
+            onStepClick={busy ? undefined : move}
+          />
+        </div>
+      )}
+      {fields}
+      {asided && (
+        <aside aria-label="About this step" className={styles.aside}>
+          {about}
+        </aside>
+      )}
+    </div>
+  ) : (
+    fields
+  );
+  const meterClass = aside && !single ? styles.meter : undefined;
   if (variant === "view")
     return (
       <>
         {meter &&
           view?.subheader &&
-          createPortal(
-            <SheetSubheader>{meter}</SheetSubheader>,
-            view.subheader,
-          )}
+          createPortal(<SheetSubheader>{meter}</SheetSubheader>, view.subheader)}
         <SheetBody className={className}>{fields}</SheetBody>
         {view?.footer &&
-          createPortal(
-            <SheetFooter className={styles.footer}>{footer}</SheetFooter>,
-            view.footer,
-          )}
+          createPortal(<SheetFooter className={styles.footer}>{footer}</SheetFooter>, view.footer)}
       </>
     );
   if (variant === "sheet")
     return (
       <Sheet open={isOpen} onOpenChange={changeOpen}>
         {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
-        <SheetContent size={size} className={className}>
+        <SheetContent
+          size={size ?? (aside ? "xl" : undefined)}
+          className={cn(aside && styles.asideFrame, className)}
+        >
           <SheetHeader>
             <SheetTitle badges={badges}>{title}</SheetTitle>
             {description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
-          {meter && <SheetSubheader>{meter}</SheetSubheader>}
-          <SheetBody>{fields}</SheetBody>
+          {meter && <SheetSubheader className={meterClass}>{meter}</SheetSubheader>}
+          <SheetBody>{body}</SheetBody>
           <SheetFooter className={styles.footer}>{footer}</SheetFooter>
         </SheetContent>
       </Sheet>
@@ -569,13 +608,15 @@ export const MultiStep = ({
   return (
     <Dialog open={isOpen} onOpenChange={changeOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className={className}>
+      <DialogContent
+        className={cn(aside && styles.asideFrame, aside && styles.asideDialog, className)}
+      >
         <DialogHeader>
           <DialogTitle badges={badges}>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        {meter && <DialogSubheader>{meter}</DialogSubheader>}
-        {fields}
+        {meter && <DialogSubheader className={meterClass}>{meter}</DialogSubheader>}
+        {body}
         <DialogFooter className={styles.footer}>{footer}</DialogFooter>
       </DialogContent>
     </Dialog>

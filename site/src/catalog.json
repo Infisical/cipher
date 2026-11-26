@@ -1548,6 +1548,18 @@
       {
         "title": "Delete at the start of the footer",
         "module": "multi-step/footer-start"
+      },
+      {
+        "title": "Aside layout: three short steps",
+        "module": "multi-step/aside-sparse"
+      },
+      {
+        "title": "Aside layout: five steps with docs links",
+        "module": "multi-step/aside-typical"
+      },
+      {
+        "title": "Aside layout: six steps with long names and long asides",
+        "module": "multi-step/aside-stressed"
       }
     ]
   },

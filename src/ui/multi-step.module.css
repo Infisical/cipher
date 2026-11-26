@@ -220,3 +220,87 @@ button.stepButton:focus-visible {
   padding: 0;
   border: 0;
 }
+.asideFrame {
+  container-type: inline-size;
+}
+.asideDialog.asideDialog {
+  max-width: var(--cipher-size-sheet-xl);
+}
+.asideGrid {
+  display: grid;
+  grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr) var(--cipher-size-popover);
+  gap: var(--cipher-space-overlay-inset);
+  min-width: 0;
+}
+.asideGrid[data-bare] {
+  grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr);
+}
+.asideGrid > .rail {
+  min-width: 0;
+  padding-inline-end: var(--cipher-space-overlay-inset);
+  border-inline-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.asideGrid > .form {
+  align-self: start;
+}
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-12);
+  min-width: 0;
+  padding-inline-start: var(--cipher-space-overlay-inset);
+  border-inline-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  overflow-wrap: anywhere;
+}
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-12);
+  overflow-wrap: anywhere;
+}
+.docs {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-4);
+  align-self: flex-start;
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+}
+.headRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cipher-space-12);
+  min-width: 0;
+}
+.headRow > .heading {
+  min-width: 0;
+}
+.aboutToggle.aboutToggle {
+  display: none;
+  flex: none;
+  margin-inline-start: auto;
+}
+@container (width < 960px) {
+  .asideGrid {
+    grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr);
+  }
+  .aside {
+    display: none;
+  }
+  .aboutToggle.aboutToggle {
+    display: inline-flex;
+  }
+}
+@container (width <= 640px) {
+  .asideGrid,
+  .asideGrid[data-bare] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@container (width > 640px) {
+  .meter.meter {
+    display: none;
+  }
+}
