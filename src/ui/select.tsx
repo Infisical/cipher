@@ -136,13 +136,8 @@ function Select({
       disabled={reason ? undefined : disabled}
       {...props}
     >
-<<<<<<< HEAD
       <SelectRootContext value={{ open, disabledReason: reason, setTriggerReason }}>
-        <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
-=======
-      <SelectRootContext value={{ open, disabledReason: reason }}>
         <SelectSettingsContext value={{ wrap: wrap ?? false }}>
->>>>>>> 7a719215
           {options ? (
             <>
               <SelectTrigger
