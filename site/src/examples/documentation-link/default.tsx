@@ -3,6 +3,7 @@ import { DocumentationLink } from "@infisical/cipher/ui/documentation-link";
 import { Field } from "@infisical/cipher/ui/field";
 import { Input } from "@infisical/cipher/ui/input";
 import { PageHeader } from "@infisical/cipher/ui/page-header";
+import { Heading } from "@infisical/cipher/ui/text";
 
 const docs = "https://infisical.com/docs/documentation/platform/gateways/overview";
 
@@ -16,6 +17,17 @@ export default function Example() {
           description="Connect Infisical to resources in your private network."
         />
         <figcaption className="text-muted-foreground text-xs">{"Page title"}</figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-w-0 items-start gap-2">
+          <Heading size="page" className="min-w-0">
+            Upgrade to Pro
+          </Heading>
+          <DocumentationLink href={docs} subject="Gateways" size="title-lg" />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {'Large dialog title, size="title-lg"'}
+        </figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <Card

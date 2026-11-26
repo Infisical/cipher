@@ -630,6 +630,16 @@
   font-weight: var(--cipher-type-title-sm-font-weight);
   letter-spacing: var(--cipher-type-title-sm-letter-spacing);
 }
+.listTitleRow {
+  flex: 1 1 var(--cipher-size-cell-min);
+  --cipher-title-badges-line: var(--cipher-type-title-sm-line-height);
+}
+.listHeader > .listTitleRow {
+  flex: 1;
+}
+.listTitleRow > [data-framed] {
+  --cipher-title-badges-line: var(--cipher-type-eyebrow-line-height);
+}
 .listHeaderAction {
   margin-inline-start: auto;
   font-family: var(--cipher-type-small-font-family);

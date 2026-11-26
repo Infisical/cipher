@@ -22,6 +22,21 @@
 :global([data-slot="overlay-title-badges"]) > .link {
   max-width: none;
 }
+:global([data-slot="multi-step-badges"]) {
+  --documentation-link-context: var(--cipher-size-icon);
+  --documentation-link-context-pad-y: calc((var(--cipher-type-title-line-height) - var(--cipher-size-icon)) / 2);
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
+}
+:global([data-slot="alert-trailing"]) {
+  --documentation-link-context: var(--cipher-size-icon-small);
+  --documentation-link-context-pad-y: calc((var(--cipher-type-small-line-height) - var(--cipher-size-icon-small)) / 2);
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
+}
+:global([data-slot="list-header-badges"][data-framed]) {
+  --documentation-link-context: var(--cipher-size-icon-xs);
+  --documentation-link-context-pad-y: var(--cipher-size-focus-ring);
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
+}
 .link {
   --documentation-link-glyph: var(--documentation-link-size, var(--documentation-link-context, var(--cipher-size-icon)));
   --documentation-link-hit-y: var(--documentation-link-pad-y, var(--documentation-link-context-pad-y, var(--cipher-size-focus-ring)));
@@ -52,6 +67,11 @@
 .link[data-size="lg"] {
   --documentation-link-size: var(--cipher-size-icon-2xl);
   --documentation-link-pad-y: calc((var(--cipher-type-display-line-height) - var(--cipher-size-icon-2xl)) / 2);
+  --documentation-link-pad-x: var(--cipher-size-focus-ring);
+}
+.link[data-size="title-lg"] {
+  --documentation-link-size: var(--cipher-size-icon-title-lg);
+  --documentation-link-pad-y: calc((var(--cipher-type-title-lg-line-height) - var(--cipher-size-icon-title-lg)) / 2);
   --documentation-link-pad-x: var(--cipher-size-focus-ring);
 }
 .link:hover,

@@ -858,6 +858,55 @@
 .alert[data-has-icon][data-has-action] {
   grid-template-columns: auto minmax(0, 1fr) auto;
 }
+.alert[data-has-icon] > .alertTitleRow {
+  grid-column: 2;
+}
+.alertTitleRow {
+  grid-row: 1;
+  --cipher-title-badges-line: var(--cipher-type-row-title-line-height);
+}
+.alertLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cipher-space-8);
+}
+.alertLine > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.alertTrailing {
+  display: inline-flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 50%;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  min-height: var(--cipher-type-small-line-height);
+}
+.titleWithBadges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--cipher-space-4) var(--cipher-space-8);
+  min-width: 0;
+}
+.titleWithBadges > :first-child {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.titleBadges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-6);
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--cipher-title-badges-line, auto);
+}
+:is(.titleBadges, .alertTrailing) > :not([data-slot="documentation-link"]) {
+  max-width: 100%;
+}
 .alertAction {
   position: static;
   grid-column: -2 / -1;

@@ -72,7 +72,8 @@
 .frameHead[data-select] {
   padding-inline-start: calc(var(--cipher-space-frame-inline) + var(--cipher-space-frame-title-inline));
 }
-.frameHead[data-select] > .frameTitle {
+.frameHead[data-select] > .frameTitle,
+.frameHead[data-select] > * > .frameTitle:first-child {
   margin-inline-start: 0;
 }
 .frameTitle {
