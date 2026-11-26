@@ -19,6 +19,7 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
     const key = {};
     const entries = reserves.get(layer) ?? new Map<object, number>();
     reserves.set(layer, entries);
+    const observer = new ResizeObserver(() => measure());
     const measure = () => {
       const toasts = [...layer.querySelectorAll<HTMLElement>("[data-sonner-toast]")];
       const style = getComputedStyle(layer);
@@ -30,27 +31,29 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
       const gap = size("--cipher-space-8");
       const stack = toasts.reduce((sum, toast) => sum + toast.offsetHeight + gap, base);
       const { top, bottom } = node.getBoundingClientRect();
-      const covered = toasts.length > 0 && window.innerHeight - bottom < stack;
+      toasts.forEach((toast) => observer.observe(toast));
+      const covered =
+        toasts.length > 0 && !node.closest("[inert]") && window.innerHeight - bottom < stack;
       entries.set(key, covered ? Math.max(0, window.innerHeight - top) : 0);
       publish(layer);
     };
     const panel = node.closest<HTMLElement>('[role="dialog"], [role="alertdialog"]') ?? node;
-    const observer = new ResizeObserver(measure);
     observer.observe(node);
     observer.observe(panel);
-    const toasts = new MutationObserver(measure);
-    toasts.observe(layer, {
+    const changes = new MutationObserver(measure);
+    changes.observe(layer, {
       childList: true,
       subtree: true,
       attributeFilter: ["data-action-bar-reserve"]
     });
+    changes.observe(panel, { subtree: true, attributeFilter: ["inert"] });
     panel.addEventListener("animationend", measure);
     panel.addEventListener("transitionend", measure);
     window.addEventListener("resize", measure);
     measure();
     return () => {
       observer.disconnect();
-      toasts.disconnect();
+      changes.disconnect();
       panel.removeEventListener("animationend", measure);
       panel.removeEventListener("transitionend", measure);
       window.removeEventListener("resize", measure);
@@ -59,10 +62,16 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
     };
   }, [layer, node]);
   return React.useCallback(
-    (value: T | null) => {
+    (value: T) => {
       setNode(value);
-      if (typeof ref === "function") ref(value);
-      else if (ref) ref.current = value;
+      const cleanup = typeof ref === "function" ? ref(value) : undefined;
+      if (ref && typeof ref !== "function") ref.current = value;
+      return () => {
+        setNode(null);
+        if (typeof cleanup === "function") cleanup();
+        else if (typeof ref === "function") ref(null);
+        else if (ref) ref.current = null;
+      };
     },
     [ref]
   );
