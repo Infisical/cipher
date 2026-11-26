@@ -131,7 +131,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const resolvedTheme = useScheme();
   const layer = useToastLayer();
   const owns = useOwnsToaster(props.id ?? TOASTER_ID);
-  const position = props.position ?? "bottom-right";
+  const position = props.position ?? "bottom-center";
   React.useLayoutEffect(() => {
     if (!owns || !layer) return undefined;
     const positions = () => layer.getAttribute("data-toast-position")?.split(" ") ?? [];
@@ -183,6 +183,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           }
         }}
         {...props}
+        position={position}
         id={toasterId}
       />
     </>

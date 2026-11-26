@@ -12,6 +12,7 @@ import { Input } from "./input";
 import { FrameScope } from "../lib/frame-context";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
 import { splitOverlaySections } from "../lib/overlay-sections";
+import { useToastFooterReserve } from "../lib/toast-footer-reserve";
 import { useOwnedEscape } from "../lib/use-owned-escape";
 import { cn } from "../lib/utils";
 
@@ -268,7 +269,7 @@ AlertDialogHeader.displayName = "AlertDialogHeader";
 function AlertDialogFooter({ className, ref, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      ref={ref}
+      ref={useToastFooterReserve(ref)}
       data-slot="alert-dialog-footer"
       className={cn(
         "flex flex-col-reverse group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",

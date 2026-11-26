@@ -10,6 +10,7 @@ import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
 import { renderInForm, splitOverlaySections } from "../lib/overlay-sections";
+import { useToastFooterReserve } from "../lib/toast-footer-reserve";
 import { useOwnedEscape } from "../lib/use-owned-escape";
 import { cn } from "../lib/utils";
 
@@ -195,7 +196,7 @@ function DialogFooter({
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   return (
     <div
-      ref={ref}
+      ref={useToastFooterReserve(ref)}
       data-slot="dialog-footer"
       className={cn("flex flex-col-reverse sm:flex-row sm:justify-end", className)}
       {...props}

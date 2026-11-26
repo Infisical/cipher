@@ -2368,6 +2368,10 @@
       {
         "title": "Toast above an open sheet",
         "module": "toast/over-sheet"
+      },
+      {
+        "title": "Toast above an open dialog",
+        "module": "toast/over-dialog"
       }
     ]
   },

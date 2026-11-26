@@ -13,6 +13,7 @@ import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl, formControlSelector } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
 import { flattenFragments, renderInForm, splitOverlaySections } from "../lib/overlay-sections";
+import { useToastFooterReserve } from "../lib/toast-footer-reserve";
 import { useOwnedEscape } from "../lib/use-owned-escape";
 import { cn } from "../lib/utils";
 
@@ -916,7 +917,7 @@ function SheetFooter({
 }) {
   return (
     <div
-      ref={ref}
+      ref={useToastFooterReserve(ref)}
       data-slot="sheet-footer"
       className={cn("mt-auto flex flex-wrap items-center justify-end gap-2 p-4", className)}
       {...props}
