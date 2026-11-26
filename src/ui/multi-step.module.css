@@ -228,12 +228,18 @@ button.stepButton:focus-visible {
 }
 .asideGrid {
   display: grid;
-  grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr) var(--cipher-size-popover);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--cipher-space-overlay-inset);
   min-width: 0;
 }
-.asideGrid[data-bare] {
+.asideGrid[data-rail] {
   grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr);
+}
+.asideGrid[data-aside] {
+  grid-template-columns: minmax(0, 1fr) var(--cipher-size-popover);
+}
+.asideGrid[data-rail][data-aside] {
+  grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr) var(--cipher-size-popover);
 }
 .asideGrid > .rail {
   min-width: 0;
@@ -283,7 +289,10 @@ button.stepButton:focus-visible {
   margin-inline-start: auto;
 }
 @container (width < 960px) {
-  .asideGrid {
+  .asideGrid[data-aside] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .asideGrid[data-rail][data-aside] {
     grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr);
   }
   .aside {
@@ -294,8 +303,8 @@ button.stepButton:focus-visible {
   }
 }
 @container (width <= 640px) {
-  .asideGrid,
-  .asideGrid[data-bare] {
+  .asideGrid[data-rail],
+  .asideGrid[data-rail][data-aside] {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -303,4 +312,19 @@ button.stepButton:focus-visible {
   .meter.meter {
     display: none;
   }
+}
+.titleRow {
+  display: flex;
+  gap: var(--cipher-space-12);
+  min-width: 0;
+}
+.media {
+  --cipher-lead-row: var(--cipher-type-title-line-height);
+}
+.titleText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: inherit;
+  min-width: 0;
 }

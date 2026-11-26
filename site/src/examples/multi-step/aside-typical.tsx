@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@infisical/cipher/ui/button";
 import { Checkbox } from "@infisical/cipher/ui/checkbox";
 import { Field } from "@infisical/cipher/ui/field";
+import { Icon } from "@infisical/cipher/ui/icon";
 import { Input } from "@infisical/cipher/ui/input";
 import { MultiStep } from "@infisical/cipher/ui/multi-step";
 import { toast } from "@infisical/cipher/ui/sonner";
@@ -28,6 +29,7 @@ const Flow = ({
       variant={variant}
       layout="aside"
       title="AWS Secrets Manager sync"
+      media={<Icon name="cloud" size={24} />}
       trigger={trigger}
       completeLabel="Create sync"
       onComplete={async () => {
