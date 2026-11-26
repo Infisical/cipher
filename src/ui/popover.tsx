@@ -134,10 +134,15 @@ function PopoverDrawer({
 }: React.ComponentPropsWithRef<typeof DialogPrimitive.Content> & { open: boolean }) {
   const state = React.useContext(PopoverStateContext);
   const [drag, setDrag] = React.useState(0);
+  const [dismissing, setDismissing] = React.useState(false);
   const [openedFor, setOpenedFor] = React.useState(open);
   if (open !== openedFor) {
     setOpenedFor(open);
+    setDismissing(false);
     if (open) setDrag(0);
+  } else if (dismissing && open) {
+    setDismissing(false);
+    setDrag(0);
   }
   const swipe = React.useRef<
     { id: number; y: number; time: number; dragging: boolean } | undefined
@@ -148,8 +153,12 @@ function PopoverDrawer({
     if (!start?.dragging) return;
     const distance = Math.max(0, y - start.y);
     const velocity = distance / Math.max(1, performance.now() - start.time);
-    setDrag(0);
-    if (distance > panel.offsetHeight / 4 || velocity > swipeVelocity) state?.setOpen(false);
+    if (distance <= panel.offsetHeight / 4 && velocity <= swipeVelocity) {
+      setDrag(0);
+      return;
+    }
+    setDismissing(true);
+    state?.setOpen(false);
   };
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(next) => state?.setOpen(next)}>
