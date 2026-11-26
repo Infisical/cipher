@@ -227,7 +227,7 @@ export interface ListProps extends ListHeaderProps {
   variant?: "framed" | "plain" | "bare" | "segmented" | "divided";
   size?: "md" | "sm";
   actionsPlacement?: "end" | "below";
-  /** Sits rows on a 16px content lane for a list inside a popover or sheet: media and text start on the lane, a trailing icon button aligns its glyph to the lane's end, and the hover and selected fill stays 8px off the container edge. Applies to the bare, segmented and divided variants, which draw no frame or border of their own. */
+  /** Sits rows on a 16px content lane for a list inside a popover or sheet: media, text and trailing buttons sit inside the lane, so a button's own hover fill keeps the same 8px off the row's hover and selected fill, which stays 8px off the container edge. Applies to the bare, segmented and divided variants, which draw no frame or border of their own. */
   inset?: boolean;
   selection?: "none" | "multiple";
   selectedIds?: readonly string[];
