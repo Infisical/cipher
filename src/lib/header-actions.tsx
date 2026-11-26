@@ -23,7 +23,8 @@ const overflows = (slot: HTMLElement) => {
 
 /**
  * Collapses icon actions when the row cannot hold the tabs or the title on one line beside the
- * full-label actions. Every measurement lays the actions out expanded first, inside flushSync, so
+ * full-label actions. It re-measures when the row resizes, fonts load, or an action's content
+ * changes; the mutations a measurement makes itself are discarded so it cannot loop. Every measurement lays the actions out expanded first, inside flushSync, so
  * the expanded and collapsed passes land in the same frame and no truncated frame is painted.
  */
 export function HeaderActions({
@@ -38,6 +39,7 @@ export function HeaderActions({
   const ref = React.useRef<HTMLDivElement>(null);
   const [collapsed, setCollapsed] = React.useState(false);
   const measuring = React.useRef(false);
+  const mutations = React.useRef<MutationObserver | null>(null);
   const measure = React.useCallback(() => {
     const node = ref.current;
     if (!node || measuring.current) return;
@@ -47,6 +49,7 @@ export function HeaderActions({
       const next = overflows(node);
       if (next) flushSync(() => setCollapsed(true));
     } finally {
+      mutations.current?.takeRecords();
       measuring.current = false;
     }
   }, []);
@@ -54,13 +57,19 @@ export function HeaderActions({
     if (!measuring.current) queueMicrotask(measure);
   });
   React.useLayoutEffect(() => {
-    const row = ref.current?.parentElement;
-    if (!row) return undefined;
+    const node = ref.current;
+    const row = node?.parentElement;
+    if (!node || !row) return undefined;
     const observer = new ResizeObserver(measure);
     observer.observe(row);
+    const mutation = new MutationObserver(measure);
+    mutation.observe(node, { childList: true, subtree: true, characterData: true });
+    mutations.current = mutation;
     document.fonts?.addEventListener("loadingdone", measure);
     return () => {
       observer.disconnect();
+      mutation.disconnect();
+      mutations.current = null;
       document.fonts?.removeEventListener("loadingdone", measure);
     };
   }, [measure]);
