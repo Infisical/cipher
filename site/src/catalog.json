@@ -2316,6 +2316,10 @@
       {
         "title": "Growing up to maxRows, then scrolling",
         "module": "textarea/max-rows"
+      },
+      {
+        "title": "Multi-line placeholder",
+        "module": "textarea/multiline-placeholder"
       }
     ]
   },
