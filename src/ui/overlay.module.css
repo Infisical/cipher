@@ -305,14 +305,20 @@
   }
   .headerTabsRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"]) {
+    > [data-cipher-button]:has([data-button-icon]):not(
+      [data-layout="trigger"],
+      [data-disabled-reason]
+    ) {
     width: var(--cipher-action-height);
     min-width: var(--cipher-action-height);
     padding-inline: 0;
   }
   .headerTabsRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"])
+    > [data-cipher-button]:has([data-button-icon]):not(
+      [data-layout="trigger"],
+      [data-disabled-reason]
+    )
     [data-slot="button-text"] {
     position: absolute;
     width: 1px;
@@ -329,14 +335,20 @@
   }
   .headerRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"]) {
+    > [data-cipher-button]:has([data-button-icon]):not(
+      [data-layout="trigger"],
+      [data-disabled-reason]
+    ) {
     width: var(--cipher-action-height);
     min-width: var(--cipher-action-height);
     padding-inline: 0;
   }
   .headerRow
     > .headerActions
-    > [data-cipher-button]:has([data-button-icon]):not([data-layout="trigger"])
+    > [data-cipher-button]:has([data-button-icon]):not(
+      [data-layout="trigger"],
+      [data-disabled-reason]
+    )
     [data-slot="button-text"] {
     position: absolute;
     width: 1px;
