@@ -40,6 +40,8 @@ export type ComboboxOption = {
   label: string;
   /** A glyph at the row's start, also shown in the trigger while this option is selected. Single selection only. */
   icon?: IconSource;
+  /** A logo or image at the row's start, sized like an icon, also shown in the trigger or chip while this option is selected. It never shrinks; the label truncates first. Ignored when icon is set. */
+  media?: React.ReactNode;
   /** A muted line under the label. Search matches it as well as the label. */
   description?: string;
   meta?: string;
@@ -296,9 +298,15 @@ export function Combobox({
         data-clear={canClear || undefined}
       >
         {selected.map((value) => {
-          const chipLabel = options.find((option) => option.value === value)?.label ?? value;
+          const chipOption = options.find((option) => option.value === value);
+          const chipLabel = chipOption?.label ?? value;
           return (
             <span key={value} className={styles.chip} data-locked={isLocked(value) || undefined}>
+              {chipOption?.media !== undefined && !chipOption.icon && (
+                <span data-slot="option-media" className={styles.optionMedia}>
+                  {chipOption.media}
+                </span>
+              )}
               <span title={chipLabel}>{chipLabel}</span>
               <Button
                 type="button"
@@ -398,6 +406,11 @@ export function Combobox({
         {selectedOption?.icon && (
           <span className={controlStyles.leading} data-slot="combobox-icon">
             <Icon icon={selectedOption.icon} />
+          </span>
+        )}
+        {selectedOption?.media !== undefined && !selectedOption.icon && (
+          <span className={cn(controlStyles.leading, styles.optionMedia)} data-slot="option-media">
+            {selectedOption.media}
           </span>
         )}
         {selectedOption?.badge === undefined ? (
@@ -502,7 +515,11 @@ export function Combobox({
                         changeOpen(false);
                       }}
                     >
-                      {option.icon && <Icon icon={option.icon} />}
+                      {option.icon ? (
+                        <Icon icon={option.icon} />
+                      ) : (
+                        option.media && <span data-menu-icon="">{option.media}</span>
+                      )}
                       {option.description ? (
                         <span className={menu.text}>
                           <span className={menu.title}>

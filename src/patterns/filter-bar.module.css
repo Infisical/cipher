@@ -66,6 +66,19 @@
   text-overflow: ellipsis;
   font-weight: var(--cipher-type-row-title-font-weight);
 }
+.media {
+  --cipher-lead-size: var(--cipher-action-icon-size);
+  display: inline-flex;
+  flex: none;
+  width: var(--cipher-lead-size);
+  height: var(--cipher-lead-size);
+  overflow: hidden;
+}
+.media > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .date {
   display: flex;
   flex-direction: column;

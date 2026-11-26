@@ -40,6 +40,8 @@ export type SelectOption = {
   group?: string;
   /** A Badge after the label, in the menu row and in the trigger while this option is selected, such as "Current". */
   badge?: React.ReactNode;
+  /** A logo or image before the label, sized like an icon, in the menu row and in the trigger while this option is selected. It never shrinks; the label truncates first. */
+  media?: React.ReactNode;
 };
 function Select({
   options,
@@ -128,6 +130,7 @@ function Select({
                         disabled={option.disabled}
                         description={option.description}
                         badge={option.badge}
+                        media={option.media}
                       >
                         <span data-slot="select-option-label">{option.label}</span>
                       </SelectItem>
@@ -301,6 +304,7 @@ function SelectItem({
   children,
   description,
   badge,
+  media,
   wrap,
   onFocus,
   "aria-describedby": describedBy,
@@ -310,6 +314,8 @@ function SelectItem({
   description?: string;
   /** A Badge after the label, shown in the menu row and in the trigger while this item is selected. The label truncates before the badge does. */
   badge?: React.ReactNode;
+  /** A logo or image before the label, sized like an icon, shown in the menu row and in the trigger while this item is selected. */
+  media?: React.ReactNode;
   /** Wrap this label instead of truncating it. Defaults to the content's `wrap`. */
   wrap?: boolean;
 } & {
@@ -331,10 +337,15 @@ function SelectItem({
       onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
     >
       <SelectPrimitive.ItemText>
-        {badge === undefined ? (
+        {badge === undefined && media === undefined ? (
           children
         ) : (
           <>
+            {media !== undefined && (
+              <span data-slot="option-media" className={cn(picker.optionMedia, "cipher-lead-line")}>
+                {media}
+              </span>
+            )}
             <span data-slot="option-text">{children}</span>
             {badge}
           </>

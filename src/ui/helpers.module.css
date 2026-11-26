@@ -438,13 +438,26 @@
 .badge > :is(svg, .badgeDot) {
   flex: none;
 }
-.badge[data-collapse]:has(> svg, > .badgeDot) {
+.badge[data-collapse]:has(> svg, > .badgeDot, > .badgeMedia) {
   min-width: calc(
     var(--cipher-badge-glyph) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
   );
 }
-.badge[data-collapse]:has(> .badgeDot):not(:has(> svg)) {
+.badge[data-collapse]:has(> .badgeDot):not(:has(> svg, > .badgeMedia)) {
   min-width: calc(6px + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border));
+}
+.badgeMedia {
+  display: inline-flex;
+  flex: none;
+  width: var(--cipher-badge-glyph);
+  height: var(--cipher-badge-glyph);
+  margin-inline-end: calc(var(--cipher-space-6) - var(--cipher-space-4));
+  overflow: hidden;
+}
+.badgeMedia > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .badgeText {
   min-width: 0;

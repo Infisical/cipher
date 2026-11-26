@@ -220,6 +220,10 @@
       {
         "title": "Wrapping group in a details card",
         "module": "badge/group-wrap"
+      },
+      {
+        "title": "Media before the label",
+        "module": "badge/media"
       }
     ]
   },
@@ -600,6 +604,10 @@
       {
         "title": "Multiple, loading",
         "module": "combobox/multiple-loading"
+      },
+      {
+        "title": "Media before the label",
+        "module": "combobox/media"
       }
     ]
   },
@@ -1024,6 +1032,10 @@
       {
         "title": "Exact-match text field: the chip reads is instead of contains",
         "module": "filter-bar/exact-match"
+      },
+      {
+        "title": "Option media in rows and chips",
+        "module": "filter-bar/media"
       }
     ]
   },
@@ -1804,6 +1816,10 @@
       {
         "title": "A badge on the selected option",
         "module": "select/badge"
+      },
+      {
+        "title": "Media before the label",
+        "module": "select/media"
       }
     ]
   },

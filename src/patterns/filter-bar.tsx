@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useReportListQuery } from "../lib/list-query";
+import { cn } from "../lib/utils";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import { Calendar } from "../ui/calendar";
@@ -18,7 +19,13 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 import styles from "./filter-bar.module.css";
 
-export type FilterBarOption = { value: string; label: string; group?: string };
+export type FilterBarOption = {
+  value: string;
+  label: string;
+  group?: string;
+  /** A logo or image before the label, sized like an icon, in the option row and in the applied chip. It never shrinks; the value truncates first. */
+  media?: React.ReactNode;
+};
 type FilterBarChoiceField = {
   key: string;
   label: string;
@@ -278,6 +285,10 @@ export const FilterBar = ({
               const field = fields.find((entry) => entry.key === filter.field);
               if (!field) return null;
               const text = describeFilter(field, filter);
+              const media =
+                field.type === "select" || field.type === "multi-select"
+                  ? field.options.find((option) => option.value === filter.values[0])?.media
+                  : undefined;
               const trigger = (
                 <Button
                   ref={(node) => {
@@ -289,6 +300,11 @@ export const FilterBar = ({
                   aria-label={`${field.label} ${text.verb} ${text.value}`}
                 >
                   <span className={styles.field}>{`${field.label} ${text.verb}`}</span>
+                  {media !== undefined && (
+                    <span data-slot="filter-media" className={cn(styles.media, "cipher-lead-line")}>
+                      {media}
+                    </span>
+                  )}
                   <span className={styles.value}>{text.value}</span>
                 </Button>
               );
