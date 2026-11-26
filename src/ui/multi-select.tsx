@@ -467,7 +467,7 @@ export function MultiSelect({
             {loading && <Spinner />}
           </div>
         )}
-        {multiple && quickActions && (options.length > 0 || selected.length > 0) ? (
+        {multiple && quickActions && (onSearch || options.length > 0 || selected.length > 0) ? (
           <div className={styles.quickBar} data-slot="multi-select-actions">
             <span role="status" aria-live="polite" className={styles.quickStatus}>
               {onSearch
