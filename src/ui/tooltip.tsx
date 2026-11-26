@@ -124,6 +124,7 @@ type TriggerHandlers = Pick<
 type AnchorHandle = { ref: React.Ref<HTMLElement> | undefined; handlers: TriggerHandlers };
 
 const sharedAttribute = "data-cipher-tooltip";
+const rowDescribedAttribute = "data-row-described";
 const TooltipScopeContext = React.createContext<SharedStore | null>(null);
 
 function SharedAnchor({
@@ -143,6 +144,7 @@ function SharedAnchor({
 function SharedTooltipHost({ store }: { store: SharedStore }) {
   const [mounted, setMounted] = React.useState(false);
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [rowIds, setRowIds] = React.useState<string[] | null>(null);
   const [open, setOpen] = React.useState(false);
   const openRef = React.useRef(open);
   const holdOpen = React.useRef(false);
@@ -168,6 +170,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   React.useEffect(() => {
     const pressed = new WeakSet<Element>();
     let hovered: HTMLElement | null = null;
+    let focusedRow: HTMLTableRowElement | null = null;
     const run = (step: (anchor: AnchorHandle) => void) => {
       if (handle.current) step(handle.current);
       else {
@@ -177,7 +180,9 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     };
     const call = (name: keyof TriggerHandlers, event: Event | { defaultPrevented: boolean }) =>
       run((anchor) => (anchor.handlers[name] as ((event: unknown) => void) | undefined)?.(event));
-    const attach = (target: HTMLElement) => {
+    const attach = (target: HTMLElement, rows: string[] | null = null) => {
+      setRowIds(rows);
+      if (!rows) focusedRow = null;
       if (element.current === target) return;
       element.current = target;
       setActiveId(target.getAttribute(sharedAttribute));
@@ -230,14 +235,38 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
         holdOpen.current = true;
       }
     };
+    const showRow = (row: HTMLTableRowElement) => {
+      const described = [
+        ...row.querySelectorAll<HTMLElement>(`[${sharedAttribute}][${rowDescribedAttribute}]`)
+      ].filter((item) => item.closest("tr") === row && find(item));
+      if (!described.length) return false;
+      attach(
+        described[0],
+        described.map((item) => item.getAttribute(sharedAttribute) as string)
+      );
+      focusedRow = row;
+      return true;
+    };
     const onFocusIn = (event: FocusEvent) => {
+      if (!focusedByKeyboard()) return;
       const trigger = find(event.target);
-      if (!trigger || pressed.has(trigger) || !focusedByKeyboard()) return;
-      attach(trigger);
-      call("onFocus", event);
+      if (trigger) {
+        if (pressed.has(trigger)) return;
+        attach(trigger);
+        call("onFocus", event);
+        return;
+      }
+      if (event.target instanceof HTMLTableRowElement && showRow(event.target))
+        call("onFocus", event);
     };
     const onFocusOut = (event: FocusEvent) => {
-      if (element.current && find(event.target) === element.current) call("onBlur", event);
+      if (
+        element.current &&
+        (event.target === focusedRow || find(event.target) === element.current)
+      ) {
+        focusedRow = null;
+        call("onBlur", event);
+      }
     };
     const onPointerCancel = () => {
       holdOpen.current = false;
@@ -250,11 +279,20 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       if (element.current && find(event.target) === element.current) call("onClick", event);
     };
     store.listener = (id) => {
+      const row = focusedRow;
+      if (row)
+        queueMicrotask(() => {
+          if (focusedRow !== row || showRow(row)) return;
+          focusedRow = null;
+          setRowIds(null);
+          call("onBlur", { defaultPrevented: false });
+        });
       if (!element.current || element.current.getAttribute(sharedAttribute) !== id) return;
       if (store.entries.has(id)) {
         refresh();
         return;
       }
+      if (row) return;
       call("onPointerLeave", { defaultPrevented: false });
       element.current = null;
       setActiveId(null);
@@ -280,13 +318,17 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
 
   React.useLayoutEffect(() => {
     const target = element.current;
-    if (!open || !target || target.hasAttribute("aria-describedby")) return undefined;
+    if (!open || !target || rowIds || target.hasAttribute("aria-describedby")) return undefined;
     target.setAttribute("aria-describedby", contentId);
     return () => target.removeAttribute("aria-describedby");
-  }, [open, activeId, contentId]);
+  }, [open, activeId, rowIds, contentId]);
 
   if (!mounted) return null;
   const entry = activeId ? store.entries.get(activeId) : undefined;
+  const rowEntries = rowIds?.flatMap((id) => {
+    const item = store.entries.get(id);
+    return item ? [{ id, content: item.content }] : [];
+  });
   return (
     <TooltipPrimitive.Root
       data-slot="tooltip"
@@ -302,8 +344,18 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       </TooltipPrimitive.Trigger>
       {entry && (
         <TooltipContent id={contentId} side={entry.side} align={entry.align}>
-          <span className={menu.tooltipText}>{entry.content}</span>
-          {entry.shortcut && <Kbd>{entry.shortcut}</Kbd>}
+          {rowEntries ? (
+            <span className={cn(menu.tooltipText, menu.tooltipLines)}>
+              {rowEntries.map((item) => (
+                <span key={item.id}>{item.content}</span>
+              ))}
+            </span>
+          ) : (
+            <>
+              <span className={menu.tooltipText}>{entry.content}</span>
+              {entry.shortcut && <Kbd>{entry.shortcut}</Kbd>}
+            </>
+          )}
         </TooltipContent>
       )}
     </TooltipPrimitive.Root>
@@ -578,7 +630,12 @@ function TooltipText({
     const nodeDisabled = disabled || Boolean(node?.matches(":disabled"));
     if (independent && !nodeDisabled) return undefined;
     if (!nodeDisabled && node?.matches(interactiveControl)) return undefined;
-    return describeRow(descriptionId);
+    const undescribe = describeRow(descriptionId);
+    node?.setAttribute(rowDescribedAttribute, "");
+    return () => {
+      node?.removeAttribute(rowDescribedAttribute);
+      undescribe();
+    };
   }, [describeRow, descriptionId, independent, disabled, child?.type]);
   return (
     <>
@@ -679,7 +736,6 @@ function useReason(reason: React.ReactNode) {
       )
   };
 }
-
 
 export {
   Tooltip,
