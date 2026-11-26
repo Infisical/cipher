@@ -781,6 +781,8 @@ export type RowAction = {
   icon: IconSource;
   onSelect: () => void;
   disabledReason?: string;
+  /** Shows the button's spinner and blocks it while the action runs. */
+  loading?: boolean;
 };
 export type UpToThree<T> = readonly [] | readonly [T] | readonly [T, T] | readonly [T, T, T];
 export type RowActionList = UpToThree<RowAction>;
@@ -797,6 +799,7 @@ function RowActionButton({ action, label }: { action: RowAction; label: string }
           size="icon-row"
           iconOnly
           disabledReason={reason}
+          loading={action.loading}
           onClick={(event) => {
             stop(event);
             action.onSelect();
@@ -871,7 +874,7 @@ function RowActions({
   const [openOnMount, setOpenOnMount] = React.useState(false);
   const group = React.useRef<HTMLDivElement | null>(null);
   const restoreFocus = React.useRef(-1);
-  if (!live && (!lazy || open)) setLive(true);
+  if (!live && (!lazy || open || inline.some((action) => action.loading))) setLive(true);
   const setGroup = React.useCallback(
     (node: HTMLDivElement | null) => {
       group.current = node;
@@ -1080,7 +1083,7 @@ function RowContextMenu({
           {inline.map((action) => (
             <DropdownMenuItem
               key={action.label}
-              disabled={Boolean(action.disabledReason)}
+              disabled={Boolean(action.disabledReason) || action.loading}
               description={action.disabledReason}
               onSelect={action.onSelect}
             >

@@ -2162,6 +2162,10 @@
         "module": "table/row-actions"
       },
       {
+        "title": "Row action loading",
+        "module": "table/row-action-loading"
+      },
+      {
         "title": "Shared tooltips",
         "module": "table/shared-tooltips"
       },
