@@ -37,6 +37,11 @@ export default function RowActionLoading() {
         rowActions={{
           inline: [
             {
+              label: "Copy secret",
+              icon: "copy",
+              onSelect: (row) => toast(`Copied the fabricated value of ${row.name}.`)
+            },
+            {
               label: "Rotate secret",
               icon: "sync",
               loading: (row) => rotating.has(row.id),
