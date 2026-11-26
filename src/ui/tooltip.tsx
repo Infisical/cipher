@@ -2,7 +2,7 @@ import * as React from "react";
 import { flushSync } from "react-dom";
 import { Slot, Tooltip as TooltipPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
@@ -376,7 +376,7 @@ TooltipTrigger.displayName = "TooltipTrigger";
 
 function TooltipContent({
   className,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   sideOffset = 0,
   children,
   ref,
