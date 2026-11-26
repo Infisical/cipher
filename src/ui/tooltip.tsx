@@ -231,6 +231,9 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     const onFocusOut = (event: FocusEvent) => {
       if (element.current && find(event.target) === element.current) call("onBlur", event);
     };
+    const onPointerCancel = () => {
+      holdOpen.current = false;
+    };
     const onClick = (event: MouseEvent) => {
       if (holdOpen.current)
         setTimeout(() => {
@@ -254,6 +257,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     document.addEventListener("focusin", onFocusIn, true);
     document.addEventListener("focusout", onFocusOut, true);
     document.addEventListener("click", onClick, true);
+    document.addEventListener("pointercancel", onPointerCancel, true);
     return () => {
       store.listener = null;
       document.removeEventListener("pointermove", onPointerMove, true);
@@ -262,6 +266,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       document.removeEventListener("focusin", onFocusIn, true);
       document.removeEventListener("focusout", onFocusOut, true);
       document.removeEventListener("click", onClick, true);
+      document.removeEventListener("pointercancel", onPointerCancel, true);
     };
   }, [store]);
 
