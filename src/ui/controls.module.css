@@ -523,14 +523,14 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex: none;
   max-width: 100%;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > [data-slot="button-group"] {
-  overflow: visible;
-}
-.card[data-variant="framed"] > .cardHeader > .cardAction > * {
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-slot="button-group"]) {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+.card[data-variant="framed"]
+  > .cardHeader
+  > .cardAction
+  > :not([data-cipher-button], [data-slot="button-group"]) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
