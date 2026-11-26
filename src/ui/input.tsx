@@ -89,6 +89,7 @@ export function Input({
   const problem = error || undefined;
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
+  const [dismissed, setDismissed] = React.useState<string>();
   const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
     const element = inner.current;
@@ -138,6 +139,7 @@ export function Input({
       onFocus={(event) => {
         onFocus?.(event);
         setFocused(true);
+        setDismissed(undefined);
       }}
       onBlur={(event) => {
         onBlur?.(event);
@@ -145,6 +147,7 @@ export function Input({
       }}
       onKeyDown={(event) => {
         onKeyDown?.(event);
+        if (event.key === "Escape" && problem) setDismissed(problem);
         if (
           !suggesting ||
           event.currentTarget.value ||
@@ -214,8 +217,13 @@ export function Input({
       <TooltipProvider>
         <Tooltip
           content={reason || problem || " "}
-          open={reason ? undefined : Boolean(problem) && (focused || hovered)}
-          onOpenChange={setHovered}
+          open={
+            reason ? undefined : Boolean(problem) && dismissed !== problem && (focused || hovered)
+          }
+          onOpenChange={(open) => {
+            setHovered(open);
+            if (open) setDismissed(undefined);
+          }}
           defaultOpen={false}
         >
           {control}

@@ -31,6 +31,7 @@ function titleIfTruncated(element: HTMLElement | null | undefined) {
 const SelectNameContext = React.createContext<{
   "aria-label"?: string;
   "aria-labelledby"?: string;
+  disabledReason?: string;
 }>({});
 
 export type SelectOption = {
@@ -144,7 +145,9 @@ function Select({
             </SelectContent>
           </>
         ) : (
-          <SelectNameContext value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy }}>
+          <SelectNameContext
+            value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy, disabledReason }}
+          >
             {children}
           </SelectNameContext>
         )}
@@ -197,7 +200,7 @@ function SelectTrigger({
     "aria-labelledby": props["aria-labelledby"] ?? name["aria-labelledby"]
   });
   const reasonId = React.useId();
-  const reason = disabledReason || undefined;
+  const reason = (disabledReason ?? name.disabledReason) || undefined;
   const trigger = (
     <SelectPrimitive.Trigger
       ref={ref}
