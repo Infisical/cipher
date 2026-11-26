@@ -105,7 +105,10 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
   let value = "any";
   if (labels.length === 1) [value] = labels;
   else if (labels.length === 2) value = `${labels[0]} or ${labels[1]}`;
-  else if (labels.length > 2) value = `${labels[0]} or ${labels.length - 1} more`;
+  else if (labels.length > 2) {
+    const more = `or ${labels.length - 1} more`;
+    return { verb: "is", value: `${labels[0]} ${more}`, first: labels[0], more };
+  }
   return { verb: "is", value };
 };
 
@@ -289,7 +292,12 @@ export const FilterBar = ({
                   aria-label={`${field.label} ${text.verb} ${text.value}`}
                 >
                   <span className={styles.field}>{`${field.label} ${text.verb}`}</span>
-                  <span className={styles.value}>{text.value}</span>
+                  <span className={styles.value}>
+                    <span className={styles.label}>
+                      {"first" in text ? text.first : text.value}
+                    </span>
+                    {"more" in text && <span className={styles.more}>{text.more}</span>}
+                  </span>
                 </Button>
               );
               const isOpen = open === field.key;

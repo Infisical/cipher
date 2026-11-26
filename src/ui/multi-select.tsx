@@ -75,6 +75,7 @@ type Shared = {
   align?: "start" | "center" | "end";
   side?: "top" | "right" | "bottom" | "left";
   menuWidth?: React.CSSProperties["width"];
+  /** Select all and Deselect all above the list. Off with onSearch, where only the loaded results could be selected. */
   quickActions?: boolean;
   closeOnFocusOutside?: boolean;
   className?: string;
@@ -470,7 +471,7 @@ export function MultiSelect({
             {loading && <Spinner />}
           </div>
         )}
-        {multiple && quickActions ? (
+        {multiple && quickActions && !onSearch ? (
           <div className={styles.quickBar} data-slot="multi-select-actions">
             <span role="status" aria-live="polite" className={styles.quickStatus}>
               {onSearch
