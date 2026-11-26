@@ -402,6 +402,16 @@ function TooltipContent({
 }
 TooltipContent.displayName = "TooltipContent";
 
+const interactiveRoles = new Set([
+  "button",
+  "checkbox",
+  "combobox",
+  "link",
+  "menuitem",
+  "switch",
+  "tab"
+]);
+
 function TooltipText({
   content,
   side,
@@ -430,17 +440,19 @@ function TooltipText({
     onKeyDown?: unknown;
     disabled?: unknown;
   };
-  const independent = typeof own.role === "string" || Boolean(own.onClick || own.onKeyDown);
+  const independent =
+    (typeof own.role === "string" && interactiveRoles.has(own.role)) ||
+    Boolean(own.onClick || own.onKeyDown);
   const disabled = Boolean(own.disabled);
   const passThrough = Boolean(describeRow) && !independent;
-  const describes = Boolean(describeRow) && (!independent || disabled);
   React.useLayoutEffect(() => {
     const node = trigger.current;
-    if (!describeRow || !describes) return undefined;
-    if (!disabled && node?.matches(interactiveControl) && !node.matches(":disabled"))
-      return undefined;
+    if (!describeRow) return undefined;
+    const nodeDisabled = disabled || Boolean(node?.matches(":disabled"));
+    if (independent && !nodeDisabled) return undefined;
+    if (!nodeDisabled && node?.matches(interactiveControl)) return undefined;
     return describeRow(descriptionId);
-  }, [describeRow, descriptionId, describes, disabled, child?.type]);
+  }, [describeRow, descriptionId, independent, disabled, child?.type]);
   return (
     <>
       <Tooltip content={content} side={side} align={align}>
@@ -457,7 +469,7 @@ function TooltipText({
           {...props}
         />
       </Tooltip>
-      {describes && (
+      {describeRow && (
         <span id={descriptionId} hidden>
           {content}
         </span>
