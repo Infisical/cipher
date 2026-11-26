@@ -15,31 +15,31 @@
   gap: var(--cipher-space-8);
 }
 .lead {
+  --cipher-lead-row: auto;
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
 }
+.layout[data-size="sm"] > .lead {
+  align-self: center;
+}
 .layout > .lead:has(> svg:first-child),
 .layout[data-has-actions] > .lead:has(> svg:first-child),
 [data-slot="tile"]:not([data-layout="stacked"], [data-described]) > .lead:has(> svg:first-child) {
+  --cipher-lead-row: var(--cipher-type-row-title-line-height);
   align-self: flex-start;
-  min-height: var(--cipher-type-row-title-line-height);
 }
 /* The media centres on a title plus one description line, then stays put as longer copy grows downward. */
-[data-slot="tile"]:not([data-layout="stacked"])[data-described] {
-  --cipher-tile-default-row: calc(
-    var(--cipher-type-row-title-line-height) + var(--cipher-space-4) +
-      var(--cipher-type-small-line-height)
-  );
-}
 [data-slot="tile"]:not([data-layout="stacked"])[data-described] > .lead {
-  min-height: var(--cipher-tile-default-row);
+  --cipher-lead-row: var(--cipher-size-default-row);
+  align-self: flex-start;
 }
 [data-slot="tile"]:not([data-layout="stacked"])[data-described] > svg:last-child {
+  /* lint-css-allow: lead: a trailing chevron, kept level with the lead's centre. */
   align-self: flex-start;
-  margin-top: calc((var(--cipher-tile-default-row) - var(--cipher-size-icon)) / 2);
+  margin-top: calc((var(--cipher-size-default-row) - var(--cipher-size-icon)) / 2);
 }
 .main {
   display: flex;
@@ -98,10 +98,6 @@
   margin-top: var(--cipher-space-4);
   color: var(--cipher-bad);
 }
-.error > svg {
-  flex: none;
-  margin-block: calc((1lh - var(--cipher-size-icon-small)) / 2);
-}
 .actions {
   display: flex;
   flex-shrink: 0;
@@ -124,7 +120,7 @@
 }
 .layout[data-has-actions] > .lead {
   align-self: flex-start;
-  min-height: calc(
+  --cipher-lead-row: calc(
     var(--cipher-type-row-title-line-height) + var(--cipher-space-2) +
       var(--cipher-type-small-line-height)
   );

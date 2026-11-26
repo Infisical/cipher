@@ -42,3 +42,17 @@
   contain: inline-size;
   color: var(--cipher-muted);
 }
+@media (max-width: 47.99rem) {
+  .panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .presets {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-inline-end: 0;
+    padding-block-end: var(--cipher-space-12);
+    border-inline-end: none;
+    border-block-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+  }
+}

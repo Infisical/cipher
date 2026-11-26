@@ -1010,6 +1010,10 @@
         "module": "filter-bar/date-range"
       },
       {
+        "title": "Date range field with presets and two months",
+        "module": "filter-bar/date-range-presets"
+      },
+      {
         "title": "Filters kept in the URL",
         "module": "filter-bar/url-state"
       },
@@ -1360,6 +1364,10 @@
       {
         "title": "Toolbar gap",
         "module": "layout/toolbar-gap"
+      },
+      {
+        "title": "Leading media: first line or default row",
+        "module": "layout/leading-media"
       }
     ]
   },

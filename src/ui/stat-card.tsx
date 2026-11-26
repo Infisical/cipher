@@ -95,9 +95,11 @@ export function StatCard({
       {loading ? (
         <Skeleton className={styles.valueSkeleton} />
       ) : failed ? (
-        <StatusText tone="bad" icon="alert" className={styles.error}>
-          {error}
-        </StatusText>
+        <div className={styles.error}>
+          <StatusText tone="bad" icon="alert">
+            {error}
+          </StatusText>
+        </div>
       ) : (
         <div id={valueId} data-slot="stat-card-value" className={styles.value}>
           {value}
