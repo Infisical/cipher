@@ -1,6 +1,7 @@
-import { CommandMenu, type CommandMenuGroup } from "@infisical/cipher/ui/command-menu";
+import { useState } from "react";
 
-import { OverlayStage } from "../overlay-stage";
+import { Button } from "@infisical/cipher/ui/button";
+import { CommandMenu, type CommandMenuGroup } from "@infisical/cipher/ui/command-menu";
 
 const groups: CommandMenuGroup[] = [
   {
@@ -25,15 +26,20 @@ const groups: CommandMenuGroup[] = [
 ];
 
 export default function Example() {
+  const [open, setOpen] = useState(false);
   return (
-    <OverlayStage height={520}>
+    <div className="flex w-full min-w-0 flex-col items-start gap-3">
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Search workspace
+      </Button>
       <CommandMenu
-        defaultOpen
+        open={open}
+        onOpenChange={setOpen}
         stableHeight
         hotkey={false}
         label="Search workspace"
         groups={groups}
       />
-    </OverlayStage>
+    </div>
   );
 }

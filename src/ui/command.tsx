@@ -44,7 +44,8 @@ function CommandDialog({
   /**
    * Holds the palette at size-palette-height while results change, so typing never makes it jump
    * and the no results state centres in the same space. Use it for a palette a person reopens to
-   * scan results; a short list of fixed commands can fit its content.
+   * scan results; a short list of fixed commands can fit its content. Render CommandEmpty beside
+   * CommandList, as CommandMenu does, so it can fill the body.
    */
   stableHeight?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
