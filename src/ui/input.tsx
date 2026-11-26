@@ -90,7 +90,7 @@ export function Input({
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
   const [dismissed, setDismissed] = React.useState<string>();
-  if (dismissed && !problem) setDismissed(undefined);
+  if (dismissed && dismissed !== problem) setDismissed(undefined);
   const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
     const element = inner.current;
