@@ -7,7 +7,7 @@ import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
 import { TooltipProvider } from "./tooltip";
 
-import { ActionLabelCollapseContext } from "../lib/action-label-collapse";
+import { HeaderActions } from "../lib/header-actions";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -171,10 +171,10 @@ function DialogHeader({
   ...props
 }: React.ComponentProps<"div"> & {
   /**
-   * Header actions beside the title. In a narrow header a Button with a leading icon drops to
-   * icon-only, its label becoming the tooltip and accessible name; one without an icon keeps its
-   * label and truncates last. Pass Buttons or a ButtonGroup; only Buttons passed directly
-   * shrink.
+   * Header actions beside the title. When the title does not fit on one line beside the full
+   * labels, a Button with a leading icon drops to icon-only, its label becoming the tooltip and
+   * accessible name. Icon actions never truncate; one without an icon keeps its label and
+   * truncates only as the last resort. Pass Buttons or a ButtonGroup.
    */
   actions?: React.ReactNode;
 }) {
@@ -182,7 +182,7 @@ function DialogHeader({
     <div
       ref={ref}
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2", Boolean(actions) && overlay.actionsHeader, className)}
+      className={cn("flex flex-col gap-2", className)}
       {...props}
     >
       {actions ? (
@@ -190,11 +190,11 @@ function DialogHeader({
           <div data-slot="dialog-header-main" className={overlay.headerMain}>
             {children}
           </div>
-          <div data-slot="dialog-header-actions" className={overlay.headerActions}>
-            <TooltipProvider>
-              <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
-            </TooltipProvider>
-          </div>
+          <TooltipProvider>
+            <HeaderActions slot="dialog-header-actions" className={overlay.headerActions}>
+              {actions}
+            </HeaderActions>
+          </TooltipProvider>
         </div>
       ) : (
         children

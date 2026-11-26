@@ -2,7 +2,7 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
-import { ActionLabelCollapseContext, actionLabelCollapsed } from "../lib/action-label-collapse";
+import { ActionLabelCollapseContext } from "../lib/header-actions";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
@@ -78,7 +78,7 @@ function Button({
   loadingLabel,
   icon,
   iconRight,
-  iconOnly = false,
+  iconOnly: iconOnlyProp = false,
   selected,
   disabledReason,
   cornerBadge,
@@ -121,6 +121,14 @@ function Button({
   const Comp = asChild ? Slot.Root : "button";
   const loading = loadingProp ?? false;
   const reason = disabledReason || undefined;
+  const headerCollapsed = React.useContext(ActionLabelCollapseContext);
+  const collapsible =
+    headerCollapsed !== undefined &&
+    Boolean(icon) &&
+    !iconOnlyProp &&
+    layout !== "trigger" &&
+    !reason;
+  const iconOnly = iconOnlyProp || (collapsible && headerCollapsed);
   const inactive =
     loading ||
     Boolean(reason) ||
@@ -157,17 +165,11 @@ function Button({
         ? `var(--cipher-button-icon-size, ${iconSize}px)`
         : "var(--cipher-action-icon-size)";
   const trigger = layout === "trigger";
-  const collapsible =
-    React.useContext(ActionLabelCollapseContext) &&
-    Boolean(icon) &&
-    !iconOnly &&
-    !trigger &&
-    !reason;
   const gateTooltip =
     <E extends React.SyntheticEvent>(handler?: (event: E) => void) =>
     (event: E) => {
       handler?.(event);
-      if (!actionLabelCollapsed(event.currentTarget as Element)) event.preventDefault();
+      if (!headerCollapsed) event.preventDefault();
     };
   const content = (label: React.ReactNode) => {
     const labelGroup = trigger ? (
@@ -322,8 +324,8 @@ function Button({
   if (reason) return <Tooltip content={reason}>{button}</Tooltip>;
   if (collapsible)
     return (
-      // An explicit delay keeps this off a surrounding TooltipScope, whose shared host would open it
-      // before the collapse gate runs.
+      // The tooltip stays mounted while the label shows, so collapsing never remounts the button;
+      // an explicit delay keeps it off a surrounding TooltipScope, which would bypass the gate.
       <Tooltip
         delayDuration={200}
         content={

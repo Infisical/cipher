@@ -10,7 +10,7 @@ import { Panes, type PanesState } from "./layout";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 import { TooltipProvider } from "./tooltip";
 
-import { ActionLabelCollapseContext } from "../lib/action-label-collapse";
+import { HeaderActions } from "../lib/header-actions";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl, formControlSelector } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -874,27 +874,28 @@ function SheetHeader({
   tabs?: React.ReactNode;
   /**
    * Header actions, such as an "Add method" Button. They sit at the end of the tab row when the
-   * header has tabs, outside the scrolling tab list, and beside the title otherwise. In a narrow
-   * header a Button with a leading icon drops to icon-only, its label becoming the tooltip and
-   * accessible name; one without an icon keeps its label and truncates last. Pass Buttons or a
-   * ButtonGroup; only Buttons passed directly shrink.
+   * header has tabs, outside the scrolling tab list, and beside the title otherwise. When the tabs,
+   * or the title on one line, do not fit beside the full labels, a Button with a leading icon drops
+   * to icon-only, its label becoming the tooltip and accessible name. Icon actions never truncate;
+   * one without an icon keeps its label and truncates only as the last resort. Pass Buttons or a
+   * ButtonGroup.
    */
   actions?: React.ReactNode;
 }) {
   const titled = React.Children.toArray(children).length > 0;
   const actionsSlot = Boolean(actions) && (
-    <div data-slot="sheet-header-actions" className={overlay.headerActions}>
-      <TooltipProvider>
-        <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
-      </TooltipProvider>
-    </div>
+    <TooltipProvider>
+      <HeaderActions slot="sheet-header-actions" className={overlay.headerActions}>
+        {actions}
+      </HeaderActions>
+    </TooltipProvider>
   );
   return (
     <div
       ref={ref}
       data-slot="sheet-header"
       data-tabs={tabs ? (titled ? "" : "only") : undefined}
-      className={cn("flex flex-col gap-0.5 p-4", actionsSlot && overlay.actionsHeader, className)}
+      className={cn("flex flex-col gap-0.5 p-4", className)}
       {...props}
     >
       {actionsSlot && !tabs ? (

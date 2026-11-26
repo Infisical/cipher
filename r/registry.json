@@ -47,11 +47,6 @@
           "target": "src/components/cipher/hooks/use-mobile.ts"
         },
         {
-          "path": "src/components/cipher/lib/action-label-collapse.ts",
-          "type": "registry:file",
-          "target": "src/components/cipher/lib/action-label-collapse.ts"
-        },
-        {
           "path": "src/components/cipher/lib/boot-theme-keys.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/boot-theme-keys.ts"
@@ -85,6 +80,11 @@
           "path": "src/components/cipher/lib/frame-context.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/lib/frame-context.tsx"
+        },
+        {
+          "path": "src/components/cipher/lib/header-actions.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/header-actions.tsx"
         },
         {
           "path": "src/components/cipher/lib/hue.ts",

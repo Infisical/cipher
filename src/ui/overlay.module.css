@@ -252,12 +252,10 @@
   margin-inline-end: calc(-1 * var(--cipher-space-6));
 }
 
-/* Header actions: at the end of the tab row or beside the title. Below the query a Button with a
-   leading icon keeps only the icon. Tabs and titles shrink first, to half the row; their large
-   shrink factor makes the actions give way only after that, truncating their labels. */
-.actionsHeader {
-  container: cipher-overlay-header / inline-size;
-}
+/* Header actions: at the end of the tab row or beside the title. HeaderActions collapses icon
+   actions before the tabs scroll or the title wraps, and they never shrink. Tabs and titles shrink
+   first, to half the row; their large shrink factor leaves an action without an icon to truncate
+   only after that. */
 .headerRow {
   display: flex;
   align-items: flex-start;
@@ -285,78 +283,20 @@
 .headerRow > .headerActions > * {
   margin-block: calc((var(--cipher-type-title-line-height) - var(--cipher-action-height, 0px)) / 2);
 }
-.headerActions > [data-cipher-button] {
+.headerActions > [data-cipher-button]:not(:has([data-button-icon])) {
   flex-shrink: 1;
   min-width: 0;
 }
-.headerActions > [data-cipher-button] > [data-press] {
+.headerActions > [data-cipher-button]:not(:has([data-button-icon])) > [data-press] {
   min-width: 0;
   overflow: hidden;
 }
-.headerActions > [data-cipher-button] > [data-press] [data-slot="button-text"] {
+.headerActions
+  > [data-cipher-button]:not(:has([data-button-icon]))
+  > [data-press]
+  [data-slot="button-text"] {
   display: block;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-/* A tab row needs more room than a title, which can wrap, so it collapses sooner. */
-@container cipher-overlay-header (max-width: 26rem) {
-  .headerTabsRow > .headerActions {
-    --cipher-action-label-collapsed: 1;
-  }
-  .headerTabsRow
-    > .headerActions
-    [data-cipher-button]:has([data-button-icon]):not(
-      [data-layout="trigger"],
-      [data-disabled-reason]
-    ) {
-    width: var(--cipher-action-height);
-    min-width: var(--cipher-action-height);
-    padding-inline: 0;
-  }
-  .headerTabsRow
-    > .headerActions
-    [data-cipher-button]:has([data-button-icon]):not(
-      [data-layout="trigger"],
-      [data-disabled-reason]
-    )
-    [data-slot="button-text"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-}
-@container cipher-overlay-header (max-width: 22rem) {
-  .headerRow > .headerActions {
-    --cipher-action-label-collapsed: 1;
-  }
-  .headerRow
-    > .headerActions
-    [data-cipher-button]:has([data-button-icon]):not(
-      [data-layout="trigger"],
-      [data-disabled-reason]
-    ) {
-    width: var(--cipher-action-height);
-    min-width: var(--cipher-action-height);
-    padding-inline: 0;
-  }
-  .headerRow
-    > .headerActions
-    [data-cipher-button]:has([data-button-icon]):not(
-      [data-layout="trigger"],
-      [data-disabled-reason]
-    )
-    [data-slot="button-text"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
 }
