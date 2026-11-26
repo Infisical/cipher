@@ -15,7 +15,7 @@ const candidate = (element: HTMLElement) =>
 /**
  * An onOpenAutoFocus handler for overlays: focus lands on the first form control, else the first
  * tabbable element that is not marked with skipAutoFocus, so a help button beside the first label
- * never takes focus and opens its tooltip. With prefer, the first control inside that element wins,
+ * never takes focus and opens its tooltip. With nothing to focus, the overlay itself takes focus. With prefer, the first control inside that element wins,
  * such as a two-pane sheet's main pane over its aside.
  */
 export function focusFirstControl(event: Event, prefer?: string) {
@@ -26,8 +26,7 @@ export function focusFirstControl(event: Event, prefer?: string) {
     Array.from(container.querySelectorAll<HTMLElement>(selector)).find(candidate);
   const first = (container: HTMLElement) =>
     find(container, formControlSelector) ?? find(container, tabbableSelector);
-  const target = (preferred && first(preferred)) ?? first(root);
-  if (!target) return;
+  const target = (preferred && first(preferred)) ?? first(root) ?? root;
   event.preventDefault();
   target.focus({ preventScroll: true });
 }

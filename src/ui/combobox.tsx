@@ -539,7 +539,7 @@ export function Combobox({
                     creation.create(query.trim());
                   }}
                 >
-                  <Icon name="plus" />
+                  <Icon name="plus" lead />
                   <span className={styles.optionLabel}>
                     {creating
                       ? "Creating…"

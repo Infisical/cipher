@@ -185,8 +185,9 @@
   letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
 }
 .status {
+  --cipher-lead-size: var(--cipher-size-icon);
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--cipher-space-6);
   min-width: 0;
   vertical-align: top;
@@ -204,6 +205,9 @@
   line-height: var(--cipher-type-small-line-height);
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.status[data-size="sm"] {
+  --cipher-lead-size: var(--cipher-size-icon-sm);
 }
 .status[data-size="sm"] > svg {
   width: var(--cipher-size-icon-sm);

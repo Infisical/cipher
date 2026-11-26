@@ -258,7 +258,7 @@ export function FileInput({
       <div id={messageId} aria-live="polite" className={styles.messages}>
         {messages.map((message, index) => (
           <p key={`${rejected.attempt}-${index}`} className={helperStyles.fieldError}>
-            <Icon name="alert" size={14} />
+            <Icon name="alert" size={14} lead />
             <span>{message}</span>
           </p>
         ))}
