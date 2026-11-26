@@ -158,26 +158,29 @@ const RowContent = ({
   count?: number;
   child?: boolean;
   trailing?: React.ReactNode;
-}) => (
-  <>
-    {!child &&
-      (item.icon ? (
-        <Icon icon={item.icon} size="var(--cipher-size-sidebar-icon)" className={styles.icon} />
-      ) : (
-        <span className={styles.monogram} aria-hidden="true">
-          {item.label.charAt(0)}
-        </span>
-      ))}
-    <span className={styles.label}>{item.label}</span>
-    {item.badge !== undefined && <span className={styles.badge}>{item.badge}</span>}
-    {count ? <Count className={styles.count}>{count}</Count> : null}
-    {(count || item.badge !== undefined) && (
-      <span className={styles.dot} data-count={count ? "" : undefined} aria-hidden="true" />
-    )}
-    {item.external && <Icon name="external" size={14} className={styles.trailing} />}
-    {trailing}
-  </>
-);
+}) => {
+  const hasBadge = React.Children.toArray(item.badge).length > 0;
+  return (
+    <>
+      {!child &&
+        (item.icon ? (
+          <Icon icon={item.icon} size="var(--cipher-size-sidebar-icon)" className={styles.icon} />
+        ) : (
+          <span className={styles.monogram} aria-hidden="true">
+            {item.label.charAt(0)}
+          </span>
+        ))}
+      <span className={styles.label}>{item.label}</span>
+      {hasBadge && <span className={styles.badge}>{item.badge}</span>}
+      {count ? <Count className={styles.count}>{count}</Count> : null}
+      {(count || hasBadge) && (
+        <span className={styles.dot} data-count={count ? "" : undefined} aria-hidden="true" />
+      )}
+      {item.external && <Icon name="external" size={14} className={styles.trailing} />}
+      {trailing}
+    </>
+  );
+};
 
 const drill = <Icon name="chev-right" size={14} className={styles.trailing} />;
 
