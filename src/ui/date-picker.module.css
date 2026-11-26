@@ -55,7 +55,4 @@
     border-inline-end: none;
     border-block-end: var(--cipher-size-control-border) solid var(--cipher-line-soft);
   }
-  .main :global(.rdp-month) ~ :global(.rdp-month) {
-    display: none;
-  }
 }

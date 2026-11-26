@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { DateRange, Locale, Matcher } from "react-day-picker";
 
+import { useIsMobile } from "../hooks/use-mobile";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { cn, titleIfClamped } from "../lib/utils";
 import { Button } from "./button";
@@ -189,20 +190,16 @@ export function DateRangePickerContent({
   "aria-label": ariaLabel = "Choose a date range",
   ...props
 }: DateRangePickerContentProps) {
+  const months = useIsMobile() ? 1 : numberOfMonths;
   return (
     <PopoverContent
       align={align}
-      data-width={numberOfMonths > 1 ? undefined : "content"}
-      className={numberOfMonths > 1 ? styles.wide : undefined}
+      data-width={months > 1 ? undefined : "content"}
+      className={months > 1 ? styles.wide : undefined}
       aria-label={ariaLabel}
       onOpenAutoFocus={(event) => event.preventDefault()}
     >
-      <DateRangePanel
-        {...props}
-        numberOfMonths={numberOfMonths}
-        presets={presets}
-        commit={commit}
-      />
+      <DateRangePanel {...props} numberOfMonths={months} presets={presets} commit={commit} />
     </PopoverContent>
   );
 }
