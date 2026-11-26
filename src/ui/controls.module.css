@@ -514,11 +514,34 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex: 0 1 auto;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > * {
+/* A ButtonGroup can't truncate without clipping its buttons, so the band wraps instead: the group
+   drops under the title, inside the band, when the two don't fit on one line. */
+.card[data-variant="framed"]
+  > .cardHeader:has(> .cardAction > [data-slot="button-group"]):not(
+    :has(> [data-slot="card-description"])
+  ) {
+  flex-wrap: wrap;
+}
+.card[data-variant="framed"]
+  > .cardHeader:has(> .cardAction > [data-slot="button-group"]):not(
+    :has(> [data-slot="card-description"])
+  )
+  > :is(.cardTitleGroup, [data-slot="card-title"]) {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction:has(> [data-slot="button-group"]) {
+  flex: none;
+  max-width: 100%;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-slot="button-group"]) {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+.card[data-variant="framed"]
+  > .cardHeader
+  > .cardAction
+  > :not([data-cipher-button], [data-slot="button-group"]) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
