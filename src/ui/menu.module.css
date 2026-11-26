@@ -133,6 +133,11 @@
 .tooltipText {
   min-width: 0;
 }
+.tooltipLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-4);
+}
 .tooltip code {
   overflow-wrap: anywhere;
 }
