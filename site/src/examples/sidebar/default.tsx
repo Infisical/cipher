@@ -30,7 +30,16 @@ const spaces: SidebarProps["spaces"] = [
               { id: "secrets-scanning", label: "Secret scanning", count: 1 }
             ]
           },
-          { id: "certificates", label: "Certificates", icon: "cert" },
+          {
+            id: "certificates",
+            label: "Certificates",
+            icon: "cert",
+            badge: (
+              <Badge size="sm" tone="warn" collapse>
+                3 expiring
+              </Badge>
+            )
+          },
           { id: "pam", label: "PAM", icon: "terminal" },
           { id: "kms", label: "KMS", icon: "lock" },
           {
@@ -116,7 +125,9 @@ export default function Example() {
             <Shell start="secrets-approvals" defaultCollapsed />
           </div>
         </div>
-        <figcaption className="text-muted-foreground text-xs">{"Rail, counts as dots"}</figcaption>
+        <figcaption className="text-muted-foreground text-xs">
+          {"Rail, counts and badges as dots"}
+        </figcaption>
       </figure>
     </div>
   );

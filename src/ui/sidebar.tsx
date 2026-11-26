@@ -41,7 +41,7 @@ export interface SidebarLink {
   href?: string;
   onClick?: () => void;
   count?: number;
-  /** A Badge after the label, such as Preview. Give it collapse so the label keeps its room in a narrow sidebar. Hidden in the rail. */
+  /** A Badge after the label, such as Preview. Give it collapse so the label keeps its room in a narrow sidebar. In the rail it shows as a square dot in the badge's tone, and its text joins the row's tooltip and accessible name. */
   badge?: React.ReactNode;
   external?: boolean;
   disabled?: boolean;
@@ -136,6 +136,18 @@ const holds = (sections: readonly SidebarSection[], id?: string) =>
 
 const LevelTrail = React.createContext<readonly string[]>([]);
 
+const textOf = (node: React.ReactNode): string => {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(textOf).join("");
+  if (!React.isValidElement<{ children?: React.ReactNode; "aria-label"?: string }>(node)) return "";
+  return node.props["aria-label"] ?? textOf(node.props.children);
+};
+
+const railName = (label: string, badge: React.ReactNode) => {
+  const text = textOf(badge).trim();
+  return text ? `${label}, ${text}` : label;
+};
+
 const RowContent = ({
   item,
   count,
@@ -158,12 +170,10 @@ const RowContent = ({
       ))}
     <span className={styles.label}>{item.label}</span>
     {item.badge !== undefined && <span className={styles.badge}>{item.badge}</span>}
-    {count ? (
-      <>
-        <Count className={styles.count}>{count}</Count>
-        <span className={styles.dot} aria-hidden="true" />
-      </>
-    ) : null}
+    {count ? <Count className={styles.count}>{count}</Count> : null}
+    {(count || item.badge !== undefined) && (
+      <span className={styles.dot} data-count={count ? "" : undefined} aria-hidden="true" />
+    )}
     {item.external && <Icon name="external" size={14} className={styles.trailing} />}
     {trailing}
   </>
@@ -187,7 +197,11 @@ const SidebarRow = ({
   onNavigate?: SidebarProps["onNavigate"];
 }) => {
   const isCurrent = !back && item.id === current;
-  const name = back ? `Back to ${item.label}` : item.label;
+  const name = back
+    ? `Back to ${item.label}`
+    : rail
+      ? railName(item.label, item.badge)
+      : item.label;
   const drillIn = !back && (item.drillIn || item.level !== undefined);
   const holdsCurrent = React.useContext(LevelTrail).includes(item.level ?? "") && !back;
   const shared = {
@@ -268,14 +282,14 @@ const SidebarGroup = ({
   if (rail)
     return (
       <DropdownMenu>
-        <Tooltip content={item.label} side="right">
+        <Tooltip content={railName(item.label, item.badge)} side="right">
           <DropdownMenuTrigger asChild>
             <button
               type="button"
               className={styles.row}
               data-sidebar-target=""
               data-holds-current={holdsCurrent || undefined}
-              aria-label={item.label}
+              aria-label={railName(item.label, item.badge)}
               disabled={item.disabled}
               onKeyDown={(event) => {
                 if (event.key === "ArrowDown" || event.key === "ArrowUp") event.preventDefault();

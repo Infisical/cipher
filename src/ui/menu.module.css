@@ -287,7 +287,7 @@ a.row[href],
 .row.row[data-lead-icon] {
   padding-inline-start: var(--cipher-space-8);
 }
-.row > svg,
+.row > :is(svg, img),
 .row > [data-menu-icon] {
   flex: none;
   width: var(--cipher-size-icon);

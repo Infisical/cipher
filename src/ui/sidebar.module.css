@@ -542,6 +542,26 @@ a.row[href] {
 .sidebar[data-collapsed] .row:is([data-current], [data-holds-current]) .dot {
   box-shadow: 0 0 0 2px var(--cipher-sidebar-current);
 }
+.sidebar[data-collapsed]
+  .row:has(> .badge :is([data-tone="outline"], [data-tone="soft"]))
+  .dot:not([data-count]) {
+  background: var(--cipher-muted);
+}
+.sidebar[data-collapsed] .row:has(> .badge [data-tone="solid"]) .dot:not([data-count]) {
+  background: var(--cipher-ink);
+}
+.sidebar[data-collapsed] .row:has(> .badge [data-tone="info"]) .dot {
+  background: var(--cipher-info);
+}
+.sidebar[data-collapsed] .row:has(> .badge [data-tone="ok"]) .dot {
+  background: var(--cipher-ok);
+}
+.sidebar[data-collapsed] .row:has(> .badge [data-tone="warn"]) .dot {
+  background: var(--cipher-warn);
+}
+.sidebar[data-collapsed] .row:has(> .badge [data-tone="bad"]) .dot {
+  background: var(--cipher-bad);
+}
 .footer {
   flex: none;
   padding: 0 var(--cipher-space-8);
