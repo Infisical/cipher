@@ -65,6 +65,8 @@ export interface DataTableColumn<Row> {
   /** Hides the column while the table is too narrow to show every column, when the primary column's names would truncate or the table would scroll sideways. For secondary columns such as a usage or a description. */
   dropFirst?: boolean;
   align?: "start" | "end" | "center";
+  /** Where the cell's content sits in a row taller than one line. Defaults to top when any column wraps, so values line up with the first line of the wrapped text, and to center otherwise. A one-line row looks the same either way. */
+  valign?: "top" | "center";
   actions?: boolean;
   /** true pins the column to the inline end (the actions tail); start pins it to the inline start, after a pinned selection column. */
   pin?: boolean | "start";
@@ -522,6 +524,9 @@ export function DataTable<Row>({
             sharing.some((other) => other !== column && other.grow)
         )?.id
       : undefined;
+  const topByDefault = columns.some((column) => column.wrap);
+  const topAligned = (column: DataTableColumn<Row>) =>
+    (column.valign ?? (topByDefault ? "top" : "center")) === "top";
   const columnStyle = (
     column: DataTableColumn<Row>
   ): React.CSSProperties & {
@@ -810,14 +815,20 @@ export function DataTable<Row>({
         style={{ height: effectiveRowHeight }}
       >
         {selectable && (
-          <TableCell selection pin={leading ? "start" : undefined}>
-            <SelectionBox
-              label={`Select ${rowLabel(row)}`}
-              checked={selected.includes(getRowId(row))}
-              disabled={!isSelectable(row)}
-              reason={selectionDisabledReason?.(row)}
-              onToggle={() => toggle(getRowId(row))}
-            />
+          <TableCell
+            selection
+            pin={leading ? "start" : undefined}
+            data-valign={topByDefault ? "top" : undefined}
+          >
+            <TopBand top={topByDefault}>
+              <SelectionBox
+                label={`Select ${rowLabel(row)}`}
+                checked={selected.includes(getRowId(row))}
+                disabled={!isSelectable(row)}
+                reason={selectionDisabledReason?.(row)}
+                onToggle={() => toggle(getRowId(row))}
+              />
+            </TopBand>
           </TableCell>
         )}
         {columns.map((column, columnIndex) => {
@@ -870,29 +881,38 @@ export function DataTable<Row>({
               data-pin={column.pin ?? column.actions}
               data-wrap={column.wrap || undefined}
               data-secondary={column.secondary ? true : undefined}
+              data-valign={topAligned(column) ? "top" : undefined}
               data-row-interactive={column.actions || column.toggle || edit ? true : undefined}
             >
-              {reorder && columnIndex === 0 ? (
-                <div className={styles.tableSortCell}>
-                  {rowHandle(row)}
-                  {content}
-                </div>
-              ) : (
-                content
-              )}
+              <TopBand top={topAligned(column)}>
+                {reorder && columnIndex === 0 ? (
+                  <div className={styles.tableSortCell}>
+                    {rowHandle(row)}
+                    {content}
+                  </div>
+                ) : (
+                  content
+                )}
+              </TopBand>
             </EditableCell>
           );
         })}
         {rowActions && (
-          <TableActionsCell slots={slots} data-pin="true">
-            <RowActions
-              lazy
-              label={rowLabel(row)}
-              inline={rowInline(row)}
-              menu={rowActions.renderMenu?.(row)}
-              menuLabel={rowActions.menuLabel}
-              menuDisabledReason={rowActions.menuDisabledReason?.(row)}
-            />
+          <TableActionsCell
+            slots={slots}
+            data-pin="true"
+            data-valign={topByDefault ? "top" : undefined}
+          >
+            <TopBand top={topByDefault}>
+              <RowActions
+                lazy
+                label={rowLabel(row)}
+                inline={rowInline(row)}
+                menu={rowActions.renderMenu?.(row)}
+                menuLabel={rowActions.menuLabel}
+                menuDisabledReason={rowActions.menuDisabledReason?.(row)}
+              />
+            </TopBand>
           </TableActionsCell>
         )}
       </TableRow>
@@ -1189,6 +1209,9 @@ export function DataTable<Row>({
       {actionBar}
     </div>
   );
+}
+function TopBand({ top, children }: { top: boolean; children: React.ReactNode }) {
+  return top ? <div className={styles.tableBand}>{children}</div> : children;
 }
 function CellValue({
   badges,

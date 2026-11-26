@@ -2206,6 +2206,10 @@
         "module": "table/wrap"
       },
       {
+        "title": "Vertical alignment in taller rows",
+        "module": "table/valign"
+      },
+      {
         "title": "Narrow screens",
         "module": "table/narrow-screen"
       },

@@ -1746,6 +1746,33 @@ tbody > .nativeTableRow[data-loading] {
 .nativeTableCell {
   height: var(--cipher-table-row-height, var(--cipher-size-row));
 }
+/* A top-aligned cell centers its content in a band one row tall, so one-line rows match centered cells and taller rows keep every value on the first line. */
+.nativeTableCell[data-valign="top"] {
+  vertical-align: top;
+}
+.tableBand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  min-height: calc(
+    var(--cipher-table-row-height, var(--cipher-size-row)) - var(--cipher-size-control-border)
+  );
+}
+.tableScroll td:is([data-wrap], [data-secondary]) > .tableBand {
+  min-height: calc(
+    var(--cipher-table-row-height, var(--cipher-size-row)) - 2 * var(--cipher-space-6) -
+      var(--cipher-size-control-border)
+  );
+}
+.tableScroll td[data-wrap][data-valign="top"]:not([data-secondary]) {
+  padding-top: calc((var(--cipher-table-row-height, var(--cipher-size-row)) - 1lh) / 2);
+}
+.tableScroll td[data-wrap][data-valign="top"]:not([data-secondary]) > .tableBand {
+  min-height: 1lh;
+}
+.tableSelectionCell > .tableBand {
+  justify-items: center;
+}
 .editableCell {
   cursor: text;
 }
