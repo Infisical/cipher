@@ -124,6 +124,27 @@ export function Meta({
 }
 Meta.displayName = "Meta";
 
+export const EMPTY_VALUE = "\u2014";
+
+/** The placeholder for a value that isn't set, such as an empty table cell or a token with no expiry. Screen readers hear the label instead of the dash. */
+export function EmptyValue({
+  label = "None",
+  className,
+  ref,
+  ...props
+}: Omit<React.ComponentPropsWithoutRef<"span">, "children"> & {
+  label?: string;
+  ref?: React.Ref<HTMLSpanElement>;
+}) {
+  return (
+    <span ref={ref} data-slot="empty-value" className={cn(styles.emptyValue, className)} {...props}>
+      <span aria-hidden>{EMPTY_VALUE}</span>
+      <span className={styles.sr}>{label}</span>
+    </span>
+  );
+}
+EmptyValue.displayName = "EmptyValue";
+
 /** A compact uppercase group label, such as WHEN or CONDITIONS above a block of rules. */
 export function Eyebrow({
   className,

@@ -1138,6 +1138,7 @@
         "@cipher/name-line",
         "@cipher/sortable-list",
         "@cipher/table",
+        "@cipher/text",
         "@cipher/tooltip"
       ],
       "files": [
