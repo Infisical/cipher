@@ -78,11 +78,14 @@ const columns: DataTableColumn<Run>[] = [
 
 function Runs({ label }: { label: string }) {
   const [sort, setSort] = React.useState<Sort | undefined>();
+  const rows = sort
+    ? [...runs].sort((a, b) => (a.found - b.found) * (sort.direction === "asc" ? 1 : -1))
+    : runs;
   return (
     <DataTable
       label={label}
       columns={columns}
-      rows={runs}
+      rows={rows}
       getRowId={(run) => run.id}
       rowLabel={(run) => run.scan}
       sort={sort}

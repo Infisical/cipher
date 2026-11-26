@@ -543,19 +543,20 @@ export function DataTable<Row>({
     textAlign: column.align,
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
-  const headShape = fixedLayout
-    ? JSON.stringify(
-        columns
-          .filter((column) => column.width !== undefined)
-          .map((column) => [
-            column.id,
-            column.header,
-            Boolean(column.sortable && onSortChange),
-            Boolean(column.hideHeader),
-            Boolean(column.toggle)
-          ])
-      )
-    : "";
+  const headShape =
+    fixedLayout && !flowing
+      ? JSON.stringify(
+          columns
+            .filter((column) => column.width !== undefined)
+            .map((column) => [
+              column.id,
+              column.header,
+              Boolean(column.sortable && onSortChange),
+              Boolean(column.hideHeader),
+              Boolean(column.toggle)
+            ])
+        )
+      : "";
   React.useLayoutEffect(() => {
     const head = scroll.current?.querySelector("thead tr");
     if (!headShape || !head) {
@@ -594,8 +595,11 @@ export function DataTable<Row>({
     };
     measure();
     void document.fonts?.ready.then(measure);
+    const observer = new ResizeObserver(measure);
+    observer.observe(head);
     return () => {
       live = false;
+      observer.disconnect();
     };
   }, [headShape]);
   const otherGrowing = sharing
