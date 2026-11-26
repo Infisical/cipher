@@ -18,7 +18,7 @@ const secrets: Secret[] = [
   {
     key: "PAYMENTS_WEBHOOK_SIGNING_SECRET_FOR_THE_LEGACY_CHECKOUT_FLOW",
     environment: "development",
-    tags: ["billing"],
+    tags: ["billing", "legacy-checkout-payments-webhooks"],
     updated: "2026-10-01"
   },
   { key: "LOG_LEVEL", environment: "development", tags: [], updated: "2026-03-30" }
@@ -35,7 +35,10 @@ const fields: FilterBarField[] = [
     key: "tags",
     label: "Tag",
     type: "multi-select",
-    options: ["auth", "billing", "cache", "db"].map((tag) => ({ value: tag, label: tag }))
+    options: ["auth", "billing", "cache", "db", "legacy-checkout-payments-webhooks"].map((tag) => ({
+      value: tag,
+      label: tag
+    }))
   },
   { key: "updated", label: "Last updated", type: "date", defaultMonth: new Date(2026, 9, 1) },
   { key: "key", label: "Key", type: "text", placeholder: "Part of a key" }
@@ -118,7 +121,7 @@ export default function Example() {
       <Bar
         initial={[
           { field: "environment", values: ["production"] },
-          { field: "tags", values: ["db", "billing", "auth"] },
+          { field: "tags", values: ["legacy-checkout-payments-webhooks", "db", "billing", "auth"] },
           { field: "updated", operator: "after", values: ["2026-07-01"] },
           { field: "key", values: ["_KEY"] }
         ]}

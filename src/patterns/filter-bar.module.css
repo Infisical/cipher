@@ -60,11 +60,21 @@
   color: var(--cipher-text2);
 }
 .value {
+  display: flex;
+  gap: 0.25em;
   min-width: 0;
   max-width: 32ch;
+  font-weight: var(--cipher-type-row-title-font-weight);
+}
+.label {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: var(--cipher-type-row-title-font-weight);
+  white-space: nowrap;
+}
+.more {
+  flex: none;
+  white-space: nowrap;
 }
 .date {
   display: flex;
