@@ -782,6 +782,10 @@
         "module": "dialog/body"
       },
       {
+        "title": "Fields reach the footer's edge",
+        "module": "dialog/field-width"
+      },
+      {
         "title": "Pending save and unsaved changes",
         "module": "dialog/pending"
       },
