@@ -78,6 +78,10 @@
   align-items: center;
   gap: var(--cipher-space-control-gap);
 }
+/* An empty header still needs a text line so the block's baseline sits on the header, as with a label. */
+.identity:empty::before {
+  content: "\200b" / "";
+}
 .actions {
   grid-column: 2;
   display: flex;
