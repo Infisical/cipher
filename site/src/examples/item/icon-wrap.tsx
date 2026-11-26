@@ -1,5 +1,5 @@
 import { Icon } from "@infisical/cipher/ui/icon";
-import { Item } from "@infisical/cipher/ui/item";
+import { Item, Media } from "@infisical/cipher/ui/item";
 
 const figures = [
   {
@@ -19,6 +19,13 @@ const figures = [
     title: "Deployment service",
     description: "Rotates the database credentials every 30 days and writes them to the vault",
     error: "The last rotation failed because the database rejected the new credentials"
+  },
+  {
+    caption: "Small row with a media block: the block stays at the top as the title wraps",
+    title: "Read and write access to every production secret in the payments-api project",
+    description: undefined,
+    error: undefined,
+    small: true
   }
 ];
 
@@ -30,7 +37,8 @@ export default function Example() {
           <Item
             variant="outline"
             truncate={false}
-            media={<Icon name="key" />}
+            size={figure.small ? "sm" : undefined}
+            media={figure.small ? <Media icon="key" size="sm" /> : <Icon name="key" />}
             title={figure.title}
             description={figure.description}
             error={figure.error}
