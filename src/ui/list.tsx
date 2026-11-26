@@ -221,7 +221,8 @@ export const ListFooter: React.FC<{ children: React.ReactNode }> = () => null;
 export interface ListProps extends ListHeaderProps {
   children?: React.ReactNode;
   label: string;
-  variant?: "framed" | "plain" | "bare" | "segmented" | "divided";
+  /** flush is for read-only rows under a DataList or other content: no row inset or hover ground, so row content starts on the container's left edge. */
+  variant?: "framed" | "plain" | "bare" | "segmented" | "divided" | "flush";
   size?: "md" | "sm";
   actionsPlacement?: "end" | "below";
   /** Sits rows on a 16px content lane for a list inside a popover or sheet: media and text start on the lane, a trailing icon button aligns its glyph to the lane's end, and the hover and selected fill stays 8px off the container edge. Applies to the bare, segmented and divided variants, which draw no frame or border of their own. */
@@ -377,7 +378,10 @@ export function List({
           data-variant={variant}
           data-embedded={embedded || undefined}
           data-size={size}
-          data-inset={(inset && !framed && !embedded && variant !== "plain") || undefined}
+          data-inset={
+            (inset && !framed && !embedded && variant !== "plain" && variant !== "flush") ||
+            undefined
+          }
         >
           {refreshing && !loading && (
             <span className={styles.refreshing} data-slot="list-refreshing" aria-hidden />

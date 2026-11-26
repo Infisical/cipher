@@ -804,6 +804,19 @@
   padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
   min-height: var(--cipher-space-40);
 }
+.listShell[data-variant="flush"] .listRow {
+  padding-inline: 0;
+}
+.listShell[data-variant="flush"] .listRow[data-interactive]:not([data-selected], [data-current]) {
+  background: none;
+  --cipher-list-row-surface: var(--cipher-surface);
+}
+.listShell[data-variant="flush"] > .listHeader,
+.listShell[data-variant="flush"] > .status,
+.listShell[data-variant="flush"] .sectionHead,
+.listShell[data-variant="flush"] .empty {
+  padding-inline: 0;
+}
 .listShell[data-inset] > .list {
   padding-block: var(--cipher-space-8);
 }

@@ -401,6 +401,11 @@ function TooltipContent({
 }
 TooltipContent.displayName = "TooltipContent";
 
+/** True inside a TooltipScope, such as Table rows, where a trigger stays pass-through and needs no tab stop of its own. */
+function useInTooltipScope() {
+  return React.useContext(TooltipScopeContext) !== null;
+}
+
 function TooltipText({
   content,
   side,
@@ -433,4 +438,12 @@ function TooltipText({
 }
 TooltipText.displayName = "TooltipText";
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipScope, TooltipText, TooltipTrigger };
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipScope,
+  TooltipText,
+  TooltipTrigger,
+  useInTooltipScope
+};

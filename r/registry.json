@@ -531,7 +531,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
@@ -541,6 +542,11 @@
           "path": "src/components/cipher/ui/avatar.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/ui/avatar.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/controls.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
           "path": "src/components/cipher/ui/helpers.module.css",
