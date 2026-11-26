@@ -877,7 +877,10 @@
 }
 .alertTrailing {
   display: inline-flex;
-  flex: none;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 50%;
   align-items: center;
   gap: var(--cipher-space-6);
   min-height: var(--cipher-type-small-line-height);
@@ -902,7 +905,7 @@
   max-width: 100%;
   min-height: var(--cipher-title-badges-line, auto);
 }
-.titleBadges > :not([data-slot="documentation-link"]) {
+:is(.titleBadges, .alertTrailing) > :not([data-slot="documentation-link"]) {
   max-width: 100%;
 }
 .alertAction {
