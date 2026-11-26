@@ -3,7 +3,7 @@ import { Avatar as AvatarPrimitive } from "radix-ui";
 
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
-import { Tooltip, useInTooltipScope } from "./tooltip";
+import { Tooltip, TooltipProvider, useInTooltipScope } from "./tooltip";
 
 import controls from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -170,24 +170,26 @@ function AvatarGroup({
       className={cn(helperStyles.avatarGroup, className)}
       {...props}
     >
-      {all.slice(0, limit).map((child) => {
-        if (!React.isValidElement<React.ComponentProps<typeof Avatar>>(child)) return child;
-        if (child.type !== Avatar) return child;
-        const { label: avatarLabel, tabIndex } = child.props;
-        const avatar = React.cloneElement(child, {
-          size: child.props.size ?? size,
-          ring: true,
-          tabIndex: avatarLabel && !scoped ? (tabIndex ?? 0) : tabIndex,
-          className: cn(avatarLabel && !scoped && controls.focusOutline, child.props.className)
-        });
-        return avatarLabel ? (
-          <Tooltip key={child.key} content={avatarLabel}>
-            {avatar}
-          </Tooltip>
-        ) : (
-          avatar
-        );
-      })}
+      <TooltipProvider>
+        {all.slice(0, limit).map((child) => {
+          if (!React.isValidElement<React.ComponentProps<typeof Avatar>>(child)) return child;
+          if (child.type !== Avatar) return child;
+          const { label: avatarLabel, tabIndex } = child.props;
+          const avatar = React.cloneElement(child, {
+            size: child.props.size ?? size,
+            ring: true,
+            tabIndex: avatarLabel && !scoped ? (tabIndex ?? 0) : tabIndex,
+            className: cn(avatarLabel && !scoped && controls.focusOutline, child.props.className)
+          });
+          return avatarLabel ? (
+            <Tooltip key={child.key} content={avatarLabel}>
+              {avatar}
+            </Tooltip>
+          ) : (
+            avatar
+          );
+        })}
+      </TooltipProvider>
       {all.length > limit && (
         <Avatar
           size={size}
