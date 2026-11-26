@@ -31,8 +31,14 @@ export default function Example() {
           <Badge size="sm" media={placeholderMedia.diamond}>
             Small
           </Badge>
+          <Badge size="control-sm" media={placeholderMedia.square}>
+            Control small
+          </Badge>
           <Badge size="control-md" media={placeholderMedia.wide}>
             Wide mark
+          </Badge>
+          <Badge size="control-lg" media={placeholderMedia.circle}>
+            Control large
           </Badge>
         </div>
       </Cell>

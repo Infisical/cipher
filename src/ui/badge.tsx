@@ -51,7 +51,7 @@ function Badge({
   dot?: boolean;
   /** A leading glyph, decorative: the text stays the badge's name. */
   icon?: IconSource;
-  /** A logo or image before the label, sized like the glyph. It never shrinks; under collapse the label truncates and the media stays. Ignored when icon is set. */
+  /** A logo or image before the label: 14px beside the default label, the glyph size in the sm and control sizes. It never shrinks; under collapse the label truncates and the media stays. Ignored when icon is set. */
   media?: React.ReactNode;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;

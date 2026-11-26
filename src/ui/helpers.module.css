@@ -408,6 +408,7 @@
 }
 .badge {
   --cipher-badge-glyph: var(--cipher-size-badge-glyph);
+  --cipher-badge-media: var(--cipher-size-icon-sm);
   --cipher-lead-line: calc(var(--cipher-badge-height) - 2 * var(--cipher-size-control-border));
   --cipher-lead-size: var(--cipher-badge-glyph);
   font-family: var(--cipher-type-caption-font-family);
@@ -443,14 +444,20 @@
     var(--cipher-badge-glyph) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
   );
 }
+.badge[data-collapse]:has(> .badgeMedia) {
+  min-width: calc(
+    var(--cipher-badge-media) + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border)
+  );
+}
 .badge[data-collapse]:has(> .badgeDot):not(:has(> svg, > .badgeMedia)) {
   min-width: calc(6px + 2 * var(--cipher-badge-pad) + 2 * var(--cipher-size-control-border));
 }
 .badgeMedia {
+  --cipher-lead-size: var(--cipher-badge-media);
   display: inline-flex;
   flex: none;
-  width: var(--cipher-badge-glyph);
-  height: var(--cipher-badge-glyph);
+  width: var(--cipher-badge-media);
+  height: var(--cipher-badge-media);
   overflow: hidden;
 }
 .badge:not([data-size^="control"]) > .badgeMedia {
@@ -527,6 +534,7 @@
 }
 .badge[data-size="sm"] {
   --cipher-badge-glyph: var(--cipher-size-badge-glyph-sm);
+  --cipher-badge-media: var(--cipher-badge-glyph);
   --cipher-badge-pad: var(--cipher-space-6);
   --cipher-badge-height: var(--cipher-size-badge-sm);
   height: var(--cipher-badge-height);
@@ -534,6 +542,7 @@
 }
 .badge:is([data-size="control-sm"], [data-size="control-md"], [data-size="control-lg"]) {
   --cipher-badge-glyph: var(--cipher-size-icon);
+  --cipher-badge-media: var(--cipher-badge-glyph);
   gap: var(--cipher-space-control-gap);
   font-family: var(--cipher-type-body-font-family);
   font-size: var(--cipher-type-body-font-size);
