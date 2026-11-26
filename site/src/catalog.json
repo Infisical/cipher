@@ -1512,6 +1512,10 @@
       {
         "title": "Connections with logos and a Create row",
         "module": "multi-select/connections"
+      },
+      {
+        "title": "Empty text for a load failure",
+        "module": "multi-select/load-failure"
       }
     ]
   },
