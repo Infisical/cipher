@@ -91,6 +91,20 @@ export function CopyButton({
       if (current === turn.current) pending.current = false;
     }
   };
+  const button = (
+    <Button
+      type="button"
+      variant="ghost"
+      className={geometry.nestedAction}
+      iconOnly={iconOnly}
+      icon={iconOnly ? (state === "copied" ? "check" : "copy") : undefined}
+      disabled={disabled}
+      loading={state === "pending"}
+      onClick={() => copy()}
+    >
+      {state === "copied" ? "Copied" : label}
+    </Button>
+  );
   return (
     <span
       className={`${styles.copy} ${styles[`copy${size}`]}`}
@@ -98,20 +112,7 @@ export function CopyButton({
       data-size={size}
       data-copy-state={state}
     >
-      <Tooltip content={iconOnly ? label : undefined}>
-        <Button
-          type="button"
-          variant="ghost"
-          className={geometry.nestedAction}
-          iconOnly={iconOnly}
-          icon={iconOnly ? (state === "copied" ? "check" : "copy") : undefined}
-          disabled={disabled}
-          loading={state === "pending"}
-          onClick={() => copy()}
-        >
-          {state === "copied" ? "Copied" : label}
-        </Button>
-      </Tooltip>
+      {iconOnly ? <Tooltip content={label}>{button}</Tooltip> : button}
       <span
         role="status"
         data-copy-feedback

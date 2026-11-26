@@ -54,6 +54,7 @@ export const CodeBlock = ({
   const labelText = typeof label === "string" ? label : undefined;
   const identityId = React.useId();
   const [revealed, setRevealed] = React.useState<string | null>(null);
+  React.useEffect(() => setRevealed(null), [source]);
   const masked = sensitive && revealed !== source;
   return (
     <section

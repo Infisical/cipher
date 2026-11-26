@@ -41,18 +41,22 @@ const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
   getComputedStyle(document.body).pointerEvents === "none";
 
+const TooltipProviderContext = React.createContext(false);
+
 function TooltipProvider({
   delayDuration = 200,
   disableHoverableContent = true,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
-    <TooltipPrimitive.Provider
-      data-slot="tooltip-provider"
-      delayDuration={delayDuration}
-      disableHoverableContent={disableHoverableContent}
-      {...props}
-    />
+    <TooltipProviderContext.Provider value>
+      <TooltipPrimitive.Provider
+        data-slot="tooltip-provider"
+        delayDuration={delayDuration}
+        disableHoverableContent={disableHoverableContent}
+        {...props}
+      />
+    </TooltipProviderContext.Provider>
   );
 }
 
@@ -300,6 +304,7 @@ function Tooltip({
   wrap?: boolean;
 }) {
   const store = React.useContext(TooltipScopeContext);
+  const provided = React.useContext(TooltipProviderContext);
   if (
     store &&
     disableHoverableContent &&
@@ -314,7 +319,7 @@ function Tooltip({
         {children}
       </SharedTooltip>
     );
-  return (
+  const tooltip = (
     <TooltipPrimitive.Root
       data-slot="tooltip"
       disableHoverableContent={disableHoverableContent}
@@ -333,6 +338,7 @@ function Tooltip({
       )}
     </TooltipPrimitive.Root>
   );
+  return provided ? tooltip : <TooltipProvider>{tooltip}</TooltipProvider>;
 }
 
 /**
