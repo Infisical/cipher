@@ -333,6 +333,5 @@
   overflow-wrap: anywhere;
 }
 .layout[data-size="sm"] .actions {
-  align-self: center;
-  min-height: 0;
+  min-height: var(--cipher-type-row-title-line-height);
 }
