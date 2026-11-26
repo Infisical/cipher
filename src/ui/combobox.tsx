@@ -118,6 +118,7 @@ type SharedComboboxProps = {
   clearLabel?: string;
   /** A fixed token width that doesn't shrink. Unset fills the row. */
   width?: FieldWidth;
+  align?: "start" | "center" | "end";
   className?: string;
 };
 export type ComboboxProps = SharedComboboxProps &
@@ -157,6 +158,7 @@ export function Combobox({
     mono,
     onCreate,
     width,
+    align = "start",
     className
   } = props;
   const onSearch = props.multiple ? undefined : props.onSearch;
@@ -338,6 +340,7 @@ export function Combobox({
           open={open}
           onOpenChange={setOpen}
           closeOnFocusOutside={closeOnFocusOutside}
+          align={align}
           renderValue={selected.length ? () => null : undefined}
           onCreate={onCreate}
           createAction={props.creation}
@@ -456,7 +459,7 @@ export function Combobox({
       {control}
       <PopoverContent
         id={contentId}
-        align="start"
+        align={align}
         surface="menu"
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();

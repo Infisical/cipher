@@ -499,6 +499,14 @@ export function DataTable<Row>({
   ];
   const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
+  const headerHidden =
+    !selectable &&
+    columns.every(
+      (column) =>
+        (column.hideHeader || column.actions) &&
+        !column.toggle &&
+        !(column.sortable && onSortChange)
+    );
   const trailing =
     actionsColumn || columns.some((column) => column.pin === true || column.actions);
   const shrinkColumn = trailing
@@ -944,7 +952,7 @@ export function DataTable<Row>({
             : undefined
         }
       >
-        <TableHeader>
+        <TableHeader data-hidden={headerHidden || undefined}>
           <TableRow>
             {selectable && (
               <TableHead selection pin={leading ? "start" : undefined}>
