@@ -37,6 +37,16 @@
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
+.eyebrow {
+  margin: 0;
+  color: var(--cipher-muted, var(--muted-foreground));
+  font-family: var(--cipher-type-eyebrow-font-family);
+  font-size: var(--cipher-type-eyebrow-font-size);
+  line-height: var(--cipher-type-eyebrow-line-height);
+  font-weight: var(--cipher-type-eyebrow-font-weight);
+  letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
+  text-transform: uppercase;
+}
 .muted {
   color: var(--cipher-muted, var(--muted-foreground));
 }
