@@ -2,7 +2,7 @@ import * as React from "react";
 import type { DateRange, Locale, Matcher } from "react-day-picker";
 
 import { useIsMobile } from "../hooks/use-mobile";
-import { useFieldControlAttributes } from "../lib/field-context";
+import { FieldControlContext, useFieldControlAttributes } from "../lib/field-context";
 import { cn, titleIfClamped } from "../lib/utils";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
@@ -73,6 +73,10 @@ const rangeTimeError = (
   if (!range?.from) return undefined;
   if (!times.from) return { end: "from", message: "Enter a start time" };
   if (!times.to) return { end: "to", message: "Enter an end time" };
+  if (timeOf(range.from) !== times.from)
+    return { end: "from", message: "That start time does not exist on this day" };
+  if (range.to && timeOf(range.to) !== times.to)
+    return { end: "to", message: "That end time does not exist on this day" };
   if (range.to && range.to < range.from)
     return { end: "to", message: "End time is before the start time" };
   return undefined;
@@ -220,26 +224,28 @@ function DateRangePanel({
           }}
         />
         {withTime ? (
-          <div data-slot="date-range-picker-times" className={styles.times}>
-            {(["from", "to"] as const).map((end) => (
-              <div key={end} className={styles.time}>
-                <Label htmlFor={`${timeId}-${end}`}>
-                  {end === "from" ? "Start time" : "End time"}
-                </Label>
-                <Input
-                  id={`${timeId}-${end}`}
-                  type="time"
-                  value={times[end]}
-                  invalid={timeError?.end === end}
-                  onChange={(event) => changeTime(end, event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" && apply && isComplete(draft) && canApply)
-                      commit(draft);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+          <FieldControlContext value={{}}>
+            <div data-slot="date-range-picker-times" className={styles.times}>
+              {(["from", "to"] as const).map((end) => (
+                <div key={end} className={styles.time}>
+                  <Label htmlFor={`${timeId}-${end}`}>
+                    {end === "from" ? "Start time" : "End time"}
+                  </Label>
+                  <Input
+                    id={`${timeId}-${end}`}
+                    type="time"
+                    value={times[end]}
+                    invalid={timeError?.end === end}
+                    onChange={(event) => changeTime(end, event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && apply && isComplete(draft) && canApply)
+                        commit(draft);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </FieldControlContext>
         ) : null}
         <div data-slot="date-range-picker-footer" className={styles.footer}>
           <span role="status" className={cn(controlStyles.caption, styles.status)}>
