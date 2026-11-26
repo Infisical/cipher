@@ -54,7 +54,7 @@ export function Icon({
       width: dimension,
       height: dimension,
       strokeWidth,
-      ...(lead && dimension ? { "--cipher-lead-size": dimension } : undefined),
+      ...(dimension ? { "--cipher-lead-size": dimension } : undefined),
       ...style
     },
     ...props

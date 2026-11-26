@@ -79,10 +79,30 @@ const leadOffset = [
   /(?:^|;)\s*margin-(?:top|block-start|block)\s*:\s*(?:-?\d*\.?\d+px|var\(--cipher-space-|calc\(|max\()/
 ];
 const leadAllow = "lint-css-allow: lead";
+const withoutConditions = (selector: string) => {
+  let out = "";
+  for (let i = 0; i < selector.length; i++) {
+    const open = selector.slice(i).match(/^:(?:has|not)\(/);
+    if (!open) {
+      out += selector[i];
+      continue;
+    }
+    let depth = 0;
+    for (i += open[0].length - 1; i < selector.length; i++) {
+      if (selector[i] === "(") depth++;
+      else if (selector[i] === ")" && --depth === 0) break;
+    }
+  }
+  return out;
+};
 for (const file of cssFiles(join(root, "src"))) {
   for (const rule of rules(readFileSync(file, "utf8"))) {
     if (rule.raw.includes(leadAllow)) continue;
-    if (!rule.selector.split(",").some((part) => leadTarget.test(lastCompound(part.trim()))))
+    if (
+      !rule.selector
+        .split(",")
+        .some((part) => leadTarget.test(lastCompound(withoutConditions(part.trim()))))
+    )
       continue;
     if (!leadOffset.some((pattern) => pattern.test(rule.body))) continue;
     problems.push(

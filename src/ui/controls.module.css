@@ -332,18 +332,18 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 :is(.selectTrigger [data-slot="select-value"], .triggerValue)
   > [data-slot="option-text"]
   + [data-slot="badge"] {
-  --trigger-badge-height: var(
+  --cipher-badge-height: var(
     --cipher-field-nested,
     calc(
       var(--cipher-action-height) - 2 *
         (var(--cipher-space-control-slot-inset) + var(--cipher-size-control-border))
     )
   );
-  height: var(--trigger-badge-height);
+  height: var(--cipher-badge-height);
   margin-block: calc(
     (
         var(--cipher-action-line-height, var(--cipher-type-body-line-height)) -
-          var(--trigger-badge-height)
+          var(--cipher-badge-height)
       ) /
       2
   );
