@@ -51,7 +51,7 @@ function Badge({
   dot?: boolean;
   /** A leading glyph, decorative: the text stays the badge's name. */
   icon?: IconSource;
-  /** A logo or image before the label, sized like the glyph. It never shrinks; under collapse the label truncates and the media stays. */
+  /** A logo or image before the label, sized like the glyph. It never shrinks; under collapse the label truncates and the media stays. Ignored when icon is set. */
   media?: React.ReactNode;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;
@@ -59,7 +59,7 @@ function Badge({
   collapse?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
-  const fitsWhole = !icon && !dot && media === undefined;
+  const fitsWhole = !icon && !dot && !media;
   const textRef = React.useCallback(
     (label: HTMLSpanElement | null) => {
       const root = label?.parentElement;
@@ -114,7 +114,7 @@ function Badge({
     <>
       {dot && <span aria-hidden="true" className={cn(helperStyles.badgeDot, "cipher-lead-line")} />}
       {icon && <Icon icon={icon} />}
-      {media !== undefined && (
+      {!icon && media && (
         <span data-slot="badge-media" className={cn(helperStyles.badgeMedia, "cipher-lead-line")}>
           {media}
         </span>

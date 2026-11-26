@@ -451,8 +451,10 @@
   flex: none;
   width: var(--cipher-badge-glyph);
   height: var(--cipher-badge-glyph);
-  margin-inline-end: calc(var(--cipher-space-6) - var(--cipher-space-4));
   overflow: hidden;
+}
+.badge:not([data-size^="control"]) > .badgeMedia {
+  margin-inline-end: calc(var(--cipher-space-6) - var(--cipher-space-4));
 }
 .badgeMedia > :is(img, svg) {
   width: 100%;

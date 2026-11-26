@@ -337,11 +337,11 @@ function SelectItem({
       onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
     >
       <SelectPrimitive.ItemText>
-        {badge === undefined && media === undefined ? (
+        {badge === undefined && !media ? (
           children
         ) : (
           <>
-            {media !== undefined && (
+            {media && (
               <span data-slot="option-media" className={cn(picker.optionMedia, "cipher-lead-line")}>
                 {media}
               </span>
