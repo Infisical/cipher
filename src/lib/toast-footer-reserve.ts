@@ -30,10 +30,15 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
         : offset;
       const gap = size("--cipher-space-8");
       const stack = toasts.reduce((sum, toast) => sum + toast.offsetHeight + gap, base);
-      const { top, bottom } = node.getBoundingClientRect();
+      const { top, bottom, left, right } = node.getBoundingClientRect();
       toasts.forEach((toast) => observer.observe(toast));
+      const beside = toasts.every((toast) => {
+        const rect = toast.getBoundingClientRect();
+        return rect.right <= left || rect.left >= right;
+      });
       const covered =
         toasts.length > 0 &&
+        !beside &&
         node.getClientRects().length > 0 &&
         !node.closest("[inert]") &&
         window.innerHeight - bottom < stack;
@@ -52,6 +57,7 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
     changes.observe(panel, { subtree: true, attributeFilter: ["inert"] });
     panel.addEventListener("animationend", measure);
     panel.addEventListener("transitionend", measure);
+    panel.addEventListener("scroll", measure, { capture: true, passive: true });
     window.addEventListener("resize", measure);
     measure();
     return () => {
@@ -59,6 +65,7 @@ export function useToastFooterReserve<T extends HTMLElement>(ref: React.Ref<T> |
       changes.disconnect();
       panel.removeEventListener("animationend", measure);
       panel.removeEventListener("transitionend", measure);
+      panel.removeEventListener("scroll", measure, { capture: true });
       window.removeEventListener("resize", measure);
       entries.delete(key);
       publish(layer);
