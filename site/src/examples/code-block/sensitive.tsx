@@ -33,7 +33,7 @@ export default function Example() {
           />
         </div>
         <figcaption className="text-muted-foreground text-xs">
-          {"Masked until revealed; copy and download use the real value"}
+          {"Masked until revealed; copy uses the real value, download shows action placement"}
         </figcaption>
       </figure>
     </div>

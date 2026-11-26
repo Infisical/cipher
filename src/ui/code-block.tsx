@@ -45,17 +45,18 @@ export const CodeBlock = ({
 }: CodeBlockProps) => {
   const json =
     React.isValidElement<JsonProps>(children) && children.type === Json ? children : null;
-  const source = json
+  const shown = json
     ? prepareJson(json.props.value, json.props.redact).text
-    : (copyValue ?? code ?? (typeof children === "string" ? children : ""));
+    : (code ?? (typeof children === "string" ? children : ""));
+  const source = json ? shown : (copyValue ?? shown);
   const hasCopySource =
     Boolean(json) || copyValue !== undefined || code !== undefined || typeof children === "string";
   const embedded = useInFrame("CodeBlock");
   const labelText = typeof label === "string" ? label : undefined;
   const identityId = React.useId();
   const [revealed, setRevealed] = React.useState<string | null>(null);
-  React.useEffect(() => setRevealed(null), [source]);
-  const masked = sensitive && revealed !== source;
+  React.useEffect(() => setRevealed(null), [shown]);
+  const masked = sensitive && revealed !== shown;
   return (
     <section
       data-slot="code-block"
@@ -89,7 +90,7 @@ export const CodeBlock = ({
                       iconOnly
                       icon={masked ? "eye" : "eye-off"}
                       aria-pressed={!masked}
-                      onClick={() => setRevealed(masked ? source : null)}
+                      onClick={() => setRevealed(masked ? shown : null)}
                     >
                       Reveal value
                     </Button>
@@ -115,7 +116,7 @@ export const CodeBlock = ({
               block
               {...props}
               format="plain"
-              code={(source || HIDDEN_SECRET_VALUE).replace(/./gu, "•")}
+              code={(shown || HIDDEN_SECRET_VALUE).replace(/./gu, "•")}
               label={`${labelText ?? "Code"}, hidden`}
               aria-hidden
               data-masked=""
