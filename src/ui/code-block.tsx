@@ -31,9 +31,12 @@ export type CodeBlockProps = Omit<CodeProps, "children" | "block" | "onCopy" | "
 const textOf = (node: React.ReactNode): string => {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(textOf).join("");
-  if (React.isValidElement<{ children?: React.ReactNode }>(node))
-    return textOf(node.props.children);
-  return "";
+  if (!React.isValidElement<Record<string, unknown>>(node)) return "";
+  const { children, ...rest } = node.props;
+  const values = Object.entries(rest).flatMap(([key, value]) =>
+    typeof value === "string" || typeof value === "number" ? [`${key}=${value}`] : []
+  );
+  return [...values, textOf(children as React.ReactNode)].join("\u0000");
 };
 export const CodeBlock = ({
   children,
