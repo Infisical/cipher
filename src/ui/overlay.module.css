@@ -99,8 +99,16 @@
 }
 .sheet[data-side="left"],
 .sheet[data-side="right"] {
+  width: 75%;
   max-width: min(var(--cipher-sheet-size), 100vw);
   transition: max-width var(--cipher-duration-moderate) var(--cipher-ease-standard);
+}
+@media (max-width: 480px) {
+  .sheet[data-side="left"],
+  .sheet[data-side="right"] {
+    width: 100%;
+    max-width: none;
+  }
 }
 .sheet[data-side="left"] {
   --cipher-sheet-from: -100% 0;
