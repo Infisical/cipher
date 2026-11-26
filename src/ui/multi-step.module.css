@@ -315,7 +315,8 @@ button.stepButton:focus-visible {
 }
 .titleRow {
   display: flex;
-  gap: var(--cipher-space-12);
+  gap: inherit;
+  column-gap: var(--cipher-space-12);
   min-width: 0;
 }
 .media {
