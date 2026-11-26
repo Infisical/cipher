@@ -1402,6 +1402,10 @@
         "module": "list/inset"
       },
       {
+        "title": "Notification rows with a media tile and a menu",
+        "module": "list/notifications"
+      },
+      {
         "title": "DataList default and compact density",
         "module": "list/density"
       },

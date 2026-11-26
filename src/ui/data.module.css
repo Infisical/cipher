@@ -703,7 +703,7 @@
   line-height: var(--cipher-type-caption-line-height);
 }
 .listShell[data-variant="bare"] .listRow {
-  border-bottom-color: transparent;
+  border-bottom: 0;
 }
 .listShell[data-variant="segmented"] .list {
   display: grid;
@@ -810,25 +810,6 @@
 .listShell[data-inset] .listRow {
   margin-inline: var(--cipher-space-8);
   padding: var(--cipher-space-8);
-}
-.listShell[data-inset] .listRow > .rowActions > :is([data-icon-only], [data-size^="icon"]):last-child,
-.listShell[data-inset]
-  > .listHeader
-  > .listHeaderAction
-  > :is([data-icon-only], [data-size^="icon"]):last-child {
-  margin-inline-end: calc(
-    (var(--cipher-inset-glyph, var(--cipher-button-icon-size, 14px)) - var(--cipher-action-height)) /
-      2
-  );
-}
-.listShell[data-inset] :is([data-size="xs"], [data-size="icon-xs"]):not(li) {
-  --cipher-inset-glyph: var(--cipher-button-icon-size, 12px);
-}
-.listShell[data-inset] :is([data-size="md"], [data-size="lg"]):not(li, .listShell) {
-  --cipher-inset-glyph: var(--cipher-button-icon-size, 16px);
-}
-.listShell[data-inset] [data-size="icon-row"] {
-  --cipher-inset-glyph: var(--cipher-size-glyph);
 }
 .listShell[data-inset] > .listHeader,
 .listShell[data-inset] > .status,
@@ -1669,7 +1650,9 @@ tbody > .nativeTableRow[data-loading] {
 .nativeTableRow[data-tone="bad"] {
   --cipher-table-row-state: var(--cipher-bad-wash);
 }
-.nativeTableRow[data-tone="bad"] .tablePrimary [data-slot="icon"]:not([data-slot="name-line-badges"] *, [data-slot="cell-badges"] *) {
+.nativeTableRow[data-tone="bad"]
+  .tablePrimary
+  [data-slot="icon"]:not([data-slot="name-line-badges"] *, [data-slot="cell-badges"] *) {
   color: var(--cipher-bad);
 }
 .nativeTableRow[data-state="selected"] {
