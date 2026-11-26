@@ -478,7 +478,10 @@ export function Combobox({
             placeholder={searchPlaceholder}
             aria-label={`Search ${label}`}
             onKeyDown={(event) => {
-              if (event.nativeEvent.isComposing || event.keyCode === 229) event.stopPropagation();
+              if (event.nativeEvent.isComposing || event.keyCode === 229) {
+                event.stopPropagation();
+                return;
+              }
               if (!emptyCreate || event.key !== "ArrowDown") return;
               event.preventDefault();
               emptyCreateRef.current?.focus();
