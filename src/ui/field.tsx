@@ -128,9 +128,9 @@ const fieldVariants = cva("group/field flex w-full", {
     orientation: {
       vertical: "flex-col *:w-full [&>.sr-only]:w-auto",
       horizontal:
-        "flex-row items-center data-[has-content]:items-start *:data-[slot=field-label]:flex-auto data-[has-content]:[&>[role=checkbox],[role=radio]]:mt-px",
+        "flex-row items-center data-[has-content]:items-start *:data-[slot=field-label]:flex-auto data-[has-content]:[--cipher-lead-line:var(--cipher-type-field-label-line-height)] data-[has-content]:[&>:is([role=checkbox],[role=radio])]:cipher-lead-line",
       responsive:
-        "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:data-[has-content]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:data-[has-content]:[&>[role=checkbox],[role=radio]]:mt-px"
+        "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:data-[has-content]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:data-[has-content]:[--cipher-lead-line:var(--cipher-type-field-label-line-height)] @md/field-group:data-[has-content]:[&>:is([role=checkbox],[role=radio])]:cipher-lead-line"
     }
   },
   defaultVariants: {
@@ -215,7 +215,7 @@ function Field({
       role={error ? "alert" : undefined}
       className={error ? helperStyles.fieldError : helperStyles.fieldDescription}
     >
-      {error && <Icon name="alert" size={14} />}
+      {error && <Icon name="alert" size={14} lead />}
       {error ? <span>{error}</span> : description}
     </p>
   );
@@ -461,7 +461,7 @@ function FieldError({
       className={cn(helperStyles.fieldError, className)}
       {...props}
     >
-      <Icon name="alert" size={14} />
+      <Icon name="alert" size={14} lead />
       <span>{content}</span>
     </div>
   );

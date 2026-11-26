@@ -243,15 +243,11 @@
   overflow-wrap: anywhere;
   white-space: normal;
 }
-.createOption > :is(svg, .optionBox) {
-  align-self: flex-start;
-  margin-block-start: calc((var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2);
+.createOption {
+  --cipher-lead-line: var(--cipher-type-body-line-height);
 }
 .createOption > .optionBox {
-  margin-block-start: calc(
-    (var(--cipher-type-body-line-height) - var(--cipher-size-icon)) / 2 -
-      var(--cipher-size-control-border)
-  );
+  --cipher-lead-size: calc(var(--cipher-size-icon) + 2 * var(--cipher-size-control-border));
 }
 .optionGlob {
   font-family: var(--cipher-font-mono);
