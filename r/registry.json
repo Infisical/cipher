@@ -182,6 +182,11 @@
           "target": "src/components/cipher/lib/themes.ts"
         },
         {
+          "path": "src/components/cipher/lib/toast-footer-reserve.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/toast-footer-reserve.ts"
+        },
+        {
           "path": "src/components/cipher/lib/use-controllable-state.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/use-controllable-state.ts"

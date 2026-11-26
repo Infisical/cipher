@@ -1,5 +1,8 @@
 .toaster[data-sonner-toaster][data-y-position="bottom"] {
-  bottom: var(--cipher-toast-bottom);
+  bottom: max(
+    var(--cipher-toast-bottom),
+    calc(var(--cipher-toast-footer, 0px) + var(--cipher-space-action-bar-offset))
+  );
   transition: bottom var(--cipher-duration-moderate) var(--cipher-ease-standard);
 }
 @media (prefers-reduced-motion: reduce) {
