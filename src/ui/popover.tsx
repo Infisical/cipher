@@ -60,8 +60,14 @@ function PopoverTrigger({ ref, ...props }: React.ComponentProps<typeof PopoverPr
     <PopoverPrimitive.Trigger
       ref={(node) => {
         if (state) state.trigger.current = node;
-        if (typeof ref === "function") ref(node);
-        else if (ref) ref.current = node;
+        const cleanup = typeof ref === "function" ? ref(node) : undefined;
+        if (ref && typeof ref !== "function") ref.current = node;
+        return () => {
+          if (state) state.trigger.current = null;
+          if (typeof cleanup === "function") cleanup();
+          else if (typeof ref === "function") ref(null);
+          else if (ref) ref.current = null;
+        };
       }}
       data-slot="popover-trigger"
       {...props}
@@ -142,8 +148,8 @@ function PopoverDrawer({
     if (!start?.dragging) return;
     const distance = Math.max(0, y - start.y);
     const velocity = distance / Math.max(1, performance.now() - start.time);
+    setDrag(0);
     if (distance > panel.offsetHeight / 4 || velocity > swipeVelocity) state?.setOpen(false);
-    else setDrag(0);
   };
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(next) => state?.setOpen(next)}>
