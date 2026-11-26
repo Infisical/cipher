@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Progress as ProgressPrimitive } from "radix-ui";
 
@@ -100,7 +102,11 @@ export const ProgressSteps = ({
     check();
     const observer = new ResizeObserver(check);
     observer.observe(node);
-    return () => observer.disconnect();
+    document.fonts?.addEventListener("loadingdone", check);
+    return () => {
+      observer.disconnect();
+      document.fonts?.removeEventListener("loadingdone", check);
+    };
   }, [names, current]);
   return (
     <div
