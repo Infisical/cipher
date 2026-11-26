@@ -10,6 +10,7 @@ import { Icon } from "./icon";
 import { Skeleton } from "./skeleton";
 
 import styles from "./data.module.css";
+import helperStyles from "./helpers.module.css";
 import frame from "./frame.module.css";
 
 interface ListContextValue {
@@ -213,6 +214,8 @@ export interface ListHeaderProps {
   count?: React.ReactNode;
   /** title puts the count right after the title, a number on the accent Count; end keeps it at the far right. */
   countPlacement?: "end" | "title";
+  /** Right after the title: status badges, and a DocumentationLink so it stays paired with the title. They drop below the title before it wraps. */
+  badges?: React.ReactNode;
   action?: React.ReactNode;
 }
 export const ListHeader: React.FC<ListHeaderProps> = () => null;
@@ -243,6 +246,7 @@ export function List({
   title: titleProp,
   count: countProp,
   countPlacement: countPlacementProp,
+  badges: badgesProp,
   action: actionProp,
   label,
   variant: requestedVariant,
@@ -263,6 +267,7 @@ export function List({
     title: titleProp,
     count: countProp,
     countPlacement: countPlacementProp,
+    badges: badgesProp,
     action: actionProp
   };
   let footer = footerProp;
@@ -282,13 +287,18 @@ export function List({
       return false;
     });
   }
-  const { title, count: rawCount, countPlacement = "end", action } = header;
+  const { title, count: rawCount, countPlacement = "end", badges, action } = header;
   const countAtTitle = countPlacement === "title" && Boolean(title);
   const headerCount = countAtTitle ? undefined : rawCount;
   const variant = requestedVariant ?? "framed";
   const inFrame = useInFrame("List", requestedVariant);
   const embedded = inFrame && variant === "framed";
   const framed = variant === "framed" && !embedded;
+  const titleElement = title && (
+    <div className={framed ? frame.frameTitle : styles.listTitle}>
+      {countAtTitle ? <TitleCount count={rawCount}>{title}</TitleCount> : title}
+    </div>
+  );
   const [own, setOwn] = React.useState<readonly string[]>(defaultSelectedIds);
   const selected = selectedIds ?? own;
   const list = React.useRef<HTMLUListElement>(null);
@@ -405,11 +415,21 @@ export function List({
                   }
                 />
               )}
-              {title && (
-                <div className={framed ? frame.frameTitle : styles.listTitle}>
-                  {countAtTitle ? <TitleCount count={rawCount}>{title}</TitleCount> : title}
-                </div>
-              )}
+              {title &&
+                (badges ? (
+                  <div className={cn(styles.listTitleRow, helperStyles.titleWithBadges)}>
+                    {titleElement}
+                    <span
+                      data-slot="list-header-badges"
+                      data-framed={framed || undefined}
+                      className={helperStyles.titleBadges}
+                    >
+                      {badges}
+                    </span>
+                  </div>
+                ) : (
+                  titleElement
+                ))}
               {framed
                 ? (headerCount || action) && (
                     <div className={frame.frameAction}>

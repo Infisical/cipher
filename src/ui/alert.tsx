@@ -9,7 +9,7 @@ import helperStyles from "./helpers.module.css";
 
 const alertFlags = {
   "data-has-icon": ":scope > svg",
-  "data-has-title": `:scope > .${helperStyles.alertTitle}`,
+  "data-has-title": `:scope > :is(.${helperStyles.alertTitle}, .${helperStyles.alertTitleRow})`,
   "data-has-action": ':scope > [data-slot="alert-action"]'
 };
 const alertWatch = { subtree: false };
@@ -19,6 +19,7 @@ function Alert({
   variant,
   tone = variant === "destructive" ? "bad" : "neutral",
   title,
+  badges,
   actions,
   onDismiss,
   children,
@@ -29,10 +30,13 @@ function Alert({
   tone?: "neutral" | "info" | "ok" | "warn" | "bad";
   /** Without a title the children are the message, still with the tone icon and actions. Children composed from AlertTitle, AlertDescription and an icon render as given. */
   title?: React.ReactNode;
+  /** Right after the title: status badges, and a DocumentationLink so it stays paired with the title. They drop below the title before it wraps. Without a title they sit at the end of the message's first line, the place for its DocumentationLink. */
+  badges?: React.ReactNode;
   actions?: React.ReactNode;
   onDismiss?: () => void;
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const alertRef = useDescendantFlags(alertFlags, alertWatch, ref);
+  const titled = title != null && title !== false;
   const composed = React.Children.toArray(children).some(
     (child) =>
       React.isValidElement(child) &&
@@ -66,9 +70,28 @@ function Alert({
                     : "info"
             }
           />
-          {title != null && title !== false && <AlertTitle>{title}</AlertTitle>}
+          {titled &&
+            (badges ? (
+              <div className={cn(helperStyles.alertTitleRow, helperStyles.titleWithBadges)}>
+                <AlertTitle>{title}</AlertTitle>
+                <span data-slot="alert-badges" className={helperStyles.titleBadges}>
+                  {badges}
+                </span>
+              </div>
+            ) : (
+              <AlertTitle>{title}</AlertTitle>
+            ))}
           <AlertDescription>
-            {children}
+            {badges && !titled ? (
+              <div className={helperStyles.alertLine}>
+                <div>{children}</div>
+                <span data-slot="alert-trailing" className={helperStyles.alertTrailing}>
+                  {badges}
+                </span>
+              </div>
+            ) : (
+              children
+            )}
             {actions && <div className={helperStyles.alertActions}>{actions}</div>}
           </AlertDescription>
         </>

@@ -101,6 +101,7 @@
   --cipher-size-icon-label: var(--cipher-size-icon);
   --cipher-size-icon-small: var(--cipher-size-icon-sm);
   --cipher-size-icon-caption: var(--cipher-size-icon-xs);
+  --cipher-size-icon-title-lg: 28px;
   --cipher-size-icon-lg: 20px;
   --cipher-size-icon-xl: 24px;
   --cipher-size-icon-2xl: 32px;

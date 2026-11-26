@@ -1844,6 +1844,11 @@
           "path": "src/components/cipher/ui/frame.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/frame.module.css"
+        },
+        {
+          "path": "src/components/cipher/ui/helpers.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/helpers.module.css"
         }
       ]
     },
@@ -1965,6 +1970,11 @@
           "path": "src/components/cipher/ui/multi-step.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/ui/multi-step.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/helpers.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/helpers.module.css"
         },
         {
           "path": "src/components/cipher/ui/multi-step.module.css",

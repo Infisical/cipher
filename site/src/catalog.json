@@ -102,6 +102,10 @@
         "module": "alert/variants"
       },
       {
+        "title": "Badges after the title, and a docs link without a title",
+        "module": "alert/badges"
+      },
+      {
         "title": "Dismissible banner",
         "module": "alert/banner"
       }
@@ -1418,6 +1422,10 @@
         "module": "list/title-count"
       },
       {
+        "title": "Badges and a docs link after the header title",
+        "module": "list/badges"
+      },
+      {
         "title": "Long keys and paths",
         "module": "list/long-keys"
       }
@@ -1536,6 +1544,10 @@
       {
         "title": "Delete at the start of the footer",
         "module": "multi-step/footer-start"
+      },
+      {
+        "title": "Badges after a step heading",
+        "module": "multi-step/badges"
       }
     ]
   },

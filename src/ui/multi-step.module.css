@@ -118,6 +118,9 @@
   letter-spacing: var(--cipher-type-eyebrow-letter-spacing);
   text-transform: uppercase;
 }
+.headingRow {
+  --cipher-title-badges-line: var(--cipher-type-title-line-height);
+}
 .heading {
   margin: 0;
   font-family: var(--cipher-type-title-font-family);

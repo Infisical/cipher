@@ -40,6 +40,7 @@ import {
   useSheetView,
 } from "./sheet";
 
+import helperStyles from "./helpers.module.css";
 import styles from "./multi-step.module.css";
 
 /**
@@ -56,6 +57,8 @@ export type MultiStepResult =
 export interface MultiStepStep {
   title: string;
   heading?: string;
+  /** Right after the step's heading: status badges, and a DocumentationLink so it stays paired with the heading. They drop below the heading before it wraps. Shown only where the step shows its heading; a single-step dialog or sheet puts them on its own badges. */
+  badges?: React.ReactNode;
   description?: React.ReactNode;
   summary?: React.ReactNode;
   content?: React.ReactNode;
@@ -401,9 +404,17 @@ export const MultiStep = ({
           Step {current + 1} of {steps.length}
         </p>
       )}
-      {titled && (
-        <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
-      )}
+      {titled &&
+        (entry.badges ? (
+          <div className={cn(styles.headingRow, helperStyles.titleWithBadges)}>
+            <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+            <span data-slot="multi-step-badges" className={helperStyles.titleBadges}>
+              {entry.badges}
+            </span>
+          </div>
+        ) : (
+          <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+        ))}
       {entry.description && <p className={styles.lede}>{entry.description}</p>}
     </div>
   );
