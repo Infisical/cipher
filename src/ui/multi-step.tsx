@@ -222,6 +222,7 @@ export const MultiStep = ({
   const revealed = React.useRef<HTMLElement | null>(null);
   const reveal = () => {
     const target = revealed.current;
+    revealed.current = null;
     if (target && target === document.activeElement)
       target.scrollIntoView({ block: "nearest" });
   };
@@ -436,7 +437,6 @@ export const MultiStep = ({
           initial={false}
           animate={height === undefined ? undefined : { height }}
           transition={reduced ? { duration: 0 } : spring.moderate}
-          onAnimationComplete={reveal}
           className={styles.viewport}
         >
           <AnimatePresence mode="popLayout" initial={false} custom={direction}>
