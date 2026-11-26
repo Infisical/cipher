@@ -362,6 +362,10 @@
         "module": "card/header-overflow"
       },
       {
+        "title": "Button group in a framed header",
+        "module": "card/band-button-group"
+      },
+      {
         "title": "Selected and choice cards",
         "module": "card/selected"
       },
