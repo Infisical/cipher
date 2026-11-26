@@ -17,6 +17,7 @@ interface ListContextValue {
   multiple: boolean;
   size: "md" | "sm";
   actionsPlacement: "end" | "below";
+  flush: boolean;
   toggle: (id: string) => void;
   register: (value: string, eligible: boolean) => () => void;
 }
@@ -115,6 +116,7 @@ export function ListRow({
       data-disabled={disabled || undefined}
       data-resolved={resolved || undefined}
       data-size={context?.size}
+      data-flush={context?.flush || undefined}
       data-interactive={(!disabled && Boolean(anchor || button)) || undefined}
       data-pressed={pressed || undefined}
     >
@@ -368,6 +370,7 @@ export function List({
           toggle,
           size,
           actionsPlacement,
+          flush: variant === "flush",
           register
         }}
       >

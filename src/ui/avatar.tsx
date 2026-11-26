@@ -37,7 +37,7 @@ function Avatar({
   ring?: boolean;
   kind?: AvatarKind;
 } & { ref?: React.Ref<React.ComponentRef<typeof AvatarPrimitive.Root>> }) {
-  if (!(kind in kindIcons) && kind !== "person") return null;
+  if (!Object.prototype.hasOwnProperty.call(kindIcons, kind) && kind !== "person") return null;
   const dimension =
     typeof size === "number" && Number.isFinite(size) && size > 0
       ? size
