@@ -116,12 +116,16 @@ const swipeVelocity = 0.5;
 function PopoverDrawer({
   open,
   className,
-  children
-}: {
-  open: boolean;
-  className?: string;
-  children: React.ReactNode;
-}) {
+  style,
+  children,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  onPointerCancel,
+  ...props
+}: React.ComponentPropsWithRef<typeof DialogPrimitive.Content> & { open: boolean }) {
   const state = React.useContext(PopoverStateContext);
   const [drag, setDrag] = React.useState(0);
   const [openedFor, setOpenedFor] = React.useState(open);
@@ -154,18 +158,24 @@ function PopoverDrawer({
           data-side="bottom"
           data-dragging={drag > 0 || undefined}
           aria-describedby={undefined}
+          {...props}
           className={cn("z-50", menu.surface, overlay.sheet, menu.feedDrawer, className)}
-          style={drag ? { transform: `translateY(${drag}px)` } : undefined}
+          style={drag ? { ...style, transform: `translateY(${drag}px)` } : style}
           onOpenAutoFocus={(event) => {
+            onOpenAutoFocus?.(event);
+            if (event.defaultPrevented) return;
             event.preventDefault();
             (event.currentTarget as HTMLElement).focus();
           }}
           onCloseAutoFocus={(event) => {
+            onCloseAutoFocus?.(event);
+            if (event.defaultPrevented) return;
             event.preventDefault();
             state?.trigger.current?.focus();
           }}
           onPointerDown={(event) => {
-            if (event.button !== 0) return;
+            onPointerDown?.(event);
+            if (event.defaultPrevented || event.button !== 0) return;
             const target = event.target as HTMLElement;
             if (
               !target.closest('[data-slot="popover-drawer-grabber"], [data-slot="popover-header"]')
@@ -179,6 +189,7 @@ function PopoverDrawer({
             };
           }}
           onPointerMove={(event) => {
+            onPointerMove?.(event);
             const start = swipe.current;
             if (!start || start.id !== event.pointerId) return;
             const distance = event.clientY - start.y;
@@ -196,8 +207,12 @@ function PopoverDrawer({
             }
             setDrag(Math.max(0, distance));
           }}
-          onPointerUp={(event) => release(event.currentTarget, event.clientY)}
-          onPointerCancel={() => {
+          onPointerUp={(event) => {
+            onPointerUp?.(event);
+            release(event.currentTarget, event.clientY);
+          }}
+          onPointerCancel={(event) => {
+            onPointerCancel?.(event);
             swipe.current = undefined;
             setDrag(0);
           }}
@@ -238,6 +253,7 @@ function PopoverContent({
   draggable?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<typeof PopoverPrimitive.Content>> }) {
   const escape = useOwnedEscape(ref, onEscapeKeyDown);
+  const container = usePortalContainer();
   const boundary = useCollisionBoundary();
   const open = React.useContext(PopoverOpenContext);
   const [offset, setOffset] = React.useState(restingOffset);
@@ -309,15 +325,35 @@ function PopoverContent({
     </FrameScope>
   );
 
-  if (feed && narrow)
+  if (feed && narrow) {
+    const {
+      side,
+      alignOffset,
+      avoidCollisions,
+      sticky,
+      hideWhenDetached,
+      arrowPadding,
+      updatePositionStrategy,
+      collisionBoundary,
+      ...drawerProps
+    } = props;
     return (
-      <PopoverDrawer open={open} className={className}>
+      <PopoverDrawer
+        {...drawerProps}
+        ref={escape.ref}
+        open={open}
+        className={className}
+        style={style}
+        onOpenAutoFocus={onOpenAutoFocus}
+        onEscapeKeyDown={escape.onEscapeKeyDown}
+      >
         {layout}
       </PopoverDrawer>
     );
+  }
 
   return (
-    <PopoverPrimitive.Portal container={usePortalContainer()}>
+    <PopoverPrimitive.Portal container={container}>
       <PopoverPrimitive.Content
         ref={escape.ref}
         data-slot="popover-content"

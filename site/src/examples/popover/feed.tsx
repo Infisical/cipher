@@ -72,14 +72,19 @@ const notifications: Notification[] = [
 ];
 
 export function NotificationsFeed({ items }: { items: Notification[] }) {
+  const [open, setOpen] = React.useState(true);
   const [tab, setTab] = React.useState("all");
   const shown = tab === "unread" ? items.filter((item) => item.unread) : items;
   return (
-    <UI.Popover open>
+    <UI.Popover open={open} onOpenChange={setOpen}>
       <UI.PopoverTrigger asChild>
         <Button variant="outline" size="icon" icon="bell" iconOnly aria-label="Notifications" />
       </UI.PopoverTrigger>
-      <UI.PopoverContent size="feed" align="start">
+      <UI.PopoverContent
+        size="feed"
+        align="start"
+        onFocusOutside={(event) => event.preventDefault()}
+      >
         <UI.PopoverHeader
           menu={
             <DropdownMenu>
@@ -87,6 +92,7 @@ export function NotificationsFeed({ items }: { items: Notification[] }) {
                 <Button variant="ghost" size="icon-sm" icon="more" iconOnly aria-label="Options" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
+                <DropdownMenuItem>Mute for 1 hour</DropdownMenuItem>
                 <DropdownMenuItem>Notification settings</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -1604,10 +1604,6 @@
       {
         "title": "Feed size for a panel reopened to scan, like notifications",
         "module": "popover/feed"
-      },
-      {
-        "title": "Feed size for a panel reopened to scan, like notifications",
-        "module": "popover/feed"
       }
     ]
   },
