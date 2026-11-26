@@ -19,6 +19,10 @@ export type TagsInputProps = {
   defaultValue?: readonly string[];
   onChange?: (tags: string[]) => void;
   onValueChange?: (tags: string[]) => void;
+  /** The text typed into the input that hasn't become a tag yet. */
+  draft?: string;
+  defaultDraft?: string;
+  onDraftChange?: (draft: string) => void;
   /** Names the text input for assistive technology; the visible label comes from a Field. */
   label: string;
   placeholder?: string;
@@ -39,6 +43,9 @@ export function TagsInput({
   defaultValue = noTags,
   onChange,
   onValueChange,
+  draft: draftProp,
+  defaultDraft = "",
+  onDraftChange,
   label,
   placeholder,
   disabled,
@@ -59,7 +66,11 @@ export function TagsInput({
       onValueChange?.([...next]);
     }
   });
-  const [draft, setDraft] = React.useState("");
+  const [draft, setDraft] = useControllableState({
+    value: draftProp,
+    defaultValue: defaultDraft,
+    onChange: onDraftChange
+  });
   const input = React.useRef<HTMLInputElement>(null);
   React.useImperativeHandle(ref, () => input.current as HTMLInputElement);
   const box = React.useRef<HTMLDivElement>(null);
