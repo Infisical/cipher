@@ -452,10 +452,15 @@ TooltipText.displayName = "TooltipText";
 const stretchedHost =
   'tr[data-stretched-link], [data-slot="card"][data-stretched-link], [data-slot="stat-card"][data-stretched-link]';
 
-/** A reason trigger sits above a row's stretched link so hovering it shows the reason, so it hands clicks on to that link, modifier keys and middle button included. */
+const ownControl =
+  "a[href], button, input, select, textarea, summary, [role=button], [role=checkbox], [role=combobox], [role=link], [role=menuitem], [role=switch], [role=tab]";
+
+/** A reason trigger sits above a row's stretched link so hovering it shows the reason, so it hands clicks on to that link, modifier keys and middle button included. A trigger that is a control of its own keeps its clicks. */
 function forwardToStretchedLink(event: React.MouseEvent<HTMLElement>) {
-  if (event.defaultPrevented || (event.type === "auxclick" && event.button !== 1)) return;
+  if (event.defaultPrevented) return;
   const trigger = event.currentTarget;
+  const control = event.target instanceof Element ? event.target.closest(ownControl) : null;
+  if (control && trigger.contains(control)) return;
   const link = trigger
     .closest(stretchedHost)
     ?.querySelector<HTMLElement>('[data-row-link], a[data-slot="card-link"]');
@@ -463,6 +468,10 @@ function forwardToStretchedLink(event: React.MouseEvent<HTMLElement>) {
   const selection = window.getSelection();
   if (selection && !selection.isCollapsed && trigger.contains(selection.anchorNode)) return;
   link.dispatchEvent(new MouseEvent("click", event.nativeEvent));
+}
+
+function forwardMiddleClick(event: React.MouseEvent<HTMLElement>) {
+  if (event.button === 1) forwardToStretchedLink(event);
 }
 
 /**
@@ -491,7 +500,7 @@ function useReason(reason: React.ReactNode) {
               content={reason}
               data-reason-trigger=""
               onClick={forwardToStretchedLink}
-              onAuxClick={forwardToStretchedLink}
+              onAuxClick={forwardMiddleClick}
             >
               {element}
             </TooltipText>
