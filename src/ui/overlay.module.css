@@ -254,8 +254,8 @@
 
 /* Header actions: at the end of the tab row or beside the title. HeaderActions collapses icon
    actions before the tabs scroll or the title wraps, and they never shrink. Tabs and titles shrink
-   first, to half the row; their large shrink factor leaves an action without an icon to truncate
-   only after that. */
+   first, to half the row; their large shrink factor leaves an action that cannot collapse (no
+   icon, a trigger, or a disabled reason) to truncate only after that. */
 .headerRow {
   display: flex;
   align-items: flex-start;
@@ -283,16 +283,31 @@
 .headerRow > .headerActions > * {
   margin-block: calc((var(--cipher-type-title-line-height) - var(--cipher-action-height, 0px)) / 2);
 }
-.headerActions > [data-cipher-button]:not(:has([data-button-icon])) {
+.headerActions
+  > [data-cipher-button]:is(
+    :not(:has([data-button-icon])),
+    [data-layout="trigger"],
+    [data-disabled-reason]
+  ) {
   flex-shrink: 1;
   min-width: 0;
 }
-.headerActions > [data-cipher-button]:not(:has([data-button-icon])) > [data-press] {
+.headerActions
+  > [data-cipher-button]:is(
+    :not(:has([data-button-icon])),
+    [data-layout="trigger"],
+    [data-disabled-reason]
+  )
+  > [data-press] {
   min-width: 0;
   overflow: hidden;
 }
 .headerActions
-  > [data-cipher-button]:not(:has([data-button-icon]))
+  > [data-cipher-button]:is(
+    :not(:has([data-button-icon])),
+    [data-layout="trigger"],
+    [data-disabled-reason]
+  )
   > [data-press]
   [data-slot="button-text"] {
   display: block;
