@@ -287,7 +287,7 @@ a.row[href],
 .row.row[data-lead-icon] {
   padding-inline-start: var(--cipher-space-8);
 }
-.row > svg,
+.row > :is(svg, img),
 .row > [data-menu-icon] {
   flex: none;
   width: var(--cipher-size-icon);
@@ -297,6 +297,9 @@ a.row[href],
 .row > [data-menu-icon] {
   display: inline-flex;
   overflow: hidden;
+}
+.row > img {
+  object-fit: contain;
 }
 .row > [data-menu-icon] > :is(img, svg) {
   width: 100%;

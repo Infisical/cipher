@@ -6,7 +6,7 @@ import { ListHighlight } from "../lib/list-highlight";
 import { useReportPresence } from "../lib/presence-count";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
-import { Count } from "./badge";
+import { Badge, type BadgeTone, Count } from "./badge";
 import { AnimatedCollapse } from "./animated-collapse";
 import { Button } from "./button";
 import {
@@ -41,7 +41,7 @@ export interface SidebarLink {
   href?: string;
   onClick?: () => void;
   count?: number;
-  /** A Badge after the label, such as Preview. Give it collapse so the label keeps its room in a narrow sidebar. Hidden in the rail. */
+  /** A Badge after the label, such as Preview. Give it collapse so the label keeps its room in a narrow sidebar. In the rail it shows as a square dot in the badge's tone, and its text joins the row's tooltip and accessible name. */
   badge?: React.ReactNode;
   external?: boolean;
   disabled?: boolean;
@@ -136,38 +136,98 @@ const holds = (sections: readonly SidebarSection[], id?: string) =>
 
 const LevelTrail = React.createContext<readonly string[]>([]);
 
+const hasContent = (node: React.ReactNode): boolean =>
+  React.Children.toArray(node).some((child) =>
+    React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment
+      ? hasContent(child.props.children)
+      : child !== ""
+  );
+
+const statusTones: readonly BadgeTone[] = ["ok", "warn", "bad", "info"];
+
+const mayBeStatusBadge = (node: React.ReactNode): boolean =>
+  React.Children.toArray(node).some((child) => {
+    if (!React.isValidElement<React.ComponentProps<typeof Badge>>(child)) return false;
+    if (child.type === React.Fragment) return mayBeStatusBadge(child.props.children);
+    return (
+      child.type !== Badge ||
+      statusTones.includes(
+        child.props.tone ?? (child.props.variant === "destructive" ? "bad" : "outline")
+      )
+    );
+  });
+
+const railTip = (
+  label: string,
+  badge: React.ReactNode,
+  suffix = "",
+  rollup: readonly SidebarLink[] = []
+) =>
+  hasContent(badge) || rollup.length ? (
+    <>
+      {label}
+      {hasContent(badge) && <> {badge}</>}
+      {rollup.map((childItem) => (
+        <React.Fragment key={childItem.id}>
+          , {childItem.label} {childItem.badge}
+        </React.Fragment>
+      ))}
+      {suffix}
+    </>
+  ) : (
+    `${label}${suffix}`
+  );
+
 const RowContent = ({
   item,
   count,
   child,
-  trailing
+  trailing,
+  labelId,
+  badgeId,
+  rollup = []
 }: {
   item: SidebarLink;
   count?: number;
   child?: boolean;
   trailing?: React.ReactNode;
-}) => (
-  <>
-    {!child &&
-      (item.icon ? (
-        <Icon icon={item.icon} size="var(--cipher-size-sidebar-icon)" className={styles.icon} />
-      ) : (
-        <span className={styles.monogram} aria-hidden="true">
-          {item.label.charAt(0)}
+  labelId?: string;
+  badgeId?: string;
+  rollup?: readonly SidebarLink[];
+}) => {
+  const hasBadge = hasContent(item.badge);
+  return (
+    <>
+      {!child &&
+        (item.icon ? (
+          <Icon icon={item.icon} size="var(--cipher-size-sidebar-icon)" className={styles.icon} />
+        ) : (
+          <span className={styles.monogram} aria-hidden="true">
+            {item.label.charAt(0)}
+          </span>
+        ))}
+      <span id={labelId} className={styles.label}>
+        {item.label}
+      </span>
+      {hasBadge && (
+        <span id={badgeId} className={styles.badge}>
+          {item.badge}
+        </span>
+      )}
+      {rollup.map((childItem) => (
+        <span key={childItem.id} id={`${badgeId}-${childItem.id}`} className={styles.badge}>
+          {childItem.label} {childItem.badge}
         </span>
       ))}
-    <span className={styles.label}>{item.label}</span>
-    {item.badge !== undefined && <span className={styles.badge}>{item.badge}</span>}
-    {count ? (
-      <>
-        <Count className={styles.count}>{count}</Count>
-        <span className={styles.dot} aria-hidden="true" />
-      </>
-    ) : null}
-    {item.external && <Icon name="external" size={14} className={styles.trailing} />}
-    {trailing}
-  </>
-);
+      {count ? <Count className={styles.count}>{count}</Count> : null}
+      {(count || hasBadge || rollup.length > 0) && (
+        <span className={styles.dot} data-count={count ? "" : undefined} aria-hidden="true" />
+      )}
+      {item.external && <Icon name="external" size={14} className={styles.trailing} />}
+      {trailing}
+    </>
+  );
+};
 
 const drill = <Icon name="chev-right" size={14} className={styles.trailing} />;
 
@@ -188,6 +248,9 @@ const SidebarRow = ({
 }) => {
   const isCurrent = !back && item.id === current;
   const name = back ? `Back to ${item.label}` : item.label;
+  const labelId = React.useId();
+  const badgeId = React.useId();
+  const badged = rail && !back && hasContent(item.badge);
   const drillIn = !back && (item.drillIn || item.level !== undefined);
   const holdsCurrent = React.useContext(LevelTrail).includes(item.level ?? "") && !back;
   const shared = {
@@ -199,7 +262,8 @@ const SidebarRow = ({
     "data-holds-current": (holdsCurrent && !isCurrent) || undefined,
     "data-child": child || undefined,
     "aria-current": isCurrent ? ("page" as const) : undefined,
-    "aria-label": rail || back ? name : undefined,
+    "aria-label": (rail || back) && !badged ? name : undefined,
+    "aria-labelledby": badged ? `${labelId} ${badgeId}` : undefined,
     "aria-description": drillIn ? "Opens section" : undefined,
     onClick: (event: React.MouseEvent) => {
       if (item.disabled) {
@@ -216,6 +280,8 @@ const SidebarRow = ({
       count={item.count}
       child={child}
       trailing={drillIn && !rail ? drill : undefined}
+      labelId={labelId}
+      badgeId={badgeId}
     />
   );
   const row =
@@ -239,7 +305,10 @@ const SidebarRow = ({
       </button>
     );
   return rail ? (
-    <Tooltip content={drillIn ? `${name}, opens section` : name} side="right">
+    <Tooltip
+      content={railTip(name, back ? undefined : item.badge, drillIn ? ", opens section" : "")}
+      side="right"
+    >
       {row}
     </Tooltip>
   ) : (
@@ -262,26 +331,41 @@ const SidebarGroup = ({
   const holdsCurrent = children.some((childItem) => childItem.id === current);
   const [open, setOpen] = React.useState(item.defaultOpen ?? holdsCurrent);
   const listId = React.useId();
+  const labelId = React.useId();
+  const badgeId = React.useId();
+  const rollup = children.filter((childItem) => mayBeStatusBadge(childItem.badge));
+  const nameIds = [
+    labelId,
+    ...(hasContent(item.badge) ? [badgeId] : []),
+    ...rollup.map((childItem) => `${badgeId}-${childItem.id}`)
+  ];
   React.useEffect(() => {
     if (holdsCurrent) setOpen(true);
   }, [holdsCurrent]);
   if (rail)
     return (
       <DropdownMenu>
-        <Tooltip content={item.label} side="right">
+        <Tooltip content={railTip(item.label, item.badge, "", rollup)} side="right">
           <DropdownMenuTrigger asChild>
             <button
               type="button"
               className={styles.row}
               data-sidebar-target=""
               data-holds-current={holdsCurrent || undefined}
-              aria-label={item.label}
+              aria-label={nameIds.length > 1 ? undefined : item.label}
+              aria-labelledby={nameIds.length > 1 ? nameIds.join(" ") : undefined}
               disabled={item.disabled}
               onKeyDown={(event) => {
                 if (event.key === "ArrowDown" || event.key === "ArrowUp") event.preventDefault();
               }}
             >
-              <RowContent item={item} count={total(children)} />
+              <RowContent
+                item={item}
+                count={total(children)}
+                labelId={labelId}
+                badgeId={badgeId}
+                rollup={rollup}
+              />
             </button>
           </DropdownMenuTrigger>
         </Tooltip>
