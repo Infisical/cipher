@@ -1,11 +1,9 @@
 import * as React from "react";
-import type { DateRange } from "react-day-picker";
-
 import { useReportListQuery } from "../lib/list-query";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import { Calendar } from "../ui/calendar";
-import { pickRange } from "../ui/date-range-picker";
+import { DateRangePickerContent, type DateRangePickerProps } from "../ui/date-range-picker";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,7 +29,10 @@ export type FilterBarField =
   | (FilterBarChoiceField & { type: "select" })
   | (FilterBarChoiceField & { type: "multi-select" })
   | { key: string; label: string; type: "date"; defaultMonth?: Date }
-  | { key: string; label: string; type: "date-range"; defaultMonth?: Date }
+  | ({ key: string; label: string; type: "date-range"; defaultMonth?: Date } & Pick<
+      DateRangePickerProps,
+      "presets" | "numberOfMonths"
+    >)
   | {
       key: string;
       label: string;
@@ -106,38 +107,6 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
   else if (labels.length === 2) value = `${labels[0]} or ${labels[1]}`;
   else if (labels.length > 2) value = `${labels[0]} or ${labels.length - 1} more`;
   return { verb: "is", value };
-};
-
-const DateRangeFilter = ({
-  label,
-  defaultMonth,
-  values,
-  onPick
-}: {
-  label: string;
-  defaultMonth?: Date;
-  values: readonly string[];
-  onPick: (values: [string, string]) => void;
-}) => {
-  const [draft, setDraft] = React.useState<DateRange | undefined>(() => {
-    const from = parseDate(values[0]);
-    const to = parseDate(values[1]);
-    return from && to ? { from, to } : undefined;
-  });
-  return (
-    <Calendar
-      mode="range"
-      autoFocus
-      aria-label={label}
-      defaultMonth={draft?.from ?? defaultMonth}
-      selected={draft}
-      onSelect={(_range, day) => {
-        const next = pickRange(draft, day);
-        setDraft(next);
-        if (next.from && next.to) onPick([isoDate(next.from), isoDate(next.to)]);
-      }}
-    />
-  );
 };
 
 type Draft = { filter: FilterBarFilter; index: number };
@@ -353,31 +322,37 @@ export const FilterBar = ({
                     trigger={trigger}
                   />
                 );
-              else
+              else if (field.type === "date-range") {
+                const from = parseDate(filter.values[0]);
+                const to = parseDate(filter.values[1]);
+                picker = (
+                  <Popover open={isOpen} onOpenChange={openChange}>
+                    <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                    <DateRangePickerContent
+                      aria-label={`${field.label} filter`}
+                      value={from && to ? { from, to } : undefined}
+                      onValueChange={(next) =>
+                        update(field.key, {
+                          values:
+                            next?.from && next.to ? [isoDate(next.from), isoDate(next.to)] : []
+                        })
+                      }
+                      onClose={() => openChange(false)}
+                      defaultMonth={field.defaultMonth}
+                      presets={field.presets}
+                      numberOfMonths={field.numberOfMonths}
+                    />
+                  </Popover>
+                );
+              } else
                 picker = (
                   <Popover open={isOpen} onOpenChange={openChange}>
                     <PopoverTrigger asChild>{trigger}</PopoverTrigger>
                     <PopoverContent
                       align="start"
-                      data-width={
-                        field.type === "date-range" || field.type === "date" ? "content" : undefined
-                      }
+                      data-width={field.type === "date" ? "content" : undefined}
                       aria-label={`${field.label} filter`}
-                      onOpenAutoFocus={(event) => {
-                        if (field.type === "date-range") event.preventDefault();
-                      }}
                     >
-                      {field.type === "date-range" && (
-                        <DateRangeFilter
-                          label={field.label}
-                          defaultMonth={field.defaultMonth}
-                          values={filter.values}
-                          onPick={(next) => {
-                            update(field.key, { values: next });
-                            openChange(false);
-                          }}
-                        />
-                      )}
                       {field.type === "date" && (
                         <div className={styles.date}>
                           <ToggleGroup
