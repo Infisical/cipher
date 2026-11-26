@@ -1662,7 +1662,8 @@ tbody > .nativeTableRow[data-loading] {
     [data-loading],
     [data-spacer],
     [data-row-kind],
-    [data-full-width]
+    [data-full-width],
+    [data-restricted]
   ) {
   --cipher-table-row-hover: var(--cipher-hover);
 }
