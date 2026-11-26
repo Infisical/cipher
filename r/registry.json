@@ -2075,6 +2075,11 @@
           "target": "src/components/cipher/ui/menu.module.css"
         },
         {
+          "path": "src/components/cipher/ui/overlay.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/overlay.module.css"
+        },
+        {
           "path": "src/components/cipher/ui/popover.module.css",
           "type": "registry:file",
           "target": "src/components/cipher/ui/popover.module.css"

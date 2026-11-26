@@ -25,3 +25,55 @@
   height: var(--cipher-size-icon);
   stroke-width: var(--cipher-stroke-icon);
 }
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  min-width: 0;
+}
+.headerText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--cipher-space-2);
+  min-width: 0;
+}
+.headerTabs {
+  position: relative;
+  min-width: 0;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+[data-size="feed"] > .header,
+[data-size="feed"] > .footer {
+  flex: none;
+  padding: var(--cipher-space-12) var(--cipher-space-16);
+}
+[data-size="feed"] > .header {
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+[data-size="feed"] > .header[data-tabs] {
+  padding-bottom: 0;
+}
+[data-size="feed"] > .header > .headerTabs {
+  margin-top: var(--cipher-space-4);
+  margin-bottom: calc(-1 * var(--cipher-size-control-border));
+}
+[data-size="feed"] > .footer {
+  border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+[data-slot="popover-drawer"] > .header {
+  padding-top: 0;
+  touch-action: pan-x;
+}
+[data-size="feed"] .headerRow > :is([data-icon-only], [data-size^="icon"]):first-child {
+  margin-inline-start: calc(
+    (var(--cipher-button-icon-size, 14px) - var(--cipher-action-height)) / 2
+  );
+}
+[data-size="feed"] .headerRow > :is([data-icon-only], [data-size^="icon"]):last-child {
+  margin-inline-end: calc((var(--cipher-button-icon-size, 14px) - var(--cipher-action-height)) / 2);
+}

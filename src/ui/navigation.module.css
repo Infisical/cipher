@@ -22,7 +22,14 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
 }
-:global([data-slot="sheet-head"] > [data-slot="sheet-header"]:not(:has(~ :not([data-slot="sheet-view-subheader"]:empty))) > [data-slot="sheet-header-tabs"]) .tabsTrack {
+:global([data-size="feed"] > [data-slot="popover-header"] > [data-slot="popover-header-tabs"])
+  .tabsTrack,
+:global(
+    [data-slot="sheet-head"]
+      > [data-slot="sheet-header"]:not(:has(~ :not([data-slot="sheet-view-subheader"]:empty)))
+      > [data-slot="sheet-header-tabs"]
+  )
+  .tabsTrack {
   border-bottom: 0;
 }
 .tabsList {
