@@ -21,6 +21,10 @@ const navigationKeys = new Set([
   "End"
 ]);
 let lastNavigationKeyAt = -Infinity;
+const tapAttribute = "data-tooltip-tap";
+const tapToggles = new WeakMap<Element, () => void>();
+const tapClicks = new WeakSet<Event>();
+let tapped: Element | null = null;
 if (typeof document !== "undefined") {
   document.addEventListener(
     "keydown",
@@ -31,12 +35,34 @@ if (typeof document !== "undefined") {
   );
   document.addEventListener(
     "pointerdown",
-    () => {
+    (event) => {
       lastNavigationKeyAt = -Infinity;
+      tapped =
+        event.pointerType === "touch" && event.target instanceof Element
+          ? event.target.closest(`[${tapAttribute}]`)
+          : null;
+      if (tapped) tapToggles.get(tapped)?.();
+    },
+    true
+  );
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (tapped && event.target instanceof Node && tapped.contains(event.target)) {
+        event.preventDefault();
+        tapClicks.add(event);
+      }
+      tapped = null;
     },
     true
   );
 }
+const skipTapClick =
+  (onClick?: React.MouseEventHandler<HTMLElement>) => (event: React.MouseEvent<HTMLElement>) => {
+    if (!tapClicks.has(event.nativeEvent)) onClick?.(event);
+  };
+/** Radix closes every open tooltip on this event when one opens; a tap opens without Radix, so it sends it itself. */
+const closeOtherTooltips = () => document.dispatchEvent(new CustomEvent("tooltip.open"));
 const focusedByKeyboard = () => performance.now() - lastNavigationKeyAt < 1000;
 const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
@@ -111,6 +137,11 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   const [mounted, setMounted] = React.useState(false);
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [open, setOpen] = React.useState(false);
+  const openRef = React.useRef(open);
+  const holdOpen = React.useRef(false);
+  React.useLayoutEffect(() => {
+    openRef.current = open;
+  });
   const [, refresh] = React.useReducer((count: number) => count + 1, 0);
   const contentId = React.useId();
   const handle = React.useRef<AnchorHandle | null>(null);
@@ -163,11 +194,12 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       if (!coveredByOverlay(target)) pressed.delete(target);
     };
     const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
       const trigger = find(event.target);
       if (trigger !== hovered) leave(event);
       if (!trigger) return;
       hovered = trigger;
-      if (pressed.has(trigger) || event.pointerType === "touch") return;
+      if (pressed.has(trigger)) return;
       attach(trigger);
       call("onPointerMove", event);
     };
@@ -180,7 +212,16 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       const trigger = find(event.target);
       if (!trigger) return;
       pressed.add(trigger);
+      const shown = openRef.current && trigger === element.current;
       if (trigger === element.current) call("onPointerDown", event);
+      if (event.pointerType !== "touch" || !trigger.hasAttribute(tapAttribute)) return;
+      if (shown) setOpen(false);
+      else {
+        closeOtherTooltips();
+        attach(trigger);
+        run(() => setOpen(true));
+        holdOpen.current = true;
+      }
     };
     const onFocusIn = (event: FocusEvent) => {
       const trigger = find(event.target);
@@ -191,7 +232,14 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     const onFocusOut = (event: FocusEvent) => {
       if (element.current && find(event.target) === element.current) call("onBlur", event);
     };
+    const onPointerCancel = () => {
+      holdOpen.current = false;
+    };
     const onClick = (event: MouseEvent) => {
+      if (holdOpen.current)
+        setTimeout(() => {
+          holdOpen.current = false;
+        });
       if (element.current && find(event.target) === element.current) call("onClick", event);
     };
     store.listener = (id) => {
@@ -210,6 +258,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     document.addEventListener("focusin", onFocusIn, true);
     document.addEventListener("focusout", onFocusOut, true);
     document.addEventListener("click", onClick, true);
+    document.addEventListener("pointercancel", onPointerCancel, true);
     return () => {
       store.listener = null;
       document.removeEventListener("pointermove", onPointerMove, true);
@@ -218,6 +267,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       document.removeEventListener("focusin", onFocusIn, true);
       document.removeEventListener("focusout", onFocusOut, true);
       document.removeEventListener("click", onClick, true);
+      document.removeEventListener("pointercancel", onPointerCancel, true);
     };
   }, [store]);
 
@@ -235,7 +285,10 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       data-slot="tooltip"
       disableHoverableContent
       open={open}
-      onOpenChange={(next) => flushSync(() => setOpen(next))}
+      onOpenChange={(next) => {
+        if (!next && holdOpen.current) return;
+        flushSync(() => setOpen(next));
+      }}
     >
       <TooltipPrimitive.Trigger asChild>
         <SharedAnchor handle={handle} />
@@ -285,8 +338,9 @@ function SharedTooltip({
   shortcut,
   side,
   align,
+  tap,
   children
-}: SharedEntry & { store: SharedStore; children: React.ReactElement }) {
+}: SharedEntry & { store: SharedStore; tap: boolean; children: React.ReactElement }) {
   const id = React.useId();
   React.useLayoutEffect(() => {
     store.set(id, content ? { content, shortcut, side, align } : null);
@@ -294,7 +348,8 @@ function SharedTooltip({
   React.useLayoutEffect(() => () => store.set(id, null), [store, id]);
   return content
     ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
-        [sharedAttribute]: id
+        [sharedAttribute]: id,
+        [tapAttribute]: tap ? "" : undefined
       })
     : children;
 }
@@ -306,6 +361,7 @@ function Tooltip({
   align = "center",
   wrap: _wrap,
   disableHoverableContent = true,
+  openOnTap = false,
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root> & {
@@ -315,8 +371,24 @@ function Tooltip({
   align?: TooltipAlign;
   /** @deprecated Tooltips always wrap at size-tooltip-max; this has no effect. */
   wrap?: boolean;
+  /** On a touch device a tap on the trigger toggles the tooltip, and a tap elsewhere or Escape closes it. The tap does not activate the trigger. Hover and keyboard focus are unchanged. */
+  openOnTap?: boolean;
 }) {
   const store = React.useContext(TooltipScopeContext);
+  const [tapOpen, setTapOpen] = React.useState(props.defaultOpen ?? false);
+  const tapOpenRef = React.useRef(tapOpen);
+  React.useLayoutEffect(() => {
+    tapOpenRef.current = tapOpen;
+  });
+  const tap = openOnTap && props.open === undefined;
+  const changeTapOpen = (next: boolean) => {
+    setTapOpen(next);
+    props.onOpenChange?.(next);
+  };
+  const trigger =
+    openOnTap && React.isValidElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>(children)
+      ? React.cloneElement(children, { onClick: skipTapClick(children.props.onClick) })
+      : children;
   if (
     store &&
     disableHoverableContent &&
@@ -327,8 +399,15 @@ function Tooltip({
     React.isValidElement(children)
   )
     return (
-      <SharedTooltip store={store} content={content} shortcut={shortcut} side={side} align={align}>
-        {children}
+      <SharedTooltip
+        store={store}
+        content={content}
+        shortcut={shortcut}
+        side={side}
+        align={align}
+        tap={openOnTap}
+      >
+        {trigger as React.ReactElement}
       </SharedTooltip>
     );
   const tooltip = (
@@ -336,10 +415,28 @@ function Tooltip({
       data-slot="tooltip"
       disableHoverableContent={disableHoverableContent}
       {...props}
+      {...(tap && {
+        open: tapOpen,
+        onOpenChange: changeTapOpen
+      })}
     >
       {content ? (
         <>
-          <TooltipTrigger asChild>{children}</TooltipTrigger>
+          <TooltipTrigger
+            asChild
+            {...(tap && {
+              [tapAttribute]: "",
+              ref: (node: HTMLButtonElement | null) => {
+                if (!node) return;
+                tapToggles.set(node, () => {
+                  if (!tapOpenRef.current) closeOtherTooltips();
+                  changeTapOpen(!tapOpenRef.current);
+                });
+              }
+            })}
+          >
+            {trigger}
+          </TooltipTrigger>
           <TooltipContent side={side} align={align} data-has-kbd={shortcut ? "" : undefined}>
             <span className={menu.tooltipText}>{content}</span>
             {shortcut && <Kbd>{shortcut}</Kbd>}
@@ -373,6 +470,8 @@ function TooltipTrigger({
       onPointerDown={(event) => {
         onPointerDown?.(event);
         pressed.current = true;
+        if (event.pointerType === "touch" && event.currentTarget.hasAttribute(tapAttribute))
+          event.preventDefault();
       }}
       onPointerMove={(event) => {
         onPointerMove?.(event);
@@ -381,6 +480,7 @@ function TooltipTrigger({
       onPointerLeave={(event) => {
         onPointerLeave?.(event);
         if (!coveredByOverlay(event.currentTarget)) pressed.current = false;
+        if (event.pointerType === "touch") event.preventDefault();
       }}
       onFocus={(event) => {
         onFocus?.(event);
@@ -434,6 +534,7 @@ function TooltipText({
   side,
   align,
   asChild = false,
+  openOnTap,
   className,
   ref,
   ...props
@@ -444,6 +545,7 @@ function TooltipText({
   align?: TooltipAlign;
   /** Make the child element (StatusText, MiddleTruncate) the focusable text instead of a span. In an activatable table row non-interactive text is no tab stop of its own: clicks and Enter reach the row, and the row's description carries the tooltip text. */
   asChild?: boolean;
+  openOnTap?: boolean;
   ref?: React.Ref<HTMLSpanElement>;
 }) {
   const Comp = asChild ? Slot.Root : "span";
@@ -472,7 +574,7 @@ function TooltipText({
   }, [describeRow, descriptionId, independent, disabled, child?.type]);
   return (
     <>
-      <Tooltip content={content} side={side} align={align}>
+      <Tooltip content={content} side={side} align={align} openOnTap={openOnTap}>
         <Comp
           ref={(node: HTMLSpanElement | null) => {
             trigger.current = node;
@@ -523,7 +625,8 @@ function forwardMiddleClick(event: React.MouseEvent<HTMLElement>) {
 
 /**
  * Says why: Button's disabledReason and the reason on Badge and StatusText. wrap shows the reason in a
- * tooltip with its own provider, and with focusable the element becomes a TooltipText tab stop. Put
+ * tooltip that also opens on a tap on touch devices, adding a provider where none is above it, and with
+ * focusable the element becomes a TooltipText tab stop. Put
  * description inside the element and pass its aria-describedby through describedBy, so the reason is
  * its accessible description even while the tooltip is closed.
  */
@@ -538,21 +641,27 @@ function useReason(reason: React.ReactNode) {
         {reason}
       </span>
     ) : null,
-    wrap: (element: React.ReactElement, focusable = false) =>
+    wrap: (
+      element: React.ReactElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>,
+      focusable = false
+    ) =>
       active ? (
         <EnsureTooltipProvider>
           {focusable ? (
             <TooltipText
               asChild
+              openOnTap
               content={reason}
               data-reason-trigger=""
               onClick={forwardToStretchedLink}
               onAuxClick={forwardMiddleClick}
             >
-              {element}
+              {React.cloneElement(element, { onClick: skipTapClick(element.props.onClick) })}
             </TooltipText>
           ) : (
-            <Tooltip content={reason}>{element}</Tooltip>
+            <Tooltip content={reason} openOnTap>
+              {element}
+            </Tooltip>
           )}
         </EnsureTooltipProvider>
       ) : (
