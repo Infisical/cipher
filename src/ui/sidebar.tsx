@@ -145,13 +145,17 @@ const hasContent = (node: React.ReactNode): boolean =>
 
 const statusTones: readonly BadgeTone[] = ["ok", "warn", "bad", "info"];
 
-const mayBeStatusBadge = (node: React.ReactNode) =>
-  React.isValidElement<React.ComponentProps<typeof Badge>>(node) &&
-  node.type !== React.Fragment &&
-  (node.type !== Badge ||
-    statusTones.includes(
-      node.props.tone ?? (node.props.variant === "destructive" ? "bad" : "outline")
-    ));
+const mayBeStatusBadge = (node: React.ReactNode): boolean =>
+  React.Children.toArray(node).some((child) => {
+    if (!React.isValidElement<React.ComponentProps<typeof Badge>>(child)) return false;
+    if (child.type === React.Fragment) return mayBeStatusBadge(child.props.children);
+    return (
+      child.type !== Badge ||
+      statusTones.includes(
+        child.props.tone ?? (child.props.variant === "destructive" ? "bad" : "outline")
+      )
+    );
+  });
 
 const railTip = (
   label: string,
