@@ -2,10 +2,11 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
+import { ActionLabelCollapseContext } from "../lib/header-actions";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
-import { useReason } from "./tooltip";
+import { Tooltip, useReason } from "./tooltip";
 
 import geometry from "./button-geometry.module.css";
 import styles from "./button-material.module.css";
@@ -86,7 +87,7 @@ function Button({
   loadingLabel,
   icon,
   iconRight,
-  iconOnly = false,
+  iconOnly: iconOnlyProp = false,
   selected,
   disabledReason,
   cornerBadge,
@@ -140,6 +141,14 @@ function Button({
       .filter(Boolean)
       .join(" ") || undefined
   );
+  const headerCollapsed = React.useContext(ActionLabelCollapseContext);
+  const collapsible =
+    headerCollapsed !== undefined &&
+    Boolean(icon) &&
+    !iconOnlyProp &&
+    layout !== "trigger" &&
+    !reason;
+  const iconOnly = iconOnlyProp || (collapsible && headerCollapsed);
   const inactive =
     loading ||
     Boolean(reason) ||
@@ -176,6 +185,12 @@ function Button({
         ? `var(--cipher-button-icon-size, ${iconSize}px)`
         : "var(--cipher-action-icon-size)";
   const trigger = layout === "trigger";
+  const gateTooltip =
+    <E extends React.SyntheticEvent>(handler?: (event: E) => void) =>
+    (event: E) => {
+      handler?.(event);
+      if (!headerCollapsed) event.preventDefault();
+    };
   const content = (label: React.ReactNode) => {
     const labelGroup = trigger ? (
       <>
@@ -292,6 +307,8 @@ function Button({
       }
       aria-describedby={describedBy}
       aria-pressed={selected ?? props["aria-pressed"]}
+      onPointerMove={collapsible ? gateTooltip(props.onPointerMove) : props.onPointerMove}
+      onFocus={collapsible ? gateTooltip(props.onFocus) : props.onFocus}
       className={cn(
         buttonVariants({ variant: resolvedVariant, size }),
         iconOnly && geometry.iconOnly,
@@ -327,6 +344,21 @@ function Button({
       {child}
     </Comp>
   );
+  if (collapsible)
+    return (
+      // The tooltip stays mounted while the label shows, so collapsing never remounts the button;
+      // an explicit delay keeps it off a surrounding TooltipScope, which would bypass the gate.
+      <Tooltip
+        delayDuration={200}
+        content={
+          asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+            ? children.props.children
+            : children
+        }
+      >
+        {button}
+      </Tooltip>
+    );
   return reasonTooltip.wrap(button);
 }
 Button.displayName = "Button";

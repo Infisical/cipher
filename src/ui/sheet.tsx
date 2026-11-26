@@ -8,8 +8,10 @@ import { Button } from "./button";
 import { Icon } from "./icon";
 import { Panes, type PanesState } from "./layout";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
+import { TooltipProvider } from "./tooltip";
 
 import { ActionBarHost, ActionBarScroller, useActionBarHost } from "../lib/action-bar-host";
+import { HeaderActions } from "../lib/header-actions";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl, formControlSelector } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -881,14 +883,31 @@ SheetViews.displayName = "SheetViews";
 function SheetHeader({
   className,
   tabs,
+  actions,
   children,
   ref,
   ...props
 }: React.ComponentProps<"div"> & {
   /** Underline Tabs that sit on the header's bottom rule, so the active underline lands on it. Pass a controlled Tabs without content and render the panel in the body, giving it role="tabpanel" and linking it to the active trigger. */
   tabs?: React.ReactNode;
+  /**
+   * Header actions, such as an "Add method" Button. They sit at the end of the tab row when the
+   * header has tabs, outside the scrolling tab list, and beside the title otherwise. When the tabs,
+   * or the title on one line, do not fit beside the full labels, a Button with a leading icon drops
+   * to icon-only, its label becoming the tooltip and accessible name. Icon actions never truncate;
+   * one without an icon keeps its label and truncates only as the last resort. Pass Buttons or a
+   * ButtonGroup.
+   */
+  actions?: React.ReactNode;
 }) {
   const titled = React.Children.toArray(children).length > 0;
+  const actionsSlot = Boolean(actions) && (
+    <TooltipProvider>
+      <HeaderActions slot="sheet-header-actions" className={overlay.headerActions}>
+        {actions}
+      </HeaderActions>
+    </TooltipProvider>
+  );
   return (
     <div
       ref={ref}
@@ -897,8 +916,25 @@ function SheetHeader({
       className={cn("flex flex-col gap-0.5 p-4", className)}
       {...props}
     >
-      {children}
-      {tabs && <div data-slot="sheet-header-tabs">{tabs}</div>}
+      {actionsSlot && !tabs ? (
+        <div data-slot="sheet-header-row" className={overlay.headerRow}>
+          <div data-slot="sheet-header-main" className={overlay.headerMain}>
+            {children}
+          </div>
+          {actionsSlot}
+        </div>
+      ) : (
+        children
+      )}
+      {tabs && (
+        <div
+          data-slot="sheet-header-tabs"
+          className={actionsSlot ? overlay.headerTabsRow : undefined}
+        >
+          {tabs}
+          {actionsSlot}
+        </div>
+      )}
     </div>
   );
 }

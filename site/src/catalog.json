@@ -838,6 +838,10 @@
         "module": "dialog/title-badges"
       },
       {
+        "title": "Header actions",
+        "module": "dialog/header-actions"
+      },
+      {
         "title": "Overflowing content",
         "module": "dialog/overflow"
       },
@@ -2076,6 +2080,10 @@
       {
         "title": "Bulk actions with a floating action bar",
         "module": "sheet/bulk-actions"
+      },
+      {
+        "title": "Header actions",
+        "module": "sheet/header-actions"
       }
     ]
   },

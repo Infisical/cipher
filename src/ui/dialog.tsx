@@ -5,8 +5,10 @@ import { usePortalContainer } from "../scope";
 import { Button } from "./button";
 import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
+import { TooltipProvider } from "./tooltip";
 
 import { ActionBarScroller } from "../lib/action-bar-host";
+import { HeaderActions } from "../lib/header-actions";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -163,14 +165,43 @@ function DialogContent({
 }
 DialogContent.displayName = "DialogContent";
 
-function DialogHeader({ className, ref, ...props }: React.ComponentProps<"div">) {
+function DialogHeader({
+  className,
+  actions,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<"div"> & {
+  /**
+   * Header actions beside the title. When the title does not fit on one line beside the full
+   * labels, a Button with a leading icon drops to icon-only, its label becoming the tooltip and
+   * accessible name. Icon actions never truncate; one without an icon keeps its label and
+   * truncates only as the last resort. Pass Buttons or a ButtonGroup.
+   */
+  actions?: React.ReactNode;
+}) {
   return (
     <div
       ref={ref}
       data-slot="dialog-header"
       className={cn("flex flex-col gap-2", className)}
       {...props}
-    />
+    >
+      {actions ? (
+        <div data-slot="dialog-header-row" className={overlay.headerRow}>
+          <div data-slot="dialog-header-main" className={overlay.headerMain}>
+            {children}
+          </div>
+          <TooltipProvider>
+            <HeaderActions slot="dialog-header-actions" className={overlay.headerActions}>
+              {actions}
+            </HeaderActions>
+          </TooltipProvider>
+        </div>
+      ) : (
+        children
+      )}
+    </div>
   );
 }
 DialogHeader.displayName = "DialogHeader";

@@ -87,6 +87,11 @@
           "target": "src/components/cipher/lib/frame-context.tsx"
         },
         {
+          "path": "src/components/cipher/lib/header-actions.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/header-actions.tsx"
+        },
+        {
           "path": "src/components/cipher/lib/hue.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/hue.ts"
@@ -1256,7 +1261,8 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/empty",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
@@ -2488,7 +2494,8 @@
         "@cipher/empty",
         "@cipher/icon",
         "@cipher/layout",
-        "@cipher/tabs"
+        "@cipher/tabs",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
