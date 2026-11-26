@@ -49,6 +49,12 @@
       "content": "import * as React from \"react\";\n\nconst MOBILE_BREAKPOINT = 768;\n\nexport function useIsMobile() {\n  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);\n\n  React.useEffect(() => {\n    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);\n    const onChange = () => {\n      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);\n    };\n    mql.addEventListener(\"change\", onChange);\n    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);\n    return () => mql.removeEventListener(\"change\", onChange);\n  }, []);\n\n  return !!isMobile;\n}\n"
     },
     {
+      "path": "src/components/cipher/lib/action-label-collapse.ts",
+      "type": "registry:file",
+      "target": "src/components/cipher/lib/action-label-collapse.ts",
+      "content": "import * as React from \"react\";\n\n/**\n * Set by a header actions slot. A Button inside it with a leading icon drops to icon-only when the\n * slot's container query sets --cipher-action-label-collapsed, and its label becomes a tooltip.\n */\nexport const ActionLabelCollapseContext = React.createContext(false);\n\nexport const actionLabelCollapsed = (element: Element) =>\n  getComputedStyle(element).getPropertyValue(\"--cipher-action-label-collapsed\").trim() === \"1\";\n"
+    },
+    {
       "path": "src/components/cipher/lib/boot-theme-keys.ts",
       "type": "registry:file",
       "target": "src/components/cipher/lib/boot-theme-keys.ts",

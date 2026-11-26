@@ -251,3 +251,95 @@
   height: var(--cipher-type-title-line-height);
   margin-inline-end: calc(-1 * var(--cipher-space-6));
 }
+
+/* Header actions: at the end of the tab row or beside the title. Below the query a Button with a
+   leading icon keeps only the icon. Tabs and titles shrink first, to half the row; their large
+   shrink factor makes the actions give way only after that, truncating their labels. */
+.actionsHeader {
+  container: cipher-overlay-header / inline-size;
+}
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cipher-space-8);
+}
+.headerMain {
+  display: flex;
+  flex: 1 1000 auto;
+  flex-direction: column;
+  gap: var(--cipher-space-6);
+  min-width: 50%;
+}
+.headerTabsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+.headerTabsRow > :not(.headerActions) {
+  flex: 1 1000 auto;
+  min-width: 50%;
+}
+.headerActions {
+  display: contents;
+}
+.headerRow > .headerActions > * {
+  margin-block: calc((var(--cipher-type-title-line-height) - var(--cipher-action-height, 0px)) / 2);
+}
+.headerActions > [data-cipher-button] {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.headerActions > [data-cipher-button] > [data-press] {
+  min-width: 0;
+}
+.headerActions > [data-cipher-button] > [data-press] [data-slot="button-text"] {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* A tab row needs more room than a title, which can wrap, so it collapses sooner. */
+@container cipher-overlay-header (max-width: 26rem) {
+  .headerTabsRow > .headerActions {
+    --cipher-action-label-collapsed: 1;
+  }
+  .headerTabsRow > .headerActions > [data-cipher-button]:has([data-button-icon]) {
+    width: var(--cipher-action-height);
+    min-width: var(--cipher-action-height);
+    padding-inline: 0;
+  }
+  .headerTabsRow
+    > .headerActions
+    > [data-cipher-button]:has([data-button-icon])
+    [data-slot="button-text"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+@container cipher-overlay-header (max-width: 22rem) {
+  .headerRow > .headerActions {
+    --cipher-action-label-collapsed: 1;
+  }
+  .headerRow > .headerActions > [data-cipher-button]:has([data-button-icon]) {
+    width: var(--cipher-action-height);
+    min-width: var(--cipher-action-height);
+    padding-inline: 0;
+  }
+  .headerRow
+    > .headerActions
+    > [data-cipher-button]:has([data-button-icon])
+    [data-slot="button-text"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

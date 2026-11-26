@@ -770,6 +770,10 @@
         "module": "dialog/title-badges"
       },
       {
+        "title": "Header actions",
+        "module": "dialog/header-actions"
+      },
+      {
         "title": "Overflowing content",
         "module": "dialog/overflow"
       },
@@ -1936,6 +1940,10 @@
       {
         "title": "Tabs on the header",
         "module": "sheet/header-tabs"
+      },
+      {
+        "title": "Header actions",
+        "module": "sheet/header-actions"
       }
     ]
   },

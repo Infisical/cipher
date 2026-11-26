@@ -6,6 +6,7 @@ import { Button } from "./button";
 import { EmptySurface } from "./empty";
 import { Icon } from "./icon";
 
+import { ActionLabelCollapseContext } from "../lib/action-label-collapse";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -161,14 +162,40 @@ function DialogContent({
 }
 DialogContent.displayName = "DialogContent";
 
-function DialogHeader({ className, ref, ...props }: React.ComponentProps<"div">) {
+function DialogHeader({
+  className,
+  actions,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<"div"> & {
+  /**
+   * Header actions beside the title. In a narrow header a Button with a leading icon drops to
+   * icon-only, its label becoming the tooltip and accessible name; one without an icon keeps its
+   * label and truncates last.
+   */
+  actions?: React.ReactNode;
+}) {
   return (
     <div
       ref={ref}
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2", className)}
+      className={cn("flex flex-col gap-2", Boolean(actions) && overlay.actionsHeader, className)}
       {...props}
-    />
+    >
+      {actions ? (
+        <div data-slot="dialog-header-row" className={overlay.headerRow}>
+          <div data-slot="dialog-header-main" className={overlay.headerMain}>
+            {children}
+          </div>
+          <div data-slot="dialog-header-actions" className={overlay.headerActions}>
+            <ActionLabelCollapseContext value>{actions}</ActionLabelCollapseContext>
+          </div>
+        </div>
+      ) : (
+        children
+      )}
+    </div>
   );
 }
 DialogHeader.displayName = "DialogHeader";

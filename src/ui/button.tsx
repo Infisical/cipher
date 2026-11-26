@@ -2,6 +2,7 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
+import { ActionLabelCollapseContext, actionLabelCollapsed } from "../lib/action-label-collapse";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
@@ -156,6 +157,14 @@ function Button({
         ? `var(--cipher-button-icon-size, ${iconSize}px)`
         : "var(--cipher-action-icon-size)";
   const trigger = layout === "trigger";
+  const collapsible =
+    React.useContext(ActionLabelCollapseContext) && Boolean(icon) && !iconOnly && !trigger;
+  const gateTooltip =
+    <E extends React.SyntheticEvent>(handler?: (event: E) => void) =>
+    (event: E) => {
+      handler?.(event);
+      if (!actionLabelCollapsed(event.currentTarget as Element)) event.preventDefault();
+    };
   const content = (label: React.ReactNode) => {
     const labelGroup = trigger ? (
       <>
@@ -269,6 +278,8 @@ function Button({
       }
       aria-description={reason ?? props["aria-description"]}
       aria-pressed={selected ?? props["aria-pressed"]}
+      onPointerMove={collapsible ? gateTooltip(props.onPointerMove) : props.onPointerMove}
+      onFocus={collapsible ? gateTooltip(props.onFocus) : props.onFocus}
       className={cn(
         buttonVariants({ variant: resolvedVariant, size }),
         iconOnly && geometry.iconOnly,
@@ -304,7 +315,20 @@ function Button({
       {child}
     </Comp>
   );
-  return reason ? <Tooltip content={reason}>{button}</Tooltip> : button;
+  if (reason) return <Tooltip content={reason}>{button}</Tooltip>;
+  if (collapsible)
+    return (
+      <Tooltip
+        content={
+          asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+            ? children.props.children
+            : children
+        }
+      >
+        {button}
+      </Tooltip>
+    );
+  return button;
 }
 Button.displayName = "Button";
 
