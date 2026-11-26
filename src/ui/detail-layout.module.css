@@ -11,36 +11,15 @@
 }
 .aside,
 .main,
-.secondary,
-.rail {
+.secondary {
   display: flex;
   flex-direction: column;
   gap: var(--cipher-space-24);
   min-width: 0;
 }
-.aside,
-.rail {
+.aside {
   scroll-margin-top: var(--cipher-detail-layout-offset);
   scroll-margin-bottom: var(--cipher-space-24);
-}
-/* The rail keeps aside and secondary in one element so the wide column can stick as a unit. Below the breakpoint a row subgrid lets main sit between them; the rail spans all three rows but only its children occupy rows 1 and 3. */
-@supports (grid-template-rows: subgrid) {
-  .rail {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: 1 / span 3;
-    grid-column: 1;
-  }
-  .rail > .aside {
-    grid-row: 1;
-  }
-  .rail > .secondary {
-    grid-row: 3;
-  }
-  .rail ~ .main {
-    grid-row: 2;
-    grid-column: 1;
-  }
 }
 /* Container conditions cannot read custom properties, so this repeats size-sidecar-collapse (896px); detail-layout.test.ts fails if they drift. */
 @container detail-layout (min-width: 896px) {
@@ -48,22 +27,25 @@
     grid-template-columns: minmax(0, 1fr) var(--cipher-size-sidecar);
     grid-template-areas: "main aside";
   }
+  .columns[data-secondary] {
+    grid-template-areas:
+      "main aside"
+      "main secondary";
+    grid-template-rows: auto 1fr;
+  }
   .root[data-aside-width="narrow"] > .columns {
     grid-template-columns: minmax(0, 1fr) var(--cipher-size-pane-aside);
   }
-  .aside,
-  .rail {
+  .aside {
     grid-area: aside;
   }
-  .rail {
-    display: flex;
-  }
-  .main,
-  .rail ~ .main {
+  .main {
     grid-area: main;
   }
-  .aside[data-sticky],
-  .rail[data-sticky] {
+  .secondary {
+    grid-area: secondary;
+  }
+  .aside[data-sticky] {
     position: sticky;
     top: var(--cipher-detail-layout-offset);
   }

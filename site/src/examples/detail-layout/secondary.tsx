@@ -146,7 +146,7 @@ export default function Example() {
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <Specimen tall />
         <figcaption className="text-muted-foreground text-xs">
-          {"A right column taller than the viewport scrolls with the page instead of sticking"}
+          {"With secondary set, the right column scrolls with the page, however tall it is"}
         </figcaption>
       </figure>
     </div>

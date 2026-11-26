@@ -282,7 +282,7 @@ export function DetailLayout({
 }: React.ComponentPropsWithoutRef<"div"> & {
   aside: React.ReactNode;
   asideLabel: string;
-  /** Bounded key/value summaries (config, flags, IDs, connection, filters) that join the aside in the right column on wide containers and follow the main content on narrow ones. Tables, lists and anything unbounded or actionable stay in children. Adding or removing it remounts the aside, so while summaries load, pass a placeholder rather than nothing. */
+  /** Bounded key/value summaries (config, flags, IDs, connection, filters) that join the aside in the right column on wide containers and follow the main content on narrow ones. Tables, lists and anything unbounded or actionable stay in children. With secondary set, the right column does not stick. */
   secondary?: React.ReactNode;
   /** Accessible name of the secondary landmark. */
   secondaryLabel?: string;
@@ -290,11 +290,11 @@ export function DetailLayout({
   asideWidth?: "default" | "narrow";
   ref?: React.Ref<HTMLDivElement>;
 }) {
-  const stickyRef = React.useRef<HTMLElement>(null);
+  const asideRef = React.useRef<HTMLElement>(null);
   const [fits, setFits] = React.useState(false);
   const hasSecondary = flattenFragments(secondary).some((child) => child !== "");
   React.useLayoutEffect(() => {
-    const node = stickyRef.current;
+    const node = asideRef.current;
     if (!node) return undefined;
     const scroller = scrollParent(node);
     const measure = () => {
@@ -316,18 +316,7 @@ export function DetailLayout({
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [hasSecondary]);
-  const asideNode = (
-    <aside
-      ref={hasSecondary ? undefined : stickyRef}
-      data-slot="detail-layout-aside"
-      data-sticky={(!hasSecondary && fits) || undefined}
-      aria-label={asideLabel}
-      className={detailStyles.aside}
-    >
-      {aside}
-    </aside>
-  );
+  }, []);
   return (
     <div
       ref={ref}
@@ -336,29 +325,28 @@ export function DetailLayout({
       className={cn(detailStyles.root, className)}
       {...props}
     >
-      <div className={detailStyles.columns}>
-        {hasSecondary ? (
-          <div
-            ref={stickyRef as React.Ref<HTMLDivElement>}
-            data-slot="detail-layout-rail"
-            data-sticky={fits || undefined}
-            className={detailStyles.rail}
-          >
-            {asideNode}
-            <aside
-              data-slot="detail-layout-secondary"
-              aria-label={secondaryLabel}
-              className={detailStyles.secondary}
-            >
-              {secondary}
-            </aside>
-          </div>
-        ) : (
-          asideNode
-        )}
+      <div className={detailStyles.columns} data-secondary={hasSecondary || undefined}>
+        <aside
+          ref={asideRef}
+          data-slot="detail-layout-aside"
+          data-sticky={(fits && !hasSecondary) || undefined}
+          aria-label={asideLabel}
+          className={detailStyles.aside}
+        >
+          {aside}
+        </aside>
         <div data-slot="detail-layout-main" className={detailStyles.main}>
           {children}
         </div>
+        {hasSecondary && (
+          <aside
+            data-slot="detail-layout-secondary"
+            aria-label={secondaryLabel}
+            className={detailStyles.secondary}
+          >
+            {secondary}
+          </aside>
+        )}
       </div>
     </div>
   );
