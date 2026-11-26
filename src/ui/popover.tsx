@@ -2,11 +2,14 @@
 
 import * as React from "react";
 import { GripHorizontalIcon } from "lucide-react";
-import { Popover as PopoverPrimitive, Slot } from "radix-ui";
+import { Dialog as DialogPrimitive, Popover as PopoverPrimitive, Slot } from "radix-ui";
+
+import { useIsMobile } from "../hooks/use-mobile";
 
 import { useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { FrameScope } from "../lib/frame-context";
+import { splitOverlaySections } from "../lib/overlay-sections";
 import { useOwnedEscape } from "../lib/use-owned-escape";
 import { cn } from "../lib/utils";
 import { EmptySurface } from "./empty";
@@ -14,9 +17,15 @@ import { Icon } from "./icon";
 
 import controls from "./controls.module.css";
 import menu from "./menu.module.css";
+import overlay from "./overlay.module.css";
 import styles from "./popover.module.css";
 
 const PopoverOpenContext = React.createContext(false);
+const PopoverStateContext = React.createContext<{
+  setOpen: (open: boolean) => void;
+  trigger: React.RefObject<HTMLButtonElement | null>;
+} | null>(null);
+const PopoverDrawerContext = React.createContext(false);
 
 function Popover({
   open,
@@ -26,23 +35,38 @@ function Popover({
 }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
   const [uncontrolled, setUncontrolled] = React.useState(defaultOpen);
   const current = open ?? uncontrolled;
+  const trigger = React.useRef<HTMLButtonElement | null>(null);
+  const setOpen = (next: boolean) => {
+    if (open === undefined) setUncontrolled(next);
+    onOpenChange?.(next);
+  };
   return (
     <PopoverOpenContext value={current}>
-      <PopoverPrimitive.Root
-        data-slot="popover"
-        open={current}
-        onOpenChange={(next) => {
-          if (open === undefined) setUncontrolled(next);
-          onOpenChange?.(next);
-        }}
-        {...props}
-      />
+      <PopoverStateContext value={{ setOpen, trigger }}>
+        <PopoverPrimitive.Root
+          data-slot="popover"
+          open={current}
+          onOpenChange={setOpen}
+          {...props}
+        />
+      </PopoverStateContext>
     </PopoverOpenContext>
   );
 }
 
 function PopoverTrigger({ ref, ...props }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
-  return <PopoverPrimitive.Trigger ref={ref} data-slot="popover-trigger" {...props} />;
+  const state = React.useContext(PopoverStateContext);
+  return (
+    <PopoverPrimitive.Trigger
+      ref={(node) => {
+        if (state) state.trigger.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) ref.current = node;
+      }}
+      data-slot="popover-trigger"
+      {...props}
+    />
+  );
 }
 PopoverTrigger.displayName = "PopoverTrigger";
 
@@ -86,12 +110,113 @@ function clampDragOffset(
   };
 }
 
+const swipeStart = 6;
+const swipeVelocity = 0.5;
+
+function PopoverDrawer({
+  open,
+  className,
+  children
+}: {
+  open: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const state = React.useContext(PopoverStateContext);
+  const [drag, setDrag] = React.useState(0);
+  const [openedFor, setOpenedFor] = React.useState(open);
+  if (open !== openedFor) {
+    setOpenedFor(open);
+    if (open) setDrag(0);
+  }
+  const swipe = React.useRef<
+    { id: number; y: number; time: number; dragging: boolean } | undefined
+  >(undefined);
+  const release = (panel: HTMLElement, y: number) => {
+    const start = swipe.current;
+    swipe.current = undefined;
+    if (!start?.dragging) return;
+    const distance = Math.max(0, y - start.y);
+    const velocity = distance / Math.max(1, performance.now() - start.time);
+    if (distance > panel.offsetHeight / 4 || velocity > swipeVelocity) state?.setOpen(false);
+    else setDrag(0);
+  };
+  return (
+    <DialogPrimitive.Root open={open} onOpenChange={(next) => state?.setOpen(next)}>
+      <DialogPrimitive.Portal container={usePortalContainer()}>
+        <DialogPrimitive.Overlay
+          data-slot="popover-drawer-overlay"
+          className={cn("z-50", overlay.scrim)}
+        />
+        <DialogPrimitive.Content
+          data-slot="popover-drawer"
+          data-size="feed"
+          data-side="bottom"
+          data-dragging={drag > 0 || undefined}
+          aria-describedby={undefined}
+          className={cn("z-50", menu.surface, overlay.sheet, menu.feedDrawer, className)}
+          style={drag ? { transform: `translateY(${drag}px)` } : undefined}
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            (event.currentTarget as HTMLElement).focus();
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            state?.trigger.current?.focus();
+          }}
+          onPointerDown={(event) => {
+            if (event.button !== 0) return;
+            const target = event.target as HTMLElement;
+            if (
+              !target.closest('[data-slot="popover-drawer-grabber"], [data-slot="popover-header"]')
+            )
+              return;
+            swipe.current = {
+              id: event.pointerId,
+              y: event.clientY,
+              time: performance.now(),
+              dragging: false
+            };
+          }}
+          onPointerMove={(event) => {
+            const start = swipe.current;
+            if (!start || start.id !== event.pointerId) return;
+            const distance = event.clientY - start.y;
+            if (!start.dragging) {
+              if (Math.abs(distance) < swipeStart) return;
+              if (distance < 0) {
+                swipe.current = undefined;
+                return;
+              }
+              start.dragging = true;
+              start.y = event.clientY;
+              start.time = performance.now();
+              event.currentTarget.setPointerCapture(event.pointerId);
+              return;
+            }
+            setDrag(Math.max(0, distance));
+          }}
+          onPointerUp={(event) => release(event.currentTarget, event.clientY)}
+          onPointerCancel={() => {
+            swipe.current = undefined;
+            setDrag(0);
+          }}
+        >
+          <div data-slot="popover-drawer-grabber" className={menu.feedGrabber} aria-hidden />
+          <PopoverDrawerContext value>{children}</PopoverDrawerContext>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
+  );
+}
+
 function PopoverContent({
   className,
   collisionPadding = 8,
   align = "center",
   sideOffset = 4,
   surface = "card",
+  size,
   draggable = false,
   onEscapeKeyDown,
   onOpenAutoFocus,
@@ -101,6 +226,15 @@ function PopoverContent({
   ...props
 }: Omit<React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>, "draggable"> & {
   surface?: "card" | "menu";
+  /**
+   * feed is for a panel a person reopens to scan, like notifications, activity, recent items or
+   * search results; never for a menu, a select or a short form. It holds a fixed height
+   * (size-feed-height, capped at the space below the trigger) whatever the content, pins a
+   * PopoverHeader and PopoverFooter while only the body scrolls, and lets an Empty or Loader in the
+   * body fill it. Below the mobile breakpoint it opens as a bottom drawer at size-feed-drawer-height
+   * on the same open state, dismissed by swiping it down, tapping outside or Escape.
+   */
+  size?: "feed";
   draggable?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<typeof PopoverPrimitive.Content>> }) {
   const escape = useOwnedEscape(ref, onEscapeKeyDown);
@@ -116,6 +250,8 @@ function PopoverContent({
   const pointer = React.useRef<{ x: number; y: number; offset: DragOffset } | undefined>(undefined);
   const instructions = React.useId();
   const dragged = offset.x !== 0 || offset.y !== 0;
+  const narrow = useIsMobile();
+  const feed = size === "feed";
 
   const moveTo = (next: DragOffset) => {
     if (!content.current) return;
@@ -145,6 +281,41 @@ function PopoverContent({
     };
   }, [dragged, collisionPadding, boundary]);
 
+  const sections = feed
+    ? splitOverlaySections(
+        children,
+        { header: PopoverHeader, footer: PopoverFooter },
+        { pinHeader: true }
+      )
+    : null;
+  const scroll = (content: React.ReactNode) => (
+    <div data-slot="popover-scroll" data-scroll-fade="y" className={menu.scroller}>
+      {content}
+    </div>
+  );
+  const layout = (
+    <FrameScope framed={false}>
+      <EmptySurface>
+        {sections ? (
+          <>
+            {sections.pinned}
+            {scroll(sections.scroll)}
+            {sections.footer}
+          </>
+        ) : (
+          scroll(children)
+        )}
+      </EmptySurface>
+    </FrameScope>
+  );
+
+  if (feed && narrow)
+    return (
+      <PopoverDrawer open={open} className={className}>
+        {layout}
+      </PopoverDrawer>
+    );
+
   return (
     <PopoverPrimitive.Portal container={usePortalContainer()}>
       <PopoverPrimitive.Content
@@ -155,6 +326,7 @@ function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         data-surface={surface}
+        data-size={size}
         className={cn(
           "z-50",
           menu.surface,
@@ -168,7 +340,13 @@ function PopoverContent({
         onEscapeKeyDown={escape.onEscapeKeyDown}
         onOpenAutoFocus={(event) => {
           onOpenAutoFocus?.(event);
-          if (!draggable || event.defaultPrevented) return;
+          if (event.defaultPrevented) return;
+          if (feed) {
+            event.preventDefault();
+            (event.currentTarget as HTMLElement).focus();
+            return;
+          }
+          if (!draggable) return;
           event.preventDefault();
           const panel = event.currentTarget as HTMLElement;
           const field = Array.from(panel.querySelectorAll<HTMLElement>(tabbable)).find(
@@ -224,11 +402,7 @@ function PopoverContent({
             </span>
           </button>
         )}
-        <div data-slot="popover-scroll" data-scroll-fade="y" className={menu.scroller}>
-          <FrameScope framed={false}>
-            <EmptySurface>{children}</EmptySurface>
-          </FrameScope>
-        </div>
+        {layout}
       </PopoverPrimitive.Content>
     </PopoverPrimitive.Portal>
   );
@@ -279,17 +453,55 @@ function PopoverAnchor({
 }
 PopoverAnchor.displayName = "PopoverAnchor";
 
-function PopoverHeader({ className, ref, ...props }: React.ComponentProps<"div">) {
+function PopoverHeader({
+  className,
+  menu: leading,
+  action,
+  tabs,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<"div"> & {
+  /** An icon button before the title, such as a DropdownMenu of view options. */
+  menu?: React.ReactNode;
+  /** An icon button after the title, such as Mark all as read. */
+  action?: React.ReactNode;
+  /** Underline Tabs or a filter row under the title; at size feed they sit on the header's bottom rule. Pass a controlled Tabs so reopening keeps the active tab. */
+  tabs?: React.ReactNode;
+}) {
   return (
     <div
       ref={ref}
       data-slot="popover-header"
-      className={cn("flex flex-col gap-0.5", className)}
+      data-tabs={tabs ? "" : undefined}
+      className={cn("flex flex-col gap-0.5", styles.header, className)}
       {...props}
-    />
+    >
+      {leading || action ? (
+        <div className={styles.headerRow}>
+          {leading}
+          <div className={styles.headerText}>{children}</div>
+          {action}
+        </div>
+      ) : (
+        children
+      )}
+      {tabs && (
+        <div data-slot="popover-header-tabs" className={styles.headerTabs}>
+          {tabs}
+        </div>
+      )}
+    </div>
   );
 }
 PopoverHeader.displayName = "PopoverHeader";
+
+function PopoverFooter({ className, ref, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div ref={ref} data-slot="popover-footer" className={cn(styles.footer, className)} {...props} />
+  );
+}
+PopoverFooter.displayName = "PopoverFooter";
 
 function PopoverTitle({
   className,
@@ -297,10 +509,11 @@ function PopoverTitle({
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<"h2"> & { ref?: React.Ref<HTMLHeadingElement> }) {
+  const Title = React.useContext(PopoverDrawerContext) ? DialogPrimitive.Title : "h2";
   return (
-    <h2 ref={ref} data-slot="popover-title" className={cn("", className)} {...props}>
+    <Title ref={ref} data-slot="popover-title" className={cn("", className)} {...props}>
       {children}
-    </h2>
+    </Title>
   );
 }
 PopoverTitle.displayName = "PopoverTitle";
@@ -322,6 +535,7 @@ export {
   PopoverAnchor,
   PopoverContent,
   PopoverDescription,
+  PopoverFooter,
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger

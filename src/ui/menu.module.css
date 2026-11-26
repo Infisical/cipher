@@ -51,6 +51,58 @@
   width: max-content;
   max-width: min(var(--cipher-size-dialog-wide), var(--radix-popper-available-width, 100vw));
 }
+.card[data-size="feed"] {
+  width: min(var(--cipher-size-feed-width), var(--radix-popper-available-width, 100vw));
+  height: min(var(--cipher-size-feed-height), var(--radix-popper-available-height, 100dvh));
+  gap: 0;
+  padding: 0;
+}
+.feedDrawer {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  height: min(
+    var(--cipher-size-feed-drawer-height),
+    calc(100dvh - var(--cipher-size-overlay-margin))
+  );
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.feedDrawer:not([data-dragging]) {
+  transition: transform var(--cipher-duration-moderate) var(--cipher-ease-standard);
+}
+.feedGrabber {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  padding-block: var(--cipher-space-8) var(--cipher-space-4);
+  touch-action: none;
+}
+.feedGrabber::before {
+  content: "";
+  width: var(--cipher-space-32);
+  height: var(--cipher-space-4);
+  background-color: var(--cipher-line);
+}
+:is(.card[data-size="feed"], .feedDrawer) > .scroller {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+:is(.card[data-size="feed"], .feedDrawer)
+  > .scroller
+  > :is([data-slot="empty"], [data-slot="loader"]) {
+  flex: 1 1 auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .feedDrawer:not([data-dragging]) {
+    transition: none;
+  }
+}
 .tooltip {
   box-sizing: border-box;
   display: inline-flex;
@@ -264,13 +316,13 @@ a.row[href],
   --overlay-hover: var(--cipher-hover-mix);
 }
 .row:is(
-    [data-highlighted],
-    [data-selected="true"],
-    [data-active],
-    [data-state="open"],
-    a:hover,
-    a:focus-visible
-  ) {
+  [data-highlighted],
+  [data-selected="true"],
+  [data-active],
+  [data-state="open"],
+  a:hover,
+  a:focus-visible
+) {
   background-color: color-mix(in oklab, var(--cipher-mix-ink) var(--overlay-hover), transparent);
 }
 .row:is([data-variant="destructive"], [data-danger]) {
@@ -287,7 +339,8 @@ a.row[href],
   background-color: transparent;
   pointer-events: none;
 }
-.row:is([data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) > :is(img, [data-menu-icon]) {
+.row:is([data-disabled]:not([data-disabled="false"]), [aria-disabled="true"])
+  > :is(img, [data-menu-icon]) {
   opacity: var(--cipher-opacity-row-dim);
 }
 .indicator {
@@ -399,7 +452,10 @@ a.row[href],
 :is([role="group"], [cmdk-group]):not(:first-child)
   > :is(.label, [cmdk-group-heading]):first-child {
   position: relative;
-  padding-top: calc(var(--cipher-space-6) + 2 * var(--cipher-menu-pad, var(--cipher-space-3)) + var(--cipher-size-control-border));
+  padding-top: calc(
+    var(--cipher-space-6) + 2 * var(--cipher-menu-pad, var(--cipher-space-3)) +
+      var(--cipher-size-control-border)
+  );
 }
 .label:not(:first-child, .separator + *),
 :is([role="group"], [cmdk-group]):not(:first-child)
@@ -414,7 +470,9 @@ a.row[href],
 .separator {
   position: relative;
   flex: none;
-  height: calc(2 * var(--cipher-menu-pad, var(--cipher-space-3)) + var(--cipher-size-control-border));
+  height: calc(
+    2 * var(--cipher-menu-pad, var(--cipher-space-3)) + var(--cipher-size-control-border)
+  );
   border: 0;
 }
 .separator::before {
