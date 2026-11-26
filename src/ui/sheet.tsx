@@ -9,6 +9,7 @@ import { Icon } from "./icon";
 import { Panes, type PanesState } from "./layout";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 
+import { ActionBarHost, ActionBarScroller } from "../lib/action-bar-host";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl, formControlSelector } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -102,13 +103,13 @@ const SheetLayout = ({
   <>
     {head && <div data-slot="sheet-head">{head}</div>}
     {scroll && (
-      <div
+      <ActionBarScroller
         data-slot="sheet-scroll"
         data-scroll-fade="y"
         data-before-footer={Boolean(footer) || undefined}
       >
         {scroll}
-      </div>
+      </ActionBarScroller>
     )}
     {footer}
   </>
@@ -137,6 +138,15 @@ function SheetContent({
   pending?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<typeof SheetPrimitive.Content>> }) {
   const escape = useOwnedEscape(ref, onEscapeKeyDown);
+  const [contentNode, setContentNode] = React.useState<HTMLDivElement | null>(null);
+  const attachContent = escape.ref;
+  const contentRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      attachContent(node);
+      setContentNode(node);
+    },
+    [attachContent]
+  );
   const [viewPending, setViewPending] = React.useState(false);
   const blocked = pending || viewPending;
   const guard = useDismissGuard(blocked, {
@@ -184,22 +194,24 @@ function SheetContent({
     },
     { pinHeader: true, lookThroughForm: true }
   );
-  const content = sections
-    ? renderInForm(
-        sections.form,
-        "sheet-form",
-        <SheetLayout
-          head={sections.pinned.length > 0 && sections.pinned}
-          scroll={sections.scroll.length > 0 && sections.scroll}
-          footer={sections.footer.length > 0 && sections.footer}
-        />
-      )
-    : rest;
+  const content = sections ? (
+    renderInForm(
+      sections.form,
+      "sheet-form",
+      <SheetLayout
+        head={sections.pinned.length > 0 && sections.pinned}
+        scroll={sections.scroll.length > 0 && sections.scroll}
+        footer={sections.footer.length > 0 && sections.footer}
+      />
+    )
+  ) : (
+    <ActionBarHost host={contentNode}>{rest}</ActionBarHost>
+  );
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Content
-        ref={escape.ref}
+        ref={contentRef}
         data-slot="sheet-content"
         data-has-close={showCloseButton || undefined}
         data-scroll-fade={sections || aside ? undefined : "y"}
@@ -511,7 +523,7 @@ function renderAsideMain({
       )}
       {details}
       {sections.scroll.length > 0 && (
-        <div
+        <ActionBarScroller
           data-slot="sheet-scroll"
           data-scroll-fade="y"
           data-before-footer={footer.length > 0 || undefined}
@@ -519,7 +531,7 @@ function renderAsideMain({
           {...mainPanel}
         >
           {sections.scroll}
-        </div>
+        </ActionBarScroller>
       )}
       {footer}
     </>

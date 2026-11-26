@@ -1092,6 +1092,10 @@
       {
         "title": "Action blocked with a reason",
         "module": "floating-action-bar/disabled-reason"
+      },
+      {
+        "title": "Inside a sheet",
+        "module": "floating-action-bar/in-sheet"
       }
     ]
   },
