@@ -81,6 +81,9 @@
   --cipher-size-menu-min: 160px;
   --cipher-size-menu-max: 320px;
   --cipher-size-popover: 288px;
+  --cipher-size-feed-width: 420px;
+  --cipher-size-feed-height: 560px;
+  --cipher-size-feed-drawer-height: 85dvh;
   --cipher-size-toast: 400px;
   --cipher-size-dialog: 440px;
   --cipher-size-dialog-wide: 560px;
