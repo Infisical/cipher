@@ -423,6 +423,19 @@
     var(--cipher-dialog-pad, var(--cipher-space-overlay-inset)) + var(--cipher-size-nested-md)
   );
 }
+/* A full-width side sheet always shows its close button, so it clears it as data-has-close does. */
+@media (width <= 512px) {
+  .cipher
+    [data-slot="sheet-content"]:is([data-side="left"], [data-side="right"])
+    [data-slot="panes"] {
+    --cipher-pane-head-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+  }
+  .cipher
+    [data-slot="sheet-content"]:is([data-side="left"], [data-side="right"])
+    [data-slot="sheet-header"] {
+    padding-inline-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+  }
+}
 /* Overlay scroll model: when Content holds the section slots it lays out as a column with no gap.
    Dialog and Sheet pin the header and any subheader above a line rule and the footer below one,
    and only the body scrolls; the rules mark those edges, so the scroller fades only where no rule
