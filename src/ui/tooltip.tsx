@@ -423,10 +423,16 @@ function TooltipText({
   const describeRow = React.useContext(RowDescriptionContext);
   const descriptionId = React.useId();
   const trigger = React.useRef<HTMLSpanElement | null>(null);
+  const childDisabled =
+    asChild && React.isValidElement<{ disabled?: unknown }>(props.children)
+      ? Boolean(props.children.props.disabled)
+      : false;
   React.useLayoutEffect(() => {
-    if (!describeRow || trigger.current?.matches(interactiveControl)) return undefined;
+    const node = trigger.current;
+    if (!describeRow || (node?.matches(interactiveControl) && !node.matches(":disabled")))
+      return undefined;
     return describeRow(descriptionId);
-  }, [describeRow, descriptionId]);
+  }, [describeRow, descriptionId, childDisabled]);
   return (
     <>
       <Tooltip content={content} side={side} align={align}>
