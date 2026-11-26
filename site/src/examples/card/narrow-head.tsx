@@ -1,6 +1,13 @@
 import { Button } from "@infisical/cipher/ui/button";
 import { ButtonGroup } from "@infisical/cipher/ui/button-group";
-import { Card } from "@infisical/cipher/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@infisical/cipher/ui/card";
 
 const channelActions = (
   <ButtonGroup label="Slack channel">
@@ -38,6 +45,18 @@ export default function Example() {
           action={<Button variant="outline">Send test notification</Button>}
         >
           Last delivered yesterday.
+        </Card>
+      </Figure>
+      <Figure caption="Composed: below a 30rem card the action moves under the description">
+        <Card>
+          <CardHeader>
+            <CardTitle>Email: security@acme.com</CardTitle>
+            <CardDescription>Sends a daily digest of failed rotations.</CardDescription>
+            <CardAction>
+              <Button variant="outline">Send test email</Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent>Last delivered this morning.</CardContent>
         </Card>
       </Figure>
       <Figure caption="Framed: the title keeps its text first and the action truncates in the band">
