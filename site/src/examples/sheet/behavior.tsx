@@ -14,7 +14,8 @@ export default function Example() {
         <UI.SheetHeader>
           <UI.SheetTitle>Connection grants</UI.SheetTitle>
           <UI.SheetDescription>
-            24 fictional grants. Use the footer action or Escape to close.
+            24 fictional grants. Use the footer action or Escape to close. On a phone the close
+            button shows as well.
           </UI.SheetDescription>
         </UI.SheetHeader>
         <UI.SheetBody>
