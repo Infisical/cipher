@@ -1092,10 +1092,6 @@
       {
         "title": "Action blocked with a reason",
         "module": "floating-action-bar/disabled-reason"
-      },
-      {
-        "title": "Inside a sheet",
-        "module": "floating-action-bar/in-sheet"
       }
     ]
   },
@@ -1940,6 +1936,10 @@
       {
         "title": "Tabs on the header",
         "module": "sheet/header-tabs"
+      },
+      {
+        "title": "Bulk actions with a floating action bar",
+        "module": "sheet/bulk-actions"
       }
     ]
   },

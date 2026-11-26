@@ -263,7 +263,7 @@ function SheetContent({
                   asideClassName={aside.props.className}
                 >
                   {(panes) => (
-                    <div data-slot="sheet-main" data-sections="">
+                    <ActionBarScroller data-slot="sheet-main" data-sections="">
                       {renderAsideMain({
                         panes,
                         aside: aside.props,
@@ -272,7 +272,7 @@ function SheetContent({
                         detailsTabId,
                         detailsPanelId
                       })}
-                    </div>
+                    </ActionBarScroller>
                   )}
                 </Panes>
               ) : (
