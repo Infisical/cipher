@@ -34,9 +34,9 @@ const keywords =
 const languageKeywords: Record<string, string> = {
   go: "package|func|type|struct|interface|map|chan|go|defer|select|switch|case|fallthrough|break|continue|goto|range|nil|iota"
 };
-const literals =
-  /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*/
-    .source;
+const literals = /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*/.source;
+const templates = /`(?:\\.|[^`\\])*`/.source;
+const rawStrings = /`[^`]*`/.source;
 const numbersAndKeys = /-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|\b[A-Za-z_][\w-]*(?=\s*[:=])/.source;
 export function normalizeCodeLanguage(language: string): string {
   return aliases[language.toLowerCase()] ?? "plain";
@@ -45,7 +45,7 @@ export function tokenizeCode(text: string, language: string): CodeToken[] {
   const normalized = normalizeCodeLanguage(language);
   if (normalized === "plain") return [{ text, kind: "plain" }];
   const expression = new RegExp(
-    `(${literals}|\\b(?:${keywords}${languageKeywords[normalized] ? `|${languageKeywords[normalized]}` : ""})\\b|${numbersAndKeys})`,
+    `(${literals}|${normalized === "go" ? rawStrings : templates}|\\b(?:${keywords}${languageKeywords[normalized] ? `|${languageKeywords[normalized]}` : ""})\\b|${numbersAndKeys})`,
     "g"
   );
   const result: CodeToken[] = [];
