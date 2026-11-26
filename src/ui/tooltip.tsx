@@ -145,13 +145,11 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   const [mounted, setMounted] = React.useState(false);
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [rowIds, setRowIds] = React.useState<string[] | null>(null);
-  const rowIdsRef = React.useRef(rowIds);
   const [open, setOpen] = React.useState(false);
   const openRef = React.useRef(open);
   const holdOpen = React.useRef(false);
   React.useLayoutEffect(() => {
     openRef.current = open;
-    rowIdsRef.current = rowIds;
   });
   const [, refresh] = React.useReducer((count: number) => count + 1, 0);
   const contentId = React.useId();
@@ -172,7 +170,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   React.useEffect(() => {
     const pressed = new WeakSet<Element>();
     let hovered: HTMLElement | null = null;
-    let focusedRow: Element | null = null;
+    let focusedRow: HTMLTableRowElement | null = null;
     const run = (step: (anchor: AnchorHandle) => void) => {
       if (handle.current) step(handle.current);
       else {
@@ -237,6 +235,18 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
         holdOpen.current = true;
       }
     };
+    const showRow = (row: HTMLTableRowElement) => {
+      const described = [
+        ...row.querySelectorAll<HTMLElement>(`[${sharedAttribute}][${rowDescribedAttribute}]`)
+      ].filter((item) => item.closest("tr") === row && find(item));
+      if (!described.length) return false;
+      attach(
+        described[0],
+        described.map((item) => item.getAttribute(sharedAttribute) as string)
+      );
+      focusedRow = row;
+      return true;
+    };
     const onFocusIn = (event: FocusEvent) => {
       if (!focusedByKeyboard()) return;
       const trigger = find(event.target);
@@ -246,18 +256,8 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
         call("onFocus", event);
         return;
       }
-      const row = event.target;
-      if (!(row instanceof HTMLTableRowElement)) return;
-      const described = [
-        ...row.querySelectorAll<HTMLElement>(`[${sharedAttribute}][${rowDescribedAttribute}]`)
-      ].filter((item) => item.closest("tr") === row && find(item));
-      if (!described.length) return;
-      attach(
-        described[0],
-        described.map((item) => item.getAttribute(sharedAttribute) as string)
-      );
-      focusedRow = row;
-      call("onFocus", event);
+      if (event.target instanceof HTMLTableRowElement && showRow(event.target))
+        call("onFocus", event);
     };
     const onFocusOut = (event: FocusEvent) => {
       if (
@@ -279,14 +279,20 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       if (element.current && find(event.target) === element.current) call("onClick", event);
     };
     store.listener = (id) => {
-      if (!element.current || element.current.getAttribute(sharedAttribute) !== id) {
-        if (rowIdsRef.current?.includes(id)) refresh();
-        return;
-      }
+      const row = focusedRow;
+      if (row)
+        queueMicrotask(() => {
+          if (focusedRow !== row || showRow(row)) return;
+          focusedRow = null;
+          setRowIds(null);
+          call("onBlur", { defaultPrevented: false });
+        });
+      if (!element.current || element.current.getAttribute(sharedAttribute) !== id) return;
       if (store.entries.has(id)) {
         refresh();
         return;
       }
+      if (row) return;
       call("onPointerLeave", { defaultPrevented: false });
       element.current = null;
       setActiveId(null);
@@ -620,7 +626,7 @@ function TooltipText({
   const passThrough = Boolean(describeRow) && !independent;
   React.useLayoutEffect(() => {
     const node = trigger.current;
-    if (!describeRow) return undefined;
+    if (!describeRow || node?.closest("[inert]")) return undefined;
     const nodeDisabled = disabled || Boolean(node?.matches(":disabled"));
     if (independent && !nodeDisabled) return undefined;
     if (!nodeDisabled && node?.matches(interactiveControl)) return undefined;
