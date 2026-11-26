@@ -17,10 +17,19 @@ export function ActionBarHost({
 }
 
 /** An overlay scroller that hosts a FloatingActionBar rendered inside it. */
-export function ActionBarScroller({ children, ...props }: React.ComponentProps<"div">) {
+export function ActionBarScroller({ children, ref, ...props }: React.ComponentProps<"div">) {
   const [host, setHost] = React.useState<HTMLDivElement | null>(null);
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      setHost(node);
+      if (typeof ref === "function") return ref(node);
+      if (ref) ref.current = node;
+      return undefined;
+    },
+    [ref]
+  );
   return (
-    <div ref={setHost} {...props}>
+    <div {...props} ref={setRefs}>
       <ActionBarHost host={host}>{children}</ActionBarHost>
     </div>
   );

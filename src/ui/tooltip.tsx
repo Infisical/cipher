@@ -57,10 +57,17 @@ if (typeof document !== "undefined") {
     true
   );
 }
-const skipTapClick =
-  (onClick?: React.MouseEventHandler<HTMLElement>) => (event: React.MouseEvent<HTMLElement>) => {
+/** Handlers the reason wrapper adds itself, so TooltipText doesn't mistake its element for a control of its own. */
+const internalHandlers = new WeakSet<object>();
+const callerHandler = (handler: unknown) =>
+  typeof handler === "function" && !internalHandlers.has(handler);
+const skipTapClick = (onClick?: React.MouseEventHandler<HTMLElement>) => {
+  const handler = (event: React.MouseEvent<HTMLElement>) => {
     if (!tapClicks.has(event.nativeEvent)) onClick?.(event);
   };
+  if (!onClick) internalHandlers.add(handler);
+  return handler;
+};
 /** Radix closes every open tooltip on this event when one opens; a tap opens without Radix, so it sends it itself. */
 const closeOtherTooltips = () => document.dispatchEvent(new CustomEvent("tooltip.open"));
 const focusedByKeyboard = () => performance.now() - lastNavigationKeyAt < 1000;
@@ -558,15 +565,11 @@ function TooltipText({
   const descriptionId = React.useId();
   const trigger = React.useRef<HTMLSpanElement | null>(null);
   const child = asChild && React.isValidElement(props.children) ? props.children : undefined;
-  const own = { ...props, ...(child?.props as object | undefined) } as {
-    role?: unknown;
-    onClick?: unknown;
-    onKeyDown?: unknown;
-    disabled?: unknown;
-  };
+  const childProps = (child?.props ?? {}) as { onClick?: unknown; onKeyDown?: unknown };
+  const own = { ...props, ...childProps } as { role?: unknown; disabled?: unknown };
   const independent =
     (typeof own.role === "string" && interactiveRoles.has(own.role)) ||
-    Boolean(own.onClick || own.onKeyDown);
+    [props.onClick, props.onKeyDown, childProps.onClick, childProps.onKeyDown].some(callerHandler);
   const disabled = Boolean(own.disabled);
   const passThrough = Boolean(describeRow) && !independent;
   React.useLayoutEffect(() => {
@@ -627,6 +630,8 @@ function forwardToStretchedLink(event: React.MouseEvent<HTMLElement>) {
 function forwardMiddleClick(event: React.MouseEvent<HTMLElement>) {
   if (event.button === 1) forwardToStretchedLink(event);
 }
+internalHandlers.add(forwardToStretchedLink);
+internalHandlers.add(forwardMiddleClick);
 
 /**
  * Says why: Button's disabledReason and the reason on Badge and StatusText. wrap shows the reason in a
