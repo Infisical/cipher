@@ -70,6 +70,8 @@ export interface MultiStepStep {
   /** The final action's look when this is the last step: destructive for an irreversible submit, such as a break-glass request. */
   completeVariant?: "primary" | "destructive";
   completeIcon?: IconName;
+  /** false drops the footer on this step, Cancel, Back and the primary button with it, for a step whose own control calls next, such as a picker. The dialog or sheet still closes from its close button and Escape, and a validate message has nowhere to show, so report problems on fields or with a toast. */
+  footer?: false;
   /** What the step is for, beside the body in layout="aside" and in an "About this step" popover when that column does not fit. The eyebrow reads "Step N · title", title defaulting to the step's. */
   aside?: {
     title?: string;
@@ -510,7 +512,7 @@ export const MultiStep = ({
       </fieldset>
     </form>
   );
-  const footer = (
+  const footer = entry.footer !== false && (
     <>
       {footerStart && (
         <div className={styles.start} {...skipAutoFocus}>
@@ -585,7 +587,7 @@ export const MultiStep = ({
           )}
           <div className={styles.card}>
             {fields}
-            <div className={styles.footer}>{footer}</div>
+            {footer && <div className={styles.footer}>{footer}</div>}
           </div>
         </div>
       </div>
@@ -641,7 +643,8 @@ export const MultiStep = ({
             view.subheader,
           )}
         <SheetBody className={className}>{fields}</SheetBody>
-        {view?.footer &&
+        {footer &&
+          view?.footer &&
           createPortal(
             <SheetFooter className={styles.footer}>{footer}</SheetFooter>,
             view.footer,
@@ -670,7 +673,9 @@ export const MultiStep = ({
             <SheetSubheader className={meterClass}>{meter}</SheetSubheader>
           )}
           <SheetBody>{body}</SheetBody>
-          <SheetFooter className={styles.footer}>{footer}</SheetFooter>
+          {footer && (
+            <SheetFooter className={styles.footer}>{footer}</SheetFooter>
+          )}
         </SheetContent>
       </Sheet>
     );
@@ -698,7 +703,9 @@ export const MultiStep = ({
           <DialogSubheader className={meterClass}>{meter}</DialogSubheader>
         )}
         {body}
-        <DialogFooter className={styles.footer}>{footer}</DialogFooter>
+        {footer && (
+          <DialogFooter className={styles.footer}>{footer}</DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

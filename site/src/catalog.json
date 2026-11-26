@@ -1560,6 +1560,10 @@
       {
         "title": "Aside layout: six steps with long names and long asides",
         "module": "multi-step/aside-stressed"
+      },
+      {
+        "title": "Aside layout: a destination picker without a footer, then the steps",
+        "module": "multi-step/aside-picker"
       }
     ]
   },
