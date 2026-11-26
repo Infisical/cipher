@@ -1024,6 +1024,10 @@
       {
         "title": "Exact-match text field: the chip reads is instead of contains",
         "module": "filter-bar/exact-match"
+      },
+      {
+        "title": "Choice fields searched on the server",
+        "module": "filter-bar/server-search"
       }
     ]
   },

@@ -24,6 +24,10 @@ type FilterBarChoiceField = {
   label: string;
   options: readonly FilterBarOption[];
   searchable?: boolean;
+  /** Searches on the server: called with each query (and with "" when the picker closes), while options holds the results as they arrive. Options are not filtered locally. Applied values keep the labels of options seen earlier, so include them in options on first render. */
+  onSearch?: (query: string) => void;
+  /** While onSearch is in flight: a spinner in the search field, and Searching… in place of the empty text. */
+  loading?: boolean;
 };
 export type FilterBarField =
   | (FilterBarChoiceField & { type: "select" })
@@ -88,7 +92,11 @@ const shortRange = (from: Date, to: Date) => {
   return from.getTime() === to.getTime() ? format(from) : `${format(from)} to ${format(to)}`;
 };
 
-export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) => {
+export const describeFilter = (
+  field: FilterBarField,
+  filter: FilterBarFilter,
+  remembered: readonly FilterBarOption[] = []
+) => {
   if (field.type === "date")
     return { verb: filter.operator ?? "before", value: filter.values[0] ?? "any date" };
   if (field.type === "date-range") {
@@ -100,7 +108,11 @@ export const describeFilter = (field: FilterBarField, filter: FilterBarFilter) =
   if (field.type === "text")
     return { verb: field.verb ?? "contains", value: filter.values[0] ?? "anything" };
   const labels = filter.values.map(
-    (value) => field.options.find((option) => option.value === value)?.label ?? value
+    (value) =>
+      (
+        field.options.find((option) => option.value === value) ??
+        remembered.find((option) => option.value === value)
+      )?.label ?? value
   );
   let value = "any";
   if (labels.length === 1) [value] = labels;
@@ -143,6 +155,32 @@ export const FilterBar = ({
     setDraftState(next);
   };
   const shown = withDraft(value, draft);
+  const [remembered, setRemembered] = React.useState<Record<string, readonly FilterBarOption[]>>(
+    {}
+  );
+  const unseen = fields.flatMap((field) => {
+    if ((field.type !== "select" && field.type !== "multi-select") || !field.onSearch) return [];
+    const values = shown.find((filter) => filter.field === field.key)?.values ?? [];
+    const known = remembered[field.key] ?? [];
+    const visible = field.options.filter(
+      (option) =>
+        values.includes(option.value) &&
+        !known.some((item) => item.value === option.value && item.label === option.label)
+    );
+    return visible.length ? [{ key: field.key, visible }] : [];
+  });
+  if (unseen.length)
+    setRemembered((current) => {
+      const next = { ...current };
+      for (const { key, visible } of unseen)
+        next[key] = [
+          ...(current[key] ?? []).filter(
+            (item) => !visible.some((option) => option.value === item.value)
+          ),
+          ...visible
+        ];
+      return next;
+    });
   const [open, setOpen] = React.useState<string | null>(null);
   const [focusTarget, setFocusTarget] = React.useState<string | null>(null);
   const picked = React.useRef<string | null>(null);
@@ -277,7 +315,7 @@ export const FilterBar = ({
             {shown.map((filter) => {
               const field = fields.find((entry) => entry.key === filter.field);
               if (!field) return null;
-              const text = describeFilter(field, filter);
+              const text = describeFilter(field, filter, remembered[field.key]);
               const trigger = (
                 <Button
                   ref={(node) => {
@@ -302,6 +340,8 @@ export const FilterBar = ({
                     label={field.label}
                     options={field.options}
                     searchable={field.searchable}
+                    onSearch={field.onSearch}
+                    loading={field.loading}
                     value={filter.values[0] ?? null}
                     onChange={(next) => update(field.key, { values: next ? [next] : [] })}
                     open={isOpen}
@@ -315,6 +355,8 @@ export const FilterBar = ({
                     label={field.label}
                     options={field.options}
                     searchable={field.searchable}
+                    onSearch={field.onSearch}
+                    loading={field.loading}
                     value={filter.values}
                     onChange={(next) => update(field.key, { values: next })}
                     open={isOpen}
