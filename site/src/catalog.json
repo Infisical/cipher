@@ -1698,7 +1698,7 @@
   {
     "id": "row-link",
     "title": "Row link",
-    "summary": "A typed route link whose target stretches over its table row or Card, with a disabled fallback.",
+    "summary": "A typed route link whose target stretches over its table row or Card, with a disabled fallback. Outside a row or Card it is an ordinary link.",
     "group": "Navigation",
     "examples": [
       {
@@ -1708,6 +1708,10 @@
       {
         "title": "Cell links in a pricing matrix",
         "module": "row-link/cell-links"
+      },
+      {
+        "title": "Outside a row, in a Sheet",
+        "module": "row-link/no-host"
       }
     ]
   },
