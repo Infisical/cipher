@@ -99,7 +99,10 @@ type SharedComboboxProps = {
   label: string;
   id?: string;
   "aria-describedby"?: string;
+  /** Shown when there are no options at all. Defaults to "No options found". */
   emptyText?: string;
+  /** Shown when options exist but the search matches none. With onSearch, any query that returns nothing. Defaults to "No options found". */
+  noMatchText?: string;
   /** The search field's placeholder. Defaults to "Search options". */
   searchPlaceholder?: string;
   disabled?: boolean;
@@ -151,6 +154,7 @@ export function Combobox({
     placeholder = "Select an option",
     label,
     emptyText = "No options found",
+    noMatchText = "No options found",
     searchPlaceholder = "Search options",
     disabled,
     invalid,
@@ -252,6 +256,7 @@ export function Combobox({
     inlineCreate &&
     query.trim() &&
     !options.some((option) => option.label.toLowerCase() === query.trim().toLowerCase());
+  const emptyMessage = options.length || (onSearch && query.trim()) ? noMatchText : emptyText;
   const triggerRef = React.useRef<HTMLButtonElement | null>(null);
   const formId = React.useId();
   const sessionRef = React.useRef(0);
@@ -333,6 +338,7 @@ export function Combobox({
           invalid={invalid}
           searchable
           searchPlaceholder={searchPlaceholder}
+          noMatchText={noMatchText}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
@@ -480,10 +486,10 @@ export function Combobox({
             trailing={loading ? <Spinner /> : undefined}
           />
           <CommandList aria-busy={loading || undefined}>
-            {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
+            {!onSearch && !rowCreation && <CommandEmpty>{emptyMessage}</CommandEmpty>}
             {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
               <p role="status" data-slot="combobox-status" className={menu.empty}>
-                {loading ? "Searching…" : emptyText}
+                {loading ? "Searching…" : emptyMessage}
               </p>
             )}
             {groups.map((group) => (
