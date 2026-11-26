@@ -124,6 +124,16 @@ export function Meta({
 }
 Meta.displayName = "Meta";
 
+/** A compact uppercase group label, such as WHEN or CONDITIONS above a block of rules. */
+export function Eyebrow({
+  className,
+  ref,
+  ...props
+}: React.ComponentPropsWithoutRef<"p"> & { ref?: React.Ref<HTMLParagraphElement> }) {
+  return <p ref={ref} data-slot="eyebrow" className={cn(styles.eyebrow, className)} {...props} />;
+}
+Eyebrow.displayName = "Eyebrow";
+
 export function StatusText({
   tone = "neutral",
   size,

@@ -512,7 +512,8 @@
       "registryDependencies": [
         "@cipher/button",
         "@cipher/cipher-base",
-        "@cipher/dialog"
+        "@cipher/dialog",
+        "@cipher/text"
       ],
       "dependencies": [
         "motion@^13.2.0"
