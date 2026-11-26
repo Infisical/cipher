@@ -6,7 +6,7 @@ import { ListHighlight } from "../lib/list-highlight";
 import { useReportPresence } from "../lib/presence-count";
 import { useControllableState } from "../lib/use-controllable-state";
 import { cn } from "../lib/utils";
-import { Count } from "./badge";
+import { Badge, type BadgeTone, Count } from "./badge";
 import { AnimatedCollapse } from "./animated-collapse";
 import { Button } from "./button";
 import {
@@ -143,10 +143,30 @@ const hasContent = (node: React.ReactNode): boolean =>
       : child !== ""
   );
 
-const railTip = (label: string, badge: React.ReactNode, suffix = "") =>
-  hasContent(badge) ? (
+const statusTones: readonly BadgeTone[] = ["ok", "warn", "bad", "info"];
+
+const isNeutralBadge = (node: React.ReactNode) =>
+  React.isValidElement<React.ComponentProps<typeof Badge>>(node) &&
+  node.type === Badge &&
+  !statusTones.includes(
+    node.props.tone ?? (node.props.variant === "destructive" ? "bad" : "outline")
+  );
+
+const railTip = (
+  label: string,
+  badge: React.ReactNode,
+  suffix = "",
+  rollup: readonly SidebarLink[] = []
+) =>
+  hasContent(badge) || rollup.length ? (
     <>
-      {label} {badge}
+      {label}
+      {hasContent(badge) && <> {badge}</>}
+      {rollup.map((childItem) => (
+        <React.Fragment key={childItem.id}>
+          , {childItem.label} {childItem.badge}
+        </React.Fragment>
+      ))}
       {suffix}
     </>
   ) : (
@@ -159,7 +179,8 @@ const RowContent = ({
   child,
   trailing,
   labelId,
-  badgeId
+  badgeId,
+  rollup = []
 }: {
   item: SidebarLink;
   count?: number;
@@ -167,6 +188,7 @@ const RowContent = ({
   trailing?: React.ReactNode;
   labelId?: string;
   badgeId?: string;
+  rollup?: readonly SidebarLink[];
 }) => {
   const hasBadge = hasContent(item.badge);
   return (
@@ -187,8 +209,13 @@ const RowContent = ({
           {item.badge}
         </span>
       )}
+      {rollup.map((childItem) => (
+        <span key={childItem.id} id={`${badgeId}-${childItem.id}`} className={styles.badge}>
+          {childItem.label} {childItem.badge}
+        </span>
+      ))}
       {count ? <Count className={styles.count}>{count}</Count> : null}
-      {(count || hasBadge) && (
+      {(count || hasBadge || rollup.length > 0) && (
         <span className={styles.dot} data-count={count ? "" : undefined} aria-hidden="true" />
       )}
       {item.external && <Icon name="external" size={14} className={styles.trailing} />}
@@ -301,28 +328,41 @@ const SidebarGroup = ({
   const listId = React.useId();
   const labelId = React.useId();
   const badgeId = React.useId();
-  const badged = hasContent(item.badge);
+  const rollup = children.filter(
+    (childItem) => hasContent(childItem.badge) && !isNeutralBadge(childItem.badge)
+  );
+  const nameIds = [
+    labelId,
+    ...(hasContent(item.badge) ? [badgeId] : []),
+    ...rollup.map((childItem) => `${badgeId}-${childItem.id}`)
+  ];
   React.useEffect(() => {
     if (holdsCurrent) setOpen(true);
   }, [holdsCurrent]);
   if (rail)
     return (
       <DropdownMenu>
-        <Tooltip content={railTip(item.label, item.badge)} side="right">
+        <Tooltip content={railTip(item.label, item.badge, "", rollup)} side="right">
           <DropdownMenuTrigger asChild>
             <button
               type="button"
               className={styles.row}
               data-sidebar-target=""
               data-holds-current={holdsCurrent || undefined}
-              aria-label={badged ? undefined : item.label}
-              aria-labelledby={badged ? `${labelId} ${badgeId}` : undefined}
+              aria-label={nameIds.length > 1 ? undefined : item.label}
+              aria-labelledby={nameIds.length > 1 ? nameIds.join(" ") : undefined}
               disabled={item.disabled}
               onKeyDown={(event) => {
                 if (event.key === "ArrowDown" || event.key === "ArrowUp") event.preventDefault();
               }}
             >
-              <RowContent item={item} count={total(children)} labelId={labelId} badgeId={badgeId} />
+              <RowContent
+                item={item}
+                count={total(children)}
+                labelId={labelId}
+                badgeId={badgeId}
+                rollup={rollup}
+              />
             </button>
           </DropdownMenuTrigger>
         </Tooltip>

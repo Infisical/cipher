@@ -25,7 +25,15 @@ const spaces: SidebarProps["spaces"] = [
             children: [
               { id: "secrets-overview", label: "Overview" },
               { id: "secrets-integrations", label: "Integrations" },
-              { id: "secrets-rotation", label: "Rotation" },
+              {
+                id: "secrets-rotation",
+                label: "Rotation",
+                badge: (
+                  <Badge size="sm" tone="bad" collapse>
+                    2 failing
+                  </Badge>
+                )
+              },
               { id: "secrets-approvals", label: "Approvals", count: 2 },
               { id: "secrets-scanning", label: "Secret scanning", count: 1 }
             ]
