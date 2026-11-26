@@ -145,12 +145,13 @@ const hasContent = (node: React.ReactNode): boolean =>
 
 const statusTones: readonly BadgeTone[] = ["ok", "warn", "bad", "info"];
 
-const isNeutralBadge = (node: React.ReactNode) =>
+const mayBeStatusBadge = (node: React.ReactNode) =>
   React.isValidElement<React.ComponentProps<typeof Badge>>(node) &&
-  node.type === Badge &&
-  !statusTones.includes(
-    node.props.tone ?? (node.props.variant === "destructive" ? "bad" : "outline")
-  );
+  node.type !== React.Fragment &&
+  (node.type !== Badge ||
+    statusTones.includes(
+      node.props.tone ?? (node.props.variant === "destructive" ? "bad" : "outline")
+    ));
 
 const railTip = (
   label: string,
@@ -328,9 +329,7 @@ const SidebarGroup = ({
   const listId = React.useId();
   const labelId = React.useId();
   const badgeId = React.useId();
-  const rollup = children.filter(
-    (childItem) => hasContent(childItem.badge) && !isNeutralBadge(childItem.badge)
-  );
+  const rollup = children.filter((childItem) => mayBeStatusBadge(childItem.badge));
   const nameIds = [
     labelId,
     ...(hasContent(item.badge) ? [badgeId] : []),
