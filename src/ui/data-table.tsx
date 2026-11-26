@@ -33,6 +33,7 @@ import {
   type RowAction,
   type UpToThree
 } from "./table";
+import { EMPTY_VALUE, EmptyValue } from "./text";
 import { Tooltip } from "./tooltip";
 
 import styles from "./data.module.css";
@@ -854,7 +855,7 @@ export function DataTable<Row>({
                   align={column.align}
                   title={column.text?.(row)}
                 >
-                  {column.render ? column.render(row, position) : column.text?.(row)}
+                  {cellValue(column.render ? column.render(row, position) : column.text?.(row))}
                 </CellValue>
               </div>
             </CellContent>
@@ -1217,6 +1218,10 @@ function CellValue({
   );
 }
 
+function cellValue(value: React.ReactNode) {
+  return value === undefined || value === null || value === "" ? <EmptyValue /> : value;
+}
+
 function CellContent({
   shrink,
   secondary,
@@ -1253,7 +1258,7 @@ function CellContent({
 export function EnvMark({ present, env }: { present: boolean; env?: string }) {
   return (
     <span aria-label={`${env ?? "Environment"}: ${present ? "present" : "missing"}`}>
-      {present ? "✓" : "−"}
+      {present ? "✓" : EMPTY_VALUE}
     </span>
   );
 }
@@ -1302,8 +1307,7 @@ function ToggleCell<Row>({
   if (toggle.absent?.(row))
     return (
       <span className={styles.tableToggleAbsent} data-slot="table-toggle-absent">
-        <span aria-hidden>−</span>
-        <span className={styles.sr}>{`${label}: not applicable`}</span>
+        <EmptyValue label={`${label}: not applicable`} />
       </span>
     );
   const reason = toggle.disabledReason?.(row);

@@ -2130,6 +2130,10 @@
         "module": "table/states"
       },
       {
+        "title": "Empty values",
+        "module": "table/empty-values"
+      },
+      {
         "title": "Native Table loading rows",
         "module": "table/native-loading"
       },
