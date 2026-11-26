@@ -148,18 +148,25 @@ const KeyValuePairs = ({
   onDone: () => void;
 }) => {
   const nextId = React.useRef(values.length);
-  const [pairs, setPairs] = React.useState<Pair[]>(() => {
-    const applied = toPairs(values);
+  const fromValues = (source: readonly string[]) => {
+    const applied = toPairs(source).map((pair) => ({ ...pair, id: nextId.current++ }));
     return applied.length ? applied : [{ id: nextId.current++, key: "", value: "" }];
-  });
+  };
+  const [pairs, setPairs] = React.useState<Pair[]>(() => fromValues(values));
+  const signature = values.join("\u0000");
+  const [synced, setSynced] = React.useState(signature);
+  if (signature !== synced) {
+    setSynced(signature);
+    setPairs(fromValues(values));
+  }
   const focusId = React.useRef<number | null>(null);
   const change = (next: Pair[]) => {
+    const emitted = next
+      .filter((pair) => pair.key.trim() && pair.value.trim())
+      .flatMap((pair) => [pair.key.trim(), pair.value.trim()]);
     setPairs(next);
-    onChange(
-      next
-        .filter((pair) => pair.key.trim() && pair.value.trim())
-        .flatMap((pair) => [pair.key.trim(), pair.value.trim()])
-    );
+    setSynced(emitted.join("\u0000"));
+    onChange(emitted);
   };
   const edit = (id: number, patch: Partial<Pair>) =>
     change(pairs.map((pair) => (pair.id === id ? { ...pair, ...patch } : pair)));
@@ -169,7 +176,7 @@ const KeyValuePairs = ({
     <div className={styles.pairs}>
       {pairs.map((pair, index) => {
         const enter = (event: React.KeyboardEvent) => {
-          if (event.key === "Enter") onDone();
+          if (event.key === "Enter" && !event.nativeEvent.isComposing) onDone();
         };
         return (
           <div key={pair.id} className={styles.pair}>
