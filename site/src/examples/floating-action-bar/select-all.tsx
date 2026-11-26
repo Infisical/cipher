@@ -20,7 +20,7 @@ const firstThousand = [
 ];
 
 export default function Example() {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(["stripe_api_key", "database_url"]);
   const [loading, setLoading] = useState(false);
   const pending = useRef<number | undefined>(undefined);
   return (
