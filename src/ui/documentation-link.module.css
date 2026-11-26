@@ -17,7 +17,10 @@
 :global([data-slot="overlay-title-badges"]) {
   --documentation-link-context: var(--cipher-size-icon);
   --documentation-link-context-pad-y: calc((var(--cipher-type-title-line-height) - var(--cipher-size-icon)) / 2);
-  --documentation-link-context-pad-x: 0px;
+  --documentation-link-context-pad-x: var(--cipher-size-focus-ring);
+}
+:global([data-slot="overlay-title-badges"]) > .link {
+  max-width: none;
 }
 .link {
   --documentation-link-glyph: var(--documentation-link-size, var(--documentation-link-context, var(--cipher-size-icon)));
