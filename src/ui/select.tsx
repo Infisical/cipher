@@ -218,6 +218,8 @@ function SelectTrigger({
   const reasonId = React.useId();
   const root = React.useContext(SelectRootContext);
   const reason = (disabledReason ?? root.disabledReason) || undefined;
+  const [tipOpen, setTipOpen] = React.useState(false);
+  if (!reason && tipOpen) setTipOpen(false);
   const trigger = (
     <SelectPrimitive.Trigger
       ref={ref}
@@ -285,7 +287,11 @@ function SelectTrigger({
     <>
       {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same trigger and its focus. */}
       <TooltipProvider>
-        <Tooltip content={reason || " "} open={reason ? undefined : false} defaultOpen={false}>
+        <Tooltip
+          content={reason || " "}
+          open={Boolean(reason) && tipOpen}
+          onOpenChange={setTipOpen}
+        >
           {trigger}
         </Tooltip>
       </TooltipProvider>

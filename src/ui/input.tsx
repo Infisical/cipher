@@ -91,6 +91,7 @@ export function Input({
   const [hovered, setHovered] = React.useState(false);
   const [dismissed, setDismissed] = React.useState<string>();
   if (dismissed && dismissed !== problem) setDismissed(undefined);
+  if (hovered && !reason && !problem) setHovered(false);
   const suggesting = Boolean(suggestedValue) && !props.readOnly && !props.disabled && !reason;
   const accept = () => {
     const element = inner.current;
@@ -219,13 +220,12 @@ export function Input({
         <Tooltip
           content={reason || problem || " "}
           open={
-            reason ? undefined : Boolean(problem) && dismissed !== problem && (focused || hovered)
+            reason ? hovered : Boolean(problem) && dismissed !== problem && (focused || hovered)
           }
           onOpenChange={(open) => {
             setHovered(open);
             if (open) setDismissed(undefined);
           }}
-          defaultOpen={false}
         >
           {control}
         </Tooltip>
