@@ -1982,6 +1982,8 @@
         "@cipher/dialog",
         "@cipher/field",
         "@cipher/icon",
+        "@cipher/link",
+        "@cipher/popover",
         "@cipher/progress",
         "@cipher/sheet",
         "@cipher/sonner"
