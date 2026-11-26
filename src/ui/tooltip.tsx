@@ -4,6 +4,7 @@ import { Slot, Tooltip as TooltipPrimitive } from "radix-ui";
 
 import { useCollisionBoundary, usePortalContainer } from "../scope";
 
+import { interactiveControl, RowDescriptionContext } from "../lib/row-description";
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
 
@@ -414,21 +415,40 @@ function TooltipText({
   content: React.ReactNode;
   side?: TooltipSide;
   align?: TooltipAlign;
-  /** Make the child element (StatusText, MiddleTruncate) the focusable text instead of a span. */
+  /** Make the child element (StatusText, MiddleTruncate) the focusable text instead of a span. In an activatable table row non-interactive text is no tab stop of its own: clicks and Enter reach the row, and the row's description carries the tooltip text. */
   asChild?: boolean;
   ref?: React.Ref<HTMLSpanElement>;
 }) {
   const Comp = asChild ? Slot.Root : "span";
+  const describeRow = React.useContext(RowDescriptionContext);
+  const descriptionId = React.useId();
+  const trigger = React.useRef<HTMLSpanElement | null>(null);
+  React.useLayoutEffect(() => {
+    if (!describeRow || trigger.current?.matches(interactiveControl)) return undefined;
+    return describeRow(descriptionId);
+  }, [describeRow, descriptionId]);
   return (
-    <Tooltip content={content} side={side} align={align}>
-      <Comp
-        ref={ref}
-        data-slot="tooltip-text"
-        tabIndex={0}
-        className={cn(controls.focusOutline, className)}
-        {...props}
-      />
-    </Tooltip>
+    <>
+      <Tooltip content={content} side={side} align={align}>
+        <Comp
+          ref={(node: HTMLSpanElement | null) => {
+            trigger.current = node;
+            if (typeof ref === "function") return ref(node);
+            if (ref) ref.current = node;
+          }}
+          data-slot="tooltip-text"
+          data-tooltip-text=""
+          tabIndex={describeRow ? undefined : 0}
+          className={cn(controls.focusOutline, className)}
+          {...props}
+        />
+      </Tooltip>
+      {describeRow && (
+        <span id={descriptionId} hidden>
+          {content}
+        </span>
+      )}
+    </>
   );
 }
 TooltipText.displayName = "TooltipText";

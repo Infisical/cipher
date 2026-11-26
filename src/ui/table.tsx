@@ -5,6 +5,11 @@ import * as React from "react";
 import { keyboardModality } from "../lib/input-modality";
 import { type PresenceReport, usePresenceCount, useReportPresence } from "../lib/presence-count";
 import {
+  interactiveControl,
+  RowDescriptionContext,
+  useRowDescriptionHost
+} from "../lib/row-description";
+import {
   CellLinkContext,
   StretchedLinkContext,
   useCellLinkHost,
@@ -130,8 +135,7 @@ function TableFooter({ className, ref, ...props }: React.ComponentProps<"tfoot">
 }
 TableFooter.displayName = "TableFooter";
 
-const interactiveTarget =
-  "a, button, input, select, textarea, label, summary, [contenteditable], [tabindex]:not(tr), [role=button], [role=checkbox], [role=combobox], [role=link], [role=menuitem], [role=switch], [role=tab], [data-row-interactive]";
+const interactiveTarget = `${interactiveControl}, label, [tabindex]:not(tr):not([data-tooltip-text]), [data-row-interactive]`;
 const activatesRow = (event: React.MouseEvent<HTMLTableRowElement>) => {
   const row = event.currentTarget;
   const target = event.target as Element;
@@ -189,6 +193,7 @@ function TableRow({
   onBlur,
   ref,
   children,
+  "aria-describedby": describedBy,
   ...props
 }: React.ComponentProps<"tr"> & {
   /** The row is being edited: every other row in the same body dims its cell contents until this clears. */
@@ -205,6 +210,9 @@ function TableRow({
   });
   const [containsFocus, reportContains] = usePresenceCount();
   const [hasLink, reportLink] = useStretchedLinkHost();
+  const [descriptions, describe] = useRowDescriptionHost(
+    onClick !== undefined && props.tabIndex !== undefined && props.tabIndex >= 0
+  );
   useReportPresence(React.useContext(BodyFocusContext), Boolean(focused) || containsFocus);
   const setRef = React.useCallback(
     (element: HTMLTableRowElement | null) => {
@@ -250,38 +258,41 @@ function TableRow({
   return (
     <RowFocusContext value={reportContains}>
       <StretchedLinkContext value={reportLink}>
-        <tr
-          ref={setRef}
-          data-slot="table-row"
-          data-focused={focused || undefined}
-          data-tone={tone}
-          data-contains-focus={containsFocus || undefined}
-          data-stretched-link={hasLink || undefined}
-          className={cn(
-            "border-b border-[color:var(--cipher-line-soft)] transition-colors duration-(--cipher-duration-fast)",
-            styles.nativeTableRow,
-            className
-          )}
-          onClick={
-            onClick &&
-            ((event) => {
-              if (activatesRow(event)) onClick(event);
-            })
-          }
-          onFocus={(event) => {
-            onFocus?.(event);
-            if (event.target === event.currentTarget && keyboardModality())
-              event.currentTarget.setAttribute("data-focus-ring", "");
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            if (event.target === event.currentTarget)
-              event.currentTarget.removeAttribute("data-focus-ring");
-          }}
-          {...props}
-        >
-          {children}
-        </tr>
+        <RowDescriptionContext value={describe}>
+          <tr
+            ref={setRef}
+            data-slot="table-row"
+            data-focused={focused || undefined}
+            data-tone={tone}
+            data-contains-focus={containsFocus || undefined}
+            data-stretched-link={hasLink || undefined}
+            aria-describedby={[describedBy, ...descriptions].filter(Boolean).join(" ") || undefined}
+            className={cn(
+              "border-b border-[color:var(--cipher-line-soft)] transition-colors duration-(--cipher-duration-fast)",
+              styles.nativeTableRow,
+              className
+            )}
+            onClick={
+              onClick &&
+              ((event) => {
+                if (activatesRow(event)) onClick(event);
+              })
+            }
+            onFocus={(event) => {
+              onFocus?.(event);
+              if (event.target === event.currentTarget && keyboardModality())
+                event.currentTarget.setAttribute("data-focus-ring", "");
+            }}
+            onBlur={(event) => {
+              onBlur?.(event);
+              if (event.target === event.currentTarget)
+                event.currentTarget.removeAttribute("data-focus-ring");
+            }}
+            {...props}
+          >
+            {children}
+          </tr>
+        </RowDescriptionContext>
       </StretchedLinkContext>
     </RowFocusContext>
   );

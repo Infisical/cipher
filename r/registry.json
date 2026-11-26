@@ -147,6 +147,11 @@
           "target": "src/components/cipher/lib/radio-value-context.ts"
         },
         {
+          "path": "src/components/cipher/lib/row-description.ts",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/row-description.ts"
+        },
+        {
           "path": "src/components/cipher/lib/scroll-edges.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/scroll-edges.ts"
