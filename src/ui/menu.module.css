@@ -500,6 +500,17 @@ a.row[href],
 .actionFooter {
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
+.footerText {
+  margin: 0;
+  padding: var(--cipher-space-4) var(--cipher-space-8);
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+  font-weight: var(--cipher-type-caption-font-weight);
+  letter-spacing: var(--cipher-type-caption-letter-spacing);
+  overflow-wrap: anywhere;
+}
 .footer {
   display: flex;
   align-items: center;

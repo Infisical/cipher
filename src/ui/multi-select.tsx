@@ -61,6 +61,8 @@ type Shared = {
   searchPlaceholder?: string;
   /** Shown when no option matches, such as a load-failure hint. Defaults to "No options found". */
   emptyText?: string;
+  /** Pinned under the list, such as a note that results are capped or a link to manage the options. A string renders as a muted caption. It stays out of arrow-key navigation, so its controls are reached with Tab. */
+  footer?: React.ReactNode;
   /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. It turns on the search field. Include the selected options in options on first render so their labels show. */
   onSearch?: (query: string) => void;
   /** While onSearch is in flight: a spinner in the search field, and Searching… in place of emptyText. */
@@ -108,6 +110,7 @@ export function MultiSelect({
     searchable: searchableProp = false,
     searchPlaceholder = "Search options",
     emptyText = "No options found",
+    footer,
     onSearch,
     loading = false,
     anchorRef,
@@ -314,7 +317,11 @@ export function MultiSelect({
       else all();
       return;
     }
-    if (event.target instanceof HTMLButtonElement) return;
+    if (
+      event.target instanceof HTMLButtonElement ||
+      (event.target instanceof Element && event.target.closest('[data-slot="multi-select-footer"]'))
+    )
+      return;
     if (event.key === "Backspace" && !query && props.onEmptyBackspace) {
       event.preventDefault();
       props.onEmptyBackspace();
@@ -636,6 +643,11 @@ export function MultiSelect({
               <span className={styles.optionLabel}>{createAction.label}</span>
               {createBlocked && <span className={styles.optionMeta}>{createBlocked}</span>}
             </div>
+          </div>
+        )}
+        {footer && (
+          <div className={cn(menu.inset, menu.actionFooter)} data-slot="multi-select-footer">
+            {typeof footer === "string" ? <p className={menu.footerText}>{footer}</p> : footer}
           </div>
         )}
         {createError && (

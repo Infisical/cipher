@@ -100,6 +100,8 @@ type SharedComboboxProps = {
   id?: string;
   "aria-describedby"?: string;
   emptyText?: string;
+  /** Pinned under the list, such as a note that results are capped or a link to manage the options. A string renders as a muted caption. It stays out of arrow-key navigation, so its controls are reached with Tab. */
+  footer?: React.ReactNode;
   /** The search field's placeholder. Defaults to "Search options". */
   searchPlaceholder?: string;
   disabled?: boolean;
@@ -151,6 +153,7 @@ export function Combobox({
     placeholder = "Select an option",
     label,
     emptyText = "No options found",
+    footer,
     searchPlaceholder = "Search options",
     disabled,
     invalid,
@@ -333,6 +336,8 @@ export function Combobox({
           invalid={invalid}
           searchable
           searchPlaceholder={searchPlaceholder}
+          emptyText={emptyText}
+          footer={footer}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
@@ -581,6 +586,11 @@ export function Combobox({
             )}
           </CommandList>
         </Command>
+        {footer && (
+          <div className={cn(menu.inset, menu.actionFooter)} data-slot="combobox-footer">
+            {typeof footer === "string" ? <p className={menu.footerText}>{footer}</p> : footer}
+          </div>
+        )}
         {error && (
           <p role="alert" className={styles.error}>
             {error}
