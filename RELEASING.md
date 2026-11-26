@@ -17,7 +17,7 @@ The run summary lists every changed snapshot with its pixel count. The `cipher-v
 
 ## Cut the release
 
-1. In one pull request, bump `version` in `package.json` and add the release's entry to the top of `CHANGELOG.md`, then merge it.
+1. In one pull request, bump `version` in `package.json`, then merge it. The pull request changes nothing else. Release notes publish with the tag, not in `CHANGELOG.md`, which stops at 0.1.24.
 2. Run the Release workflow with `commit` set to that merge's full sha. It builds exactly that commit, even if main has moved since, and refuses a commit that isn't on main.
 
    ```bash
