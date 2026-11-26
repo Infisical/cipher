@@ -28,6 +28,13 @@ export type CodeBlockProps = Omit<CodeProps, "children" | "block" | "onCopy" | "
   /** Masks the content until the reveal toggle is pressed. Copy still writes the real value. */
   sensitive?: boolean;
 };
+const textOf = (node: React.ReactNode): string => {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(textOf).join("");
+  if (React.isValidElement<{ children?: React.ReactNode }>(node))
+    return textOf(node.props.children);
+  return "";
+};
 export const CodeBlock = ({
   children,
   code,
@@ -54,7 +61,7 @@ export const CodeBlock = ({
   const embedded = useInFrame("CodeBlock");
   const labelText = typeof label === "string" ? label : undefined;
   const identityId = React.useId();
-  const revealKey = `${shown}\u0000${source}`;
+  const revealKey = `${shown || textOf(children)}\u0000${source}`;
   const [revealed, setRevealed] = React.useState<string | null>(null);
   if (revealed !== null && (!sensitive || revealed !== revealKey)) setRevealed(null);
   const masked = sensitive && revealed !== revealKey;
