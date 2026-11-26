@@ -452,6 +452,14 @@
       {
         "title": "Filename, terminal, line numbers and copy",
         "module": "code-block/default"
+      },
+      {
+        "title": "Sensitive content with a reveal toggle",
+        "module": "code-block/sensitive"
+      },
+      {
+        "title": "Custom actions in a narrow container",
+        "module": "code-block/narrow-actions"
       }
     ]
   },

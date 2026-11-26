@@ -790,18 +790,26 @@
       "name": "code-block",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/code",
         "@cipher/icon",
         "@cipher/json",
         "@cipher/middle-truncate",
-        "@cipher/sensitive-editor"
+        "@cipher/secret-input",
+        "@cipher/sensitive-editor",
+        "@cipher/tooltip"
       ],
       "files": [
         {
           "path": "src/components/cipher/ui/code-block.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/ui/code-block.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/button-geometry.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
           "path": "src/components/cipher/ui/code.module.css",
@@ -2321,7 +2329,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/button",
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/tooltip"
       ],
       "files": [
         {
