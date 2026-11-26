@@ -41,9 +41,12 @@ const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
   getComputedStyle(document.body).pointerEvents === "none";
 
+const ProvidedContext = React.createContext(false);
+
 function TooltipProvider({
   delayDuration = 200,
   disableHoverableContent = true,
+  children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
@@ -52,7 +55,18 @@ function TooltipProvider({
       delayDuration={delayDuration}
       disableHoverableContent={disableHoverableContent}
       {...props}
-    />
+    >
+      <ProvidedContext value>{children}</ProvidedContext>
+    </TooltipPrimitive.Provider>
+  );
+}
+
+/** Adds a TooltipProvider only where no ancestor has one, so the app's delay and skip-delay group still apply. */
+function EnsureTooltipProvider({ children }: { children: React.ReactNode }) {
+  return React.useContext(ProvidedContext) ? (
+    children
+  ) : (
+    <TooltipProvider>{children}</TooltipProvider>
   );
 }
 
@@ -257,9 +271,9 @@ function TooltipScope({ children }: { children?: React.ReactNode }) {
   return (
     <TooltipScopeContext.Provider value={store}>
       {children}
-      <TooltipProvider>
+      <EnsureTooltipProvider>
         <SharedTooltipHost store={store} />
-      </TooltipProvider>
+      </EnsureTooltipProvider>
     </TooltipScopeContext.Provider>
   );
 }
@@ -454,7 +468,7 @@ function useReason(reason: React.ReactNode) {
     ) : null,
     wrap: (element: React.ReactElement, focusable = false) =>
       active ? (
-        <TooltipProvider>
+        <EnsureTooltipProvider>
           {focusable ? (
             <TooltipText asChild content={reason}>
               {element}
@@ -462,7 +476,7 @@ function useReason(reason: React.ReactNode) {
           ) : (
             <Tooltip content={reason}>{element}</Tooltip>
           )}
-        </TooltipProvider>
+        </EnsureTooltipProvider>
       ) : (
         element
       )
