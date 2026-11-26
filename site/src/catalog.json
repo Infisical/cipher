@@ -622,6 +622,10 @@
         "module": "combobox/async"
       },
       {
+        "title": "Multiple with async search",
+        "module": "combobox/multiple-search"
+      },
+      {
         "title": "Free-text tags",
         "module": "combobox/tags"
       },
