@@ -241,7 +241,7 @@ export const MultiStep = ({
     (
       step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
       step?.querySelector<HTMLElement>(formControlSelector)
-    )?.focus();
+    )?.focus({ preventScroll: variant !== "page" });
   }, [current]);
   const measure = React.useCallback((node: HTMLDivElement | null) => {
     if (!node) return undefined;
