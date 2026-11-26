@@ -99,9 +99,12 @@ type SharedComboboxProps = {
   label: string;
   id?: string;
   "aria-describedby"?: string;
+  /** Shown when there are no options at all. Defaults to "No options found". */
   emptyText?: string;
   /** Pinned under the list, such as a note that results are capped or a link to manage the options. A string renders as a muted caption. It stays out of arrow-key navigation, so its controls are reached with Tab. */
   footer?: React.ReactNode;
+  /** Shown when options exist but the search matches none. With onSearch, any query that returns nothing. Defaults to "No options found". */
+  noMatchText?: string;
   /** The search field's placeholder. Defaults to "Search options". */
   searchPlaceholder?: string;
   disabled?: boolean;
@@ -155,6 +158,7 @@ export function Combobox({
     label,
     emptyText = "No options found",
     footer,
+    noMatchText = "No options found",
     searchPlaceholder = "Search options",
     disabled,
     invalid,
@@ -260,6 +264,7 @@ export function Combobox({
   const emptyCreate =
     !loading && !options.length && (!onSearch || !query.trim()) ? dialogCreation : undefined;
   const emptyCreateRef = React.useRef<HTMLButtonElement>(null);
+  const emptyMessage = options.length || (onSearch && query.trim()) ? noMatchText : emptyText;
   const triggerRef = React.useRef<HTMLButtonElement | null>(null);
   const formId = React.useId();
   const sessionRef = React.useRef(0);
@@ -343,6 +348,7 @@ export function Combobox({
           searchPlaceholder={searchPlaceholder}
           emptyText={emptyText}
           footer={footer}
+          noMatchText={noMatchText}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
@@ -499,10 +505,10 @@ export function Combobox({
           />
           {!emptyCreate && (
             <CommandList aria-busy={loading || undefined}>
-              {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
+              {!onSearch && !rowCreation && <CommandEmpty>{emptyMessage}</CommandEmpty>}
               {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
                 <p role="status" data-slot="combobox-status" className={menu.empty}>
-                  {loading ? "Searching…" : emptyText}
+                  {loading ? "Searching…" : emptyMessage}
                 </p>
               )}
               {groups.map((group) => (

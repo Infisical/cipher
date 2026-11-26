@@ -606,6 +606,10 @@
         "module": "combobox/create-flow"
       },
       {
+        "title": "Empty and no-match text",
+        "module": "combobox/no-match-text"
+      },
+      {
         "title": "Async search",
         "module": "combobox/async"
       },

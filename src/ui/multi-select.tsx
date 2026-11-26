@@ -59,10 +59,12 @@ type Shared = {
   invalid?: boolean;
   searchable?: boolean;
   searchPlaceholder?: string;
-  /** Shown when no option matches, such as a load-failure hint. Defaults to "No options found". */
+  /** Shown when there are no options at all, such as a load-failure hint. Defaults to "No options found". */
   emptyText?: string;
   /** Pinned under the list, such as a note that results are capped or a link to manage the options. A string renders as a muted caption. It stays out of arrow-key navigation, so its controls are reached with Tab. */
   footer?: React.ReactNode;
+  /** Shown when options exist but the search matches none. With onSearch, any query that returns nothing. Defaults to "No options found". */
+  noMatchText?: string;
   /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. It turns on the search field. Include the selected options in options on first render so their labels show. */
   onSearch?: (query: string) => void;
   /** While onSearch is in flight: a spinner in the search field, and Searching… in place of emptyText. */
@@ -112,6 +114,7 @@ export function MultiSelect({
     searchPlaceholder = "Search options",
     emptyText = "No options found",
     footer,
+    noMatchText = "No options found",
     onSearch,
     loading = false,
     anchorRef,
@@ -514,7 +517,11 @@ export function MultiSelect({
         )}
         {!filtered.length && (loading || !canCreate) && (
           <p role={onSearch ? "status" : undefined} className={menu.empty}>
-            {loading ? "Searching…" : emptyText}
+            {loading
+              ? "Searching…"
+              : options.length || (onSearch && query.trim())
+                ? noMatchText
+                : emptyText}
           </p>
         )}
         <div
