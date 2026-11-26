@@ -1308,6 +1308,14 @@ tbody > .nativeTableRow[data-loading] {
   z-index: 5;
   background: var(--cipher-tint);
 }
+.tableScroll thead[data-hidden] > tr {
+  border-bottom-width: 0;
+}
+.tableScroll thead[data-hidden] > tr > th {
+  height: 0;
+  padding-block: 0;
+  border-block-width: 0;
+}
 .tableShell[data-embedded] thead,
 .tableShell[data-embedded] th[data-pin="true"],
 .tableShell[data-embedded] .tablePagination {

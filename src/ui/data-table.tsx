@@ -341,17 +341,17 @@ export function DataTable<Row>({
   const footOwner = frameFoot?.owner;
   const footTarget = wantsFrameFoot && footOwner === footId ? (frameFoot?.target ?? null) : null;
   const [viewport, setViewport] = React.useState(0);
-  const [chrome, setChrome] = React.useState({ head: 0, rest: 0 });
+  const [chrome, setChrome] = React.useState<{ head: number; rest: number } | null>(null);
   const windowSize =
     windowed && effectiveRowHeight
       ? Math.ceil((height ?? viewport) / effectiveRowHeight) + 8
       : rows.length;
   const wholeRows =
-    windowed && height && effectiveRowHeight && chrome.head
+    windowed && height && effectiveRowHeight && chrome
       ? Math.floor((height - chrome.head - chrome.rest) / effectiveRowHeight)
       : 0;
   const frameHeight =
-    wholeRows > 0 && effectiveRowHeight
+    wholeRows > 0 && effectiveRowHeight && chrome
       ? chrome.head + chrome.rest + wholeRows * effectiveRowHeight
       : height;
   const start =
@@ -376,7 +376,7 @@ export function DataTable<Row>({
           [...bands].reduce((sum, band) => sum + band.getBoundingClientRect().height, 0)
       };
       setChrome((current) =>
-        current.head === next.head && current.rest === next.rest ? current : next
+        current?.head === next.head && current.rest === next.rest ? current : next
       );
     };
     measure();
@@ -501,6 +501,14 @@ export function DataTable<Row>({
   ];
   const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
+  const headerHidden =
+    !selectable &&
+    columns.every(
+      (column) =>
+        (column.hideHeader || column.actions) &&
+        !column.toggle &&
+        !(column.sortable && onSortChange)
+    );
   const trailing =
     actionsColumn || columns.some((column) => column.pin === true || column.actions);
   const shrinkColumn = trailing
@@ -947,7 +955,7 @@ export function DataTable<Row>({
             : undefined
         }
       >
-        <TableHeader>
+        <TableHeader data-hidden={headerHidden || undefined}>
           <TableRow>
             {selectable && (
               <TableHead selection pin={leading ? "start" : undefined}>

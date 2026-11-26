@@ -612,6 +612,10 @@
       {
         "title": "Multiple, loading",
         "module": "combobox/multiple-loading"
+      },
+      {
+        "title": "Menu alignment",
+        "module": "combobox/align"
       }
     ]
   },
@@ -2284,6 +2288,10 @@
       {
         "title": "Inline editable cells",
         "module": "table/editable-cells"
+      },
+      {
+        "title": "Every header hidden",
+        "module": "table/hidden-header"
       }
     ]
   },
