@@ -7,6 +7,7 @@ import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { useReason } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -37,6 +38,7 @@ function Badge({
   size = "md",
   mono = false,
   collapse = false,
+  reason,
   children,
   asChild = false,
   ref,
@@ -54,8 +56,11 @@ function Badge({
   mono?: boolean;
   /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. */
   collapse?: boolean;
+  /** Says why the badge reads as it does, such as the error behind a failed status: it becomes a tab stop, shows the reason in a tooltip and exposes it as the accessible description. */
+  reason?: React.ReactNode;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
+  const reasonTooltip = useReason(reason);
   const fitsWhole = !icon && !dot;
   const textRef = React.useCallback(
     (label: HTMLSpanElement | null) => {
@@ -121,16 +126,18 @@ function Badge({
         <>
           {dotNode}
           {text(children.props.children)}
+          {reasonTooltip.description}
         </>
       )
     ) : (
       <>
         {dotNode}
         {text(children)}
+        {reasonTooltip.description}
       </>
     );
 
-  return (
+  return reasonTooltip.wrap(
     <Comp
       ref={ref}
       data-slot="badge"
@@ -143,7 +150,7 @@ function Badge({
         const badge = event.currentTarget;
         const labels = badge.querySelectorAll<HTMLElement>("[data-badge-text]");
         if (!labels.length) return;
-        if (props.title !== undefined) {
+        if (props.title !== undefined || reasonTooltip.active) {
           delete badge.dataset.autoTitle;
           return;
         }
@@ -163,9 +170,11 @@ function Badge({
         }
       }}
       {...props}
+      aria-describedby={reasonTooltip.describedBy(props["aria-describedby"])}
     >
       {body}
-    </Comp>
+    </Comp>,
+    true
   );
 }
 Badge.displayName = "Badge";

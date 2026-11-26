@@ -433,4 +433,46 @@ function TooltipText({
 }
 TooltipText.displayName = "TooltipText";
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipScope, TooltipText, TooltipTrigger };
+/**
+ * Says why: Button's disabledReason and the reason on Badge and StatusText. wrap shows the reason in a
+ * tooltip with its own provider, and with focusable the element becomes a TooltipText tab stop. Put
+ * description inside the element and pass its aria-describedby through describedBy, so the reason is
+ * its accessible description even while the tooltip is closed.
+ */
+function useReason(reason: React.ReactNode) {
+  const id = React.useId();
+  const active = reason !== undefined && reason !== null && reason !== false && reason !== "";
+  return {
+    active,
+    describedBy: (own?: string) => (active ? [own, id].filter(Boolean).join(" ") : own),
+    description: active ? (
+      <span id={id} hidden>
+        {reason}
+      </span>
+    ) : null,
+    wrap: (element: React.ReactElement, focusable = false) =>
+      active ? (
+        <TooltipProvider>
+          {focusable ? (
+            <TooltipText asChild content={reason}>
+              {element}
+            </TooltipText>
+          ) : (
+            <Tooltip content={reason}>{element}</Tooltip>
+          )}
+        </TooltipProvider>
+      ) : (
+        element
+      )
+  };
+}
+
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipScope,
+  TooltipText,
+  TooltipTrigger,
+  useReason
+};
