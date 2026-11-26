@@ -257,7 +257,9 @@ function TooltipScope({ children }: { children?: React.ReactNode }) {
   return (
     <TooltipScopeContext.Provider value={store}>
       {children}
-      <SharedTooltipHost store={store} />
+      <TooltipProvider>
+        <SharedTooltipHost store={store} />
+      </TooltipProvider>
     </TooltipScopeContext.Provider>
   );
 }
