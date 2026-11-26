@@ -475,7 +475,7 @@ export function MultiSelect({
                 : `${chosen.length} of ${options.length} selected`}
             </span>
             {[
-              { text: "Select all", disabled: allSelected, run: all },
+              { text: "Select all", disabled: allSelected || !eligible.length, run: all },
               { text: "Deselect all", disabled: noneSelected, run: none }
             ].map((action) => (
               <Button
