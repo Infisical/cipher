@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 
 import { FrameScope, useFrameFoot, useInFrame } from "../lib/frame-context";
 import { useListFiltered } from "../lib/list-query";
@@ -594,8 +594,9 @@ export function DataTable<Row>({
       );
     };
     measure();
-    void document.fonts?.ready.then(measure);
-    const observer = new ResizeObserver(measure);
+    const remeasure = () => flushSync(measure);
+    void document.fonts?.ready.then(remeasure);
+    const observer = new ResizeObserver(remeasure);
     observer.observe(head);
     return () => {
       live = false;
