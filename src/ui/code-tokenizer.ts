@@ -25,16 +25,29 @@ const aliases: Record<string, string> = {
   python: "python",
   tf: "hcl",
   terraform: "hcl",
-  hcl: "hcl"
+  hcl: "hcl",
+  go: "go",
+  golang: "go"
 };
+const keywords =
+  "true|false|null|undefined|None|True|False|const|let|var|function|return|import|from|export|default|async|await|if|else|for|while|class|def|try|except|raise|with|as|in|not|and|or|resource|variable|output|provider|module|locals|data|terraform";
+const languageKeywords: Record<string, string> = {
+  go: "package|func|type|struct|interface|map|chan|go|defer|select|switch|case|fallthrough|break|continue|goto|range|nil|iota"
+};
+const literals = /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*/.source;
+const templates = /`(?:\\.|[^`\\])*`/.source;
+const rawStrings = /`[^`]*`/.source;
+const numbersAndKeys = /-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|\b[A-Za-z_][\w-]*(?=\s*[:=])/.source;
 export function normalizeCodeLanguage(language: string): string {
   return aliases[language.toLowerCase()] ?? "plain";
 }
 export function tokenizeCode(text: string, language: string): CodeToken[] {
   const normalized = normalizeCodeLanguage(language);
   if (normalized === "plain") return [{ text, kind: "plain" }];
-  const expression =
-    /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*|\b(?:true|false|null|undefined|None|True|False|const|let|var|function|return|import|from|export|default|async|await|if|else|for|while|class|def|try|except|raise|with|as|in|not|and|or|resource|variable|output|provider|module|locals|data|terraform)\b|-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|\b[A-Za-z_][\w-]*(?=\s*[:=]))/g;
+  const expression = new RegExp(
+    `(${literals}|${normalized === "go" ? rawStrings : templates}|\\b(?:${keywords}${languageKeywords[normalized] ? `|${languageKeywords[normalized]}` : ""})\\b|${numbersAndKeys})`,
+    "g"
+  );
   const result: CodeToken[] = [];
   let end = 0;
   Array.from(text.matchAll(expression)).forEach((match) => {
@@ -44,7 +57,7 @@ export function tokenizeCode(text: string, language: string): CodeToken[] {
     const comment = part.startsWith("#")
       ? ["shell", "env", "yaml", "python", "hcl"].includes(normalized)
       : part.startsWith("//") || part.startsWith("/*")
-        ? ["javascript", "typescript", "hcl"].includes(normalized)
+        ? ["javascript", "typescript", "hcl", "go"].includes(normalized)
         : false;
     const kind = comment
       ? "comment"
