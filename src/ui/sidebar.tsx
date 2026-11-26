@@ -143,13 +143,14 @@ const hasContent = (node: React.ReactNode): boolean =>
       : child !== ""
   );
 
-const railTip = (tip: string, badge: React.ReactNode) =>
+const railTip = (label: string, badge: React.ReactNode, suffix = "") =>
   hasContent(badge) ? (
     <>
-      {tip} {badge}
+      {label} {badge}
+      {suffix}
     </>
   ) : (
-    tip
+    `${label}${suffix}`
   );
 
 const RowContent = ({
@@ -273,7 +274,7 @@ const SidebarRow = ({
     );
   return rail ? (
     <Tooltip
-      content={railTip(drillIn ? `${name}, opens section` : name, back ? undefined : item.badge)}
+      content={railTip(name, back ? undefined : item.badge, drillIn ? ", opens section" : "")}
       side="right"
     >
       {row}

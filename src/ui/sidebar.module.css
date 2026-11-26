@@ -550,9 +550,6 @@ a.row[href] {
 .sidebar[data-collapsed] .row:has(> .badge [data-tone="solid"]) .dot:not([data-count]) {
   background: var(--cipher-ink);
 }
-.sidebar[data-collapsed] .row:has(> .badge [data-tone="accent"]) .dot {
-  background: var(--cipher-accent);
-}
 .sidebar[data-collapsed] .row:has(> .badge [data-tone="info"]) .dot {
   background: var(--cipher-info);
 }
