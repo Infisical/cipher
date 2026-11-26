@@ -681,6 +681,32 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   grid-column: 2;
   grid-row: 1;
 }
+/* A plain head keeps size-text-min for its title: actions too wide to sit beside that floor drop
+   onto their own row at the start, the way a framed head wraps, instead of squeezing the title. */
+.cardHeader:not([data-framed]):has(> .cardAction):not(:has(> [data-slot="card-description"])) {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: var(--cipher-space-12);
+}
+.cardHeader:not([data-framed]) > :is(.cardTitleGroup, [data-slot="card-title"]) {
+  flex: 1 1 var(--cipher-size-text-min);
+  min-width: min(100%, var(--cipher-size-text-min));
+}
+.cardHeader:not([data-framed]):not(:has(> [data-slot="card-description"])) > .cardAction {
+  margin-inline-start: 0;
+}
+@container (max-width: 30rem) {
+  .cardHeader:not([data-framed]):has(> [data-slot="card-description"]):has(> .cardAction) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cardHeader:not([data-framed]):has(> [data-slot="card-description"]) > .cardAction {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+    margin-top: var(--cipher-space-8);
+    margin-inline-start: 0;
+  }
+}
 :where(.cardFooter) {
   display: flex;
   align-items: center;

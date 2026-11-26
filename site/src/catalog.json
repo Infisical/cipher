@@ -362,6 +362,10 @@
         "module": "card/header-overflow"
       },
       {
+        "title": "Wide actions in a narrow header",
+        "module": "card/narrow-head"
+      },
+      {
         "title": "Selected and choice cards",
         "module": "card/selected"
       },
