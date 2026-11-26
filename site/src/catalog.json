@@ -1010,6 +1010,10 @@
         "module": "filter-bar/date-range"
       },
       {
+        "title": "Date range field with presets and two months",
+        "module": "filter-bar/date-range-presets"
+      },
+      {
         "title": "Filters kept in the URL",
         "module": "filter-bar/url-state"
       },
@@ -2276,6 +2280,10 @@
       {
         "title": "Search highlight",
         "module": "text/highlight"
+      },
+      {
+        "title": "Eyebrow",
+        "module": "text/eyebrow"
       }
     ]
   },

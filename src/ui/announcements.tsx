@@ -5,6 +5,7 @@ import { exit, snap, spring } from "../lib/motion";
 import { useControllableState } from "../lib/use-controllable-state";
 import { Button } from "./button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./dialog";
+import { Eyebrow } from "./text";
 
 import styles from "./announcements.module.css";
 
@@ -124,7 +125,7 @@ export const Announcements = ({
             >
               {item.media && <Inert>{item.media}</Inert>}
               <div className={styles.copy}>
-                <p className={styles.eyebrow}>{item.eyebrow}</p>
+                <Eyebrow>{item.eyebrow}</Eyebrow>
                 <h3 className={styles.title}>{item.title}</h3>
                 <DialogDescription asChild>
                   {item.description && <div className={styles.description}>{item.description}</div>}

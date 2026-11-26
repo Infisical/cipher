@@ -605,6 +605,9 @@ a.row[href] {
   overflow: hidden;
   background: var(--cipher-sidebar);
 }
+.sheet.sheet[data-side] > [data-slot="sheet-close"] {
+  display: none;
+}
 .sheet > .sidebar {
   width: min(calc(var(--cipher-size-sidebar) + var(--cipher-space-48)), calc(100vw - var(--cipher-space-48)));
   height: 100%;
