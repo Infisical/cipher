@@ -130,8 +130,24 @@
 }
 .sheet[data-side="left"],
 .sheet[data-side="right"] {
+  width: 75%;
   max-width: min(var(--cipher-sheet-size), 100vw);
   transition: max-width var(--cipher-duration-moderate) var(--cipher-ease-standard);
+}
+@media (width <= 512px) {
+  .sheet[data-side="left"],
+  .sheet[data-side="right"] {
+    width: 100%;
+    max-width: none;
+  }
+}
+.sheet:not([data-has-close]):is([data-side="top"], [data-side="bottom"]) > .close[data-slot] {
+  display: none;
+}
+@media (width > 512px) {
+  .sheet:not([data-has-close]) > .close[data-slot] {
+    display: none;
+  }
 }
 .sheet[data-side="left"] {
   --cipher-sheet-from: -100% 0;

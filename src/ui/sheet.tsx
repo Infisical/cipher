@@ -129,7 +129,9 @@ function SheetContent({
   ...props
 }: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
+  /** Caps a left or right sheet's width at its size token and three quarters of the viewport. At 512px and below it takes the full viewport width. */
   size?: SheetSize;
+  /** A left or right sheet at 512px and below shows the close button even when this is false, since no backdrop is left to tap. */
   showCloseButton?: boolean;
   /** While true, Escape, outside clicks and every close control are blocked, so an in-flight save cannot be abandoned. */
   pending?: boolean;
@@ -206,7 +208,7 @@ function SheetContent({
         data-side={side}
         data-size={viewSize ?? size}
         className={cn(
-          "fixed z-50 flex flex-col gap-4 data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto",
+          "fixed z-50 flex flex-col gap-4 data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto",
           overlay.pop,
           overlay.sheet,
           className
@@ -264,23 +266,19 @@ function SheetContent({
               ) : (
                 content
               )}
-              {showCloseButton ? (
-                <SheetPrimitive.Close data-slot="sheet-close" asChild>
-                  <Button
-                    ref={closeRef}
-                    variant="ghost"
-                    className={overlay.close}
-                    size="icon-sm"
-                    disabled={blocked}
-                    onClick={host.interceptClose}
-                  >
-                    <Icon name="x" />
-                    <span className="sr-only">Close</span>
-                  </Button>
-                </SheetPrimitive.Close>
-              ) : (
-                <SheetPrimitive.Close ref={closeRef} hidden tabIndex={-1} aria-hidden />
-              )}
+              <SheetPrimitive.Close data-slot="sheet-close" asChild>
+                <Button
+                  ref={closeRef}
+                  variant="ghost"
+                  className={overlay.close}
+                  size="icon-sm"
+                  disabled={blocked}
+                  onClick={host.interceptClose}
+                >
+                  <Icon name="x" />
+                  <span className="sr-only">Close</span>
+                </Button>
+              </SheetPrimitive.Close>
             </OverlayPendingContext>
           </SheetViewDescribeContext>
         </SheetHostContext>

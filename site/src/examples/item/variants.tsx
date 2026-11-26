@@ -50,6 +50,34 @@ export default function Example() {
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          {[
+            "Deployment service",
+            "applications/staging/services/payment-processing/configuration/credentials/rotation-policy"
+          ].map((title) => (
+            <Item
+              key={title}
+              size="sm"
+              title={title}
+              truncate={false}
+              mono
+              actions={
+                <Button
+                  variant="ghost"
+                  size="xs"
+                  icon="x"
+                  iconOnly
+                  aria-label={`Remove ${title}`}
+                />
+              }
+            />
+          ))}
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"sm with an action, one line and wrapping"}
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <Tile
             title="Managed vault"
             description="Connection managed by the organization"
