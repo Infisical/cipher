@@ -9,7 +9,7 @@ import { Icon } from "./icon";
 import { Panes, type PanesState } from "./layout";
 import { Tabs, TabsList, TabsTrigger } from "./tabs";
 
-import { ActionBarHost, ActionBarScroller } from "../lib/action-bar-host";
+import { ActionBarHost, ActionBarScroller, useActionBarHost } from "../lib/action-bar-host";
 import { FrameScope } from "../lib/frame-context";
 import { focusFirstControl, formControlSelector } from "../lib/initial-focus";
 import { OverlayPendingContext, useDismissGuard, useOverlayPending } from "../lib/overlay-pending";
@@ -413,6 +413,11 @@ const withDetailsTab = (
 
 type Sections = ReturnType<typeof splitOverlaySections>;
 
+function PaneActionBarHost({ hidden, children }: { hidden: boolean; children: React.ReactNode }) {
+  const host = useActionBarHost();
+  return <ActionBarHost host={hidden ? null : (host ?? null)}>{children}</ActionBarHost>;
+}
+
 const hide = (node: React.ReactNode, hidden: boolean) =>
   React.isValidElement<{ "data-hidden"?: boolean }>(node)
     ? React.cloneElement(node, { "data-hidden": hidden || undefined })
@@ -501,7 +506,7 @@ function renderAsideMain({
           data-hidden={open || undefined}
           {...mainPanel}
         >
-          {rest}
+          <PaneActionBarHost hidden={open}>{rest}</PaneActionBarHost>
         </div>
       </>
     );
