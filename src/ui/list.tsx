@@ -529,7 +529,7 @@ export function DataList({
   /** stat for headline numbers, meta and props for label and value rows with dividers, inline for a borderless label column beside wrapping values, such as a short breakdown inside another list's value. */
   variant?: "stat" | "meta" | "props" | "inline";
   density?: "default" | "compact";
-  /** Inline only. A fixed label width, as a size token (cell-min, data-list-term, text-min) or a CSS length, so values in every row and in sibling lists start on one edge. A value that can't keep text-min beside the label wraps under it. Without it, the label column fits the longest label. */
+  /** Inline only. The label width, as a size token (cell-min, data-list-term, text-min) or a CSS length; defaults to data-list-term. Values in every row and in sibling lists start on one edge, and when a row can't keep text-min for the value beside the label, labels take the full row and values stack under them. */
   labelWidth?: DataListLabelWidth;
 }) {
   const halves = new Set<number>();
@@ -544,7 +544,6 @@ export function DataList({
       data-slot="data-list"
       data-variant={variant}
       data-density={density}
-      data-label-width={labelWidth ? "fixed" : undefined}
       style={
         labelWidth
           ? ({

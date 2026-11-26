@@ -24,10 +24,8 @@ export default function LabelWidth() {
         <figcaption className="text-muted-foreground text-xs">{"default"}</figcaption>
       </figure>
       <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
-        <DataList variant="inline" labelWidth="data-list-term" items={items} />
-        <figcaption className="text-muted-foreground text-xs">
-          {'labelWidth="data-list-term"'}
-        </figcaption>
+        <DataList variant="inline" labelWidth="text-min" items={items} />
+        <figcaption className="text-muted-foreground text-xs">{'labelWidth="text-min"'}</figcaption>
       </figure>
     </div>
   );

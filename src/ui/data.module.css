@@ -1075,24 +1075,43 @@ button.rowTitle::after {
   font-variant-numeric: tabular-nums;
 }
 .dataList[data-variant="inline"] {
-  grid-template-columns: max-content auto;
-  align-items: baseline;
-  gap: var(--cipher-space-4) var(--cipher-space-8);
-  justify-content: start;
+  --cipher-data-list-label-width: var(--cipher-size-data-list-term);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cipher-space-4);
 }
 .dataList[data-variant="inline"] > .dataPair {
-  display: contents;
+  grid-column: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: start;
+  gap: 0 var(--cipher-space-8);
+  min-height: 0;
+  padding: 0;
+  border-top: 0;
 }
+/* Below label + gap + text-min the basis turns huge and max-width clamps the label to the full row, so the value wraps under it. A container query can't compare against the label width variable. */
 .dataList[data-variant="inline"] > .dataPair > dt {
-  max-width: none;
+  flex: 0 0
+    max(
+      var(--cipher-data-list-label-width),
+      calc(
+        (
+            var(--cipher-data-list-label-width) + var(--cipher-space-8) +
+              var(--cipher-size-text-min) - 100%
+          ) *
+          999
+      )
+    );
+  max-width: 100%;
   text-align: start;
 }
 .dataList[data-variant="inline"] > .dataPair > dd {
   --cipher-data-list-value-justify: flex-start;
+  flex: 1 1 var(--cipher-size-text-min);
   text-align: start;
-}
-.dataPair dd > .dataList[data-variant="inline"] {
-  justify-content: var(--cipher-data-list-value-justify, end);
 }
 .dataList[data-variant="inline"] > .dataPair > .dataValueWithAction {
   justify-content: flex-start;
@@ -1100,27 +1119,8 @@ button.rowTitle::after {
 .dataPair:has(> dd > .dataList[data-variant="inline"]) > dt {
   flex: none;
 }
-.dataList[data-variant="inline"][data-label-width] {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-.dataList[data-variant="inline"][data-label-width] > .dataPair {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: start;
-  gap: 0 var(--cipher-space-8);
-  padding: 0;
-  border-top: 0;
-}
-.dataList[data-variant="inline"][data-label-width] > .dataPair > dt {
-  flex: 0 0 var(--cipher-data-list-label-width);
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-.dataList[data-variant="inline"][data-label-width] > .dataPair > dd {
-  flex: 1 1 var(--cipher-size-text-min);
+.dataPair:has(> dd > .dataList[data-variant="inline"]) > dd {
+  flex: 1 1 auto;
 }
 @media (max-width: 480px) {
   .listRow {
