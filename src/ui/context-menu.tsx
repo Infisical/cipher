@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ContextMenu as ContextMenuPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { ListHighlight } from "../lib/list-highlight";
 import { MenuKindContext } from "../lib/menu-kind";
@@ -103,7 +103,7 @@ ContextMenuRadioGroup.displayName = "ContextMenuRadioGroup";
 function ContextMenuContent({
   className,
   children,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   onPointerDownCapture,
   onPointerUpCapture,
   ref,
@@ -199,7 +199,7 @@ ContextMenuSubTrigger.displayName = "ContextMenuSubTrigger";
 function ContextMenuSubContent({
   className,
   children,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   sideOffset = 4,
   alignOffset = -3,
   ref,

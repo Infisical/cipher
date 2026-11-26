@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { ListHighlight } from "../lib/list-highlight";
 import { useMenuPrimitive } from "../lib/menu-kind";
@@ -59,7 +59,7 @@ DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
 function DropdownMenuContent({
   className,
   children,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   align = "start",
   sideOffset = 4,
   ref,
@@ -341,7 +341,7 @@ DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
 function DropdownMenuSubContent({
   className,
   children,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   sideOffset = 4,
   alignOffset = -3,
   ref,

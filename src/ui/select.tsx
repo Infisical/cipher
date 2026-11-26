@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
@@ -307,7 +307,7 @@ SelectTrigger.displayName = "SelectTrigger";
 
 function SelectContent({
   className,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   children,
   align = "start",
   sideOffset = 4,

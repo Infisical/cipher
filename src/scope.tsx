@@ -18,6 +18,8 @@ const ActionBarReserveContext = React.createContext<PresenceReport | null>(null)
 const subscribeNever = () => () => {};
 export const usePortalContainer = () => React.useContext(PortalContainerContext);
 export const useCollisionBoundary = () => React.useContext(CollisionBoundaryContext);
+/** How close a floating panel may come to the viewport or collision boundary: the space-16 gutter Dialog and Sheet keep on a phone. */
+export const overlayCollisionPadding = 16;
 export const useTheme = () => React.useContext(ThemeContext);
 export const useScheme = (): Scheme | undefined => {
   const theme = useTheme();

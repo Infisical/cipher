@@ -6,7 +6,7 @@ import { Dialog as DialogPrimitive, Popover as PopoverPrimitive, Slot } from "ra
 
 import { useIsMobile } from "../hooks/use-mobile";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { FrameScope } from "../lib/frame-context";
 import { splitOverlaySections } from "../lib/overlay-sections";
@@ -242,7 +242,7 @@ function PopoverDrawer({
 
 function PopoverContent({
   className,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   align = "center",
   sideOffset = 4,
   surface = "card",
