@@ -1672,6 +1672,9 @@ tbody > .nativeTableRow[data-loading] {
 .nativeTableRow[data-tone="bad"] .tablePrimary [data-slot="icon"]:not([data-slot="name-line-badges"] *, [data-slot="cell-badges"] *) {
   color: var(--cipher-bad);
 }
+.nativeTableRow[data-expanded] {
+  --cipher-table-row-state: var(--cipher-table-row-expanded);
+}
 .nativeTableRow[data-state="selected"] {
   --cipher-table-row-state: var(--cipher-selected-surface);
 }

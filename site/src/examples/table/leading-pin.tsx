@@ -148,7 +148,10 @@ function Matrix() {
         {ordered.map((secret) => (
           <React.Fragment key={secret.id}>
             <RowContextMenu label={secret.name} inline={[copyAction(secret.name)]}>
-              <TableRow data-state={selected.includes(secret.id) ? "selected" : undefined}>
+              <TableRow
+                data-state={selected.includes(secret.id) ? "selected" : undefined}
+                expanded={expanded === secret.id}
+              >
                 <TableCell selection pin="start">
                   <Checkbox
                     aria-label={`Select ${secret.name}`}
