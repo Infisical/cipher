@@ -1624,6 +1624,10 @@
       {
         "title": "Six steps with long names, collapsing to the current step where the labels do not fit",
         "module": "multi-step/six-steps"
+      },
+      {
+        "title": "Row switches at the edge of a later step",
+        "module": "multi-step/row-switch"
       }
     ]
   },

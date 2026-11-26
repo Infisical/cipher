@@ -222,6 +222,13 @@ export const MultiStep = ({
     viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ??
     null;
   const moved = React.useRef(false);
+  const revealed = React.useRef<HTMLElement | null>(null);
+  const reveal = () => {
+    const target = revealed.current;
+    revealed.current = null;
+    if (target && target === document.activeElement)
+      target.scrollIntoView({ block: "nearest" });
+  };
   const reduced = useReducedMotion();
   const formId = React.useId();
   const entry = steps[current];
@@ -241,10 +248,15 @@ export const MultiStep = ({
     const step = viewport.current?.querySelector<HTMLElement>(
       `[data-step="${current}"]`,
     );
-    (
-      step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
-      step?.querySelector<HTMLElement>(formControlSelector)
-    )?.focus();
+    const selected = step?.querySelector<HTMLElement>(
+      "[data-list-target][aria-current]",
+    );
+    revealed.current = selected ?? null;
+    if (selected) selected.focus({ preventScroll: true });
+    else
+      step
+        ?.querySelector<HTMLElement>(formControlSelector)
+        ?.focus({ preventScroll: variant !== "page" });
   }, [current]);
   const measure = React.useCallback((node: HTMLDivElement | null) => {
     if (!node) return undefined;
@@ -449,6 +461,9 @@ export const MultiStep = ({
               initial="enter"
               animate="center"
               exit="leave"
+              onAnimationComplete={(definition) => {
+                if (definition === "center") reveal();
+              }}
             >
               {stepHead}
               <FieldErrors errors={fieldErrors}>
