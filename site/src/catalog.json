@@ -1516,6 +1516,10 @@
       {
         "title": "Connections with logos and a Create row",
         "module": "multi-select/connections"
+      },
+      {
+        "title": "Empty text for a load failure",
+        "module": "multi-select/load-failure"
       }
     ]
   },
@@ -1612,6 +1616,10 @@
       {
         "title": "Overflowing content",
         "module": "popover/overflow"
+      },
+      {
+        "title": "Feed size for a panel reopened to scan, like notifications",
+        "module": "popover/feed"
       }
     ]
   },
