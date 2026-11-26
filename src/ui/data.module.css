@@ -1105,7 +1105,9 @@ button.rowTitle::after {
           999
       )
     );
+  min-width: 0;
   max-width: 100%;
+  overflow-wrap: anywhere;
   text-align: start;
 }
 .dataList[data-variant="inline"] > .dataPair > dd {
@@ -1116,10 +1118,10 @@ button.rowTitle::after {
 .dataList[data-variant="inline"] > .dataPair > .dataValueWithAction {
   justify-content: flex-start;
 }
-.dataPair:has(> dd > .dataList[data-variant="inline"]) > dt {
+.dataList:not([data-variant="inline"]) > .dataPair:has(> dd > .dataList[data-variant="inline"]) > dt {
   flex: none;
 }
-.dataPair:has(> dd > .dataList[data-variant="inline"]) > dd {
+.dataList:not([data-variant="inline"]) > .dataPair:has(> dd > .dataList[data-variant="inline"]) > dd {
   flex: 1 1 auto;
 }
 @media (max-width: 480px) {
