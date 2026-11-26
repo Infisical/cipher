@@ -103,7 +103,7 @@
 .chip.mono {
   font-family: var(--cipher-font-mono, monospace);
 }
-.chip > span:first-child {
+.chip > span:is(:first-child:not(.optionMedia), .optionMedia + span) {
   min-width: 0;
   max-width: var(--cipher-size-field-md);
   overflow: hidden;
@@ -112,6 +112,10 @@
 }
 .chip > [data-cipher-button] {
   flex-shrink: 0;
+}
+.chip > .optionMedia {
+  --cipher-lead-size: var(--cipher-size-icon-caption);
+  margin-inline-end: calc(var(--cipher-space-6) - var(--cipher-space-4));
 }
 .multiCombobox[data-size] {
   display: flex;
@@ -229,6 +233,19 @@
 }
 .optionLabel > span:has(> [data-slot="option-text"]) {
   display: contents;
+}
+.optionMedia {
+  --cipher-lead-size: var(--cipher-size-icon);
+  display: inline-flex;
+  flex: none;
+  width: var(--cipher-lead-size);
+  height: var(--cipher-lead-size);
+  overflow: hidden;
+}
+.optionMedia > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .optionLabel [data-slot="option-text"] {
   min-width: 0;

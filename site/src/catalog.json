@@ -228,6 +228,10 @@
       {
         "title": "Reason on a status",
         "module": "badge/reason"
+      },
+      {
+        "title": "Media before the label",
+        "module": "badge/media"
       }
     ]
   },
@@ -652,6 +656,10 @@
       {
         "title": "Menu alignment",
         "module": "combobox/align"
+      },
+      {
+        "title": "Media before the label",
+        "module": "combobox/media"
       }
     ]
   },
@@ -1104,6 +1112,10 @@
       {
         "title": "Choice fields searched on the server",
         "module": "filter-bar/server-search"
+      },
+      {
+        "title": "Option media in rows and chips",
+        "module": "filter-bar/media"
       }
     ]
   },
@@ -1948,6 +1960,10 @@
       {
         "title": "A badge on the selected option",
         "module": "select/badge"
+      },
+      {
+        "title": "Media before the label",
+        "module": "select/media"
       }
     ]
   },

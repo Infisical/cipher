@@ -47,6 +47,9 @@
   width: var(--cipher-size-icon-xs);
   height: var(--cipher-size-icon-xs);
 }
+.field[data-size="xs"] [data-slot="option-media"] {
+  --cipher-lead-size: var(--cipher-size-icon-xs);
+}
 .field[data-size="md"] {
   --cipher-field-height: var(--cipher-size-control-md);
   --cipher-field-inline: var(--cipher-space-control-inline-md);

@@ -35,6 +35,7 @@ function Badge({
   tone,
   dot = false,
   icon,
+  media,
   size = "md",
   mono = false,
   collapse = false,
@@ -52,6 +53,8 @@ function Badge({
   dot?: boolean;
   /** A leading glyph, decorative: the text stays the badge's name. */
   icon?: IconSource;
+  /** A logo or image before the label: 14px beside the default label, the glyph size in the sm and control sizes. It never shrinks; under collapse the label truncates and the media stays. Ignored when icon is set. */
+  media?: React.ReactNode;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;
   /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. */
@@ -71,7 +74,7 @@ function Badge({
       .filter(Boolean)
       .join(" ") || undefined
   );
-  const fitsWhole = !icon && !dot;
+  const fitsWhole = !icon && !dot && !media;
   const textRef = React.useCallback(
     (label: HTMLSpanElement | null) => {
       const root = label?.parentElement;
@@ -126,6 +129,11 @@ function Badge({
     <>
       {dot && <span aria-hidden="true" className={cn(helperStyles.badgeDot, "cipher-lead-line")} />}
       {icon && <Icon icon={icon} />}
+      {!icon && Boolean(media) && (
+        <span data-slot="badge-media" className={cn(helperStyles.badgeMedia, "cipher-lead-line")}>
+          {media}
+        </span>
+      )}
     </>
   );
   const body =
