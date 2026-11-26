@@ -1043,6 +1043,26 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   color: var(--cipher-ink);
   font-weight: 600;
 }
+.progressSteps {
+  position: relative;
+}
+.progressSteps[data-compact] > .stepLabels {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+.stepCompact {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--cipher-ink);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
+  font-weight: 600;
+}
 .separatorLabel {
   display: flex;
   align-items: center;

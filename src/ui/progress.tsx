@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Progress as ProgressPrimitive } from "radix-ui";
 
@@ -83,12 +85,36 @@ export const ProgressSteps = ({
   showHeading?: boolean;
 }) => {
   const step = Math.min(current + 1, steps.length);
+  const names = steps.join("\n");
+  const list = React.useRef<HTMLOListElement>(null);
+  const [compact, setCompact] = React.useState(false);
+  React.useLayoutEffect(() => {
+    const node = list.current;
+    if (!node) return undefined;
+    const check = () =>
+      setCompact(
+        [...node.children].some((item) => {
+          const element = item as HTMLElement;
+          const lines = element.offsetHeight / parseFloat(getComputedStyle(element).lineHeight);
+          return element.scrollWidth > element.clientWidth || lines > 2.5;
+        })
+      );
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(node);
+    document.fonts?.addEventListener("loadingdone", check);
+    return () => {
+      observer.disconnect();
+      document.fonts?.removeEventListener("loadingdone", check);
+    };
+  }, [names, current]);
   return (
     <div
       data-slot="progress-steps"
+      data-compact={compact || undefined}
       role="group"
       aria-label={label}
-      className={styles.progressGroup}
+      className={cn(styles.progressGroup, styles.progressSteps)}
     >
       {showHeading && (
         <div className={styles.progressLabels}>
@@ -116,13 +142,22 @@ export const ProgressSteps = ({
           />
         ))}
       </div>
-      <ol aria-hidden="true" className={styles.stepLabels}>
+      <ol ref={list} className={styles.stepLabels}>
         {steps.map((name, index) => (
-          <li key={`${index}-${name}`} data-current={index === current || undefined}>
+          <li
+            key={`${index}-${name}`}
+            data-current={index === current || undefined}
+            aria-current={index === current ? "step" : undefined}
+          >
             {name}
           </li>
         ))}
       </ol>
+      {compact && (
+        <p aria-hidden="true" className={styles.stepCompact}>
+          {steps[current]}
+        </p>
+      )}
     </div>
   );
 };
