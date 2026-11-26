@@ -86,7 +86,7 @@ export default function Example() {
           </Table>
         </div>
         <figcaption className="text-muted-foreground text-xs">
-          {"in rows that open with a RowLink"}
+          {"in rows that open with a RowLink: hover shows the reason, a click opens the row"}
         </figcaption>
       </figure>
     </div>

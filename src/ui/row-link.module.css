@@ -131,6 +131,7 @@
     [role="combobox"],
     [role="switch"],
     [data-slot="tooltip-trigger"],
+    [data-reason-trigger],
     [data-row-interactive]
   ) {
   position: relative;

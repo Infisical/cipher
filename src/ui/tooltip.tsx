@@ -449,6 +449,22 @@ function TooltipText({
 }
 TooltipText.displayName = "TooltipText";
 
+const stretchedHost =
+  'tr[data-stretched-link], [data-slot="card"][data-stretched-link], [data-slot="stat-card"][data-stretched-link]';
+
+/** A reason trigger sits above a row's stretched link so hovering it shows the reason, so it hands clicks on to that link, modifier keys and middle button included. */
+function forwardToStretchedLink(event: React.MouseEvent<HTMLElement>) {
+  if (event.defaultPrevented || (event.type === "auxclick" && event.button !== 1)) return;
+  const trigger = event.currentTarget;
+  const link = trigger
+    .closest(stretchedHost)
+    ?.querySelector<HTMLElement>('[data-row-link], a[data-slot="card-link"]');
+  if (!link || trigger.contains(link) || link.contains(trigger)) return;
+  const selection = window.getSelection();
+  if (selection && !selection.isCollapsed && trigger.contains(selection.anchorNode)) return;
+  link.dispatchEvent(new MouseEvent("click", event.nativeEvent));
+}
+
 /**
  * Says why: Button's disabledReason and the reason on Badge and StatusText. wrap shows the reason in a
  * tooltip with its own provider, and with focusable the element becomes a TooltipText tab stop. Put
@@ -470,7 +486,13 @@ function useReason(reason: React.ReactNode) {
       active ? (
         <EnsureTooltipProvider>
           {focusable ? (
-            <TooltipText asChild content={reason}>
+            <TooltipText
+              asChild
+              content={reason}
+              data-reason-trigger=""
+              onClick={forwardToStretchedLink}
+              onAuxClick={forwardToStretchedLink}
+            >
               {element}
             </TooltipText>
           ) : (
