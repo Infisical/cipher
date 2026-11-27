@@ -2000,6 +2000,10 @@
       {
         "title": "Media before the label",
         "module": "select/media"
+      },
+      {
+        "title": "One option with a description",
+        "module": "select/one-option"
       }
     ]
   },
