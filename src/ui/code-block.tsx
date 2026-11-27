@@ -27,6 +27,8 @@ export type CodeBlockProps = Omit<CodeProps, "children" | "block" | "onCopy" | "
   writeClipboard?: (value: string) => Promise<void>;
   /** Masks the content until the reveal toggle is pressed. Copy still writes the real value. */
   sensitive?: boolean;
+  /** Names what sensitive hides, for the reveal toggle: "private key" reads "Reveal private key". */
+  sensitiveLabel?: string;
 };
 const textOf = (node: React.ReactNode): string => {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -50,6 +52,7 @@ export const CodeBlock = ({
   onCopy,
   writeClipboard,
   sensitive = false,
+  sensitiveLabel = "value",
   className,
   ...props
 }: CodeBlockProps) => {
@@ -93,7 +96,7 @@ export const CodeBlock = ({
               <div className={styles.actions}>
                 {actions}
                 {sensitive && (
-                  <Tooltip content={masked ? "Reveal value" : "Hide value"}>
+                  <Tooltip content={masked ? `Reveal ${sensitiveLabel}` : `Hide ${sensitiveLabel}`}>
                     <Button
                       type="button"
                       variant="ghost"
@@ -103,7 +106,7 @@ export const CodeBlock = ({
                       aria-pressed={!masked}
                       onClick={() => setRevealed(masked ? revealKey : null)}
                     >
-                      Reveal value
+                      {`Reveal ${sensitiveLabel}`}
                     </Button>
                   </Tooltip>
                 )}
@@ -127,7 +130,10 @@ export const CodeBlock = ({
               block
               {...props}
               format="plain"
-              code={(shown || HIDDEN_SECRET_VALUE).replace(/./gu, "•")}
+              code={(shown || HIDDEN_SECRET_VALUE)
+                .split("\n")
+                .map(() => HIDDEN_SECRET_VALUE)
+                .join("\n")}
               label={`${labelText ?? "Code"}, hidden`}
               aria-hidden
               data-masked=""
