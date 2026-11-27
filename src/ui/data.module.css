@@ -2285,3 +2285,6 @@ td.tableSelectionCell {
 .tableScroll[data-stacked] .tableGroupMeta {
   margin-inline-start: var(--cipher-space-8);
 }
+.tableScroll[data-stacked] tr[data-stack-row] > td[data-cell-link] {
+  position: relative;
+}
