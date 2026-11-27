@@ -16,7 +16,7 @@ const buttonVariants = cva(
   [
     geometry.button,
     controlStyles.focusOutline,
-    "group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-border whitespace-nowrap select-none disabled:pointer-events-none aria-invalid:border-[color:var(--cipher-control-invalid-border)] [&_svg]:pointer-events-none [&_svg]:shrink-0"
+    "group/button inline-flex shrink-0 items-center justify-center border-transparent bg-clip-border whitespace-nowrap select-none disabled:pointer-events-none aria-invalid:border-[color:var(--cipher-control-invalid-border)] [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ],
   {
     variants: {

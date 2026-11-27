@@ -156,7 +156,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   appearance: none;
   -webkit-appearance: none;
 }
-.bare:disabled {
+.bare:is(:disabled, [aria-disabled="true"]) {
   cursor: not-allowed;
 }
 .mono {
