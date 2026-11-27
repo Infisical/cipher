@@ -663,11 +663,11 @@ export function DataTable<Row>({
         const tableMin = table ? getComputedStyle(table).minWidth : "";
         const cells = Array.from(table?.tHead?.rows[0]?.cells ?? [], (cell) => {
           const style = getComputedStyle(cell);
-          return (
-            (parseFloat(style.minWidth) || 0) +
-            parseFloat(style.paddingLeft) +
-            parseFloat(style.paddingRight)
-          );
+          const padding =
+            style.boxSizing === "border-box"
+              ? 0
+              : parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+          return (parseFloat(style.minWidth) || 0) + padding;
         });
         return Math.max(
           tableMin.endsWith("px") ? parseFloat(tableMin) : 0,
