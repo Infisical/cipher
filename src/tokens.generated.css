@@ -307,6 +307,12 @@
   --cipher-tab-label: color-mix(in oklab, var(--cipher-ink) 60%, transparent);
   --cipher-selected-surface: color-mix(in oklab, var(--cipher-neutral-300) var(--cipher-selected-mix), transparent);
   --cipher-selected-border: var(--cipher-control);
+  --cipher-toggle-pressed-base: var(--cipher-selected-surface);
+  --cipher-toggle-pressed-line-base: var(--cipher-selected-border);
+  --cipher-toggle-pressed-accent: 0%;
+  --cipher-toggle-pressed-accent-hover: 0%;
+  --cipher-toggle-pressed-line-accent: 0%;
+  --cipher-toggle-pressed-line-accent-hover: 0%;
   --cipher-selected-ink: var(--cipher-ink);
   --cipher-halftone-peak: 42%;
   --cipher-halftone-peak-hover: 90%;
@@ -549,6 +555,12 @@
   --cipher-tab-label: var(--cipher-muted);
   --cipher-selected-surface: color-mix(in oklab, var(--cipher-neutral-600) var(--cipher-selected-mix), transparent);
   --cipher-selected-border: var(--cipher-neutral-600);
+  --cipher-toggle-pressed-base: transparent;
+  --cipher-toggle-pressed-line-base: transparent;
+  --cipher-toggle-pressed-accent: 10%;
+  --cipher-toggle-pressed-accent-hover: 15%;
+  --cipher-toggle-pressed-line-accent: 25%;
+  --cipher-toggle-pressed-line-accent-hover: 30%;
   --cipher-selected-ink: var(--cipher-ink);
   --cipher-halftone-peak: 20%;
   --cipher-halftone-peak-hover: 90%;
