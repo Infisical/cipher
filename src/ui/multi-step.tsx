@@ -169,6 +169,8 @@ export type MultiStepProps = {
   media?: React.ReactNode;
   description?: React.ReactNode;
   open?: boolean;
+  /** false leaves the page behind a dialog or sheet interactive, as Dialog and Sheet do. */
+  modal?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   trigger?: React.ReactElement;
@@ -206,6 +208,7 @@ export const MultiStep = ({
   media,
   description,
   open,
+  modal,
   defaultOpen = false,
   onOpenChange,
   trigger,
@@ -679,7 +682,7 @@ export const MultiStep = ({
     );
   if (variant === "sheet")
     return (
-      <Sheet open={isOpen} onOpenChange={changeOpen}>
+      <Sheet open={isOpen} onOpenChange={changeOpen} modal={modal}>
         {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
         <SheetContent
           size={size ?? (aside ? "xl" : undefined)}
@@ -698,7 +701,9 @@ export const MultiStep = ({
           {meter && (
             <SheetSubheader className={meterClass}>{meter}</SheetSubheader>
           )}
-          <SheetBody>{body}</SheetBody>
+          <SheetBody className={aside ? styles.asideBody : undefined}>
+            {body}
+          </SheetBody>
           {footer && (
             <SheetFooter className={styles.footer}>{footer}</SheetFooter>
           )}
@@ -706,7 +711,7 @@ export const MultiStep = ({
       </Sheet>
     );
   return (
-    <Dialog open={isOpen} onOpenChange={changeOpen}>
+    <Dialog open={isOpen} onOpenChange={changeOpen} modal={modal}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent
         className={cn(

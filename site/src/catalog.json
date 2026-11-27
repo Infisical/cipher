@@ -1698,6 +1698,10 @@
         "module": "multi-step/row-switch"
       },
       {
+        "title": "Aside layout: short content, with the rules running the full body height",
+        "module": "multi-step/aside-short"
+      },
+      {
         "title": "Aside layout: three short steps",
         "module": "multi-step/aside-sparse"
       },
