@@ -308,11 +308,12 @@
   --cipher-selected-surface: color-mix(in oklab, var(--cipher-neutral-300) var(--cipher-selected-mix), transparent);
   --cipher-selected-border: var(--cipher-control);
   --cipher-toggle-pressed-base: transparent;
-  --cipher-toggle-pressed-line-base: var(--cipher-accent-2);
+  --cipher-toggle-pressed-line-base: transparent;
   --cipher-toggle-pressed-accent: 45%;
   --cipher-toggle-pressed-accent-hover: 55%;
   --cipher-toggle-pressed-line-accent: 0%;
   --cipher-toggle-pressed-line-accent-hover: 0%;
+  --cipher-toggle-pressed-line-accent-2: 100%;
   --cipher-selected-ink: var(--cipher-ink);
   --cipher-halftone-peak: 42%;
   --cipher-halftone-peak-hover: 90%;
@@ -561,6 +562,7 @@
   --cipher-toggle-pressed-accent-hover: 15%;
   --cipher-toggle-pressed-line-accent: 25%;
   --cipher-toggle-pressed-line-accent-hover: 30%;
+  --cipher-toggle-pressed-line-accent-2: 0%;
   --cipher-selected-ink: var(--cipher-ink);
   --cipher-halftone-peak: 20%;
   --cipher-halftone-peak-hover: 90%;
@@ -598,7 +600,6 @@
   --cipher-button-glow: var(--cipher-accent);
   --cipher-button-hover-glow: var(--cipher-accent);
   --cipher-button-hover-bloom-soft: color-mix(in srgb, var(--cipher-accent) 38%, white);
-  --cipher-toggle-pressed-line-base: var(--cipher-accent-2);
 }
 .cipher[data-scheme="dark"][data-hue],
 .cipher[data-scheme="dark"] [data-hue] {
@@ -608,5 +609,4 @@
   --cipher-sw-on: var(--cipher-accent);
   --cipher-sw-knob-on: var(--cipher-on-accent);
   --cipher-slider-range: var(--cipher-accent);
-  --cipher-toggle-pressed-line-base: transparent;
 }
