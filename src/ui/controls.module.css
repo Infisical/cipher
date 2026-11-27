@@ -1488,6 +1488,18 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-color: transparent;
   color: var(--cipher-ink);
 }
+:global(.cipher[data-scheme="dark"])
+  :not([data-indicator])
+  > .toggle.toggle:is([aria-pressed="true"], [data-state="on"]) {
+  background-color: color-mix(in oklab, var(--cipher-accent) 10%, transparent);
+  border-color: color-mix(in oklab, var(--cipher-accent) 25%, transparent);
+}
+:global(.cipher[data-scheme="dark"])
+  :not([data-indicator])
+  > .toggle.toggle:is([aria-pressed="true"], [data-state="on"]):hover {
+  background-color: color-mix(in oklab, var(--cipher-accent) 15%, transparent);
+  border-color: color-mix(in oklab, var(--cipher-accent) 30%, transparent);
+}
 @media (hover: hover) {
   .toggleGroup[data-spacing="0"]
     > [data-slot="toggle-group-item"]:hover:not(
