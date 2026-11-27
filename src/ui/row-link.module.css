@@ -25,6 +25,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+:global(td)[data-wrap] .rowLink,
+:global(td)[data-wrap] .label {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+:global(td)[data-wrap] .rowLink[data-chevron] {
+  align-items: flex-start;
+}
 .chevron {
   flex: none;
   width: var(--cipher-size-glyph);
@@ -32,6 +41,9 @@
   stroke-width: var(--cipher-stroke-icon);
   color: var(--cipher-muted);
   transition: color var(--cipher-duration-fast) var(--cipher-ease-fade);
+}
+:global(td)[data-wrap] .chevron {
+  margin-block-start: calc((1lh - var(--cipher-size-glyph)) / 2);
 }
 .rowLink[data-disabled] .chevron {
   color: var(--cipher-faint);
