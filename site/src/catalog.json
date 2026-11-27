@@ -2480,6 +2480,14 @@
       {
         "title": "Explicit widths are a floor: headers keep their text and the table scrolls",
         "module": "table/fixed-widths"
+      },
+      {
+        "title": "Stacked groups",
+        "module": "table/stacked-groups"
+      },
+      {
+        "title": "Stacked virtual rows",
+        "module": "table/stacked-virtual"
       }
     ]
   },
