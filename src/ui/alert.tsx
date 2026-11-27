@@ -22,6 +22,7 @@ function Alert({
   badges,
   actions,
   onDismiss,
+  band,
   children,
   ref,
   ...props
@@ -34,6 +35,8 @@ function Alert({
   badges?: React.ReactNode;
   actions?: React.ReactNode;
   onDismiss?: () => void;
+  /** A full-width band inside a framed block, such as a notice between a table's toolbar and its header: a rule below it and no side or top edge, at the frame's inline inset. */
+  band?: boolean;
 } & { ref?: React.Ref<React.ComponentRef<"div">> }) {
   const alertRef = useDescendantFlags(alertFlags, alertWatch, ref);
   const titled = title != null && title !== false;
@@ -52,6 +55,7 @@ function Alert({
       data-variant={variant ?? "default"}
       role={tone === "bad" ? "alert" : "status"}
       data-tone={tone}
+      data-band={band || undefined}
       className={cn(helperStyles.alert, "[&>svg]:cipher-lead-line", className)}
       {...props}
     >

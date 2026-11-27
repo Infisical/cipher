@@ -108,6 +108,10 @@
       {
         "title": "Dismissible banner",
         "module": "alert/banner"
+      },
+      {
+        "title": "Band between a table's toolbar and its header",
+        "module": "alert/band"
       }
     ]
   },
@@ -2492,6 +2496,10 @@
       {
         "title": "Stacked virtual rows",
         "module": "table/stacked-virtual"
+      },
+      {
+        "title": "Header on paper under a notice band",
+        "module": "table/band-stack"
       }
     ]
   },

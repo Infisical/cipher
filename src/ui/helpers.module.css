@@ -856,6 +856,10 @@
 .alert[data-has-icon] {
   grid-template-columns: auto minmax(0, 1fr);
 }
+.alert[data-band] {
+  border-width: 0 0 var(--cipher-size-control-border);
+  padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
+}
 .alert > svg {
   --cipher-lead-line: var(--cipher-type-row-title-line-height);
   grid-column: 1;

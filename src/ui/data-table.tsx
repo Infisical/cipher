@@ -228,6 +228,8 @@ interface DataTableBaseProps<Row> {
    * value lines under it (see column stack). Select all and sort move to a band above the rows.
    */
   stackBelow?: number;
+  /** paper sets the header row on its own ground, for a table with a toolbar or notice band stacked above it. */
+  headerGround?: "paper";
 }
 export type DataTableProps<Row> = DataTableBaseProps<Row> &
   (
@@ -282,7 +284,8 @@ export function DataTable<Row>({
   getRowRestricted,
   rowProps,
   reorder,
-  stackBelow
+  stackBelow,
+  headerGround
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
   const frameFoot = useFrameFoot();
@@ -1446,7 +1449,11 @@ export function DataTable<Row>({
             : undefined
         }
       >
-        <TableHeader data-hidden={headerHidden || squeezed || undefined} role={role("rowgroup")}>
+        <TableHeader
+          ground={headerGround}
+          data-hidden={headerHidden || squeezed || undefined}
+          role={role("rowgroup")}
+        >
           <TableRow role={role("row")}>
             {selectable && (
               <TableHead
