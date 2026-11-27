@@ -324,6 +324,10 @@
       {
         "title": "Corner badge",
         "module": "button/corner-badge"
+      },
+      {
+        "title": "Inside an app with its own border utility",
+        "module": "button/consumer-utilities"
       }
     ]
   },
