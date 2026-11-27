@@ -14,7 +14,7 @@ Both come from the same source in [src/](src/).
 Cipher requires React 19.2 or later. Until it's published to npm, install a release tag from GitHub. Use the latest tag from the [releases page](https://github.com/Infisical/cipher/releases):
 
 ```bash
-$ npm install github:Infisical/cipher#v0.1.18 motion sonner
+$ npm install github:Infisical/cipher#v0.1.30 motion sonner
 ```
 
 `motion` and `sonner` are peer dependencies. Install `recharts` if you use the chart, `@xterm/xterm` and `@xterm/addon-fit` if you use the terminal, and the `@codemirror/*` and `@lezer/highlight` packages listed in [package.json](package.json) if you use the code editor.
