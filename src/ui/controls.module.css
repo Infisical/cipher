@@ -1488,17 +1488,30 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   border-color: transparent;
   color: var(--cipher-ink);
 }
-:global(.cipher[data-scheme="dark"])
-  :not([data-indicator])
-  > .toggle.toggle:is([aria-pressed="true"], [data-state="on"]) {
-  background-color: color-mix(in oklab, var(--cipher-accent) 10%, transparent);
-  border-color: color-mix(in oklab, var(--cipher-accent) 25%, transparent);
+:not([data-indicator]) > .toggle.toggle.toggle.toggle:is([aria-pressed="true"], [data-state="on"]) {
+  background-color: color-mix(
+    in oklab,
+    var(--cipher-accent) var(--cipher-toggle-pressed-accent),
+    var(--cipher-toggle-pressed-base)
+  );
+  border-color: color-mix(
+    in oklab,
+    var(--cipher-accent) var(--cipher-toggle-pressed-line-accent),
+    var(--cipher-toggle-pressed-line-base)
+  );
 }
-:global(.cipher[data-scheme="dark"])
-  :not([data-indicator])
-  > .toggle.toggle:is([aria-pressed="true"], [data-state="on"]):hover {
-  background-color: color-mix(in oklab, var(--cipher-accent) 15%, transparent);
-  border-color: color-mix(in oklab, var(--cipher-accent) 30%, transparent);
+:not([data-indicator])
+  > .toggle.toggle.toggle.toggle:is([aria-pressed="true"], [data-state="on"]):hover:not(:disabled) {
+  background-color: color-mix(
+    in oklab,
+    var(--cipher-accent) var(--cipher-toggle-pressed-accent-hover),
+    var(--cipher-toggle-pressed-base)
+  );
+  border-color: color-mix(
+    in oklab,
+    var(--cipher-accent) var(--cipher-toggle-pressed-line-accent-hover),
+    var(--cipher-toggle-pressed-line-base)
+  );
 }
 @media (hover: hover) {
   .toggleGroup[data-spacing="0"]
