@@ -279,17 +279,20 @@ export function DataTable<Row>({
     [containerRef]
   );
   const [narrow, setNarrow] = React.useState<number | null>(null);
+  const bare =
+    !loading && !(groups ? groups.some((group) => group.rows.length > 0) : flatRows?.length);
   const droppable = allColumns.some((column) => column.dropFirst);
+  const squeezed = bare && narrow !== null;
   const primaryColumn = allColumns.find((column) => column.primary);
   const primaryCap = primaryColumn?.width ?? primaryColumn?.maxWidth ?? Infinity;
   const columns =
-    droppable && narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
+    narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
   const columnShape = allColumns
     .map((column) =>
       [column.id, column.width, column.minWidth, column.grow, column.dropFirst].join(":")
     )
     .join("|");
-  React.useLayoutEffect(() => setNarrow(null), [columnShape]);
+  React.useLayoutEffect(() => setNarrow(null), [columnShape, bare]);
   const [primaryWidth, setPrimaryWidth] = React.useState<number>();
   const [headWidths, setHeadWidths] = React.useState<Record<string, number>>({});
   const [landing, setLanding] = React.useState<number | null>(null);
@@ -498,11 +501,13 @@ export function DataTable<Row>({
   const actionsColumn = Boolean(rowActions) && (loading || rows.length > 0);
   const span = columns.length + (selectable ? 1 : 0) + (actionsColumn ? 1 : 0);
   const hasGrowingColumn = columns.some((column) => column.grow && column.width === undefined);
-  const fixedLayout = columns.every(
-    (column) => column.width !== undefined || column.grow || column.actions
-  );
+  const fixedLayout =
+    squeezed ||
+    columns.every((column) => column.width !== undefined || column.grow || column.actions);
   const explicitWidth = (column: DataTableColumn<Row>) =>
-    column.width === undefined ? undefined : Math.max(column.width, headWidths[column.id] ?? 0);
+    squeezed || column.width === undefined
+      ? undefined
+      : Math.max(column.width, headWidths[column.id] ?? 0);
   const primaryMin = flowing ? "var(--cipher-size-cell-min)" : "var(--cipher-size-text-min)";
   const columnFloor = (column: DataTableColumn<Row>) => {
     if (column.minWidth) return `${column.minWidth}px`;
@@ -538,7 +543,7 @@ export function DataTable<Row>({
       return before + (explicitWidth(column) ?? 0);
     }, 0);
   const contentSized =
-    fixedLayout && !flowing
+    fixedLayout && !flowing && !squeezed
       ? columns.find(
           (column) =>
             column.primary &&
@@ -559,10 +564,10 @@ export function DataTable<Row>({
     width:
       explicitWidth(column) ??
       (column.id === contentSized ? primaryWidth : undefined) ??
-      (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
+      (hasGrowingColumn && !squeezed && !column.grow && !column.actions ? "1%" : undefined),
     minWidth:
       explicitWidth(column) ??
-      (column.actions
+      (column.actions || squeezed
         ? undefined
         : (column.minWidth ?? (column.primary ? primaryMin : 64))),
     maxWidth: column.maxWidth,
@@ -635,7 +640,8 @@ export function DataTable<Row>({
     .join("\n");
   React.useLayoutEffect(() => {
     const container = scroll.current;
-    if (!droppable || !container || (contentSized && primaryWidth === undefined)) return;
+    if ((!droppable && !bare) || !container || (contentSized && primaryWidth === undefined))
+      return;
     const measure = () => {
       const width = container.clientWidth;
       const truncated = Math.max(
@@ -652,7 +658,23 @@ export function DataTable<Row>({
           }
         )
       );
-      const needed = container.scrollWidth + truncated;
+      const table = container.querySelector("table");
+      const floors = () => {
+        const tableMin = table ? getComputedStyle(table).minWidth : "";
+        const cells = Array.from(table?.tHead?.rows[0]?.cells ?? [], (cell) => {
+          const style = getComputedStyle(cell);
+          return (
+            (parseFloat(style.minWidth) || 0) +
+            parseFloat(style.paddingLeft) +
+            parseFloat(style.paddingRight)
+          );
+        });
+        return Math.max(
+          tableMin.endsWith("px") ? parseFloat(tableMin) : 0,
+          cells.reduce((sum, cell) => sum + cell, 0)
+        );
+      };
+      const needed = bare ? floors() : container.scrollWidth + truncated;
       setNarrow((current) => {
         if (current === null) return needed > width + 1 ? needed : null;
         return width >= current ? null : current;
@@ -664,7 +686,7 @@ export function DataTable<Row>({
     const table = container.querySelector("table");
     if (table) observer.observe(table);
     return () => observer.disconnect();
-  }, [droppable, narrow, contentSized, primaryWidth, primaryCap]);
+  }, [droppable, bare, narrow, contentSized, primaryWidth, primaryCap]);
   React.useLayoutEffect(() => {
     const table = scroll.current?.querySelector("table");
     if (!contentSized || !table) {
@@ -1085,7 +1107,7 @@ export function DataTable<Row>({
         data-variant={variant}
         data-layout={fixedLayout ? "fixed" : undefined}
         style={
-          fixedLayout
+          fixedLayout && !squeezed
             ? {
                 minWidth: `calc(${[
                   `${fixedWidth}px`,
@@ -1099,26 +1121,28 @@ export function DataTable<Row>({
             : undefined
         }
       >
-        <TableHeader data-hidden={headerHidden || undefined}>
+        <TableHeader data-hidden={headerHidden || squeezed || undefined}>
           <TableRow>
             {selectable && (
               <TableHead selection pin={leading ? "start" : undefined}>
-                <Checkbox
-                  aria-label={`Select all available rows in ${label}`}
-                  disabled={loading || !eligible.length}
-                  checked={
-                    checked > 0 && checked < eligible.length
-                      ? "indeterminate"
-                      : eligible.length > 0 && checked === eligible.length
-                  }
-                  onCheckedChange={() =>
-                    update(
-                      checked === eligible.length
-                        ? selected.filter((id) => !eligible.includes(id))
-                        : [...new Set([...selected, ...eligible])]
-                    )
-                  }
-                />
+                {!squeezed && (
+                  <Checkbox
+                    aria-label={`Select all available rows in ${label}`}
+                    disabled={loading || !eligible.length}
+                    checked={
+                      checked > 0 && checked < eligible.length
+                        ? "indeterminate"
+                        : eligible.length > 0 && checked === eligible.length
+                    }
+                    onCheckedChange={() =>
+                      update(
+                        checked === eligible.length
+                          ? selected.filter((id) => !eligible.includes(id))
+                          : [...new Set([...selected, ...eligible])]
+                      )
+                    }
+                  />
+                )}
               </TableHead>
             )}
             {columns.map((column) => (
@@ -1138,7 +1162,7 @@ export function DataTable<Row>({
                     : undefined
                 }
               >
-                {column.toggle && (
+                {column.toggle && !squeezed && (
                   <ToggleHead
                     toggle={column.toggle}
                     counts={toggleCounts(column.toggle)}
@@ -1147,7 +1171,7 @@ export function DataTable<Row>({
                     getRowId={getRowId}
                   />
                 )}
-                {column.sortable && onSortChange ? (
+                {column.sortable && onSortChange && !squeezed ? (
                   <TableHeadButton
                     data-active={sort?.columnId === column.id || undefined}
                     onClick={() =>
@@ -1170,7 +1194,7 @@ export function DataTable<Row>({
                 ) : (
                   <span
                     className={
-                      column.hideHeader || column.actions
+                      squeezed || column.hideHeader || column.actions
                         ? styles.sr
                         : column.toggle
                           ? undefined
