@@ -528,10 +528,7 @@ export function Combobox({
             trailing={loading ? <Spinner /> : undefined}
           />
           {!emptyCreate && (
-            <CommandList
-              aria-busy={loading || undefined}
-              data-before-footer={footer ? "" : undefined}
-            >
+            <CommandList aria-busy={loading || undefined}>
               {!onSearch && !rowCreation && <CommandEmpty>{emptyMessage}</CommandEmpty>}
               {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
                 <p role="status" data-slot="combobox-status" className={menu.empty}>

@@ -535,7 +535,6 @@ export function MultiSelect({
           aria-activedescendant={activeId}
           aria-owns={createAction ? createId : undefined}
           data-scroll-fade="y"
-          data-before-footer={createAction || footer ? "" : undefined}
           className={cn(menu.list, menu.inset)}
         >
           {groups.map((group) => (
