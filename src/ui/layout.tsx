@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { useListFiltered } from "../lib/list-query";
+import { flattenFragments } from "../lib/overlay-sections";
 import { cn, truncateTitle } from "../lib/utils";
 import { type EmptyGhost, EmptyGhostScope } from "./empty";
 
@@ -272,6 +273,8 @@ export function DetailLayout({
   aside,
   asideLabel,
   asideWidth = "default",
+  secondary,
+  secondaryLabel = "More details",
   children,
   className,
   ref,
@@ -279,12 +282,17 @@ export function DetailLayout({
 }: React.ComponentPropsWithoutRef<"div"> & {
   aside: React.ReactNode;
   asideLabel: string;
+  /** Bounded key/value summaries (config, flags, IDs, connection, filters) that join the aside in the right column on wide containers and follow the main content on narrow ones. Tables, lists and anything unbounded or actionable stay in children. With secondary set, the right column does not stick. */
+  secondary?: React.ReactNode;
+  /** Accessible name of the secondary landmark. */
+  secondaryLabel?: string;
   /** "narrow" sets the sidecar to size-pane-aside (320px) instead of size-sidecar (384px), for a page capped narrower than the content measure. A full UUID wraps onto two lines at that width. */
   asideWidth?: "default" | "narrow";
   ref?: React.Ref<HTMLDivElement>;
 }) {
   const asideRef = React.useRef<HTMLElement>(null);
   const [fits, setFits] = React.useState(false);
+  const hasSecondary = flattenFragments(secondary).some((child) => child !== "");
   React.useLayoutEffect(() => {
     const node = asideRef.current;
     if (!node) return undefined;
@@ -317,11 +325,11 @@ export function DetailLayout({
       className={cn(detailStyles.root, className)}
       {...props}
     >
-      <div className={detailStyles.columns}>
+      <div className={detailStyles.columns} data-secondary={hasSecondary || undefined}>
         <aside
           ref={asideRef}
           data-slot="detail-layout-aside"
-          data-sticky={fits || undefined}
+          data-sticky={(fits && !hasSecondary) || undefined}
           aria-label={asideLabel}
           className={detailStyles.aside}
         >
@@ -330,6 +338,15 @@ export function DetailLayout({
         <div data-slot="detail-layout-main" className={detailStyles.main}>
           {children}
         </div>
+        {hasSecondary && (
+          <aside
+            data-slot="detail-layout-secondary"
+            aria-label={secondaryLabel}
+            className={detailStyles.secondary}
+          >
+            {secondary}
+          </aside>
+        )}
       </div>
     </div>
   );

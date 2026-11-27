@@ -4,9 +4,11 @@ import * as React from "react";
 import { cva } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
+import { RowDescriptionContext } from "../lib/row-description";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { useReason } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
@@ -34,9 +36,11 @@ function Badge({
   tone,
   dot = false,
   icon,
+  media,
   size = "md",
   mono = false,
   collapse = false,
+  reason,
   children,
   asChild = false,
   ref,
@@ -50,13 +54,28 @@ function Badge({
   dot?: boolean;
   /** A leading glyph, decorative: the text stays the badge's name. */
   icon?: IconSource;
+  /** A logo or image before the label: 14px beside the default label, the glyph size in the sm and control sizes. It never shrinks; under collapse the label truncates and the media stays. Ignored when icon is set. */
+  media?: React.ReactNode;
   size?: "sm" | "md" | "control-sm" | "control-md" | "control-lg";
   mono?: boolean;
   /** Lets the badge give up width under pressure, as in a NameLine or a narrow cell: an icon or dot badge drops to its glyph and a text badge truncates to about 6ch. */
   collapse?: boolean;
+  /** Says why the badge reads as it does, such as the error behind a failed status: it becomes a tab stop, shows the reason in a tooltip and exposes it as the accessible description. */
+  reason?: React.ReactNode;
 } & { ref?: React.Ref<React.ComponentRef<"span">> }) {
   const Comp = asChild ? Slot.Root : "span";
-  const fitsWhole = !icon && !dot;
+  const reasonTooltip = useReason(reason);
+  const describedBy = reasonTooltip.describedBy(
+    [
+      props["aria-describedby"],
+      asChild && React.isValidElement<{ "aria-describedby"?: string }>(children)
+        ? children.props["aria-describedby"]
+        : undefined
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
+  const fitsWhole = !icon && !dot && !media;
   const textRef = React.useCallback(
     (label: HTMLSpanElement | null) => {
       const root = label?.parentElement;
@@ -111,26 +130,34 @@ function Badge({
     <>
       {dot && <span aria-hidden="true" className={cn(helperStyles.badgeDot, "cipher-lead-line")} />}
       {icon && <Icon icon={icon} />}
+      {!icon && Boolean(media) && (
+        <span data-slot="badge-media" className={cn(helperStyles.badgeMedia, "cipher-lead-line")}>
+          {media}
+        </span>
+      )}
     </>
   );
   const body =
-    asChild && React.isValidElement<{ children?: React.ReactNode }>(children) ? (
+    asChild &&
+    React.isValidElement<{ children?: React.ReactNode; "aria-describedby"?: string }>(children) ? (
       React.cloneElement(
         children,
-        undefined,
+        reasonTooltip.active ? { "aria-describedby": describedBy } : undefined,
         <>
           {dotNode}
           {text(children.props.children)}
+          {reasonTooltip.description}
         </>
       )
     ) : (
       <>
         {dotNode}
         {text(children)}
+        {reasonTooltip.description}
       </>
     );
 
-  return (
+  return reasonTooltip.wrap(
     <Comp
       ref={ref}
       data-slot="badge"
@@ -143,7 +170,7 @@ function Badge({
         const badge = event.currentTarget;
         const labels = badge.querySelectorAll<HTMLElement>("[data-badge-text]");
         if (!labels.length) return;
-        if (props.title !== undefined) {
+        if (props.title !== undefined || reasonTooltip.active) {
           delete badge.dataset.autoTitle;
           return;
         }
@@ -163,9 +190,11 @@ function Badge({
         }
       }}
       {...props}
+      aria-describedby={describedBy}
     >
       {body}
-    </Comp>
+    </Comp>,
+    true
   );
 }
 Badge.displayName = "Badge";
@@ -268,12 +297,14 @@ function BadgeGroup({
       )}
       {!wrap && (
         <div ref={measureRef} aria-hidden="true" inert className={helperStyles.badgeGroupMeasure}>
-          {items.map((item) =>
-            React.isValidElement(item)
-              ? React.cloneElement(item, { ref: null, id: undefined } as object)
-              : item
-          )}
-          <Badge>+{items.length}</Badge>
+          <RowDescriptionContext value={null}>
+            {items.map((item) =>
+              React.isValidElement(item)
+                ? React.cloneElement(item, { ref: null, id: undefined } as object)
+                : item
+            )}
+            <Badge>+{items.length}</Badge>
+          </RowDescriptionContext>
         </div>
       )}
     </div>

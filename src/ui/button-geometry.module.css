@@ -5,16 +5,20 @@
   --cipher-action-line-height: var(--cipher-type-label-line-height);
   --cipher-action-inset: var(--cipher-space-control-inline);
   --cipher-action-icon-size: var(--cipher-size-icon-label);
-  --cipher-kbd-host-block: calc(var(--cipher-action-height) - 2 * var(--cipher-size-control-border));
+  --cipher-action-border: var(--cipher-size-control-border);
+  --cipher-kbd-host-block: calc(var(--cipher-action-height) - 2 * var(--cipher-action-border));
   --cipher-kbd-host-end: var(--cipher-action-inset);
   box-sizing: border-box;
   min-height: var(--cipher-action-height);
   gap: var(--cipher-space-control-gap);
   padding-block: calc(
-    (var(--cipher-action-height) - var(--cipher-action-line-height)) / 2 - var(--cipher-size-control-border)
+    (var(--cipher-action-height) - var(--cipher-action-line-height)) / 2 -
+      var(--cipher-action-border)
   );
-  padding-inline: var(--cipher-action-inset);
-  border-width: var(--cipher-size-control-border);
+  padding-inline: calc(
+    var(--cipher-action-inset) + var(--cipher-size-control-border) - var(--cipher-action-border)
+  );
+  border-width: var(--cipher-action-border);
   border-radius: 0;
   font-family: var(--cipher-type-label-font-family);
   font-size: var(--cipher-action-font-size);
@@ -22,6 +26,12 @@
   font-weight: var(--cipher-type-label-font-weight);
   letter-spacing: var(--cipher-type-label-letter-spacing);
   cursor: default;
+}
+/* The accent face lights its edges with inset shadows, which paint inside the border, so it trades the border for padding to light the whole face at the same size. */
+@media (forced-colors: none) {
+  .button[data-cipher-button-material] {
+    --cipher-action-border: 0px;
+  }
 }
 a.button[href]:not([aria-busy="true"]) {
   cursor: pointer;
@@ -108,13 +118,18 @@ a.button[href]:not([aria-busy="true"]) {
 }
 .cornerBadge {
   position: absolute;
-  top: calc(var(--cipher-size-control-border) / -2);
-  inset-inline-end: calc(-1 * var(--cipher-size-control-border));
+  top: calc(var(--cipher-action-border) / -2);
+  inset-inline-end: calc(-1 * var(--cipher-action-border));
   z-index: 1;
   display: inline-flex;
   translate: 0 -50%;
   background: var(--cipher-surface);
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-surface);
   pointer-events: none;
+}
+[data-framed] .cornerBadge {
+  background: var(--cipher-tint);
+  box-shadow: 0 0 0 var(--cipher-space-2) var(--cipher-tint);
 }
 .applied[data-cipher-button] {
   position: relative;

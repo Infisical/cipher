@@ -47,6 +47,9 @@
   width: var(--cipher-size-icon-xs);
   height: var(--cipher-size-icon-xs);
 }
+.field[data-size="xs"] [data-slot="option-media"] {
+  --cipher-lead-size: var(--cipher-size-icon-xs);
+}
 .field[data-size="md"] {
   --cipher-field-height: var(--cipher-size-control-md);
   --cipher-field-inline: var(--cipher-space-control-inline-md);
@@ -101,6 +104,17 @@
 }
 .field:is([readonly]:not([aria-disabled="true"]), [data-field-box][data-control-readonly]) {
   background-color: var(--cipher-paper);
+}
+.field:is(
+  [readonly]:not([aria-disabled="true"], :disabled),
+  [data-field-box][data-control-readonly]:not([data-control-disabled])
+),
+.bare[readonly]:not([aria-disabled="true"], :disabled) {
+  cursor: default;
+}
+.field[readonly],
+.bare[readonly] {
+  caret-color: transparent;
 }
 .fieldBox {
   display: flex;
@@ -202,7 +216,7 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   resize: vertical;
 }
 /* field-sizing: content ignores the rows attribute, so rows becomes the starting height: that many lines plus the field's padding and border, and content still grows it. */
-.textarea::placeholder {
+.textarea:not([data-multiline-placeholder])::placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -503,11 +517,34 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex: 0 1 auto;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > * {
+/* A ButtonGroup can't truncate without clipping its buttons, so the band wraps instead: the group
+   drops under the title, inside the band, when the two don't fit on one line. */
+.card[data-variant="framed"]
+  > .cardHeader:has(> .cardAction > [data-slot="button-group"]):not(
+    :has(> [data-slot="card-description"])
+  ) {
+  flex-wrap: wrap;
+}
+.card[data-variant="framed"]
+  > .cardHeader:has(> .cardAction > [data-slot="button-group"]):not(
+    :has(> [data-slot="card-description"])
+  )
+  > :is(.cardTitleGroup, [data-slot="card-title"]) {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction:has(> [data-slot="button-group"]) {
+  flex: none;
+  max-width: 100%;
+}
+.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-slot="button-group"]) {
   flex-shrink: 1;
   min-width: 0;
 }
-.card[data-variant="framed"] > .cardHeader > .cardAction > :not([data-cipher-button]) {
+.card[data-variant="framed"]
+  > .cardHeader
+  > .cardAction
+  > :not([data-cipher-button], [data-slot="button-group"]) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -680,6 +717,32 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   margin-inline-start: auto;
   grid-column: 2;
   grid-row: 1;
+}
+/* A plain head keeps size-text-min for its title: actions too wide to sit beside that floor drop
+   onto their own row at the start, the way a framed head wraps, instead of squeezing the title. */
+.cardHeader:not([data-framed]):has(> .cardAction):not(:has(> [data-slot="card-description"])) {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: var(--cipher-space-12);
+}
+.cardHeader:not([data-framed]) > :is(.cardTitleGroup, [data-slot="card-title"]) {
+  flex: 1 1 var(--cipher-size-text-min);
+  min-width: min(100%, var(--cipher-size-text-min));
+}
+.cardHeader:not([data-framed]):not(:has(> [data-slot="card-description"])) > .cardAction {
+  margin-inline-start: 0;
+}
+@container (max-width: 30rem) {
+  .cardHeader:not([data-framed]):has(> [data-slot="card-description"]):has(> .cardAction) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cardHeader:not([data-framed]):has(> [data-slot="card-description"]) > .cardAction {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+    margin-top: var(--cipher-space-8);
+    margin-inline-start: 0;
+  }
 }
 :where(.cardFooter) {
   display: flex;
@@ -1004,6 +1067,26 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
 }
 .stepLabels > li[data-current] {
   color: var(--cipher-ink);
+  font-weight: 600;
+}
+.progressSteps {
+  position: relative;
+}
+.progressSteps[data-compact] > .stepLabels {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+.stepCompact {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--cipher-ink);
+  font-family: var(--cipher-type-caption-font-family);
+  font-size: var(--cipher-type-caption-font-size);
+  line-height: var(--cipher-type-caption-line-height);
   font-weight: 600;
 }
 .separatorLabel {

@@ -18,6 +18,7 @@ interface ListContextValue {
   multiple: boolean;
   size: "md" | "sm";
   actionsPlacement: "end" | "below";
+  flush: boolean;
   toggle: (id: string) => void;
   register: (value: string, eligible: boolean) => () => void;
 }
@@ -116,6 +117,7 @@ export function ListRow({
       data-disabled={disabled || undefined}
       data-resolved={resolved || undefined}
       data-size={context?.size}
+      data-flush={context?.flush || undefined}
       data-interactive={(!disabled && Boolean(anchor || button)) || undefined}
       data-pressed={pressed || undefined}
     >
@@ -224,7 +226,8 @@ export const ListFooter: React.FC<{ children: React.ReactNode }> = () => null;
 export interface ListProps extends ListHeaderProps {
   children?: React.ReactNode;
   label: string;
-  variant?: "framed" | "plain" | "bare" | "segmented" | "divided";
+  /** flush is for read-only rows under a DataList or other content: no row inset or hover ground, so row content starts on the container's left edge. */
+  variant?: "framed" | "plain" | "bare" | "segmented" | "divided" | "flush";
   size?: "md" | "sm";
   actionsPlacement?: "end" | "below";
   /** Sits rows on a 16px content lane for a list inside a popover or sheet: media, text and trailing buttons sit inside the lane, so a button's own hover fill keeps the same 8px off the row's hover and selected fill, which stays 8px off the container edge. Applies to the bare, segmented and divided variants, which draw no frame or border of their own. */
@@ -377,6 +380,7 @@ export function List({
           toggle,
           size,
           actionsPlacement,
+          flush: variant === "flush",
           register
         }}
       >
@@ -387,7 +391,10 @@ export function List({
           data-variant={variant}
           data-embedded={embedded || undefined}
           data-size={size}
-          data-inset={(inset && !framed && !embedded && variant !== "plain") || undefined}
+          data-inset={
+            (inset && !framed && !embedded && variant !== "plain" && variant !== "flush") ||
+            undefined
+          }
         >
           {refreshing && !loading && (
             <span className={styles.refreshing} data-slot="list-refreshing" aria-hidden />
@@ -535,15 +542,22 @@ export type DataListItem =
 
 const isHalf = (item?: DataListItem) => item?.[2]?.span === "half";
 
+const labelWidthTokens = new Set(["cell-min", "data-list-term", "text-min"]);
+
+export type DataListLabelWidth = "cell-min" | "data-list-term" | "text-min" | (string & {});
+
 export function DataList({
   items,
   variant = "stat",
-  density = "default"
+  density = "default",
+  labelWidth
 }: {
   items: readonly DataListItem[];
   /** stat for headline numbers, meta and props for label and value rows with dividers, inline for a borderless label column beside wrapping values, such as a short breakdown inside another list's value. */
   variant?: "stat" | "meta" | "props" | "inline";
   density?: "default" | "compact";
+  /** Inline only. The label width, as a size token (cell-min, data-list-term, text-min) or a CSS length; defaults to data-list-term. Values in every row and in sibling lists start on one edge, and when a row can't keep text-min for the value beside the label, labels take the full row and values stack under them. */
+  labelWidth?: DataListLabelWidth;
 }) {
   const halves = new Set<number>();
   if (density === "compact")
@@ -557,6 +571,15 @@ export function DataList({
       data-slot="data-list"
       data-variant={variant}
       data-density={density}
+      style={
+        labelWidth
+          ? ({
+              "--cipher-data-list-label-width": labelWidthTokens.has(labelWidth)
+                ? `var(--cipher-size-${labelWidth})`
+                : labelWidth
+            } as React.CSSProperties)
+          : undefined
+      }
     >
       {items.map(([term, value, options], index) => (
         <div

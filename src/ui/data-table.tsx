@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 
 import { FrameScope, useFrameFoot, useInFrame } from "../lib/frame-context";
 import { useListFiltered } from "../lib/list-query";
@@ -33,6 +33,7 @@ import {
   type RowAction,
   type UpToThree
 } from "./table";
+import { EMPTY_VALUE, EmptyValue } from "./text";
 import { Tooltip } from "./tooltip";
 
 import styles from "./data.module.css";
@@ -65,6 +66,8 @@ export interface DataTableColumn<Row> {
   /** Hides the column while the table is too narrow to show every column, when the primary column's names would truncate or the table would scroll sideways. For secondary columns such as a usage or a description. */
   dropFirst?: boolean;
   align?: "start" | "end" | "center";
+  /** Where the cell's content sits in a row taller than one line. Defaults to top when any column wraps, so values line up with the first line of the wrapped text, and to center otherwise. A one-line row looks the same either way. */
+  valign?: "top" | "center";
   actions?: boolean;
   /** true pins the column to the inline end (the actions tail); start pins it to the inline start, after a pinned selection column. */
   pin?: boolean | "start";
@@ -186,6 +189,12 @@ interface DataTableBaseProps<Row> {
   isRowMuted?: (row: Row) => boolean;
   /** Tints a row by tone: bad marks one that is invalid, such as a row an import cannot take, and colors the icons in its primary cell, other than its badges. */
   rowTone?: (row: Row) => "bad" | undefined;
+  /**
+   * Rows the viewer may not see, such as a member hidden by their permissions: return the reason to
+   * restrict one. It renders muted with a lock and the reason in the primary column, leaves its other
+   * cells empty, and takes no selection, actions, editing or activation.
+   */
+  getRowRestricted?: (row: Row) => string | undefined;
   /** Extra attributes and handlers for each data row's tr. Handlers run before DataTable's own, which skip a default-prevented event. */
   rowProps?: (row: Row, index: number) => DataTableRowProps;
   /**
@@ -249,6 +258,7 @@ export function DataTable<Row>({
   containerClassName,
   isRowMuted,
   rowTone,
+  getRowRestricted,
   rowProps,
   reorder
 }: DataTableProps<Row>) {
@@ -281,6 +291,7 @@ export function DataTable<Row>({
     .join("|");
   React.useLayoutEffect(() => setNarrow(null), [columnShape]);
   const [primaryWidth, setPrimaryWidth] = React.useState<number>();
+  const [headWidths, setHeadWidths] = React.useState<Record<string, number>>({});
   const [landing, setLanding] = React.useState<number | null>(null);
   const [focusRow, setFocusRow] = React.useState<number | null>(null);
   const focusPending = React.useRef(false);
@@ -305,7 +316,8 @@ export function DataTable<Row>({
   const entries = sections.flatMap((section) => section.entries);
   const rows = entries.map((entry) => entry.row);
   const indentColumn = (columns.find((column) => column.primary) ?? columns[0])?.id;
-  const isSelectable = (row: Row) => isSelectableProp(row) && !selectionDisabledReason?.(row);
+  const isSelectable = (row: Row) =>
+    !getRowRestricted?.(row) && isSelectableProp(row) && !selectionDisabledReason?.(row);
   const selected = selectedIds ?? ownSelected;
   const eligible = rows.filter(isSelectable).map(getRowId);
   const checked = eligible.filter((id) => selected.includes(id)).length;
@@ -341,17 +353,17 @@ export function DataTable<Row>({
   const footOwner = frameFoot?.owner;
   const footTarget = wantsFrameFoot && footOwner === footId ? (frameFoot?.target ?? null) : null;
   const [viewport, setViewport] = React.useState(0);
-  const [chrome, setChrome] = React.useState({ head: 0, rest: 0 });
+  const [chrome, setChrome] = React.useState<{ head: number; rest: number } | null>(null);
   const windowSize =
     windowed && effectiveRowHeight
       ? Math.ceil((height ?? viewport) / effectiveRowHeight) + 8
       : rows.length;
   const wholeRows =
-    windowed && height && effectiveRowHeight && chrome.head
+    windowed && height && effectiveRowHeight && chrome
       ? Math.floor((height - chrome.head - chrome.rest) / effectiveRowHeight)
       : 0;
   const frameHeight =
-    wholeRows > 0 && effectiveRowHeight
+    wholeRows > 0 && effectiveRowHeight && chrome
       ? chrome.head + chrome.rest + wholeRows * effectiveRowHeight
       : height;
   const start =
@@ -376,7 +388,7 @@ export function DataTable<Row>({
           [...bands].reduce((sum, band) => sum + band.getBoundingClientRect().height, 0)
       };
       setChrome((current) =>
-        current.head === next.head && current.rest === next.rest ? current : next
+        current?.head === next.head && current.rest === next.rest ? current : next
       );
     };
     measure();
@@ -471,7 +483,9 @@ export function DataTable<Row>({
     row.focus({ preventScroll: true });
   }, [focusRow, start]);
   const toggleCounts = (toggle: DataTableToggle<Row>) => {
-    const enabled = rows.filter((row) => !toggle.absent?.(row) && !toggle.disabledReason?.(row));
+    const enabled = rows.filter(
+      (row) => !getRowRestricted?.(row) && !toggle.absent?.(row) && !toggle.disabledReason?.(row)
+    );
     return {
       enabled,
       on: enabled.filter((row) => toggle.checked(row) === true).length,
@@ -487,6 +501,8 @@ export function DataTable<Row>({
   const fixedLayout = columns.every(
     (column) => column.width !== undefined || column.grow || column.actions
   );
+  const explicitWidth = (column: DataTableColumn<Row>) =>
+    column.width === undefined ? undefined : Math.max(column.width, headWidths[column.id] ?? 0);
   const primaryMin = flowing ? "var(--cipher-size-cell-min)" : "var(--cipher-size-text-min)";
   const columnFloor = (column: DataTableColumn<Row>) => {
     if (column.minWidth) return `${column.minWidth}px`;
@@ -499,8 +515,16 @@ export function DataTable<Row>({
       .map(() => "var(--cipher-size-row)"),
     ...(sharing.length > 0 ? [`${sharing.length} * max(${sharing.map(columnFloor).join(", ")})`] : [])
   ];
-  const fixedWidth = columns.reduce((sum, column) => sum + (column.width ?? 0), 0);
+  const fixedWidth = columns.reduce((sum, column) => sum + (explicitWidth(column) ?? 0), 0);
   const leading = columns.some((column) => column.pin === "start");
+  const headerHidden =
+    !selectable &&
+    columns.every(
+      (column) =>
+        (column.hideHeader || column.actions) &&
+        !column.toggle &&
+        !(column.sortable && onSortChange)
+    );
   const trailing =
     actionsColumn || columns.some((column) => column.pin === true || column.actions);
   const shrinkColumn = trailing
@@ -511,7 +535,7 @@ export function DataTable<Row>({
     .filter((column) => column.pin === "start")
     .reduce((before, column) => {
       pinOffsets.set(column.id, `calc(${selectable ? "var(--cipher-size-row)" : "0px"} + ${before}px)`);
-      return before + (column.width ?? 0);
+      return before + (explicitWidth(column) ?? 0);
     }, 0);
   const contentSized =
     fixedLayout && !flowing
@@ -524,17 +548,20 @@ export function DataTable<Row>({
             sharing.some((other) => other !== column && other.grow)
         )?.id
       : undefined;
+  const topByDefault = columns.some((column) => column.wrap);
+  const topAligned = (column: DataTableColumn<Row>) =>
+    (column.valign ?? (topByDefault ? "top" : "center")) === "top";
   const columnStyle = (
     column: DataTableColumn<Row>
   ): React.CSSProperties & {
     "--cipher-pin-offset"?: string;
   } => ({
     width:
-      column.width ??
+      explicitWidth(column) ??
       (column.id === contentSized ? primaryWidth : undefined) ??
       (hasGrowingColumn && !column.grow && !column.actions ? "1%" : undefined),
     minWidth:
-      column.width ??
+      explicitWidth(column) ??
       (column.actions
         ? undefined
         : (column.minWidth ?? (column.primary ? primaryMin : 64))),
@@ -542,6 +569,66 @@ export function DataTable<Row>({
     textAlign: column.align,
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
+  const headShape =
+    fixedLayout && !flowing
+      ? JSON.stringify(
+          columns
+            .filter((column) => column.width !== undefined)
+            .map((column) => [
+              column.id,
+              column.header,
+              Boolean(column.sortable && onSortChange),
+              Boolean(column.hideHeader),
+              Boolean(column.toggle)
+            ])
+        )
+      : "";
+  React.useLayoutEffect(() => {
+    const head = scroll.current?.querySelector("thead tr");
+    if (!headShape || !head) {
+      setHeadWidths((current) => (Object.keys(current).length ? {} : current));
+      return;
+    }
+    const ids = new Set((JSON.parse(headShape) as [string][]).map(([id]) => id));
+    let live = true;
+    const measure = () => {
+      if (!live) return;
+      const next: Record<string, number> = {};
+      for (const cell of head.querySelectorAll<HTMLTableCellElement>("th[data-column]")) {
+        const id = cell.dataset.column;
+        if (!id || !ids.has(id)) continue;
+        const probe = document.createElement("div");
+        probe.style.cssText =
+          "position:absolute;visibility:hidden;width:max-content;white-space:nowrap";
+        probe.append(...Array.from(cell.childNodes, (node) => node.cloneNode(true)));
+        cell.append(probe);
+        const style = getComputedStyle(cell);
+        next[id] = Math.ceil(
+          probe.getBoundingClientRect().width +
+            parseFloat(style.paddingLeft) +
+            parseFloat(style.paddingRight) +
+            parseFloat(style.borderLeftWidth) +
+            parseFloat(style.borderRightWidth)
+        );
+        probe.remove();
+      }
+      setHeadWidths((current) =>
+        Object.keys(next).length === Object.keys(current).length &&
+        Object.entries(next).every(([id, width]) => current[id] === width)
+          ? current
+          : next
+      );
+    };
+    measure();
+    const remeasure = () => flushSync(measure);
+    void document.fonts?.ready.then(remeasure);
+    const observer = new ResizeObserver(remeasure);
+    observer.observe(head);
+    return () => {
+      live = false;
+      observer.disconnect();
+    };
+  }, [headShape]);
   const otherGrowing = sharing
     .filter((column) => column.grow && column.id !== contentSized)
     .map((column) => column.id)
@@ -768,6 +855,56 @@ export function DataTable<Row>({
     rowIndex: number
   ) => {
     const extra = rowProps?.(row, position);
+    const restricted = getRowRestricted?.(row);
+    if (restricted)
+      return (
+        <TableRow
+          {...extra}
+          key={getRowId(row)}
+          aria-rowindex={rowIndex}
+          data-row-index={position}
+          tabIndex={position === focusRow ? -1 : extra?.tabIndex}
+          onBlur={(event) => {
+            extra?.onBlur?.(event);
+            if (position === focusRow) setFocusRow(null);
+          }}
+          data-muted=""
+          data-restricted=""
+          data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
+          style={{ height: effectiveRowHeight }}
+        >
+          {selectable && <TableCell selection pin={leading ? "start" : undefined} />}
+          {columns.map((column) => (
+            <TableCell
+              key={column.id}
+              className={column.actions ? styles.tableActions : undefined}
+              style={columnStyle(column)}
+              data-actions={column.actions || undefined}
+              data-pin={column.pin ?? column.actions}
+            >
+              {column.id === indentColumn && (
+                <CellContent
+                  shrink={column.id === shrinkColumn}
+                  secondary={undefined}
+                  depth={depth > 0 ? depth : undefined}
+                  maxWidth={column.maxWidth}
+                >
+                  <div
+                    className={styles.tablePrimary}
+                    data-depth={depth > 0 ? depth : undefined}
+                    style={{ maxWidth: column.maxWidth }}
+                  >
+                    <NameLine media={<Icon name="lock" />} title={restricted}>
+                      {restricted}
+                    </NameLine>
+                  </div>
+                </CellContent>
+              )}
+            </TableCell>
+          ))}
+          {rowActions && <TableActionsCell slots={slots} data-pin="true" />}
+        </TableRow>
+      );
     const activate = onRowActivate && (isRowActivatable?.(row) ?? true) ? onRowActivate : undefined;
     const tableRow = (
       <TableRow
@@ -813,14 +950,20 @@ export function DataTable<Row>({
         style={{ height: effectiveRowHeight }}
       >
         {selectable && (
-          <TableCell selection pin={leading ? "start" : undefined}>
-            <SelectionBox
-              label={`Select ${rowLabel(row)}`}
-              checked={selected.includes(getRowId(row))}
-              disabled={!isSelectable(row)}
-              reason={selectionDisabledReason?.(row)}
-              onToggle={() => toggle(getRowId(row))}
-            />
+          <TableCell
+            selection
+            pin={leading ? "start" : undefined}
+            data-valign={topByDefault ? "top" : undefined}
+          >
+            <TopBand top={topByDefault}>
+              <SelectionBox
+                label={`Select ${rowLabel(row)}`}
+                checked={selected.includes(getRowId(row))}
+                disabled={!isSelectable(row)}
+                reason={selectionDisabledReason?.(row)}
+                onToggle={() => toggle(getRowId(row))}
+              />
+            </TopBand>
           </TableCell>
         )}
         {columns.map((column, columnIndex) => {
@@ -857,7 +1000,7 @@ export function DataTable<Row>({
                   align={column.align}
                   title={column.text?.(row)}
                 >
-                  {column.render ? column.render(row, position) : column.text?.(row)}
+                  {cellValue(column.render ? column.render(row, position) : column.text?.(row))}
                 </CellValue>
               </div>
             </CellContent>
@@ -873,29 +1016,38 @@ export function DataTable<Row>({
               data-pin={column.pin ?? column.actions}
               data-wrap={column.wrap || undefined}
               data-secondary={column.secondary ? true : undefined}
+              data-valign={topAligned(column) ? "top" : undefined}
               data-row-interactive={column.actions || column.toggle || edit ? true : undefined}
             >
-              {reorder && columnIndex === 0 ? (
-                <div className={styles.tableSortCell}>
-                  {rowHandle(row)}
-                  {content}
-                </div>
-              ) : (
-                content
-              )}
+              <TopBand top={topAligned(column)}>
+                {reorder && columnIndex === 0 ? (
+                  <div className={styles.tableSortCell}>
+                    {rowHandle(row)}
+                    {content}
+                  </div>
+                ) : (
+                  content
+                )}
+              </TopBand>
             </EditableCell>
           );
         })}
         {rowActions && (
-          <TableActionsCell slots={slots} data-pin="true">
-            <RowActions
-              lazy
-              label={rowLabel(row)}
-              inline={rowInline(row)}
-              menu={rowActions.renderMenu?.(row)}
-              menuLabel={rowActions.menuLabel}
-              menuDisabledReason={rowActions.menuDisabledReason?.(row)}
-            />
+          <TableActionsCell
+            slots={slots}
+            data-pin="true"
+            data-valign={topByDefault ? "top" : undefined}
+          >
+            <TopBand top={topByDefault}>
+              <RowActions
+                lazy
+                label={rowLabel(row)}
+                inline={rowInline(row)}
+                menu={rowActions.renderMenu?.(row)}
+                menuLabel={rowActions.menuLabel}
+                menuDisabledReason={rowActions.menuDisabledReason?.(row)}
+              />
+            </TopBand>
           </TableActionsCell>
         )}
       </TableRow>
@@ -947,7 +1099,7 @@ export function DataTable<Row>({
             : undefined
         }
       >
-        <TableHeader>
+        <TableHeader data-hidden={headerHidden || undefined}>
           <TableRow>
             {selectable && (
               <TableHead selection pin={leading ? "start" : undefined}>
@@ -1193,6 +1345,9 @@ export function DataTable<Row>({
     </div>
   );
 }
+function TopBand({ top, children }: { top: boolean; children: React.ReactNode }) {
+  return top ? <div className={styles.tableBand}>{children}</div> : children;
+}
 function CellValue({
   badges,
   wrap,
@@ -1218,6 +1373,10 @@ function CellValue({
       {children}
     </NameLine>
   );
+}
+
+function cellValue(value: React.ReactNode) {
+  return value === undefined || value === null || value === "" ? <EmptyValue /> : value;
 }
 
 function CellContent({
@@ -1256,7 +1415,7 @@ function CellContent({
 export function EnvMark({ present, env }: { present: boolean; env?: string }) {
   return (
     <span aria-label={`${env ?? "Environment"}: ${present ? "present" : "missing"}`}>
-      {present ? "✓" : "−"}
+      {present ? "✓" : EMPTY_VALUE}
     </span>
   );
 }
@@ -1305,8 +1464,7 @@ function ToggleCell<Row>({
   if (toggle.absent?.(row))
     return (
       <span className={styles.tableToggleAbsent} data-slot="table-toggle-absent">
-        <span aria-hidden>−</span>
-        <span className={styles.sr}>{`${label}: not applicable`}</span>
+        <EmptyValue label={`${label}: not applicable`} />
       </span>
     );
   const reason = toggle.disabledReason?.(row);

@@ -1,23 +1,33 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
+import { isDev } from "../lib/dev";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
 import { cn } from "../lib/utils";
 import { Icon, type IconSource } from "./icon";
 import type { FieldWidth } from "./input";
 import { useMenuInset } from "./menu-inset";
+import { Tooltip } from "./tooltip";
 
 import controlStyles from "./controls.module.css";
 import menu from "./menu.module.css";
 import picker from "./picker.module.css";
 
-const SelectSettingsContext = React.createContext<{
-  wrap: boolean;
-  descriptionLayout: "inline" | "stacked";
-}>({ wrap: false, descriptionLayout: "inline" });
+const SelectSettingsContext = React.createContext<{ wrap: boolean }>({ wrap: false });
+
+let descriptionLayoutWarned = false;
+function useDescriptionLayoutWarning(descriptionLayout: unknown) {
+  React.useEffect(() => {
+    if (!isDev || descriptionLayout === undefined || descriptionLayoutWarned) return;
+    descriptionLayoutWarned = true;
+    console.warn(
+      "Select: descriptionLayout is deprecated and ignored. Descriptions always stack under the label. Pass short values such as a count, region or version as meta instead."
+    );
+  }, [descriptionLayout]);
+}
 
 function titleIfTruncated(element: HTMLElement | null | undefined) {
   if (!element) return;
@@ -32,14 +42,27 @@ const SelectNameContext = React.createContext<{
   "aria-labelledby"?: string;
 }>({});
 
+const SelectRootContext = React.createContext<{
+  open: boolean;
+  disabledReason?: string;
+  setTriggerReason?: (reason: string | undefined) => void;
+}>({
+  open: false
+});
+
 export type SelectOption = {
   value: string;
   label: string;
+  /** Prose under the label, such as what a role allows. It wraps in full. */
   description?: string;
+  /** A short value after the label on the same line, such as a count, region or version. It stays in the menu row, not the trigger, and the label truncates before it does. A string, like ComboboxOption's, so one options array serves both. */
+  meta?: string;
   disabled?: boolean;
   group?: string;
   /** A Badge after the label, in the menu row and in the trigger while this option is selected, such as "Current". */
   badge?: React.ReactNode;
+  /** A logo or image before the label, sized like an icon, in the menu row and in the trigger while this option is selected. It never shrinks; the label truncates first. */
+  media?: React.ReactNode;
 };
 function Select({
   options,
@@ -52,7 +75,12 @@ function Select({
   menuWidth,
   icon,
   wrap,
-  descriptionLayout = "inline",
+  descriptionLayout,
+  disabledReason,
+  disabled,
+  open: openProp,
+  defaultOpen,
+  onOpenChange,
   onChange,
   onValueChange,
   children,
@@ -75,73 +103,93 @@ function Select({
   icon?: IconSource;
   /** Wrap long option labels in the list instead of truncating them. The trigger stays on one line. */
   wrap?: boolean;
-  /** inline puts an option's description after its label on one line; stacked puts it on the lines below, wrapping in full, for descriptions longer than a few words such as what a role allows. */
+  /** @deprecated Ignored. Descriptions always stack under the label; pass short values such as a count, region or version as an option's `meta`. */
   descriptionLayout?: "inline" | "stacked";
+  /** Blocks choosing and says why: the trigger looks disabled but stays focusable, shows the reason in a tooltip on hover and focus, and exposes it as the accessible description. */
+  disabledReason?: string;
   onChange?: (value: string) => void;
   id?: string;
   "aria-describedby"?: string;
   "aria-label"?: string;
   "aria-labelledby"?: string;
 }) {
+  useDescriptionLayoutWarning(descriptionLayout);
   const groups = [...new Set(options?.map((option) => option.group ?? ""))];
+  const [localOpen, setLocalOpen] = React.useState(defaultOpen ?? false);
+  const [triggerReason, setTriggerReason] = React.useState<string>();
+  const reason = disabledReason || triggerReason || undefined;
+  if (reason && localOpen) setLocalOpen(false);
+  const open = !reason && (openProp ?? localOpen);
   return (
     <SelectPrimitive.Root
       data-slot="select"
+      open={open}
+      onOpenChange={(next) => {
+        setLocalOpen(next);
+        onOpenChange?.(next);
+      }}
       onValueChange={(value) => {
+        if (reason) return;
         onValueChange?.(value);
         onChange?.(value);
       }}
+      disabled={reason ? undefined : disabled}
       {...props}
     >
-      <SelectSettingsContext value={{ wrap: wrap ?? false, descriptionLayout }}>
-        {options ? (
-          <>
-            <SelectTrigger
-              id={id}
-              size={size ?? "default"}
-              icon={icon}
-              width={width}
-              aria-label={ariaLabel ?? label}
-              aria-labelledby={labelledBy}
-              aria-describedby={describedBy}
-              aria-invalid={invalid || undefined}
-            >
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-            <SelectContent
-              align={align}
-              style={
-                menuWidth
-                  ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
-                  : undefined
-              }
-            >
-              {groups.map((group) => (
-                <SelectGroup key={group}>
-                  {group && <SelectLabel>{group}</SelectLabel>}
-                  {options
-                    .filter((option) => (option.group ?? "") === group)
-                    .map((option) => (
-                      <SelectItem
-                        key={option.value}
-                        value={option.value}
-                        disabled={option.disabled}
-                        description={option.description}
-                        badge={option.badge}
-                      >
-                        <span data-slot="select-option-label">{option.label}</span>
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              ))}
-            </SelectContent>
-          </>
-        ) : (
-          <SelectNameContext value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy }}>
-            {children}
-          </SelectNameContext>
-        )}
-      </SelectSettingsContext>
+      <SelectRootContext value={{ open, disabledReason: reason, setTriggerReason }}>
+        <SelectSettingsContext value={{ wrap: wrap ?? false }}>
+          {options ? (
+            <>
+              <SelectTrigger
+                id={id}
+                size={size ?? "default"}
+                icon={icon}
+                width={width}
+                disabledReason={disabledReason}
+                aria-label={ariaLabel ?? label}
+                aria-labelledby={labelledBy}
+                aria-describedby={describedBy}
+                aria-invalid={invalid || undefined}
+              >
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+              <SelectContent
+                align={align}
+                style={
+                  menuWidth
+                    ? { width: menuWidth, maxWidth: "var(--radix-select-content-available-width)" }
+                    : undefined
+                }
+              >
+                {groups.map((group) => (
+                  <SelectGroup key={group}>
+                    {group && <SelectLabel>{group}</SelectLabel>}
+                    {options
+                      .filter((option) => (option.group ?? "") === group)
+                      .map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          disabled={option.disabled}
+                          description={option.description}
+                          meta={option.meta}
+                          badge={option.badge}
+                          media={option.media}
+                        >
+                          <span data-slot="select-option-label">{option.label}</span>
+                        </SelectItem>
+                      ))}
+                  </SelectGroup>
+                ))}
+              </SelectContent>
+            </>
+          ) : (
+            <SelectNameContext value={{ "aria-label": ariaLabel, "aria-labelledby": labelledBy }}>
+              {children}
+            </SelectNameContext>
+          )}
+        </SelectSettingsContext>
+      </SelectRootContext>
     </SelectPrimitive.Root>
   );
 }
@@ -167,9 +215,13 @@ function SelectTrigger({
   size = "default",
   icon,
   width,
+  disabledReason,
   children,
   onPointerEnter,
   onFocus,
+  onPointerDown,
+  onClick,
+  onKeyDown,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
@@ -177,16 +229,30 @@ function SelectTrigger({
   icon?: IconSource;
   /** A fixed token width that doesn't shrink. Unset fills the row. */
   width?: FieldWidth;
+  /** Blocks choosing and says why: the trigger looks disabled but stays focusable, shows the reason in a tooltip on hover and focus, and exposes it as the accessible description. */
+  disabledReason?: string;
 } & { ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Trigger>> }) {
   const name = React.useContext(SelectNameContext);
   const fieldAttributes = useFieldControlAttributes({
     ...props,
     "aria-labelledby": props["aria-labelledby"] ?? name["aria-labelledby"]
   });
-  return (
+  const reasonId = React.useId();
+  const root = React.useContext(SelectRootContext);
+  const reason = (disabledReason ?? root.disabledReason) || undefined;
+  const { setTriggerReason } = root;
+  React.useLayoutEffect(() => {
+    if (!disabledReason || !setTriggerReason) return undefined;
+    setTriggerReason(disabledReason);
+    return () => setTriggerReason(undefined);
+  }, [disabledReason, setTriggerReason]);
+  const [tipOpen, setTipOpen] = React.useState(false);
+  if (!reason && tipOpen) setTipOpen(false);
+  const trigger = (
     <SelectPrimitive.Trigger
       ref={ref}
       data-slot="select-trigger"
+      data-state={root.open ? "open" : "closed"}
       data-size={size}
       data-width={width}
       className={cn(
@@ -212,6 +278,27 @@ function SelectTrigger({
       }}
       {...props}
       {...fieldAttributes}
+      disabled={reason ? undefined : props.disabled}
+      aria-disabled={reason ? true : props["aria-disabled"]}
+      aria-describedby={
+        [fieldAttributes["aria-describedby"], reason && reasonId].filter(Boolean).join(" ") ||
+        undefined
+      }
+      onPointerDown={(event) => {
+        onPointerDown?.(event);
+        if (reason) event.preventDefault();
+      }}
+      onClick={(event) => {
+        onClick?.(event);
+        if (reason) event.preventDefault();
+      }}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        const typeahead =
+          event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
+        if (reason && (typeahead || ["Enter", "ArrowUp", "ArrowDown"].includes(event.key)))
+          event.preventDefault();
+      }}
     >
       {icon && (
         <span className={controlStyles.leading} data-slot="select-icon">
@@ -224,12 +311,25 @@ function SelectTrigger({
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
+  return (
+    <>
+      {/* The tooltip always renders, closed and blank without a reason, so adding or removing one keeps the same trigger and its focus. */}
+      <Tooltip content={reason || " "} open={Boolean(reason) && tipOpen} onOpenChange={setTipOpen}>
+        {trigger}
+      </Tooltip>
+      {reason && (
+        <span id={reasonId} className="sr-only">
+          {reason}
+        </span>
+      )}
+    </>
+  );
 }
 SelectTrigger.displayName = "SelectTrigger";
 
 function SelectContent({
   className,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   children,
   align = "start",
   sideOffset = 4,
@@ -241,12 +341,13 @@ function SelectContent({
 }: Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>, "position"> & {
   /** Wrap long option labels instead of truncating them. Defaults to the Select's `wrap`; items can override it. */
   wrap?: boolean;
-  /** Where option descriptions go: after the label on one line, or stacked below it and wrapping in full. Defaults to the Select's descriptionLayout. */
+  /** @deprecated Ignored. Descriptions always stack under the label; pass short values such as a count, region or version as an item's `meta`. */
   descriptionLayout?: "inline" | "stacked";
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Content>>;
 }) {
   const inset = useMenuInset<HTMLDivElement>();
   const inherited = React.useContext(SelectSettingsContext);
+  useDescriptionLayoutWarning(descriptionLayout);
   return (
     <SelectPrimitive.Portal container={usePortalContainer()}>
       <SelectPrimitive.Content
@@ -263,12 +364,7 @@ function SelectContent({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport ref={inset} className={menu.inset} data-scroll-fade="y">
-          <SelectSettingsContext
-            value={{
-              wrap: wrap ?? inherited.wrap,
-              descriptionLayout: descriptionLayout ?? inherited.descriptionLayout
-            }}
-          >
+          <SelectSettingsContext value={{ wrap: wrap ?? inherited.wrap }}>
             {children}
           </SelectSettingsContext>
           <ListHighlight />
@@ -300,26 +396,34 @@ function SelectItem({
   className,
   children,
   description,
+  meta,
   badge,
+  media,
   wrap,
   onFocus,
   "aria-describedby": describedBy,
   ref,
   ...props
 }: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+  /** Prose under the label, wrapping in full. */
   description?: string;
+  /** A short value after the label on the same line, such as a count, region or version. It stays in the menu row, not the trigger, and the label truncates before it does. */
+  meta?: React.ReactNode;
   /** A Badge after the label, shown in the menu row and in the trigger while this item is selected. The label truncates before the badge does. */
   badge?: React.ReactNode;
+  /** A logo or image before the label, sized like an icon, shown in the menu row and in the trigger while this item is selected. */
+  media?: React.ReactNode;
   /** Wrap this label instead of truncating it. Defaults to the content's `wrap`. */
   wrap?: boolean;
 } & {
   ref?: React.Ref<React.ComponentRef<typeof SelectPrimitive.Item>>;
 }) {
   const descriptionId = React.useId();
+  const metaId = React.useId();
+  const hasMeta = meta != null && meta !== false && meta !== "";
   const label = React.useRef<HTMLSpanElement>(null);
   const inherited = React.useContext(SelectSettingsContext);
   const wrapped = wrap ?? inherited.wrap;
-  const stacked = inherited.descriptionLayout === "stacked" && Boolean(description);
   React.useLayoutEffect(() => {
     const node = label.current;
     if (node?.title && node.title !== node.textContent) titleIfTruncated(node);
@@ -331,10 +435,15 @@ function SelectItem({
       onPointerEnter={(event) => titleIfTruncated(event.currentTarget)}
     >
       <SelectPrimitive.ItemText>
-        {badge === undefined ? (
+        {badge === undefined && !media ? (
           children
         ) : (
           <>
+            {Boolean(media) && (
+              <span data-slot="option-media" className={cn(picker.optionMedia, "cipher-lead-line")}>
+                {media}
+              </span>
+            )}
             <span data-slot="option-text">{children}</span>
             {badge}
           </>
@@ -347,11 +456,11 @@ function SelectItem({
       ref={ref}
       data-slot="select-item"
       aria-describedby={
-        [describedBy, description ? descriptionId : undefined].filter(Boolean).join(" ") ||
+        [describedBy, description && descriptionId, hasMeta && metaId].filter(Boolean).join(" ") ||
         undefined
       }
       data-wrap={wrapped || undefined}
-      data-description={stacked ? "stacked" : undefined}
+      data-description={description ? "stacked" : undefined}
       className={cn(menu.row, picker.option, className)}
       onFocus={(event) => {
         onFocus?.(event);
@@ -359,7 +468,7 @@ function SelectItem({
       }}
       {...props}
     >
-      {stacked ? (
+      {description ? (
         <span className={menu.text}>
           {labelText}
           <span id={descriptionId} className={cn(menu.description, picker.optionDescription)}>
@@ -367,14 +476,12 @@ function SelectItem({
           </span>
         </span>
       ) : (
-        <>
-          {labelText}
-          {description && (
-            <span id={descriptionId} className={picker.optionMeta}>
-              {description}
-            </span>
-          )}
-        </>
+        labelText
+      )}
+      {hasMeta && (
+        <span id={metaId} className={picker.optionMeta}>
+          {meta}
+        </span>
       )}
       <span className={picker.optionCheck}>
         <SelectPrimitive.ItemIndicator>

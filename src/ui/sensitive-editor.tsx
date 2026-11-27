@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { useFieldControlAttributes } from "../lib/field-context";
 import { Button } from "./button";
+import { Tooltip } from "./tooltip";
 
 import geometry from "./button-geometry.module.css";
 import styles from "./data.module.css";
@@ -90,6 +91,20 @@ export function CopyButton({
       if (current === turn.current) pending.current = false;
     }
   };
+  const button = (
+    <Button
+      type="button"
+      variant="ghost"
+      className={geometry.nestedAction}
+      iconOnly={iconOnly}
+      icon={iconOnly ? (state === "copied" ? "check" : "copy") : undefined}
+      disabled={disabled}
+      loading={state === "pending"}
+      onClick={() => copy()}
+    >
+      {state === "copied" ? "Copied" : label}
+    </Button>
+  );
   return (
     <span
       className={`${styles.copy} ${styles[`copy${size}`]}`}
@@ -97,19 +112,7 @@ export function CopyButton({
       data-size={size}
       data-copy-state={state}
     >
-      <Button
-        type="button"
-        variant="ghost"
-        className={geometry.nestedAction}
-        iconOnly={iconOnly}
-        icon={iconOnly ? (state === "copied" ? "check" : "copy") : undefined}
-        title={iconOnly ? (state === "copied" ? "Copied" : label) : undefined}
-        disabled={disabled}
-        loading={state === "pending"}
-        onClick={() => copy()}
-      >
-        {state === "copied" ? "Copied" : label}
-      </Button>
+      {iconOnly ? <Tooltip content={label}>{button}</Tooltip> : button}
       <span
         role="status"
         data-copy-feedback

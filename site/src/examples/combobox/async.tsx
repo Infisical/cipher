@@ -47,7 +47,7 @@ export default function Example() {
             onChange={setValue}
             onSearch={search}
             loading={loading}
-            emptyText="No projects match"
+            noMatchText="No projects match"
             onCreate={async (query, { signal }) => {
               await new Promise((resolve) => {
                 setTimeout(resolve, 300);

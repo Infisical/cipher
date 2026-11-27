@@ -224,6 +224,14 @@
       {
         "title": "Wrapping group in a details card",
         "module": "badge/group-wrap"
+      },
+      {
+        "title": "Reason on a status",
+        "module": "badge/reason"
+      },
+      {
+        "title": "Media before the label",
+        "module": "badge/media"
       }
     ]
   },
@@ -366,6 +374,14 @@
         "module": "card/header-overflow"
       },
       {
+        "title": "Wide actions in a narrow header",
+        "module": "card/narrow-head"
+      },
+      {
+        "title": "Button group in a framed header",
+        "module": "card/band-button-group"
+      },
+      {
         "title": "Selected and choice cards",
         "module": "card/selected"
       },
@@ -456,6 +472,18 @@
       {
         "title": "Filename, terminal, line numbers and copy",
         "module": "code-block/default"
+      },
+      {
+        "title": "Go",
+        "module": "code-block/go"
+      },
+      {
+        "title": "Sensitive content with a reveal toggle",
+        "module": "code-block/sensitive"
+      },
+      {
+        "title": "Custom actions in a narrow container",
+        "module": "code-block/narrow-actions"
       }
     ]
   },
@@ -566,20 +594,44 @@
         "module": "combobox/multiple-create"
       },
       {
+        "title": "Multiple with empty text and a footer",
+        "module": "combobox/multiple-footer"
+      },
+      {
         "title": "Creation",
         "module": "combobox/creation"
+      },
+      {
+        "title": "Create in a dialog",
+        "module": "combobox/dialog-creation"
+      },
+      {
+        "title": "Create in a dialog, no options yet",
+        "module": "combobox/dialog-creation-empty"
       },
       {
         "title": "Create through your own MultiStep dialog",
         "module": "combobox/create-flow"
       },
       {
+        "title": "Empty and no-match text",
+        "module": "combobox/no-match-text"
+      },
+      {
         "title": "Async search",
         "module": "combobox/async"
       },
       {
+        "title": "Multiple with async search",
+        "module": "combobox/multiple-search"
+      },
+      {
         "title": "Free-text tags",
         "module": "combobox/tags"
+      },
+      {
+        "title": "Tags with a prefilled draft",
+        "module": "combobox/tags-draft"
       },
       {
         "title": "Secret path",
@@ -604,6 +656,14 @@
       {
         "title": "Multiple, loading",
         "module": "combobox/multiple-loading"
+      },
+      {
+        "title": "Menu alignment",
+        "module": "combobox/align"
+      },
+      {
+        "title": "Media before the label",
+        "module": "combobox/media"
       }
     ]
   },
@@ -700,6 +760,10 @@
       {
         "title": "Future dates disabled",
         "module": "date-range-picker/disabled-future"
+      },
+      {
+        "title": "With time of day: empty, set with presets and a long range",
+        "module": "date-range-picker/time"
       }
     ]
   },
@@ -732,6 +796,10 @@
       {
         "title": "Wide and narrow containers",
         "module": "detail-layout/default"
+      },
+      {
+        "title": "Secondary summaries",
+        "module": "detail-layout/secondary"
       }
     ]
   },
@@ -770,12 +838,20 @@
         "module": "dialog/body"
       },
       {
+        "title": "Fields reach the footer's edge",
+        "module": "dialog/field-width"
+      },
+      {
         "title": "Pending save and unsaved changes",
         "module": "dialog/pending"
       },
       {
         "title": "Docs link beside the title",
         "module": "dialog/title-badges"
+      },
+      {
+        "title": "Header actions",
+        "module": "dialog/header-actions"
       },
       {
         "title": "Overflowing content",
@@ -1032,6 +1108,18 @@
       {
         "title": "Exact-match text field: the chip reads is instead of contains",
         "module": "filter-bar/exact-match"
+      },
+      {
+        "title": "Key-value field: several key=value pairs in one filter",
+        "module": "filter-bar/key-value"
+      },
+      {
+        "title": "Choice fields searched on the server",
+        "module": "filter-bar/server-search"
+      },
+      {
+        "title": "Option media in rows and chips",
+        "module": "filter-bar/media"
       }
     ]
   },
@@ -1100,6 +1188,10 @@
       {
         "title": "Action blocked with a reason",
         "module": "floating-action-bar/disabled-reason"
+      },
+      {
+        "title": "Select all with a cap and loading",
+        "module": "floating-action-bar/select-all"
       }
     ]
   },
@@ -1252,6 +1344,10 @@
       {
         "title": "Disabled with a reason, beside read only",
         "module": "input/disabled-reason"
+      },
+      {
+        "title": "Error in a table cell",
+        "module": "input/cell-error"
       },
       {
         "title": "Short placeholders on narrow fields",
@@ -1414,6 +1510,10 @@
         "module": "list/notifications"
       },
       {
+        "title": "Flush rows under a DataList",
+        "module": "list/approval-step"
+      },
+      {
         "title": "DataList default and compact density",
         "module": "list/density"
       },
@@ -1426,8 +1526,16 @@
         "module": "list/long-values"
       },
       {
+        "title": "Block values in a compact list",
+        "module": "list/block-values"
+      },
+      {
         "title": "Breakdown inside a value",
         "module": "list/nested-breakdown"
+      },
+      {
+        "title": "Inline labels at a fixed width",
+        "module": "list/label-width"
       },
       {
         "title": "Refreshing in the background",
@@ -1532,6 +1640,10 @@
       {
         "title": "Empty text for a load failure",
         "module": "multi-select/load-failure"
+      },
+      {
+        "title": "Empty text and a footer",
+        "module": "multi-select/footer"
       }
     ]
   },
@@ -1568,6 +1680,30 @@
       {
         "title": "Badges after a step heading",
         "module": "multi-step/badges"
+      },
+      {
+        "title": "Six steps with long names, collapsing to the current step where the labels do not fit",
+        "module": "multi-step/six-steps"
+      },
+      {
+        "title": "Row switches at the edge of a later step",
+        "module": "multi-step/row-switch"
+      },
+      {
+        "title": "Aside layout: three short steps",
+        "module": "multi-step/aside-sparse"
+      },
+      {
+        "title": "Aside layout: five steps with docs links",
+        "module": "multi-step/aside-typical"
+      },
+      {
+        "title": "Aside layout: six steps with long names and long asides",
+        "module": "multi-step/aside-stressed"
+      },
+      {
+        "title": "Aside layout: a destination picker without a footer, then the steps",
+        "module": "multi-step/aside-picker"
       }
     ]
   },
@@ -1592,6 +1728,10 @@
       {
         "title": "Actions collapse to their glyph at 390px",
         "module": "page-header/collapsed-actions"
+      },
+      {
+        "title": "Scope above the title",
+        "module": "page-header/scope"
       }
     ]
   },
@@ -1814,6 +1954,10 @@
         "module": "select/stacked-descriptions"
       },
       {
+        "title": "Meta and description",
+        "module": "select/meta-and-description"
+      },
+      {
         "title": "Long option names",
         "module": "select/long-labels"
       },
@@ -1822,12 +1966,20 @@
         "module": "select/states"
       },
       {
+        "title": "Disabled with a reason",
+        "module": "select/disabled-reason"
+      },
+      {
         "title": "Named without a Field",
         "module": "select/accessible-name"
       },
       {
         "title": "A badge on the selected option",
         "module": "select/badge"
+      },
+      {
+        "title": "Media before the label",
+        "module": "select/media"
       }
     ]
   },
@@ -1960,6 +2112,14 @@
       {
         "title": "Tabs on the header",
         "module": "sheet/header-tabs"
+      },
+      {
+        "title": "Bulk actions with a floating action bar",
+        "module": "sheet/bulk-actions"
+      },
+      {
+        "title": "Header actions",
+        "module": "sheet/header-actions"
       }
     ]
   },
@@ -2154,6 +2314,10 @@
         "module": "table/states"
       },
       {
+        "title": "Empty values",
+        "module": "table/empty-values"
+      },
+      {
         "title": "Native Table loading rows",
         "module": "table/native-loading"
       },
@@ -2222,6 +2386,10 @@
         "module": "table/invalid-rows"
       },
       {
+        "title": "Restricted rows",
+        "module": "table/restricted-rows"
+      },
+      {
         "title": "Row props: drop targets and reorder",
         "module": "table/drop-targets"
       },
@@ -2232,6 +2400,14 @@
       {
         "title": "Wrapping text and a shrinking primary column",
         "module": "table/wrap"
+      },
+      {
+        "title": "Vertical alignment in taller rows",
+        "module": "table/valign"
+      },
+      {
+        "title": "Virtual scrolling with a secondary line",
+        "module": "table/virtual-secondary"
       },
       {
         "title": "Narrow screens",
@@ -2272,6 +2448,14 @@
       {
         "title": "Inline editable cells",
         "module": "table/editable-cells"
+      },
+      {
+        "title": "Every header hidden",
+        "module": "table/hidden-header"
+      },
+      {
+        "title": "Explicit widths are a floor: headers keep their text and the table scrolls",
+        "module": "table/fixed-widths"
       }
     ]
   },
@@ -2344,6 +2528,10 @@
       {
         "title": "Growing up to maxRows, then scrolling",
         "module": "textarea/max-rows"
+      },
+      {
+        "title": "Multi-line placeholder",
+        "module": "textarea/multiline-placeholder"
       }
     ]
   },

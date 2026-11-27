@@ -26,15 +26,20 @@ function Textarea({
   const fieldAttributes = useFieldControlAttributes(props);
   const inner = React.useRef<HTMLTextAreaElement>(null);
   React.useImperativeHandle(ref, () => inner.current as HTMLTextAreaElement);
-  const shownPlaceholder = useFittingPlaceholder(inner, placeholder, placeholderShort, {
-    truncate: true
-  });
+  const multiline = placeholder?.includes("\n") ?? false;
+  const shownPlaceholder = useFittingPlaceholder(
+    inner,
+    placeholder,
+    multiline ? undefined : placeholderShort,
+    { truncate: !multiline }
+  );
   return (
     <textarea
       ref={inner}
       data-slot="textarea"
       placeholder={shownPlaceholder}
       data-size="sm"
+      data-multiline-placeholder={multiline || undefined}
       data-mono={mono || undefined}
       data-rows={rows === undefined ? undefined : ""}
       data-max-rows={maxRows === undefined ? undefined : ""}

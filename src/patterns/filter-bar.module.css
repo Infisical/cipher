@@ -60,15 +60,51 @@
   color: var(--cipher-text2);
 }
 .value {
+  display: flex;
+  gap: 0.25em;
   min-width: 0;
   max-width: 32ch;
+  font-weight: var(--cipher-type-row-title-font-weight);
+}
+.label {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: var(--cipher-type-row-title-font-weight);
+  white-space: nowrap;
+}
+.more {
+  flex: none;
+  white-space: nowrap;
+}
+.media {
+  --cipher-lead-size: var(--cipher-action-icon-size);
+  display: inline-flex;
+  flex: none;
+  width: var(--cipher-lead-size);
+  height: var(--cipher-lead-size);
+  overflow: hidden;
+}
+.media > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .date {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--cipher-space-8);
+}
+.pairs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--cipher-space-8);
+}
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--cipher-space-8);
+  align-self: stretch;
 }

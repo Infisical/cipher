@@ -45,6 +45,7 @@
   user-select: none;
 }
 .codeBlock {
+  container: cipher-code-block / inline-size;
   width: 100%;
 }
 .codeBlock > .header {
@@ -78,6 +79,10 @@
   align-items: center;
   gap: var(--cipher-space-control-gap);
 }
+/* An empty header still needs a text line so the block's baseline sits on the header, as with a label. */
+.identity:empty::before {
+  content: "\200b" / "";
+}
 .actions {
   grid-column: 2;
   display: flex;
@@ -86,14 +91,12 @@
   justify-content: end;
   gap: var(--cipher-space-control-slot-gap);
 }
-.header > :global([data-slot="copy-button"]) {
+.actions > :global([data-slot="copy-button"]) {
   display: contents;
 }
-.header > :global([data-slot="copy-button"]) > :global(button) {
-  grid-column: -2 / -1;
-}
-.header > :global([data-slot="copy-button"]) > :global([data-copy-feedback]):not(:empty) {
-  grid-column: 1 / -1;
+.actions > :global([data-slot="copy-button"]) > :global([data-copy-feedback]):not(:empty) {
+  flex-basis: 100%;
+  text-align: end;
 }
 .customContent {
   font-family: var(--cipher-type-body-font-family);
@@ -263,16 +266,15 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-@media (max-width: 480px) {
-  .header[data-has-actions] .identity {
+@container cipher-code-block (max-width: 30rem) {
+  .header[data-has-actions] .identity,
+  .header[data-has-actions] .actions {
     grid-column: 1 / -1;
   }
-  .header .actions {
-    grid-column: 1 / 3;
+  .header[data-has-actions] .identity:empty {
+    display: none;
+  }
+  .header[data-has-actions] .actions {
     justify-content: start;
   }
-}
-
-.header[data-has-actions] {
-  grid-template-columns: minmax(0, 1fr) auto auto;
 }

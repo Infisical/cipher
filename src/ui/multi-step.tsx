@@ -25,6 +25,8 @@ import {
 } from "./dialog";
 import { Field, FieldErrors } from "./field";
 import { Icon, type IconName } from "./icon";
+import { Link } from "./link";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ProgressSteps } from "./progress";
 import { toast } from "./sonner";
 import {
@@ -71,6 +73,16 @@ export interface MultiStepStep {
   /** The final action's look when this is the last step: destructive for an irreversible submit, such as a break-glass request. */
   completeVariant?: "primary" | "destructive";
   completeIcon?: IconName;
+  /** false drops the footer on this step, Cancel, Back and the primary button with it, for a step whose own control calls next, such as a picker. The dialog or sheet still closes from its close button and Escape, and a validate message has nowhere to show, so report problems on fields or with a toast. */
+  footer?: false;
+  /** What the step is for, beside the body in layout="aside" and in an "About this step" popover when that column does not fit. The eyebrow reads "Step N · title", title defaulting to the step's. */
+  aside?: {
+    title?: string;
+    description: React.ReactNode;
+    docsHref?: string;
+    /** Defaults to "Documentation". */
+    docsLabel?: string;
+  };
 }
 
 export type StepsProps = {
@@ -147,10 +159,14 @@ export type MultiStepProps = {
   steps: readonly MultiStepStep[];
   /** view renders inside a SheetView: its meter and footer go to the view's slots, Cancel on the first step goes back, and completing returns to the parent view. */
   variant?: "dialog" | "sheet" | "page" | "view";
+  /** aside lays a dialog or sheet out as the steps rail, the step body and each step's aside. It follows the width of the dialog or sheet, not the viewport: the aside becomes a popover first, then the rail becomes the meter above the body. The sheet defaults to size xl and the dialog widens to the same width. */
+  layout?: "stack" | "aside";
   size?: React.ComponentProps<typeof SheetContent>["size"];
   title?: React.ReactNode;
   /** Right after the dialog or sheet title, such as its DocumentationLink. In a view, set badges on the SheetView. */
   badges?: React.ReactNode;
+  /** Leading media before the dialog or sheet title and description, such as a provider logo. It sits on the title's first line. */
+  media?: React.ReactNode;
   description?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -183,9 +199,11 @@ const holdsField = (node: React.ReactNode, name: string): boolean =>
 export const MultiStep = ({
   steps,
   variant = "dialog",
+  layout = "stack",
   size,
   title,
   badges,
+  media,
   description,
   open,
   defaultOpen = false,
@@ -222,6 +240,13 @@ export const MultiStep = ({
     viewport.current?.querySelector<HTMLElement>(`[data-step="${current}"]`) ??
     null;
   const moved = React.useRef(false);
+  const revealed = React.useRef<HTMLElement | null>(null);
+  const reveal = () => {
+    const target = revealed.current;
+    revealed.current = null;
+    if (target && target === document.activeElement)
+      target.scrollIntoView({ block: "nearest" });
+  };
   const reduced = useReducedMotion();
   const formId = React.useId();
   const entry = steps[current];
@@ -241,10 +266,15 @@ export const MultiStep = ({
     const step = viewport.current?.querySelector<HTMLElement>(
       `[data-step="${current}"]`,
     );
-    (
-      step?.querySelector<HTMLElement>("[data-list-target][aria-current]") ??
-      step?.querySelector<HTMLElement>(formControlSelector)
-    )?.focus();
+    const selected = step?.querySelector<HTMLElement>(
+      "[data-list-target][aria-current]",
+    );
+    revealed.current = selected ?? null;
+    if (selected) selected.focus({ preventScroll: true });
+    else
+      step
+        ?.querySelector<HTMLElement>(formControlSelector)
+        ?.focus({ preventScroll: variant !== "page" });
   }, [current]);
   const measure = React.useCallback((node: HTMLDivElement | null) => {
     if (!node) return undefined;
@@ -397,24 +427,67 @@ export const MultiStep = ({
   };
   const titled =
     variant === "page" || !single || (!title && variant !== "view");
-  const stepHead = (titled || entry.description) && (
+  const aside =
+    layout === "aside" && (variant === "dialog" || variant === "sheet");
+  const about = aside && entry.aside && (
+    <>
+      <p className={styles.eyebrow}>
+        Step {current + 1} · {entry.aside.title ?? entry.title}
+      </p>
+      <div className={styles.lede}>{entry.aside.description}</div>
+      {entry.aside.docsHref && (
+        <Link
+          href={entry.aside.docsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.docs}
+        >
+          {entry.aside.docsLabel ?? "Documentation"}
+          <Icon name="external" size={12} />
+        </Link>
+      )}
+    </>
+  );
+  const stepHead = (titled || entry.description || about) && (
     <div className={styles.stepHead}>
       {variant === "page" && !single && (
         <p className={styles.eyebrow}>
           Step {current + 1} of {steps.length}
         </p>
       )}
-      {titled &&
-        (entry.badges ? (
-          <div className={cn(styles.headingRow, helperStyles.titleWithBadges)}>
-            <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
-            <span data-slot="multi-step-badges" className={helperStyles.titleBadges}>
-              {entry.badges}
-            </span>
-          </div>
-        ) : (
-          <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
-        ))}
+      {(titled || about) && (
+        <div className={styles.headRow}>
+          {titled &&
+            (entry.badges ? (
+              <div className={cn(styles.headingRow, helperStyles.titleWithBadges)}>
+                <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+                <span data-slot="multi-step-badges" className={helperStyles.titleBadges}>
+                  {entry.badges}
+                </span>
+              </div>
+            ) : (
+              <h3 className={styles.heading}>{entry.heading ?? entry.title}</h3>
+            ))}
+          {about && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="xs"
+                  icon="info"
+                  className={styles.aboutToggle}
+                >
+                  About this step
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className={styles.about}>
+                {about}
+              </PopoverContent>
+            </Popover>
+          )}
+        </div>
+      )}
       {entry.description && <p className={styles.lede}>{entry.description}</p>}
     </div>
   );
@@ -449,6 +522,9 @@ export const MultiStep = ({
               initial="enter"
               animate="center"
               exit="leave"
+              onAnimationComplete={(definition) => {
+                if (definition === "center") reveal();
+              }}
             >
               {stepHead}
               <FieldErrors errors={fieldErrors}>
@@ -462,7 +538,7 @@ export const MultiStep = ({
       </fieldset>
     </form>
   );
-  const footer = (
+  const footer = entry.footer !== false && (
     <>
       {footerStart && (
         <div className={styles.start} {...skipAutoFocus}>
@@ -537,7 +613,7 @@ export const MultiStep = ({
           )}
           <div className={styles.card}>
             {fields}
-            <div className={styles.footer}>{footer}</div>
+            {footer && <div className={styles.footer}>{footer}</div>}
           </div>
         </div>
       </div>
@@ -545,6 +621,44 @@ export const MultiStep = ({
   const meter = single ? null : (
     <Steps steps={steps} current={current} label={label} showHeading={false} />
   );
+  const asided = steps.some((candidate) => candidate.aside);
+  const body = aside ? (
+    <div
+      className={styles.asideGrid}
+      data-rail={single ? undefined : ""}
+      data-aside={asided ? "" : undefined}
+    >
+      {!single && (
+        <div className={styles.rail}>
+          <Steps
+            steps={steps}
+            current={current}
+            label={label}
+            orientation="vertical"
+            onStepClick={busy ? undefined : move}
+          />
+        </div>
+      )}
+      {fields}
+      {asided && (
+        <aside aria-label="About this step" className={styles.aside}>
+          {about}
+        </aside>
+      )}
+    </div>
+  ) : (
+    fields
+  );
+  const meterClass = aside && !single ? styles.meter : undefined;
+  const lead = (head: React.ReactNode) =>
+    media ? (
+      <div className={styles.titleRow}>
+        <span className={cn(styles.media, "cipher-lead-block")}>{media}</span>
+        <div className={styles.titleText}>{head}</div>
+      </div>
+    ) : (
+      head
+    );
   if (variant === "view")
     return (
       <>
@@ -555,7 +669,8 @@ export const MultiStep = ({
             view.subheader,
           )}
         <SheetBody className={className}>{fields}</SheetBody>
-        {view?.footer &&
+        {footer &&
+          view?.footer &&
           createPortal(
             <SheetFooter className={styles.footer}>{footer}</SheetFooter>,
             view.footer,
@@ -566,28 +681,57 @@ export const MultiStep = ({
     return (
       <Sheet open={isOpen} onOpenChange={changeOpen}>
         {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
-        <SheetContent size={size} className={className}>
+        <SheetContent
+          size={size ?? (aside ? "xl" : undefined)}
+          className={cn(aside && styles.asideFrame, className)}
+        >
           <SheetHeader>
-            <SheetTitle badges={badges}>{title}</SheetTitle>
-            {description && <SheetDescription>{description}</SheetDescription>}
+            {lead(
+              <>
+                <SheetTitle badges={badges}>{title}</SheetTitle>
+                {description && (
+                  <SheetDescription>{description}</SheetDescription>
+                )}
+              </>,
+            )}
           </SheetHeader>
-          {meter && <SheetSubheader>{meter}</SheetSubheader>}
-          <SheetBody>{fields}</SheetBody>
-          <SheetFooter className={styles.footer}>{footer}</SheetFooter>
+          {meter && (
+            <SheetSubheader className={meterClass}>{meter}</SheetSubheader>
+          )}
+          <SheetBody>{body}</SheetBody>
+          {footer && (
+            <SheetFooter className={styles.footer}>{footer}</SheetFooter>
+          )}
         </SheetContent>
       </Sheet>
     );
   return (
     <Dialog open={isOpen} onOpenChange={changeOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className={className}>
+      <DialogContent
+        className={cn(
+          aside && styles.asideFrame,
+          aside && styles.asideDialog,
+          className,
+        )}
+      >
         <DialogHeader>
-          <DialogTitle badges={badges}>{title}</DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
+          {lead(
+            <>
+              <DialogTitle badges={badges}>{title}</DialogTitle>
+              {description && (
+                <DialogDescription>{description}</DialogDescription>
+              )}
+            </>,
+          )}
         </DialogHeader>
-        {meter && <DialogSubheader>{meter}</DialogSubheader>}
-        {fields}
-        <DialogFooter className={styles.footer}>{footer}</DialogFooter>
+        {meter && (
+          <DialogSubheader className={meterClass}>{meter}</DialogSubheader>
+        )}
+        {body}
+        {footer && (
+          <DialogFooter className={styles.footer}>{footer}</DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -10,7 +10,15 @@ import { Select } from "@infisical/cipher/ui/select";
 import { SettingsCard } from "@infisical/cipher/ui/settings-card";
 import { Switch } from "@infisical/cipher/ui/switch";
 
-const Figure = ({ caption, narrow, children }: { caption: string; narrow?: boolean; children: React.ReactNode }) => (
+const Figure = ({
+  caption,
+  narrow,
+  children
+}: {
+  caption: string;
+  narrow?: boolean;
+  children: React.ReactNode;
+}) => (
   <figure className={"m-0 flex min-w-0 flex-col gap-3 " + (narrow ? "w-full max-w-88" : "w-full")}>
     <div className="flex w-full min-w-0 flex-col items-stretch">{children}</div>
     <figcaption className="text-muted-foreground text-xs">{caption}</figcaption>
@@ -30,14 +38,19 @@ export default function Example() {
       <Figure caption="Sparse: a toggle, no footer">
         <SettingsCard
           title="Allow user signups"
-          action={<Switch aria-label="Allow user signups" checked={signups} onChange={setSignups} />}
+          action={
+            <Switch aria-label="Allow user signups" checked={signups} onChange={setSignups} />
+          }
         />
       </Figure>
       <Figure caption="Sparse: a badge and a select">
         <SettingsCard
           title={
             <>
-              Audit log retention <Badge tone="soft" size="sm">Enterprise</Badge>
+              Audit log retention{" "}
+              <Badge tone="soft" size="sm">
+                Enterprise
+              </Badge>
             </>
           }
           action={
@@ -65,7 +78,8 @@ export default function Example() {
         <SettingsCard
           title={
             <>
-              Project details <DocumentationLink href="https://infisical.com/docs" subject="Projects" />
+              Project details{" "}
+              <DocumentationLink href="https://infisical.com/docs" subject="Projects" />
             </>
           }
           action={<Button variant="outline">Copy project ID</Button>}
@@ -78,18 +92,29 @@ export default function Example() {
           </Field>
         </SettingsCard>
       </Figure>
-      <Figure caption="Stressed: long title, badge, docs link, search and three actions, narrow" narrow>
+      <Figure
+        caption="Stressed: long title, badge, docs link, search and three actions, narrow"
+        narrow
+      >
         <SettingsCard
           title={
             <>
-              {longTitle} <Badge tone="soft" size="sm">Enterprise</Badge>{" "}
+              {longTitle}{" "}
+              <Badge tone="soft" size="sm">
+                Enterprise
+              </Badge>{" "}
               <DocumentationLink href="https://infisical.com/docs" subject="Token limits" />
             </>
           }
           description="Applies to every machine identity in Acme Corporation, including the ones created by Terraform, the Kubernetes operator and the CLI."
           action={
             <>
-              <HeaderSearch label="Search rules" placeholder="Search rules" value={search} onValueChange={setSearch} />
+              <HeaderSearch
+                label="Search rules"
+                placeholder="Search rules"
+                value={search}
+                onValueChange={setSearch}
+              />
               <Button variant="outline">Export</Button>
               <Button variant="outline">Import</Button>
               <Button icon="plus">Add rule</Button>
@@ -97,6 +122,11 @@ export default function Example() {
           }
           dirty={ttl !== "86400"}
           saveLabel="Save limits"
+          actions={
+            <Button variant="outline" size="sm">
+              Reset to defaults
+            </Button>
+          }
           onSave={() => undefined}
           onDiscard={() => setTtl("86400")}
         >

@@ -1,7 +1,9 @@
 import { useState } from "react";
 
+import { Button } from "@infisical/cipher/ui/button";
 import { Field } from "@infisical/cipher/ui/field";
 import { Input } from "@infisical/cipher/ui/input";
+import { Select } from "@infisical/cipher/ui/select";
 import { SettingsCard, useAutosave } from "@infisical/cipher/ui/settings-card";
 import { toast } from "@infisical/cipher/ui/sonner";
 import { Switch } from "@infisical/cipher/ui/switch";
@@ -30,6 +32,17 @@ export default function Example() {
       await wait(1200);
       setName(next.trim());
       toast.success("Name updated");
+    }
+  });
+  const [aiModel, setAiModel] = useState("claude-sonnet");
+  const [aiEnabled, setAiEnabled] = useState(true);
+  const ai = useAutosave({
+    value: aiModel,
+    errorMessage: "Couldn't update the AI model. Try again.",
+    onSave: async (next) => {
+      await wait(1200);
+      setAiModel(next);
+      toast.success("AI model updated");
     }
   });
   const events = useAutosave({
@@ -65,6 +78,28 @@ export default function Example() {
               if (event.key === "Enter") profile.save();
               if (event.key === "Escape") profile.reset();
             }}
+          />
+        </Field>
+      </SettingsCard>
+      <SettingsCard
+        title="AI features"
+        saveStatus={ai.status}
+        hint={aiEnabled ? undefined : "AI features are off for this organization."}
+        actions={
+          <Button variant="outline" size="sm" onClick={() => setAiEnabled((enabled) => !enabled)}>
+            {aiEnabled ? "Turn off" : "Turn on"}
+          </Button>
+        }
+      >
+        <Field label="Model">
+          <Select
+            value={ai.value}
+            disabled={ai.pending || !aiEnabled}
+            onChange={(next) => ai.save(next)}
+            options={[
+              { value: "claude-sonnet", label: "Claude Sonnet" },
+              { value: "claude-opus", label: "Claude Opus" }
+            ]}
           />
         </Field>
       </SettingsCard>

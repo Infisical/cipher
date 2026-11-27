@@ -17,14 +17,20 @@ The run summary lists every changed snapshot with its pixel count. The `cipher-v
 
 ## Cut the release
 
-1. In one pull request, bump `version` in `package.json` and add the release's entry to the top of `CHANGELOG.md`, then merge it.
+1. In one pull request, bump `version` in `package.json`, then merge it. The pull request changes nothing else. Release notes publish with the tag, not in `CHANGELOG.md`, which stops at 0.1.24.
 2. Run the Release workflow with `commit` set to that merge's full sha. It builds exactly that commit, even if main has moved since, and refuses a commit that isn't on main.
 
    ```bash
    $ gh workflow run release.yml -f commit=<merge sha>
    ```
 
-3. The Showcase workflow runs when the release succeeds and publishes the source of the newest tag to GitHub Pages, so the showcase matches the package. To publish it without a release, run the Showcase workflow by hand.
+3. Right after it pushes the tag, the workflow creates the GitHub release on it with generated notes, so every tag has a release. Replace that body with the curated release notes:
+
+   ```bash
+   $ gh release edit vX.Y.Z --notes-file <notes.md>
+   ```
+
+4. The Showcase workflow runs when the release succeeds and publishes the source of the newest tag to GitHub Pages, so the showcase matches the package. To publish it without a release, run the Showcase workflow by hand.
 
 ## Publishing to npm
 

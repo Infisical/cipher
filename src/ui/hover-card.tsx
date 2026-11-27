@@ -3,7 +3,7 @@
 import * as React from "react";
 import { HoverCard as HoverCardPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { FrameScope } from "../lib/frame-context";
 import { cn } from "../lib/utils";
@@ -25,7 +25,7 @@ HoverCardTrigger.displayName = "HoverCardTrigger";
 
 function HoverCardContent({
   className,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   align = "center",
   sideOffset = 4,
   width = "default",
