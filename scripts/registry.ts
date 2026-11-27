@@ -33,13 +33,20 @@ const read = (file: string) => readFileSync(path.join(root, file), "utf8");
 const localFile = (from: string, specifier: string) => {
   if (!specifier.startsWith(".")) return undefined;
   const base = path.posix.normalize(path.posix.join(path.posix.dirname(from), specifier));
-  return [base, base + ".ts", base + ".tsx", base + ".json", base + "/index.ts", base + "/index.tsx"].find(
-    (file) => existsSync(path.join(root, file)) && !file.endsWith("/")
-  );
+  return [
+    base,
+    base + ".ts",
+    base + ".tsx",
+    base + ".json",
+    base + "/index.ts",
+    base + "/index.tsx"
+  ].find((file) => existsSync(path.join(root, file)) && !file.endsWith("/"));
 };
 const importsFrom = (file: string): string[] => {
   if (file.endsWith(".css"))
-    return [...read(file).matchAll(/@(?:import|reference)\s+["']([^"']+)["']/g)].map((match) => match[1]);
+    return [...read(file).matchAll(/@(?:import|reference)\s+["']([^"']+)["']/g)].map(
+      (match) => match[1]
+    );
   if (!/\.tsx?$/.test(file)) return [];
   const result = parseSync(file, read(file));
   if (result.errors.length) throw new Error(file + " does not parse");
@@ -47,8 +54,15 @@ const importsFrom = (file: string): string[] => {
   const collect = (node: unknown): void => {
     if (Array.isArray(node)) return node.forEach(collect);
     if (!node || typeof node !== "object") return;
-    const record = node as Record<string, unknown> & { type?: string; source?: { type?: string; value?: unknown } };
-    if (record.type === "ImportExpression" && record.source?.type === "Literal" && typeof record.source.value === "string")
+    const record = node as Record<string, unknown> & {
+      type?: string;
+      source?: { type?: string; value?: unknown };
+    };
+    if (
+      record.type === "ImportExpression" &&
+      record.source?.type === "Literal" &&
+      typeof record.source.value === "string"
+    )
       dynamic.push(record.source.value);
     Object.values(record).forEach(collect);
   };
@@ -119,8 +133,7 @@ const items: Item[] = [
   {
     name: baseItemName,
     type: "registry:base",
-    description:
-      "Cipher tokens, the Light and Dark themes, fonts, cn and scoped portal support.",
+    description: "Cipher tokens, the Light and Dark themes, fonts, cn and scoped portal support.",
     dependencies: [...baseDependencies].sort().map(declaredPackage),
     files: baseFiles
   }
@@ -144,8 +157,10 @@ const items: Item[] = [
           extras.add(local);
           collect(local);
         }
-      } else if (specifier.startsWith(".")) failures.push("Unresolved local import: " + current + " -> " + specifier);
-      else if (!["react", "react-dom"].includes(packageName(specifier))) dependencies.add(packageName(specifier));
+      } else if (specifier.startsWith("."))
+        failures.push("Unresolved local import: " + current + " -> " + specifier);
+      else if (!["react", "react-dom"].includes(packageName(specifier)))
+        dependencies.add(packageName(specifier));
     });
   };
   collect(file);
@@ -178,25 +193,19 @@ entries.forEach((item, index) =>
     json({
       $schema: "https://ui.shadcn.com/schema/registry-item.json",
       ...item,
-      files: item.files.map((entry, fileIndex) => ({ ...entry, content: portable(items[index].files[fileIndex]) }))
+      files: item.files.map((entry, fileIndex) => ({
+        ...entry,
+        content: portable(items[index].files[fileIndex])
+      }))
     })
   )
 );
 
-const existing = existsSync(out) ? readdirSync(out).filter((file) => file.endsWith(".json")) : [];
 if (check) {
-  const stale = [
-    ...[...outputs].filter(([file, text]) => !existing.includes(file) || readFileSync(path.join(out, file), "utf8") !== text).map(([file]) => file),
-    ...existing.filter((file) => !outputs.has(file))
-  ];
-  if (stale.length) {
-    process.stderr.write("Stale registry payloads in r/: " + stale.join(", ") + ". Run npm run registry.\n");
-    process.exit(1);
-  }
-  process.stdout.write("Checked " + outputs.size + " registry files in r/.\n");
-} else {
-  existing.filter((file) => !outputs.has(file)).forEach((file) => rmSync(path.join(out, file)));
-  mkdirSync(out, { recursive: true });
-  outputs.forEach((text, file) => writeFileSync(path.join(out, file), text));
-  process.stdout.write("Generated " + items.length + " registry items in r/.\n");
+  process.stdout.write("Checked " + items.length + " registry items.\n");
+  process.exit(0);
 }
+rmSync(out, { recursive: true, force: true });
+mkdirSync(out, { recursive: true });
+outputs.forEach((text, file) => writeFileSync(path.join(out, file), text));
+process.stdout.write("Generated " + items.length + " registry items in r/.\n");

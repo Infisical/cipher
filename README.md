@@ -79,7 +79,7 @@ $ npx shadcn@latest registry add "@cipher=https://raw.githubusercontent.com/Infi
 $ npx shadcn@latest add @cipher/cipher-base @cipher/button @cipher/dialog
 ```
 
-The URL pins a release. Swap in a newer tag, a commit SHA, or `main` to follow the latest. Every item depends on `@cipher/cipher-base`, which the CLI installs for you. Run `npx shadcn@latest search @cipher` to see what's available.
+The URL pins a release. Swap in a newer tag to upgrade. Only release tags carry `r/`, so a branch or a source commit doesn't serve the registry. Every item depends on `@cipher/cipher-base`, which the CLI installs for you. Run `npx shadcn@latest search @cipher` to see what's available.
 
 Files land under `src/components/cipher/` and import each other by relative path, so they don't depend on your import aliases. Import the stylesheet once, after your Tailwind entry, and wrap Cipher UI in `CipherScope`:
 

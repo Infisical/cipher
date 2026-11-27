@@ -25,7 +25,7 @@ $ npm run site
 | `src/patterns/` | Larger compositions built from components |
 | `src/lib/`, `src/hooks/` | Shared helpers and hooks |
 | `src/tokens.json` | Design tokens. `src/tokens.generated.css` is generated from it. |
-| `r/` | The shadcn registry, generated from `src/` |
+| `r/` | The shadcn registry, generated from `src/` by `npm run registry`. Not committed: the Release workflow adds it to each release tag. |
 | `site/` | The showcase. Examples live in `site/src/examples/<page>/` and pages are listed in `site/src/catalog.json`. |
 | `visual/baselines/` | Screenshot baselines for the visual tests |
 
@@ -34,16 +34,15 @@ $ npm run site
 1. Edit the source in `src/`.
 2. Add or update an example in `site/src/examples/` that shows the change.
 3. If you changed `src/tokens.json`, run `npm run tokens`.
-4. Run `npm run registry` and commit `r/` with your change.
-5. Check your work:
+4. Check your work:
 
    ```bash
    $ npm run typecheck
-   $ npm run check   # tokens.generated.css and r/ match the source, and the CSS lint passes
+   $ npm run check   # tokens.generated.css matches the source, the registry resolves, and the CSS lint passes
    $ npm run build
    ```
 
-CI runs the same checks and fails if `r/` or the generated tokens are stale.
+CI runs the same checks and fails if the generated tokens are stale or a registry item imports something it can't ship.
 
 ### Code style
 
