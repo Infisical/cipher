@@ -75,6 +75,33 @@ const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
   getComputedStyle(document.body).pointerEvents === "none";
 
+/**
+ * Whether an element of a row shows in full: inside every ancestor that clips sideways and the window, and not
+ * under a cell pinned over the scrolled columns. A sideways-scrolled table can leave a row's trigger out of view.
+ */
+const visibleInRow = (row: HTMLTableRowElement) => {
+  const pinned = [...row.cells].filter((cell) => cell.hasAttribute("data-pin"));
+  return (item: Element) => {
+    const box = item.getBoundingClientRect();
+    if (box.width === 0) return false;
+    let left = 0;
+    let right = document.documentElement.clientWidth;
+    for (let node = item.parentElement; node; node = node.parentElement) {
+      if (!/auto|scroll|hidden|clip/.test(getComputedStyle(node).overflowX)) continue;
+      const clip = node.getBoundingClientRect();
+      left = Math.max(left, clip.left);
+      right = Math.min(right, clip.right);
+    }
+    if (box.left < left - 1 || box.right > right + 1) return false;
+    const cell = item.closest("td, th");
+    if (cell?.hasAttribute("data-pin")) return true;
+    return pinned.every((pin) => {
+      const cover = pin.getBoundingClientRect();
+      return box.right <= cover.left + 1 || box.left >= cover.right - 1;
+    });
+  };
+};
+
 const ProvidedContext = React.createContext(false);
 
 function TooltipProvider({
@@ -240,8 +267,9 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
         ...row.querySelectorAll<HTMLElement>(`[${sharedAttribute}][${rowDescribedAttribute}]`)
       ].filter((item) => item.closest("tr") === row && find(item));
       if (!described.length) return false;
+      const inView = visibleInRow(row);
       attach(
-        described[0],
+        described.find(inView) ?? [...row.cells].find(inView) ?? described[0],
         described.map((item) => item.getAttribute(sharedAttribute) as string)
       );
       focusedRow = row;
@@ -324,7 +352,8 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   }, [open, activeId, rowIds, contentId]);
 
   if (!mounted) return null;
-  const entry = activeId ? store.entries.get(activeId) : undefined;
+  const entryId = rowIds?.[0] ?? activeId;
+  const entry = entryId ? store.entries.get(entryId) : undefined;
   const rowEntries = rowIds?.flatMap((id) => {
     const item = store.entries.get(id);
     return item ? [{ id, content: item.content }] : [];
@@ -343,7 +372,12 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
         <SharedAnchor handle={handle} />
       </TooltipPrimitive.Trigger>
       {entry && (
-        <TooltipContent id={contentId} side={entry.side} align={entry.align}>
+        <TooltipContent
+          id={contentId}
+          side={entry.side}
+          align={entry.align}
+          sticky={rowEntries ? "always" : undefined}
+        >
           {rowEntries ? (
             <span className={cn(menu.tooltipText, menu.tooltipLines)}>
               {rowEntries.map((item) => (

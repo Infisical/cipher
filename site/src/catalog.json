@@ -1736,6 +1736,10 @@
       {
         "title": "Scope above the title",
         "module": "page-header/scope"
+      },
+      {
+        "title": "Media on a narrow header",
+        "module": "page-header/media"
       }
     ]
   },
@@ -2416,6 +2420,10 @@
       {
         "title": "Narrow screens",
         "module": "table/narrow-screen"
+      },
+      {
+        "title": "Row tooltip with its trigger scrolled out of view",
+        "module": "table/scrolled-row-tooltip"
       },
       {
         "title": "Import review: content-sized names, a column that drops first, and an invalid row",
