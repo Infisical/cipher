@@ -1470,6 +1470,7 @@
         "@cipher/cipher-base",
         "@cipher/dropdown-menu",
         "@cipher/icon",
+        "@cipher/tooltip",
         "@cipher/top-bar"
       ],
       "dependencies": [
