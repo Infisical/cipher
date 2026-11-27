@@ -17,7 +17,7 @@ const columns: DataTableColumn<Secret>[] = [
 
 export default function Example() {
   return (
-    <Card variant="framed" title="Secrets">
+    <Card variant="framed" title="Secrets" className="w-full" flush>
       <Alert band tone="info">
         2 changes need your approval. <a href="#review">Review</a>
       </Alert>

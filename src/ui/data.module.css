@@ -1370,6 +1370,7 @@ thead[data-ground="paper"] > .nativeTableRow {
 }
 .tableScroll thead[data-ground="paper"],
 .tableShell[data-embedded] thead[data-ground="paper"],
+thead[data-ground="paper"] th:is([data-pin], .tableActions, .tableSelectionCell),
 .tableScroll thead[data-ground="paper"] th:is([data-pin], .tableActions, .tableSelectionCell) {
   background-color: var(--cipher-paper);
 }
