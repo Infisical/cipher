@@ -27,6 +27,7 @@ export default function Example() {
           </List>
           <FloatingActionBar
             count={selected.length}
+            countDetail={selected.join(", ")}
             total={rows.length}
             onSelectAll={() => setSelected(rows)}
             onClear={() => setSelected([])}
