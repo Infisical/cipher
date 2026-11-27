@@ -18,6 +18,7 @@ export default function Example() {
         <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
           <CodeBlock
             sensitive
+            sensitiveLabel="private key"
             label="private-key.pem"
             icon="file-key"
             copyLabel="Copy private key"
