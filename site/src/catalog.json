@@ -688,6 +688,10 @@
       {
         "title": "Stable height while results change",
         "module": "command-menu/stable-height"
+      },
+      {
+        "title": "Picker with a footer action and a hint",
+        "module": "command-menu/picker-footer"
       }
     ]
   },

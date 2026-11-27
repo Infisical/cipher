@@ -159,7 +159,10 @@ export function ListHighlight() {
         hovered = item;
         keyboard = false;
         yielded = false;
-      } else if (candidate && !item) hovered = null;
+      } else if (candidate && !item) {
+        hovered = null;
+        keyboard = false;
+      }
       schedule();
     };
     const leave = () => {

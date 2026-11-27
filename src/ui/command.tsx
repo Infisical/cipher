@@ -230,10 +230,37 @@ function CommandShortcut({ className, children, ref, ...props }: React.Component
 }
 CommandShortcut.displayName = "CommandShortcut";
 
+/** Pinned under CommandList as its sibling, such as a footer action or a hint. Its keys stay out of the list, so its controls are reached with Tab. */
+function CommandFooter({
+  className,
+  children,
+  onKeyDown,
+  ref,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      ref={ref}
+      data-slot="command-footer"
+      className={cn(menu.inset, menu.actionFooter, className)}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        if (event.key !== "Tab" && event.key !== "Escape") event.stopPropagation();
+      }}
+      {...props}
+    >
+      {children}
+      <ListHighlight />
+    </div>
+  );
+}
+CommandFooter.displayName = "CommandFooter";
+
 export {
   Command,
   CommandDialog,
   CommandEmpty,
+  CommandFooter,
   CommandGroup,
   CommandInput,
   CommandItem,
