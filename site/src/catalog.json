@@ -900,6 +900,10 @@
       {
         "title": "Overflowing content",
         "module": "dropdown-menu/overflow"
+      },
+      {
+        "title": "Interpolated labels",
+        "module": "dropdown-menu/interpolated"
       }
     ]
   },
