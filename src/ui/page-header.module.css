@@ -24,7 +24,7 @@
   column-gap: var(--cipher-space-24);
   min-width: 0;
 }
-.main:has(> .media) {
+.main:has(> .media:not([data-dropped])) {
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas:
     "media title actions"
@@ -36,7 +36,7 @@
     "title actions"
     "description description";
 }
-.main:has(> .media):has(> .scope) {
+.main:has(> .media:not([data-dropped])):has(> .scope) {
   grid-template-areas:
     "media scope ."
     "media title actions"
@@ -70,6 +70,9 @@
   display: inline-flex;
   width: var(--cipher-size-control-lg);
   height: var(--cipher-size-control-lg);
+}
+.media[data-dropped] {
+  display: none;
 }
 .titleLine {
   grid-area: title;
@@ -195,7 +198,7 @@
       "description"
       "actions";
   }
-  .main:has(> .media) {
+  .main:has(> .media:not([data-dropped])) {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
       "media title"
@@ -209,7 +212,7 @@
       "description"
       "actions";
   }
-  .main:has(> .media):has(> .scope) {
+  .main:has(> .media:not([data-dropped])):has(> .scope) {
     grid-template-areas:
       "media scope"
       "media title"
