@@ -510,8 +510,20 @@ a.row[href],
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
+/* A footer sits as close to its rule as option rows sit to each other: the list above drops its
+   bottom pad, and a footer that opens with an action row drops its top pad. */
+.inset[data-before-footer] {
+  padding-block-end: 0;
+}
 .actionFooter {
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.actionFooter:has(> .row:first-child) {
+  padding-block-start: 0;
+}
+.actionFooter + .actionFooter {
+  border-top: 0;
+  padding-block-start: 0;
 }
 .footerText {
   margin: 0;

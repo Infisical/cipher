@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Field } from "@infisical/cipher/ui/field";
 import { Link } from "@infisical/cipher/ui/link";
-import { MultiSelect } from "@infisical/cipher/ui/multi-select";
+import { MultiSelect, MultiSelectFooterAction } from "@infisical/cipher/ui/multi-select";
 import { Meta } from "@infisical/cipher/ui/text";
 
 const teams = [
@@ -20,10 +20,19 @@ const groups = Array.from({ length: 50 }, (_, index) => {
   return { value: name.toLowerCase().replace(" ", "-"), label: name };
 });
 
+const environments = [
+  { value: "dev", label: "Development" },
+  { value: "staging", label: "Staging" },
+  { value: "prod", label: "Production" },
+  { value: "prod-eu", label: "Production EU (Frankfurt, data residency)" }
+];
+
 export default function Example() {
   const [none, setNone] = useState<string[]>([]);
   const [some, setSome] = useState(["platform-1", "security-1"]);
   const [long, setLong] = useState<string[]>([]);
+  const [envs, setEnvs] = useState(["prod"]);
+  const [scoped, setScoped] = useState<string[]>([]);
   return (
     <div className="flex w-full max-w-sm min-w-0 flex-col gap-6">
       <Field label="Groups to sync">
@@ -65,6 +74,34 @@ export default function Example() {
                 </Link>
               </Meta>
             </p>
+          }
+        />
+      </Field>
+      <Field label="Environments">
+        <MultiSelect
+          label="Environments"
+          placeholder="All environments"
+          options={environments}
+          value={envs}
+          onChange={setEnvs}
+          footer={<MultiSelectFooterAction icon="plus">Add environment</MultiSelectFooterAction>}
+        />
+      </Field>
+      <Field label="Scoped environments">
+        <MultiSelect
+          label="Scoped environments"
+          placeholder="All environments"
+          options={environments}
+          value={scoped}
+          onChange={setScoped}
+          footer={
+            <>
+              <MultiSelectFooterAction icon="plus">Add environment</MultiSelectFooterAction>
+              <MultiSelectFooterAction icon="settings">Manage environments</MultiSelectFooterAction>
+              <p className="px-2 py-1">
+                <Meta mono={false}>New environments start with no secrets.</Meta>
+              </p>
+            </>
           }
         />
       </Field>

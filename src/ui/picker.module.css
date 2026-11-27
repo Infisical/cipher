@@ -267,6 +267,12 @@
 .createOption > .optionBox {
   --cipher-lead-size: calc(var(--cipher-size-icon) + 2 * var(--cipher-size-control-border));
 }
+.footerAction {
+  width: 100%;
+  border: 0;
+  background-color: transparent;
+  text-align: start;
+}
 .optionGlob {
   font-family: var(--cipher-font-mono);
 }

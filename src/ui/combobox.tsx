@@ -3,6 +3,7 @@ import * as React from "react";
 import { useDiscardChangesGuard } from "../hooks/use-discard-changes-guard";
 import { useDescendantFlags } from "../lib/descendant-flags";
 import { useFieldControlAttributes } from "../lib/field-context";
+import { ListHighlight } from "../lib/list-highlight";
 import { type OptionCreateHandler, useOptionCreation } from "../lib/use-option-creation";
 import { cn, titleIfClamped } from "../lib/utils";
 import { DiscardChangesAlertDialog } from "./alert-dialog";
@@ -26,7 +27,7 @@ import {
 } from "./dialog";
 import { Icon, type IconSource } from "./icon";
 import { type FieldWidth, fieldBoxFlags, fieldBoxWatch } from "./input";
-import { MultiSelect } from "./multi-select";
+import { MultiSelect, MultiSelectFooterAction } from "./multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Spinner } from "./spinner";
 import { Highlight } from "./text";
@@ -527,7 +528,10 @@ export function Combobox({
             trailing={loading ? <Spinner /> : undefined}
           />
           {!emptyCreate && (
-            <CommandList aria-busy={loading || undefined}>
+            <CommandList
+              aria-busy={loading || undefined}
+              data-before-footer={footer ? "" : undefined}
+            >
               {!onSearch && !rowCreation && <CommandEmpty>{emptyMessage}</CommandEmpty>}
               {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
                 <p role="status" data-slot="combobox-status" className={menu.empty}>
@@ -652,6 +656,7 @@ export function Combobox({
         {footer && (
           <div className={cn(menu.inset, menu.actionFooter)} data-slot="combobox-footer">
             {typeof footer === "string" ? <p className={menu.footerText}>{footer}</p> : footer}
+            <ListHighlight />
           </div>
         )}
         {error && (
@@ -732,6 +737,7 @@ export function ComboboxLabel({
 ComboboxLabel.displayName = "ComboboxLabel";
 export const ComboboxValue = ComboboxLabel;
 export const ComboboxCollection = React.Fragment;
+export const ComboboxFooterAction = MultiSelectFooterAction;
 export function ComboboxChips({
   ref,
   ...props
