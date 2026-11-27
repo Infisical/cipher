@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "inset",
+  "type": "registry:ui",
+  "registryDependencies": [
+    "@cipher/cipher-base"
+  ],
+  "files": [
+    {
+      "path": "src/components/cipher/ui/inset.tsx",
+      "type": "registry:file",
+      "target": "src/components/cipher/ui/inset.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"../lib/utils\";\n\nimport styles from \"./inset.module.css\";\n\n/**\n * A block inside a framed container (a card, sheet section or frame): tinted fill, inset padding and no border.\n * Use it for every block nested in a frame, such as a resource, a template, a summary tile or a drop target,\n * instead of a bordered Card or frame, so two frames never nest.\n */\nexport function Inset({ className, ref, ...props }: React.ComponentProps<\"div\">) {\n  return <div ref={ref} data-slot=\"inset\" className={cn(styles.inset, className)} {...props} />;\n}\nInset.displayName = \"Inset\";\n"
+    },
+    {
+      "path": "src/components/cipher/ui/inset.module.css",
+      "type": "registry:file",
+      "target": "src/components/cipher/ui/inset.module.css",
+      "content": ".inset {\n  min-width: 0;\n  padding: var(--cipher-space-surface-inset-sm);\n  border: 0;\n  border-radius: 0;\n  background: var(--cipher-tint);\n  color: var(--cipher-ink);\n}\n"
+    }
+  ]
+}
