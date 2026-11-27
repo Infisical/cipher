@@ -1,5 +1,5 @@
 import { DataTable, type DataTableColumn } from "@infisical/cipher/ui/data-table";
-import { RowLink } from "@infisical/cipher/ui/row-link";
+import { CellLink, RowLink } from "@infisical/cipher/ui/row-link";
 
 type Secret = {
   key: string;
@@ -40,9 +40,9 @@ export default function Example() {
       width: 160,
       text: (row) => row.path,
       render: (row) => (
-        <RowLink link={{ href: `/folders${row.path}` }} chevron={false} title={row.path}>
+        <CellLink link={{ href: `/folders${row.path}` }} title={row.path}>
           {row.path}
-        </RowLink>
+        </CellLink>
       )
     }
   ];
