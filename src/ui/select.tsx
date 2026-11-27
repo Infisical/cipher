@@ -514,6 +514,8 @@ SelectSeparator.displayName = "SelectSeparator";
  * Radix shows a scroll button for any overflow at all, so a list whose height lands on a fractional
  * pixel at some zoom levels gets a chevron with nothing to scroll. Radix keeps that decision
  * private, so its button stays mounted and is hidden until more than a pixel is left to scroll.
+ * A list that fits once the shown buttons give their height back hides both, because the buttons
+ * would otherwise keep a list that briefly overflowed while opening scrollable for good.
  */
 function useScrollButtonOverflow(
   edge: "start" | "end",
@@ -526,22 +528,37 @@ function useScrollButtonOverflow(
     const viewport = node?.parentElement?.querySelector<HTMLElement>(
       "[data-radix-select-viewport]"
     );
-    if (!viewport) return undefined;
+    const menu = node?.parentElement;
+    if (!viewport || !menu) return undefined;
     const update = () => {
-      const remaining =
-        edge === "start"
-          ? viewport.scrollTop
-          : viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop;
-      setOverflows(remaining > 1);
+      const buttons = Array.from(
+        menu.querySelectorAll<HTMLElement>(":scope > [data-slot^='select-scroll-']")
+      ).reduce((height, button) => height + button.offsetHeight, 0);
+      const overflow = viewport.scrollHeight - viewport.clientHeight;
+      const remaining = edge === "start" ? viewport.scrollTop : overflow - viewport.scrollTop;
+      setOverflows(overflow - buttons > 1 && remaining > 1);
+    };
+    const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
+    const observeRows = () => {
+      resize?.observe(viewport);
+      Array.from(viewport.children).forEach((child) => resize?.observe(child));
     };
     update();
+    observeRows();
+    const frame = requestAnimationFrame(update);
     viewport.addEventListener("scroll", update);
-    const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
-    resize?.observe(viewport);
-    const content = new MutationObserver(update);
+    menu.addEventListener("animationend", update);
+    menu.addEventListener("transitionend", update);
+    const content = new MutationObserver(() => {
+      observeRows();
+      update();
+    });
     content.observe(viewport, { childList: true, subtree: true, characterData: true });
     return () => {
+      cancelAnimationFrame(frame);
       viewport.removeEventListener("scroll", update);
+      menu.removeEventListener("animationend", update);
+      menu.removeEventListener("transitionend", update);
       resize?.disconnect();
       content.disconnect();
     };
