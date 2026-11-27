@@ -523,7 +523,7 @@ a.row[href],
 .actionFooter {
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
-.actionFooter:has(> .row:first-child) {
+.actionFooter:not(.actionFooter + .actionFooter):has(> .row:first-child) {
   padding-block-start: var(--cipher-space-2);
 }
 .actionFooter:has(+ .actionFooter) {
