@@ -1,4 +1,5 @@
 import { DataTable, type DataTableColumn } from "@infisical/cipher/ui/data-table";
+import { EmptyState } from "@infisical/cipher/ui/empty";
 
 type Project = {
   id: string;
@@ -71,6 +72,44 @@ export default function Example() {
           {
             "The primary column keeps size-text-min, even beside another growing column, so a narrow screen scrolls the other columns instead of squeezing names"
           }
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <DataTable
+            label="Empty projects"
+            rows={[]}
+            columns={columns}
+            getRowId={(row) => row.id}
+            rowLabel={(row) => row.name}
+            empty={<EmptyState size="sm" media="bare" icon="folder" title="No projects yet" />}
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"With no rows the column floors drop, so the empty state fits instead of scrolling"}
+        </figcaption>
+      </figure>
+      <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
+        <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
+          <DataTable
+            label="Matching projects"
+            rows={[]}
+            columns={columns}
+            getRowId={(row) => row.id}
+            rowLabel={(row) => row.name}
+            filtered
+            empty={
+              <EmptyState
+                size="sm"
+                media="bare"
+                icon="search"
+                title="No projects match these filters"
+              />
+            }
+          />
+        </div>
+        <figcaption className="text-muted-foreground text-xs">
+          {"Filtered to no matches"}
         </figcaption>
       </figure>
     </div>
