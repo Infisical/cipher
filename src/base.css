@@ -455,8 +455,9 @@
 }
 .cipher [data-slot="dialog-content"][data-has-close] [data-slot="dialog-header"],
 .cipher [data-slot="sheet-content"][data-has-close] [data-slot="sheet-header"] {
+  --cipher-header-close-clear: var(--cipher-size-nested-md);
   padding-inline-end: calc(
-    var(--cipher-dialog-pad, var(--cipher-space-overlay-inset)) + var(--cipher-size-nested-md)
+    var(--cipher-dialog-pad, var(--cipher-space-overlay-inset)) + var(--cipher-header-close-clear)
   );
 }
 /* A full-width side sheet always shows its close button, so it clears it as data-has-close does. */
@@ -469,8 +470,20 @@
   .cipher
     [data-slot="sheet-content"]:is([data-side="left"], [data-side="right"])
     [data-slot="sheet-header"] {
-    padding-inline-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-size-nested-md));
+    --cipher-header-close-clear: var(--cipher-size-nested-md);
+    padding-inline-end: calc(var(--cipher-space-overlay-inset) + var(--cipher-header-close-clear));
   }
+}
+/* The close button sits on the title line, so a tab row below a title, or below a narrow pane's
+   identity, runs to the content edge with its actions. A tabs-only header keeps the clearance
+   because the close button moves onto its tab row. */
+.cipher
+  :is(
+    [data-slot="sheet-header"][data-tabs=""],
+    [data-slot="panes"][data-narrow] [data-slot="sheet-header"][data-tabs="only"]
+  )
+  > [data-slot="sheet-header-tabs"] {
+  margin-inline-end: calc(-1 * var(--cipher-header-close-clear, 0px));
 }
 /* Overlay scroll model: when Content holds the section slots it lays out as a column with no gap.
    Dialog and Sheet pin the header and any subheader above a line rule and the footer below one,
