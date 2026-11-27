@@ -546,6 +546,11 @@ function useScrollButtonOverflow(
       content.disconnect();
     };
   }, [node, edge]);
+  React.useLayoutEffect(() => {
+    const active = document.activeElement;
+    if (overflows && active instanceof HTMLElement && node?.parentElement?.contains(active))
+      active.scrollIntoView({ block: "nearest" });
+  }, [overflows, node]);
   const attach = React.useCallback(
     (element: HTMLDivElement) => {
       setNode(element);
