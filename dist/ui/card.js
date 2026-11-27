@@ -1,0 +1,357 @@
+"use client";
+import { useDescendantFlags } from "../lib/descendant-flags.js";
+import { FrameFootSlot, FrameScope, useInFrame } from "../lib/frame-context.js";
+import { CipherLink } from "../lib/link.js";
+import { exit, spring } from "../lib/motion.js";
+import { usePresenceCount, useReportPresence } from "../lib/presence-count.js";
+import { RadioValueContext } from "../lib/radio-value-context.js";
+import { StretchedLinkContext, useStretchedLink, useStretchedLinkHost } from "../lib/stretched-link.js";
+import { useControllableState } from "../lib/use-controllable-state.js";
+import { cn } from "../lib/utils.js";
+import { EmptyScope } from "./empty.js";
+import { Badge } from "./badge.js";
+import { Icon } from "./icon.js";
+import { TooltipText } from "./tooltip.js";
+import controls_module_default from "./controls.module.js";
+import frame_module_default from "./frame.module.js";
+import row_link_module_default from "./row-link.module.js";
+import * as React from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+import { Checkbox, RadioGroup } from "radix-ui";
+// src/ui/card.tsx
+var FramedContext = React.createContext(false);
+var CardChoiceContext = React.createContext(null);
+var cardFlags = {
+	"data-has-slots": ":scope > :is([data-slot=\"card-header\"], [data-slot=\"card-content\"], [data-slot=\"card-footer\"])",
+	"data-frame-head": `:scope > .${frame_module_default.frameHead}`,
+	"data-frame-foot": `:scope > .${frame_module_default.frameFoot}:not([hidden])`
+};
+var cardWatch = {
+	subtree: false,
+	marks: { "data-before-footer": `:scope > .${controls_module_default.cardBody}:has(+ .${controls_module_default.cardFooter}:not([data-placement="frame"]))` }
+};
+var withPanelBackdrop = (children, backdrop) => {
+	let placed = false;
+	const walk = (nodes) => React.Children.map(nodes, (child) => {
+		if (placed || !React.isValidElement(child)) return child;
+		if (child.type === React.Fragment) return React.cloneElement(child, void 0, walk(child.props.children));
+		if (child.type !== CardContent || "dangerouslySetInnerHTML" in child.props) return child;
+		placed = true;
+		return React.cloneElement(child, { "data-backdrop": backdrop === void 0 ? void 0 : "" }, backdrop ?? null, child.props.children);
+	});
+	return {
+		content: walk(children),
+		placed
+	};
+};
+function Card({ className, size = "default", variant: requestedVariant = "plain", title, badges, description, hint, action, footer, footerPlacement = "inset", toolbar, flush = false, backdrop, selected, children, ref, ...props }) {
+	const convenience = title !== void 0 || badges !== void 0 || description !== void 0 || action !== void 0 || footer !== void 0 || toolbar !== void 0;
+	const inFrame = useInFrame("Card", requestedVariant);
+	const variant = inFrame ? "plain" : requestedVariant;
+	const panelBackdrop = variant !== "plain" && backdrop !== void 0;
+	const hasBody = React.Children.toArray(children).length > 0;
+	const composed = !convenience && variant !== "plain" ? withPanelBackdrop(children, backdrop) : null;
+	const [hasLink, reportLink] = useStretchedLinkHost();
+	const [choiceChecked, reportChoice] = usePresenceCount();
+	const cardRef = useDescendantFlags(cardFlags, cardWatch, ref);
+	const [foot, setFoot] = React.useState(null);
+	const [footOwner, setFootOwner] = React.useState(null);
+	const claimFoot = React.useCallback((id) => setFootOwner((owner) => owner ?? id), []);
+	const releaseFoot = React.useCallback((id) => setFootOwner((owner) => owner === id ? null : owner), []);
+	const footSlot = React.useMemo(() => ({
+		target: foot,
+		owner: footOwner,
+		claim: claimFoot,
+		release: releaseFoot
+	}), [
+		foot,
+		footOwner,
+		claimFoot,
+		releaseFoot
+	]);
+	const titleParts = React.Children.toArray(React.isValidElement(title) && title.type === React.Fragment ? title.props.children : title);
+	const firstBadge = titleParts.findIndex((part) => React.isValidElement(part) && part.type === Badge);
+	const hintText = firstBadge > 0 ? titleParts.slice(0, firstBadge) : titleParts;
+	const lastText = hintText.at(-1);
+	const trailingSpace = typeof lastText === "string" && /\s$/.test(lastText);
+	const heading = title !== void 0 && (hint ? /* @__PURE__ */ jsxs(CardTitle, {
+		"data-hint": "",
+		children: [
+			/* @__PURE__ */ jsx(TooltipText, {
+				content: hint,
+				align: "start",
+				className: frame_module_default.frameTitleHint,
+				children: trailingSpace ? [...hintText.slice(0, -1), lastText.trimEnd()] : hintText
+			}),
+			trailingSpace && " ",
+			firstBadge > 0 && titleParts.slice(firstBadge)
+		]
+	}) : /* @__PURE__ */ jsx(CardTitle, { children: title }));
+	const toolbarRow = toolbar !== void 0 && /* @__PURE__ */ jsx("div", {
+		"data-slot": "card-toolbar",
+		className: cn(controls_module_default.cardToolbar, frame_module_default.frameToolbar),
+		children: toolbar
+	});
+	const header = (title !== void 0 || badges !== void 0 || description !== void 0 || action) && /* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx("div", {
+		className: controls_module_default.cardTitleGroup,
+		children: /* @__PURE__ */ jsxs("div", {
+			className: controls_module_default.cardCopy,
+			children: [badges !== void 0 ? /* @__PURE__ */ jsxs("div", {
+				className: controls_module_default.cardTitleRow,
+				children: [heading, /* @__PURE__ */ jsx(CardBadges, { children: badges })]
+			}) : heading, description !== void 0 && /* @__PURE__ */ jsx(CardDescription, { children: description })]
+		})
+	}), action && /* @__PURE__ */ jsx(CardAction, { children: action })] });
+	return /* @__PURE__ */ jsx("div", {
+		ref: cardRef,
+		"data-slot": "card",
+		"data-stretched-link": hasLink || void 0,
+		"data-size": size,
+		"data-variant": variant,
+		"data-embedded": inFrame && requestedVariant === "framed" || void 0,
+		"data-flush": flush || void 0,
+		"data-selected": (selected ?? choiceChecked) || void 0,
+		className: cn("group/card", controls_module_default.card, variant === "plain" ? controls_module_default.cardPlain : frame_module_default.frame, className),
+		...props,
+		children: /* @__PURE__ */ jsx(StretchedLinkContext, {
+			value: reportLink,
+			children: /* @__PURE__ */ jsx(CardChoiceContext, {
+				value: reportChoice,
+				children: /* @__PURE__ */ jsx(FrameScope, {
+					framed: inFrame || variant !== "plain",
+					children: /* @__PURE__ */ jsx(EmptyScope, {
+						size: "sm",
+						fill: flush,
+						children: /* @__PURE__ */ jsx(FrameFootSlot, {
+							value: null,
+							children: /* @__PURE__ */ jsx(FramedContext, {
+								value: variant !== "plain",
+								children: convenience && variant !== "plain" && footerPlacement === "frame" ? /* @__PURE__ */ jsxs(Fragment, { children: [
+									!backdrop && header,
+									(hasBody || toolbar !== void 0 || backdrop) && /* @__PURE__ */ jsxs("div", {
+										"data-slot": "card-inset",
+										className: cn(frame_module_default.frameInset, controls_module_default.cardInset),
+										children: [backdrop, /* @__PURE__ */ jsxs(FramedContext, {
+											value: false,
+											children: [backdrop && header, (hasBody || toolbar !== void 0) && /* @__PURE__ */ jsxs(CardContent, { children: [toolbarRow, /* @__PURE__ */ jsx(FrameFootSlot, {
+												value: footer === void 0 ? footSlot : null,
+												children
+											})] })]
+										})]
+									}),
+									footer !== void 0 ? /* @__PURE__ */ jsx(CardFooter, {
+										placement: "frame",
+										children: footer
+									}) : /* @__PURE__ */ jsx(CardFooter, {
+										placement: "frame",
+										ref: setFoot,
+										hidden: !footOwner
+									})
+								] }) : convenience ? /* @__PURE__ */ jsxs(Fragment, { children: [
+									!panelBackdrop && backdrop,
+									header,
+									/* @__PURE__ */ jsxs(CardContent, {
+										"data-backdrop": panelBackdrop ? "" : void 0,
+										children: [
+											panelBackdrop && backdrop,
+											toolbarRow,
+											children
+										]
+									}),
+									footer !== void 0 && /* @__PURE__ */ jsx(CardFooter, {
+										placement: footerPlacement,
+										children: footer
+									})
+								] }) : composed ? /* @__PURE__ */ jsxs(Fragment, { children: [!composed.placed && backdrop, composed.content] }) : /* @__PURE__ */ jsxs(Fragment, { children: [backdrop, children] })
+							})
+						})
+					})
+				})
+			})
+		})
+	});
+}
+Card.displayName = "Card";
+function CardHeader({ className, ref, ...props }) {
+	const framed = React.useContext(FramedContext);
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		"data-slot": "card-header",
+		"data-framed": framed || void 0,
+		className: cn(controls_module_default.cardHeader, framed && frame_module_default.frameHead, className),
+		...props
+	});
+}
+CardHeader.displayName = "CardHeader";
+function CardTitle({ className, ref, ...props }) {
+	const framed = React.useContext(FramedContext);
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		"data-slot": "card-title",
+		className: cn(controls_module_default.cardHeading, framed && frame_module_default.frameTitle, className),
+		...props
+	});
+}
+CardTitle.displayName = "CardTitle";
+function CardBadges({ className, ref, ...props }) {
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		"data-slot": "card-badges",
+		className: cn(controls_module_default.cardBadges, className),
+		...props
+	});
+}
+CardBadges.displayName = "CardBadges";
+function CardDescription({ className, ref, ...props }) {
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		"data-slot": "card-description",
+		className: cn(controls_module_default.cardDescription, className),
+		...props
+	});
+}
+CardDescription.displayName = "CardDescription";
+function CardAction({ className, title, children, onPointerEnter, onFocus, ref, ...props }) {
+	const framed = React.useContext(FramedContext);
+	const [clipped, setClipped] = React.useState();
+	const parts = [];
+	let text = [];
+	const flush = () => {
+		if (text.length) parts.push(/* @__PURE__ */ jsx("span", { children: text.join("") }, "text-" + parts.length));
+		text = [];
+	};
+	for (const child of React.Children.toArray(children)) if (typeof child === "string" || typeof child === "number") text.push(child);
+	else {
+		flush();
+		parts.push(child);
+	}
+	flush();
+	const measure = (element) => {
+		if (title !== void 0) return;
+		const truncated = [element, ...element.querySelectorAll("*")].some((part) => part.scrollWidth > part.clientWidth);
+		setClipped(truncated ? element.textContent?.trim() || void 0 : void 0);
+	};
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		title: title ?? clipped,
+		"data-slot": "card-action",
+		className: cn(controls_module_default.cardAction, framed && frame_module_default.frameAction, className),
+		onPointerEnter: (event) => {
+			measure(event.currentTarget);
+			onPointerEnter?.(event);
+		},
+		onFocus: (event) => {
+			measure(event.currentTarget);
+			onFocus?.(event);
+		},
+		...props,
+		children: parts
+	});
+}
+CardAction.displayName = "CardAction";
+function CardContent({ className, ref, ...props }) {
+	const framed = React.useContext(FramedContext);
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		"data-slot": "card-content",
+		className: cn(controls_module_default.cardBody, framed && frame_module_default.frameInset, className),
+		...props
+	});
+}
+CardContent.displayName = "CardContent";
+function CardFooter({ className, placement = "inset", ref, ...props }) {
+	const framed = React.useContext(FramedContext);
+	const band = framed && placement === "frame";
+	return /* @__PURE__ */ jsx("div", {
+		ref,
+		"data-slot": "card-footer",
+		"data-placement": band ? "frame" : void 0,
+		className: cn(controls_module_default.cardFooter, framed && (band ? frame_module_default.frameFoot : frame_module_default.frameInset), className),
+		...props
+	});
+}
+CardFooter.displayName = "CardFooter";
+function CardLink({ className, disabled, title, children, ref, ...props }) {
+	const off = disabled ?? props.link.disabled;
+	useStretchedLink(!off);
+	if (off) return /* @__PURE__ */ jsx("span", {
+		role: "link",
+		"aria-disabled": "true",
+		title,
+		"data-slot": "card-link",
+		"data-disabled": "",
+		className: cn(row_link_module_default.cardLink, className),
+		children
+	});
+	return /* @__PURE__ */ jsx(CipherLink, {
+		ref,
+		title,
+		"data-slot": "card-link",
+		className: cn(row_link_module_default.cardLink, row_link_module_default.stretched, className),
+		...props,
+		children
+	});
+}
+/**
+* Makes the whole Card one checkbox or radio, the way CardLink makes it one link: the label is its
+* accessible name, its overlay covers the card, and the card paints itself selected while it is checked.
+*/
+function CardChoice({ className, value, checked: checkedProp, defaultChecked, onCheckedChange, disabled, children, ref, ...props }) {
+	const reduced = useReducedMotion();
+	const groupValue = React.useContext(RadioValueContext);
+	const [toggled, setToggled] = useControllableState({
+		value: checkedProp,
+		defaultValue: defaultChecked ?? false,
+		onChange: onCheckedChange
+	});
+	const radio = value !== void 0;
+	const checked = radio ? groupValue === value : toggled;
+	useStretchedLink(!disabled);
+	useReportPresence(React.useContext(CardChoiceContext), checked);
+	const state = checked ? "checked" : "unchecked";
+	const classes = cn(row_link_module_default.cardLink, row_link_module_default.cardChoice, !disabled && row_link_module_default.stretched, className);
+	const label = /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx("span", {
+		"aria-hidden": true,
+		"data-state": state,
+		className: cn(controls_module_default.choiceMark, radio ? controls_module_default.choiceCardMark : controls_module_default.cardChoiceCheck),
+		children: radio ? /* @__PURE__ */ jsx(motion.span, {
+			className: controls_module_default.radioDot,
+			initial: false,
+			animate: {
+				scale: checked || reduced ? 1 : .3,
+				opacity: checked ? 1 : 0
+			},
+			transition: checked ? spring.fast : exit.fast
+		}) : checked && /* @__PURE__ */ jsx(Icon, {
+			name: "check",
+			strokeWidth: 2
+		})
+	}), /* @__PURE__ */ jsx("span", {
+		className: row_link_module_default.cardChoiceLabel,
+		children
+	})] });
+	if (radio) return /* @__PURE__ */ jsx(RadioGroup.Item, {
+		ref,
+		"data-slot": "card-choice",
+		value,
+		disabled,
+		className: classes,
+		...props,
+		children: label
+	});
+	return /* @__PURE__ */ jsx(Checkbox.Root, {
+		ref,
+		"data-slot": "card-choice",
+		checked: toggled,
+		onCheckedChange: (next) => setToggled(next === true),
+		disabled,
+		className: classes,
+		...props,
+		children: label
+	});
+}
+CardChoice.displayName = "CardChoice";
+export { Card, CardAction, CardBadges, CardChoice, CardContent, CardDescription, CardFooter, CardHeader, CardLink, CardTitle };
+
+//# sourceMappingURL=card.js.map
