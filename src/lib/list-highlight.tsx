@@ -95,6 +95,7 @@ export function ListHighlight() {
     let hovered: HTMLElement | null = null;
     let keyboard = false;
     let inside = false;
+    let yielded = false;
     let frame = 0;
     const own = (element: Element | null) =>
       element instanceof HTMLElement && element.closest("[data-list-highlight]") === list
@@ -141,7 +142,7 @@ export function ListHighlight() {
       if (!hoverTarget && keyboard) hoverTarget = first(ACTIVE) ?? current;
       else if (!hoverTarget && inside && hovered?.isConnected && !shut(hovered))
         hoverTarget = hovered;
-      hoverTarget ??= first(SHOWN_ACTIVE);
+      if (!yielded) hoverTarget ??= first(SHOWN_ACTIVE);
       measureOne(hoverTarget, setHover);
       measureOne(hoverTarget ? null : current, setSelection);
     };
@@ -157,6 +158,7 @@ export function ListHighlight() {
       if (item && !blocked(item)) {
         hovered = item;
         keyboard = false;
+        yielded = false;
       } else if (candidate && !item) hovered = null;
       schedule();
     };
@@ -180,15 +182,15 @@ export function ListHighlight() {
       )
         return;
       keyboard = true;
+      yielded = false;
       schedule();
     };
     const focusIn = (event: FocusEvent) => {
       const candidate =
         event.target instanceof Element ? event.target.closest(LIST_HIGHLIGHT_ITEM) : null;
-      if (candidate && !own(candidate)) {
-        keyboard = false;
-        hovered = null;
-      }
+      yielded = Boolean(candidate && !own(candidate));
+      if (yielded) keyboard = false;
+      if (yielded || candidate?.matches("[data-list-item]:focus-visible")) hovered = null;
       schedule();
     };
     const focusOut = (event: FocusEvent) => {

@@ -521,6 +521,9 @@ a.row[href],
 .actionFooter:has(> .row:first-child) {
   padding-block-start: 0;
 }
+.actionFooter:has(+ .actionFooter) {
+  padding-block-end: 0;
+}
 .actionFooter + .actionFooter {
   border-top: 0;
   padding-block-start: 0;
