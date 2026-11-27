@@ -173,7 +173,7 @@ export function ListHighlight() {
       target instanceof Element &&
       target.getAttribute("aria-controls") === list.id;
     const key = (event: KeyboardEvent) => {
-      if (!KEYS.includes(event.key)) return;
+      if (yielded || !KEYS.includes(event.key)) return;
       if (
         !list.contains(document.activeElement) &&
         !list.contains(event.target as Node) &&
@@ -182,7 +182,6 @@ export function ListHighlight() {
       )
         return;
       keyboard = true;
-      yielded = false;
       schedule();
     };
     const focusIn = (event: FocusEvent) => {
