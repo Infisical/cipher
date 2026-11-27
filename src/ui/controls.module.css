@@ -1496,8 +1496,12 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   );
   border-color: color-mix(
     in oklab,
-    var(--cipher-accent) var(--cipher-toggle-pressed-line-accent),
-    var(--cipher-toggle-pressed-line-base)
+    var(--cipher-accent-2) var(--cipher-toggle-pressed-line-accent-2),
+    color-mix(
+      in oklab,
+      var(--cipher-accent) var(--cipher-toggle-pressed-line-accent),
+      var(--cipher-toggle-pressed-line-base)
+    )
   );
 }
 :not([data-indicator])
@@ -1509,8 +1513,12 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   );
   border-color: color-mix(
     in oklab,
-    var(--cipher-accent) var(--cipher-toggle-pressed-line-accent-hover),
-    var(--cipher-toggle-pressed-line-base)
+    var(--cipher-accent-2) var(--cipher-toggle-pressed-line-accent-2),
+    color-mix(
+      in oklab,
+      var(--cipher-accent) var(--cipher-toggle-pressed-line-accent-hover),
+      var(--cipher-toggle-pressed-line-base)
+    )
   );
 }
 @media (hover: hover) {
