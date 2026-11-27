@@ -18,6 +18,14 @@
   box-shadow: var(--cipher-shadow-pop);
   white-space: nowrap;
 }
+.bar[data-hosted] {
+  position: sticky;
+  left: auto;
+  flex: none;
+  width: fit-content;
+  margin-block: auto var(--cipher-space-action-bar-offset);
+  translate: none;
+}
 :global([data-slot="app-inset"])[data-action-bar-reserve] {
   padding-bottom: calc(var(--cipher-size-action-bar) + var(--cipher-space-action-bar-offset));
 }

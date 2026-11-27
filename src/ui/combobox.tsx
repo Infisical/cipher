@@ -40,6 +40,8 @@ export type ComboboxOption = {
   label: string;
   /** A glyph at the row's start, also shown in the trigger while this option is selected. Single selection only. */
   icon?: IconSource;
+  /** A logo or image at the row's start, sized like an icon, also shown in the trigger or chip while this option is selected. It never shrinks; the label truncates first. Ignored when icon is set. */
+  media?: React.ReactNode;
   /** A muted line under the label. Search matches it as well as the label. */
   description?: string;
   meta?: string;
@@ -52,7 +54,7 @@ export type ComboboxOption = {
   disabled?: boolean;
 };
 export type ComboboxCreationFormProps = {
-  /** The trimmed search text when the row was chosen, for prefilling a name. */
+  /** Always empty: the dialog opens blank rather than copying the search text into a field. */
   query: string;
   /** Give the form element this id; the dialog's submit button targets it. */
   formId: string;
@@ -99,7 +101,12 @@ type SharedComboboxProps = {
   label: string;
   id?: string;
   "aria-describedby"?: string;
+  /** Shown when there are no options at all. Defaults to "No options found". */
   emptyText?: string;
+  /** Pinned under the list, such as a note that results are capped or a link to manage the options. A string renders as a muted caption. It stays out of arrow-key navigation, so its controls are reached with Tab. */
+  footer?: React.ReactNode;
+  /** Shown when options exist but the search matches none. With onSearch, any query that returns nothing. Defaults to "No options found". */
+  noMatchText?: string;
   /** The search field's placeholder. Defaults to "Search options". */
   searchPlaceholder?: string;
   disabled?: boolean;
@@ -118,6 +125,7 @@ type SharedComboboxProps = {
   clearLabel?: string;
   /** A fixed token width that doesn't shrink. Unset fills the row. */
   width?: FieldWidth;
+  align?: "start" | "center" | "end";
   className?: string;
 };
 export type ComboboxProps = SharedComboboxProps &
@@ -137,7 +145,8 @@ export type ComboboxProps = SharedComboboxProps &
         defaultValue?: string[];
         onChange?: (value: string[]) => void;
         onValueChange?: (value: string[]) => void;
-        onSearch?: never;
+        /** Searches on the server: called with each query (and with "" when the menu closes), while options holds the results as they arrive. Chips keep the labels of options seen earlier, so include the initially selected options in options on first render. */
+        onSearch?: (query: string) => void;
         /** Only the action mode: a Create row pinned under the list, visible before anything is typed. */
         creation?: Extract<ComboboxCreation, { mode: "action" }>;
       }
@@ -151,15 +160,18 @@ export function Combobox({
     placeholder = "Select an option",
     label,
     emptyText = "No options found",
+    footer,
+    noMatchText = "No options found",
     searchPlaceholder = "Search options",
     disabled,
     invalid,
     mono,
     onCreate,
     width,
+    align = "start",
     className
   } = props;
-  const onSearch = props.multiple ? undefined : props.onSearch;
+  const { onSearch } = props;
   const loading = Boolean(props.loading);
   const creationConfig = props.multiple ? undefined : props.creation;
   const dialogCreation = creationConfig?.mode === "dialog" ? creationConfig : undefined;
@@ -201,8 +213,17 @@ export function Combobox({
       chip ?? fieldRef.current?.querySelector<HTMLButtonElement>("[data-slot=multi-select]")
     )?.focus();
   });
-  const isLocked = (value: string) =>
-    disabled || Boolean(options.find((option) => option.value === value)?.disabled);
+  const [seen, setSeen] = React.useState<readonly ComboboxOption[]>([]);
+  const visibleSelected = options.filter((option) => selected.includes(option.value));
+  if (props.multiple && onSearch && visibleSelected.some((option) => !seen.includes(option)))
+    setSeen((known) => [
+      ...known.filter((item) => !visibleSelected.some((option) => option.value === item.value)),
+      ...visibleSelected
+    ]);
+  const findSelected = (value: string) =>
+    options.find((option) => option.value === value) ??
+    (onSearch ? seen.find((option) => option.value === value) : undefined);
+  const isLocked = (value: string) => disabled || Boolean(findSelected(value)?.disabled);
   const remove = (value: string) => {
     const index = selected.indexOf(value);
     refocus.current =
@@ -252,10 +273,14 @@ export function Combobox({
     inlineCreate &&
     query.trim() &&
     !options.some((option) => option.label.toLowerCase() === query.trim().toLowerCase());
+  const emptyCreate =
+    !loading && !options.length && (!onSearch || !query.trim()) ? dialogCreation : undefined;
+  const emptyCreateRef = React.useRef<HTMLButtonElement>(null);
+  const emptyMessage = options.length || (onSearch && query.trim()) ? noMatchText : emptyText;
   const triggerRef = React.useRef<HTMLButtonElement | null>(null);
   const formId = React.useId();
   const sessionRef = React.useRef(0);
-  const [session, setSession] = React.useState<{ id: number; query: string; open: boolean }>();
+  const [session, setSession] = React.useState<{ id: number; open: boolean }>();
   const [formDirty, setFormDirty] = React.useState(false);
   const [formPending, setFormPending] = React.useState(false);
   const [formSubmitLabel, setFormSubmitLabel] = React.useState<string>();
@@ -268,7 +293,7 @@ export function Combobox({
   const guard = useDiscardChangesGuard({ isDirty: formDirty, onDiscard: closeDialog });
   const openDialog = () => {
     sessionRef.current += 1;
-    setSession({ id: sessionRef.current, query: query.trim(), open: true });
+    setSession({ id: sessionRef.current, open: true });
     setFormDirty(false);
     setFormPending(false);
     setFormSubmitLabel(undefined);
@@ -296,9 +321,15 @@ export function Combobox({
         data-clear={canClear || undefined}
       >
         {selected.map((value) => {
-          const chipLabel = options.find((option) => option.value === value)?.label ?? value;
+          const chipOption = findSelected(value);
+          const chipLabel = chipOption?.label ?? value;
           return (
             <span key={value} className={styles.chip} data-locked={isLocked(value) || undefined}>
+              {Boolean(chipOption?.media) && !chipOption?.icon && (
+                <span data-slot="option-media" className={styles.optionMedia}>
+                  {chipOption?.media}
+                </span>
+              )}
               <span title={chipLabel}>{chipLabel}</span>
               <Button
                 type="button"
@@ -333,12 +364,17 @@ export function Combobox({
           invalid={invalid}
           searchable
           searchPlaceholder={searchPlaceholder}
+          emptyText={emptyText}
+          footer={footer}
+          noMatchText={noMatchText}
           quickActions={false}
           anchorRef={fieldRef}
           open={open}
           onOpenChange={setOpen}
           closeOnFocusOutside={closeOnFocusOutside}
+          align={align}
           renderValue={selected.length ? () => null : undefined}
+          onSearch={onSearch}
           onCreate={onCreate}
           createAction={props.creation}
           createLabel={props.createLabel}
@@ -346,8 +382,7 @@ export function Combobox({
           className={className}
           onEmptyBackspace={() => {
             const last = selected[selected.length - 1];
-            if (last && !options.find((option) => option.value === last)?.disabled)
-              apply(selected.slice(0, -1));
+            if (last && !isLocked(last)) apply(selected.slice(0, -1));
           }}
         />
         {canClear && (
@@ -398,6 +433,11 @@ export function Combobox({
         {selectedOption?.icon && (
           <span className={controlStyles.leading} data-slot="combobox-icon">
             <Icon icon={selectedOption.icon} />
+          </span>
+        )}
+        {Boolean(selectedOption?.media) && !selectedOption?.icon && (
+          <span className={cn(controlStyles.leading, styles.optionMedia)} data-slot="option-media">
+            {selectedOption?.media}
           </span>
         )}
         {selectedOption?.badge === undefined ? (
@@ -456,8 +496,9 @@ export function Combobox({
       {control}
       <PopoverContent
         id={contentId}
-        align="start"
+        align={align}
         surface="menu"
+        className={styles.panelColumn}
         onFocusOutside={(event) => {
           if (!closeOnFocusOutside) event.preventDefault();
         }}
@@ -475,112 +516,144 @@ export function Combobox({
             placeholder={searchPlaceholder}
             aria-label={`Search ${label}`}
             onKeyDown={(event) => {
-              if (event.nativeEvent.isComposing || event.keyCode === 229) event.stopPropagation();
+              if (event.nativeEvent.isComposing || event.keyCode === 229) {
+                event.stopPropagation();
+                return;
+              }
+              if (!emptyCreate || event.key !== "ArrowDown") return;
+              event.preventDefault();
+              emptyCreateRef.current?.focus();
             }}
             trailing={loading ? <Spinner /> : undefined}
           />
-          <CommandList aria-busy={loading || undefined}>
-            {!onSearch && !rowCreation && <CommandEmpty>{emptyText}</CommandEmpty>}
-            {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
-              <p role="status" data-slot="combobox-status" className={menu.empty}>
-                {loading ? "Searching…" : emptyText}
-              </p>
-            )}
-            {groups.map((group) => (
-              <CommandGroup key={group} heading={group || undefined}>
-                {filtered
-                  .filter((option) => (option.group ?? "") === group)
-                  .map((option) => (
-                    <CommandItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.disabled || disabled}
-                      data-checked={selected.includes(option.value)}
-                      onSelect={() => {
-                        setPicked(option);
-                        apply([option.value]);
-                        changeOpen(false);
-                      }}
-                    >
-                      {option.icon && <Icon icon={option.icon} />}
-                      {option.description ? (
-                        <span className={menu.text}>
+          {!emptyCreate && (
+            <CommandList aria-busy={loading || undefined}>
+              {!onSearch && !rowCreation && <CommandEmpty>{emptyMessage}</CommandEmpty>}
+              {(onSearch || rowCreation) && !filtered.length && (loading || !canCreate) && (
+                <p role="status" data-slot="combobox-status" className={menu.empty}>
+                  {loading ? "Searching…" : emptyMessage}
+                </p>
+              )}
+              {groups.map((group) => (
+                <CommandGroup key={group} heading={group || undefined}>
+                  {filtered
+                    .filter((option) => (option.group ?? "") === group)
+                    .map((option) => (
+                      <CommandItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.disabled || disabled}
+                        data-checked={selected.includes(option.value)}
+                        onSelect={() => {
+                          setPicked(option);
+                          apply([option.value]);
+                          changeOpen(false);
+                        }}
+                      >
+                        {option.icon ? (
+                          <Icon icon={option.icon} />
+                        ) : (
+                          option.media && <span data-menu-icon="">{option.media}</span>
+                        )}
+                        {option.description ? (
+                          <span className={menu.text}>
+                            <span className={menu.title}>
+                              <Highlight text={option.label} query={query} />
+                            </span>
+                            <span
+                              className={menu.description}
+                              onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+                            >
+                              <Highlight text={option.description} query={query} />
+                            </span>
+                          </span>
+                        ) : (
                           <span className={menu.title}>
                             <Highlight text={option.label} query={query} />
                           </span>
-                          <span
-                            className={menu.description}
-                            onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
-                          >
-                            <Highlight text={option.description} query={query} />
-                          </span>
-                        </span>
-                      ) : (
-                        <span className={menu.title}>
-                          <Highlight text={option.label} query={query} />
-                        </span>
-                      )}
-                      {option.badge}
-                      {option.meta && <span className={menu.meta}>{option.meta}</span>}
-                    </CommandItem>
-                  ))}
-              </CommandGroup>
-            ))}
-            {canCreate && (
-              <CommandGroup>
-                <CommandItem
-                  disabled={creating || loading || disabled || Boolean(creationBlocked)}
-                  value={`create:${query}`}
-                  data-slot="combobox-create-option"
-                  data-highlight-default=""
-                  data-wrap=""
-                  className={styles.createOption}
-                  onSelect={() => {
-                    creation.create(query.trim());
-                  }}
-                >
-                  <Icon name="plus" lead />
-                  <span className={styles.optionLabel}>
-                    {creating
-                      ? "Creating…"
-                      : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
-                  </span>
-                  {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
-                </CommandItem>
-              </CommandGroup>
-            )}
-            {rowCreation && (
-              <>
-                <CommandSeparator alwaysRender />
+                        )}
+                        {option.badge}
+                        {option.meta && <span className={menu.meta}>{option.meta}</span>}
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              ))}
+              {canCreate && (
                 <CommandGroup>
                   <CommandItem
-                    value="combobox-create-dialog"
-                    data-slot="combobox-create"
-                    disabled={disabled || Boolean(creationBlocked)}
+                    disabled={creating || loading || disabled || Boolean(creationBlocked)}
+                    value={`create:${query}`}
+                    data-slot="combobox-create-option"
+                    data-highlight-default=""
+                    data-wrap=""
+                    className={styles.createOption}
                     onSelect={() => {
-                      if (rowCreation.mode === "dialog") {
-                        openDialog();
-                        return;
-                      }
-                      changeOpen(false);
-                      rowCreation.onSelect({
-                        query: query.trim(),
-                        complete: (option) => {
-                          setPicked(option);
-                          latestApply.current([option.value]);
-                        }
-                      });
+                      creation.create(query.trim());
                     }}
                   >
-                    <Icon name="plus" />
-                    <span className={menu.title}>{rowCreation.label}</span>
+                    <Icon name="plus" lead />
+                    <span className={styles.optionLabel}>
+                      {creating
+                        ? "Creating…"
+                        : (props.createLabel?.(query.trim()) ?? `Create "${query.trim()}"`)}
+                    </span>
                     {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
                   </CommandItem>
                 </CommandGroup>
-              </>
-            )}
-          </CommandList>
+              )}
+              {rowCreation && (
+                <>
+                  <CommandSeparator alwaysRender />
+                  <CommandGroup>
+                    <CommandItem
+                      value="combobox-create-dialog"
+                      data-slot="combobox-create"
+                      disabled={disabled || Boolean(creationBlocked)}
+                      onSelect={() => {
+                        if (rowCreation.mode === "dialog") {
+                          openDialog();
+                          return;
+                        }
+                        changeOpen(false);
+                        rowCreation.onSelect({
+                          query: query.trim(),
+                          complete: (option) => {
+                            setPicked(option);
+                            latestApply.current([option.value]);
+                          }
+                        });
+                      }}
+                    >
+                      <Icon name="plus" />
+                      <span className={menu.title}>{rowCreation.label}</span>
+                      {creationBlocked && <span className={menu.meta}>{creationBlocked}</span>}
+                    </CommandItem>
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          )}
         </Command>
+        {emptyCreate && (
+          <div data-slot="combobox-create-empty" className={cn(menu.empty, styles.createEmpty)}>
+            <p role="status">{emptyText}</p>
+            <Button
+              ref={emptyCreateRef}
+              variant="outline"
+              icon="plus"
+              disabled={disabled || Boolean(creationBlocked)}
+              onClick={openDialog}
+            >
+              {emptyCreate.label}
+            </Button>
+            {creationBlocked && <p>{creationBlocked}</p>}
+          </div>
+        )}
+        {footer && (
+          <div className={cn(menu.inset, menu.actionFooter)} data-slot="combobox-footer">
+            {typeof footer === "string" ? <p className={menu.footerText}>{footer}</p> : footer}
+          </div>
+        )}
         {error && (
           <p role="alert" className={styles.error}>
             {error}
@@ -611,7 +684,7 @@ export function Combobox({
               </DialogHeader>
               <React.Fragment key={session.id}>
                 {dialogCreation.renderForm({
-                  query: session.query,
+                  query: "",
                   formId,
                   complete: (option) => complete(session.id, option),
                   dismiss: guard.requestDiscard,

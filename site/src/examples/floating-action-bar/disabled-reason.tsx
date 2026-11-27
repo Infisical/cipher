@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { ActionBarScroller } from "@infisical/cipher/lib/action-bar-host";
 import { FloatingActionBar } from "@infisical/cipher/ui/floating-action-bar";
 import { List, ListRow } from "@infisical/cipher/ui/list";
 import { toast } from "@infisical/cipher/ui/sonner";
@@ -19,7 +20,7 @@ export default function Example() {
   return (
     <figure className="m-0 flex w-full min-w-0 flex-col gap-3">
       <div className="flex min-h-8 w-full min-w-0 flex-col items-stretch gap-3">
-        <div className="relative isolate h-[600px] w-full min-w-0 [transform:translateZ(0)] overflow-auto">
+        <ActionBarScroller className="flex h-[600px] w-full min-w-0 flex-col overflow-auto">
           <List
             label="Secrets"
             title="Secrets"
@@ -62,7 +63,7 @@ export default function Example() {
               }
             ]}
           />
-        </div>
+        </ActionBarScroller>
       </div>
       <figcaption className="text-muted-foreground text-xs">
         {"Copy blocked until the selection shares one environment"}

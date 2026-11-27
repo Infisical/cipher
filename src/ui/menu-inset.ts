@@ -4,7 +4,7 @@ import { useDescendantFlags } from "../lib/descendant-flags";
 
 import menu from "./menu.module.css";
 
-const leadIcon = `:is(svg, [data-menu-icon]):not(.${menu.trail})`;
+const leadIcon = `:is(svg, img, [data-menu-icon]):not(.${menu.trail})`;
 const insetFlags = {
   "data-icon-slot": `.${menu.row} > ${leadIcon}, .${menu.row}[data-inset], .${menu.label}[data-inset]`
 };

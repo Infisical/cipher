@@ -10,7 +10,8 @@
   gap: var(--cipher-space-24);
 }
 .aside,
-.main {
+.main,
+.secondary {
   display: flex;
   flex-direction: column;
   gap: var(--cipher-space-24);
@@ -26,6 +27,12 @@
     grid-template-columns: minmax(0, 1fr) var(--cipher-size-sidecar);
     grid-template-areas: "main aside";
   }
+  .columns[data-secondary] {
+    grid-template-areas:
+      "main aside"
+      "main secondary";
+    grid-template-rows: auto 1fr;
+  }
   .root[data-aside-width="narrow"] > .columns {
     grid-template-columns: minmax(0, 1fr) var(--cipher-size-pane-aside);
   }
@@ -34,6 +41,9 @@
   }
   .main {
     grid-area: main;
+  }
+  .secondary {
+    grid-area: secondary;
   }
   .aside[data-sticky] {
     position: sticky;

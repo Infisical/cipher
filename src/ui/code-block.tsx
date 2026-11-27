@@ -2,12 +2,16 @@ import * as React from "react";
 
 import { FrameScope, useInFrame } from "../lib/frame-context";
 import { cn } from "../lib/utils";
+import { Button } from "./button";
 import { Code, type CodeProps } from "./code";
 import { Icon, type IconSource } from "./icon";
 import { Json, type JsonProps, prepareJson } from "./json";
 import { MiddleTruncate } from "./middle-truncate";
+import { HIDDEN_SECRET_VALUE } from "./secret-input";
 import { CopyButton } from "./sensitive-editor";
+import { Tooltip } from "./tooltip";
 
+import geometry from "./button-geometry.module.css";
 import styles from "./code.module.css";
 import frame from "./frame.module.css";
 
@@ -21,6 +25,18 @@ export type CodeBlockProps = Omit<CodeProps, "children" | "block" | "onCopy" | "
   copyLabel?: string;
   onCopy?: (value: string) => void;
   writeClipboard?: (value: string) => Promise<void>;
+  /** Masks the content until the reveal toggle is pressed. Copy still writes the real value. */
+  sensitive?: boolean;
+};
+const textOf = (node: React.ReactNode): string => {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(textOf).join("");
+  if (!React.isValidElement<Record<string, unknown>>(node)) return "";
+  const { children, ...rest } = node.props;
+  const values = Object.entries(rest).flatMap(([key, value]) =>
+    typeof value === "string" || typeof value === "number" ? [`${key}=${value}`] : []
+  );
+  return [...values, textOf(children as React.ReactNode)].join("\u0000");
 };
 export const CodeBlock = ({
   children,
@@ -33,19 +49,25 @@ export const CodeBlock = ({
   copyLabel = "Copy code",
   onCopy,
   writeClipboard,
+  sensitive = false,
   className,
   ...props
 }: CodeBlockProps) => {
   const json =
     React.isValidElement<JsonProps>(children) && children.type === Json ? children : null;
-  const source = json
+  const shown = json
     ? prepareJson(json.props.value, json.props.redact).text
-    : (copyValue ?? code ?? (typeof children === "string" ? children : ""));
+    : (code ?? (typeof children === "string" ? children : ""));
+  const source = json ? shown : (copyValue ?? shown);
   const hasCopySource =
     Boolean(json) || copyValue !== undefined || code !== undefined || typeof children === "string";
   const embedded = useInFrame("CodeBlock");
   const labelText = typeof label === "string" ? label : undefined;
   const identityId = React.useId();
+  const revealKey = `${shown || textOf(children)}\u0000${source}`;
+  const [revealed, setRevealed] = React.useState<string | null>(null);
+  if (revealed !== null && (!sensitive || revealed !== revealKey)) setRevealed(null);
+  const masked = sensitive && revealed !== revealKey;
   return (
     <section
       data-slot="code-block"
@@ -55,7 +77,7 @@ export const CodeBlock = ({
       className={cn(!embedded && frame.frame, styles.codeBlock, className)}
     >
       <FrameScope framed>
-        {(label || actions || copyable) && (
+        {(label || actions || copyable || sensitive) && (
           <div className={styles.header} data-has-actions={Boolean(actions) || undefined}>
             <div id={identityId} className={styles.identity}>
               {icon && <Icon icon={icon} />}
@@ -67,26 +89,57 @@ export const CodeBlock = ({
                 label
               )}
             </div>
-            {actions && <div className={styles.actions}>{actions}</div>}
-            {copyable && (
-              <CopyButton
-                value={source}
-                disabled={!hasCopySource}
-                label={copyLabel}
-                iconOnly
-                onCopy={onCopy}
-                writeClipboard={writeClipboard}
-              />
+            {(actions || copyable || sensitive) && (
+              <div className={styles.actions}>
+                {actions}
+                {sensitive && (
+                  <Tooltip content={masked ? "Reveal value" : "Hide value"}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className={geometry.nestedAction}
+                      iconOnly
+                      icon={masked ? "eye" : "eye-off"}
+                      aria-pressed={!masked}
+                      onClick={() => setRevealed(masked ? revealKey : null)}
+                    >
+                      Reveal value
+                    </Button>
+                  </Tooltip>
+                )}
+                {copyable && (
+                  <CopyButton
+                    value={source}
+                    disabled={!hasCopySource}
+                    label={copyLabel}
+                    iconOnly
+                    onCopy={onCopy}
+                    writeClipboard={writeClipboard}
+                  />
+                )}
+              </div>
             )}
           </div>
         )}
         <div className={cn(frame.frameInset, styles.body)}>
-          {json ??
+          {masked ? (
+            <Code
+              block
+              {...props}
+              format="plain"
+              code={(shown || HIDDEN_SECRET_VALUE).replace(/./gu, "•")}
+              label={`${labelText ?? "Code"}, hidden`}
+              aria-hidden
+              data-masked=""
+            />
+          ) : (
+            (json ??
             (typeof children === "string" || children === undefined ? (
               <Code block code={code ?? children} label={labelText} {...props} />
             ) : (
               <div className={styles.customContent}>{children}</div>
-            ))}
+            )))
+          )}
         </div>
       </FrameScope>
     </section>

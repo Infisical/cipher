@@ -20,6 +20,7 @@
   outline: none;
 }
 .dialog {
+  --cipher-size-measure-field: 100%;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -281,4 +282,68 @@
   content: "";
   height: var(--cipher-type-title-line-height);
   margin-inline-end: calc(-1 * var(--cipher-space-6));
+}
+
+/* Header actions: at the end of the tab row or beside the title. HeaderActions collapses icon
+   actions before the tabs scroll or the title wraps, and they never shrink. Tabs and titles shrink
+   first, to half the row; their large shrink factor leaves an action that cannot collapse (no
+   icon, a trigger, or a disabled reason) to truncate only after that. */
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cipher-space-8);
+}
+.headerMain {
+  display: flex;
+  flex: 1 1000 auto;
+  flex-direction: column;
+  gap: var(--cipher-space-6);
+  min-width: 50%;
+}
+.headerTabsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+.headerTabsRow > :not(.headerActions) {
+  flex: 1 1000 auto;
+  min-width: 50%;
+}
+.headerActions {
+  display: contents;
+}
+.headerRow > .headerActions > * {
+  margin-block: calc((var(--cipher-type-title-line-height) - var(--cipher-action-height, 0px)) / 2);
+}
+.headerActions
+  > [data-cipher-button]:is(
+    :not(:has([data-button-icon])),
+    [data-layout="trigger"],
+    [data-disabled-reason]
+  ) {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.headerActions
+  > [data-cipher-button]:is(
+    :not(:has([data-button-icon])),
+    [data-layout="trigger"],
+    [data-disabled-reason]
+  )
+  > [data-press] {
+  min-width: 0;
+  overflow: hidden;
+}
+.headerActions
+  > [data-cipher-button]:is(
+    :not(:has([data-button-icon])),
+    [data-layout="trigger"],
+    [data-disabled-reason]
+  )
+  > [data-press]
+  [data-slot="button-text"] {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

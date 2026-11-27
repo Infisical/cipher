@@ -29,7 +29,7 @@ export default function Example() {
   return (
     <div className="w-full max-w-sm min-w-0">
       <Field label="Role">
-        <Select label="Role" options={roles} defaultValue="member" descriptionLayout="stacked" />
+        <Select label="Role" options={roles} defaultValue="member" />
       </Field>
     </div>
   );

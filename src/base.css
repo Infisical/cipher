@@ -715,10 +715,12 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
-.cipher [data-slot="sheet-head"] + [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:first-child {
+.cipher [data-slot="sheet-head"] ~ [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:first-child {
   padding-top: var(--cipher-space-overlay-inset);
 }
-.cipher [data-slot="sheet-scroll"] > [data-slot="sheet-body"]:last-child {
+.cipher
+  [data-slot="sheet-scroll"]
+  > [data-slot="sheet-body"]:is(:last-child, :has(+ [data-slot="floating-action-bar"]:last-child)) {
   padding-bottom: var(--cipher-space-overlay-inset);
 }
 .cipher

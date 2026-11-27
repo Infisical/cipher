@@ -47,6 +47,11 @@
           "target": "src/components/cipher/hooks/use-mobile.ts"
         },
         {
+          "path": "src/components/cipher/lib/action-bar-host.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/action-bar-host.tsx"
+        },
+        {
           "path": "src/components/cipher/lib/boot-theme-keys.ts",
           "type": "registry:file",
           "target": "src/components/cipher/lib/boot-theme-keys.ts"
@@ -80,6 +85,11 @@
           "path": "src/components/cipher/lib/frame-context.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/lib/frame-context.tsx"
+        },
+        {
+          "path": "src/components/cipher/lib/header-actions.tsx",
+          "type": "registry:file",
+          "target": "src/components/cipher/lib/header-actions.tsx"
         },
         {
           "path": "src/components/cipher/lib/hue.ts",
@@ -541,7 +551,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/cipher-base",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
@@ -551,6 +562,11 @@
           "path": "src/components/cipher/ui/avatar.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/ui/avatar.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/controls.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/controls.module.css"
         },
         {
           "path": "src/components/cipher/ui/helpers.module.css",
@@ -565,7 +581,8 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/popover"
+        "@cipher/popover",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "class-variance-authority@^0.7.1",
@@ -800,18 +817,26 @@
       "name": "code-block",
       "type": "registry:ui",
       "registryDependencies": [
+        "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/code",
         "@cipher/icon",
         "@cipher/json",
         "@cipher/middle-truncate",
-        "@cipher/sensitive-editor"
+        "@cipher/secret-input",
+        "@cipher/sensitive-editor",
+        "@cipher/tooltip"
       ],
       "files": [
         {
           "path": "src/components/cipher/ui/code-block.tsx",
           "type": "registry:file",
           "target": "src/components/cipher/ui/code-block.tsx"
+        },
+        {
+          "path": "src/components/cipher/ui/button-geometry.module.css",
+          "type": "registry:file",
+          "target": "src/components/cipher/ui/button-geometry.module.css"
         },
         {
           "path": "src/components/cipher/ui/code.module.css",
@@ -1133,6 +1158,7 @@
         "@cipher/name-line",
         "@cipher/sortable-list",
         "@cipher/table",
+        "@cipher/text",
         "@cipher/tooltip"
       ],
       "files": [
@@ -1190,6 +1216,8 @@
         "@cipher/button",
         "@cipher/calendar",
         "@cipher/cipher-base",
+        "@cipher/input",
+        "@cipher/label",
         "@cipher/popover"
       ],
       "dependencies": [
@@ -1239,7 +1267,8 @@
         "@cipher/button",
         "@cipher/cipher-base",
         "@cipher/empty",
-        "@cipher/icon"
+        "@cipher/icon",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
@@ -1966,6 +1995,8 @@
         "@cipher/dialog",
         "@cipher/field",
         "@cipher/icon",
+        "@cipher/link",
+        "@cipher/popover",
         "@cipher/progress",
         "@cipher/sheet",
         "@cipher/sonner"
@@ -2303,7 +2334,8 @@
       "registryDependencies": [
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/input"
+        "@cipher/input",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
@@ -2341,7 +2373,8 @@
       "type": "registry:ui",
       "registryDependencies": [
         "@cipher/button",
-        "@cipher/cipher-base"
+        "@cipher/cipher-base",
+        "@cipher/tooltip"
       ],
       "files": [
         {
@@ -2467,7 +2500,8 @@
         "@cipher/empty",
         "@cipher/icon",
         "@cipher/layout",
-        "@cipher/tabs"
+        "@cipher/tabs",
+        "@cipher/tooltip"
       ],
       "dependencies": [
         "radix-ui@^1.8.1"
@@ -2891,7 +2925,8 @@
         "@cipher/badge",
         "@cipher/cipher-base",
         "@cipher/icon",
-        "@cipher/spinner"
+        "@cipher/spinner",
+        "@cipher/tooltip"
       ],
       "files": [
         {

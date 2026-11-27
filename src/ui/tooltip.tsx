@@ -2,7 +2,7 @@ import * as React from "react";
 import { flushSync } from "react-dom";
 import { Slot, Tooltip as TooltipPrimitive } from "radix-ui";
 
-import { useCollisionBoundary, usePortalContainer } from "../scope";
+import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
 import { interactiveControl, RowDescriptionContext } from "../lib/row-description";
 import { cn } from "../lib/utils";
@@ -21,6 +21,10 @@ const navigationKeys = new Set([
   "End"
 ]);
 let lastNavigationKeyAt = -Infinity;
+const tapAttribute = "data-tooltip-tap";
+const tapToggles = new WeakMap<Element, () => void>();
+const tapClicks = new WeakSet<Event>();
+let tapped: Element | null = null;
 if (typeof document !== "undefined") {
   document.addEventListener(
     "keydown",
@@ -31,20 +35,52 @@ if (typeof document !== "undefined") {
   );
   document.addEventListener(
     "pointerdown",
-    () => {
+    (event) => {
       lastNavigationKeyAt = -Infinity;
+      tapped =
+        event.pointerType === "touch" && event.target instanceof Element
+          ? event.target.closest(`[${tapAttribute}]`)
+          : null;
+      if (tapped) tapToggles.get(tapped)?.();
+    },
+    true
+  );
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (tapped && event.target instanceof Node && tapped.contains(event.target)) {
+        event.preventDefault();
+        tapClicks.add(event);
+      }
+      tapped = null;
     },
     true
   );
 }
+/** Handlers the reason wrapper adds itself, so TooltipText doesn't mistake its element for a control of its own. */
+const internalHandlers = new WeakSet<object>();
+const callerHandler = (handler: unknown) =>
+  typeof handler === "function" && !internalHandlers.has(handler);
+const skipTapClick = (onClick?: React.MouseEventHandler<HTMLElement>) => {
+  const handler = (event: React.MouseEvent<HTMLElement>) => {
+    if (!tapClicks.has(event.nativeEvent)) onClick?.(event);
+  };
+  if (!onClick) internalHandlers.add(handler);
+  return handler;
+};
+/** Radix closes every open tooltip on this event when one opens; a tap opens without Radix, so it sends it itself. */
+const closeOtherTooltips = () => document.dispatchEvent(new CustomEvent("tooltip.open"));
 const focusedByKeyboard = () => performance.now() - lastNavigationKeyAt < 1000;
 const coveredByOverlay = (trigger: Element) =>
   trigger.getAttribute("aria-expanded") === "true" ||
   getComputedStyle(document.body).pointerEvents === "none";
 
+const ProvidedContext = React.createContext(false);
+
 function TooltipProvider({
   delayDuration = 200,
   disableHoverableContent = true,
+  children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
@@ -53,7 +89,18 @@ function TooltipProvider({
       delayDuration={delayDuration}
       disableHoverableContent={disableHoverableContent}
       {...props}
-    />
+    >
+      <ProvidedContext value>{children}</ProvidedContext>
+    </TooltipPrimitive.Provider>
+  );
+}
+
+/** Adds a TooltipProvider only where no ancestor has one, so the app's delay and skip-delay group still apply. */
+function EnsureTooltipProvider({ children }: { children: React.ReactNode }) {
+  return React.useContext(ProvidedContext) ? (
+    children
+  ) : (
+    <TooltipProvider>{children}</TooltipProvider>
   );
 }
 
@@ -77,6 +124,7 @@ type TriggerHandlers = Pick<
 type AnchorHandle = { ref: React.Ref<HTMLElement> | undefined; handlers: TriggerHandlers };
 
 const sharedAttribute = "data-cipher-tooltip";
+const rowDescribedAttribute = "data-row-described";
 const TooltipScopeContext = React.createContext<SharedStore | null>(null);
 
 function SharedAnchor({
@@ -96,7 +144,13 @@ function SharedAnchor({
 function SharedTooltipHost({ store }: { store: SharedStore }) {
   const [mounted, setMounted] = React.useState(false);
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [rowIds, setRowIds] = React.useState<string[] | null>(null);
   const [open, setOpen] = React.useState(false);
+  const openRef = React.useRef(open);
+  const holdOpen = React.useRef(false);
+  React.useLayoutEffect(() => {
+    openRef.current = open;
+  });
   const [, refresh] = React.useReducer((count: number) => count + 1, 0);
   const contentId = React.useId();
   const handle = React.useRef<AnchorHandle | null>(null);
@@ -116,6 +170,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
   React.useEffect(() => {
     const pressed = new WeakSet<Element>();
     let hovered: HTMLElement | null = null;
+    let focusedRow: HTMLTableRowElement | null = null;
     const run = (step: (anchor: AnchorHandle) => void) => {
       if (handle.current) step(handle.current);
       else {
@@ -125,7 +180,9 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     };
     const call = (name: keyof TriggerHandlers, event: Event | { defaultPrevented: boolean }) =>
       run((anchor) => (anchor.handlers[name] as ((event: unknown) => void) | undefined)?.(event));
-    const attach = (target: HTMLElement) => {
+    const attach = (target: HTMLElement, rows: string[] | null = null) => {
+      setRowIds(rows);
+      if (!rows) focusedRow = null;
       if (element.current === target) return;
       element.current = target;
       setActiveId(target.getAttribute(sharedAttribute));
@@ -149,11 +206,12 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       if (!coveredByOverlay(target)) pressed.delete(target);
     };
     const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
       const trigger = find(event.target);
       if (trigger !== hovered) leave(event);
       if (!trigger) return;
       hovered = trigger;
-      if (pressed.has(trigger) || event.pointerType === "touch") return;
+      if (pressed.has(trigger)) return;
       attach(trigger);
       call("onPointerMove", event);
     };
@@ -166,26 +224,75 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       const trigger = find(event.target);
       if (!trigger) return;
       pressed.add(trigger);
+      const shown = openRef.current && trigger === element.current;
       if (trigger === element.current) call("onPointerDown", event);
+      if (event.pointerType !== "touch" || !trigger.hasAttribute(tapAttribute)) return;
+      if (shown) setOpen(false);
+      else {
+        closeOtherTooltips();
+        attach(trigger);
+        run(() => setOpen(true));
+        holdOpen.current = true;
+      }
+    };
+    const showRow = (row: HTMLTableRowElement) => {
+      const described = [
+        ...row.querySelectorAll<HTMLElement>(`[${sharedAttribute}][${rowDescribedAttribute}]`)
+      ].filter((item) => item.closest("tr") === row && find(item));
+      if (!described.length) return false;
+      attach(
+        described[0],
+        described.map((item) => item.getAttribute(sharedAttribute) as string)
+      );
+      focusedRow = row;
+      return true;
     };
     const onFocusIn = (event: FocusEvent) => {
+      if (!focusedByKeyboard()) return;
       const trigger = find(event.target);
-      if (!trigger || pressed.has(trigger) || !focusedByKeyboard()) return;
-      attach(trigger);
-      call("onFocus", event);
+      if (trigger) {
+        if (pressed.has(trigger)) return;
+        attach(trigger);
+        call("onFocus", event);
+        return;
+      }
+      if (event.target instanceof HTMLTableRowElement && showRow(event.target))
+        call("onFocus", event);
     };
     const onFocusOut = (event: FocusEvent) => {
-      if (element.current && find(event.target) === element.current) call("onBlur", event);
+      if (
+        element.current &&
+        (event.target === focusedRow || find(event.target) === element.current)
+      ) {
+        focusedRow = null;
+        call("onBlur", event);
+      }
+    };
+    const onPointerCancel = () => {
+      holdOpen.current = false;
     };
     const onClick = (event: MouseEvent) => {
+      if (holdOpen.current)
+        setTimeout(() => {
+          holdOpen.current = false;
+        });
       if (element.current && find(event.target) === element.current) call("onClick", event);
     };
     store.listener = (id) => {
+      const row = focusedRow;
+      if (row)
+        queueMicrotask(() => {
+          if (focusedRow !== row || showRow(row)) return;
+          focusedRow = null;
+          setRowIds(null);
+          call("onBlur", { defaultPrevented: false });
+        });
       if (!element.current || element.current.getAttribute(sharedAttribute) !== id) return;
       if (store.entries.has(id)) {
         refresh();
         return;
       }
+      if (row) return;
       call("onPointerLeave", { defaultPrevented: false });
       element.current = null;
       setActiveId(null);
@@ -196,6 +303,7 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
     document.addEventListener("focusin", onFocusIn, true);
     document.addEventListener("focusout", onFocusOut, true);
     document.addEventListener("click", onClick, true);
+    document.addEventListener("pointercancel", onPointerCancel, true);
     return () => {
       store.listener = null;
       document.removeEventListener("pointermove", onPointerMove, true);
@@ -204,32 +312,50 @@ function SharedTooltipHost({ store }: { store: SharedStore }) {
       document.removeEventListener("focusin", onFocusIn, true);
       document.removeEventListener("focusout", onFocusOut, true);
       document.removeEventListener("click", onClick, true);
+      document.removeEventListener("pointercancel", onPointerCancel, true);
     };
   }, [store]);
 
   React.useLayoutEffect(() => {
     const target = element.current;
-    if (!open || !target || target.hasAttribute("aria-describedby")) return undefined;
+    if (!open || !target || rowIds || target.hasAttribute("aria-describedby")) return undefined;
     target.setAttribute("aria-describedby", contentId);
     return () => target.removeAttribute("aria-describedby");
-  }, [open, activeId, contentId]);
+  }, [open, activeId, rowIds, contentId]);
 
   if (!mounted) return null;
   const entry = activeId ? store.entries.get(activeId) : undefined;
+  const rowEntries = rowIds?.flatMap((id) => {
+    const item = store.entries.get(id);
+    return item ? [{ id, content: item.content }] : [];
+  });
   return (
     <TooltipPrimitive.Root
       data-slot="tooltip"
       disableHoverableContent
       open={open}
-      onOpenChange={(next) => flushSync(() => setOpen(next))}
+      onOpenChange={(next) => {
+        if (!next && holdOpen.current) return;
+        flushSync(() => setOpen(next));
+      }}
     >
       <TooltipPrimitive.Trigger asChild>
         <SharedAnchor handle={handle} />
       </TooltipPrimitive.Trigger>
       {entry && (
         <TooltipContent id={contentId} side={entry.side} align={entry.align}>
-          <span className={menu.tooltipText}>{entry.content}</span>
-          {entry.shortcut && <Kbd>{entry.shortcut}</Kbd>}
+          {rowEntries ? (
+            <span className={cn(menu.tooltipText, menu.tooltipLines)}>
+              {rowEntries.map((item) => (
+                <span key={item.id}>{item.content}</span>
+              ))}
+            </span>
+          ) : (
+            <>
+              <span className={menu.tooltipText}>{entry.content}</span>
+              {entry.shortcut && <Kbd>{entry.shortcut}</Kbd>}
+            </>
+          )}
         </TooltipContent>
       )}
     </TooltipPrimitive.Root>
@@ -258,7 +384,9 @@ function TooltipScope({ children }: { children?: React.ReactNode }) {
   return (
     <TooltipScopeContext.Provider value={store}>
       {children}
-      <SharedTooltipHost store={store} />
+      <EnsureTooltipProvider>
+        <SharedTooltipHost store={store} />
+      </EnsureTooltipProvider>
     </TooltipScopeContext.Provider>
   );
 }
@@ -269,8 +397,9 @@ function SharedTooltip({
   shortcut,
   side,
   align,
+  tap,
   children
-}: SharedEntry & { store: SharedStore; children: React.ReactElement }) {
+}: SharedEntry & { store: SharedStore; tap: boolean; children: React.ReactElement }) {
   const id = React.useId();
   React.useLayoutEffect(() => {
     store.set(id, content ? { content, shortcut, side, align } : null);
@@ -278,7 +407,8 @@ function SharedTooltip({
   React.useLayoutEffect(() => () => store.set(id, null), [store, id]);
   return content
     ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
-        [sharedAttribute]: id
+        [sharedAttribute]: id,
+        [tapAttribute]: tap ? "" : undefined
       })
     : children;
 }
@@ -290,6 +420,7 @@ function Tooltip({
   align = "center",
   wrap: _wrap,
   disableHoverableContent = true,
+  openOnTap = false,
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root> & {
@@ -299,8 +430,24 @@ function Tooltip({
   align?: TooltipAlign;
   /** @deprecated Tooltips always wrap at size-tooltip-max; this has no effect. */
   wrap?: boolean;
+  /** On a touch device a tap on the trigger toggles the tooltip, and a tap elsewhere or Escape closes it. The tap does not activate the trigger. Hover and keyboard focus are unchanged. */
+  openOnTap?: boolean;
 }) {
   const store = React.useContext(TooltipScopeContext);
+  const [tapOpen, setTapOpen] = React.useState(props.defaultOpen ?? false);
+  const tapOpenRef = React.useRef(tapOpen);
+  React.useLayoutEffect(() => {
+    tapOpenRef.current = tapOpen;
+  });
+  const tap = openOnTap && props.open === undefined;
+  const changeTapOpen = (next: boolean) => {
+    setTapOpen(next);
+    props.onOpenChange?.(next);
+  };
+  const trigger =
+    openOnTap && React.isValidElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>(children)
+      ? React.cloneElement(children, { onClick: skipTapClick(children.props.onClick) })
+      : children;
   if (
     store &&
     disableHoverableContent &&
@@ -311,19 +458,44 @@ function Tooltip({
     React.isValidElement(children)
   )
     return (
-      <SharedTooltip store={store} content={content} shortcut={shortcut} side={side} align={align}>
-        {children}
+      <SharedTooltip
+        store={store}
+        content={content}
+        shortcut={shortcut}
+        side={side}
+        align={align}
+        tap={openOnTap}
+      >
+        {trigger as React.ReactElement}
       </SharedTooltip>
     );
-  return (
+  const tooltip = (
     <TooltipPrimitive.Root
       data-slot="tooltip"
       disableHoverableContent={disableHoverableContent}
       {...props}
+      {...(tap && {
+        open: tapOpen,
+        onOpenChange: changeTapOpen
+      })}
     >
       {content ? (
         <>
-          <TooltipTrigger asChild>{children}</TooltipTrigger>
+          <TooltipTrigger
+            asChild
+            {...(tap && {
+              [tapAttribute]: "",
+              ref: (node: HTMLButtonElement | null) => {
+                if (!node) return;
+                tapToggles.set(node, () => {
+                  if (!tapOpenRef.current) closeOtherTooltips();
+                  changeTapOpen(!tapOpenRef.current);
+                });
+              }
+            })}
+          >
+            {trigger}
+          </TooltipTrigger>
           <TooltipContent side={side} align={align} data-has-kbd={shortcut ? "" : undefined}>
             <span className={menu.tooltipText}>{content}</span>
             {shortcut && <Kbd>{shortcut}</Kbd>}
@@ -334,6 +506,7 @@ function Tooltip({
       )}
     </TooltipPrimitive.Root>
   );
+  return <EnsureTooltipProvider>{tooltip}</EnsureTooltipProvider>;
 }
 
 /**
@@ -356,6 +529,8 @@ function TooltipTrigger({
       onPointerDown={(event) => {
         onPointerDown?.(event);
         pressed.current = true;
+        if (event.pointerType === "touch" && event.currentTarget.hasAttribute(tapAttribute))
+          event.preventDefault();
       }}
       onPointerMove={(event) => {
         onPointerMove?.(event);
@@ -364,6 +539,7 @@ function TooltipTrigger({
       onPointerLeave={(event) => {
         onPointerLeave?.(event);
         if (!coveredByOverlay(event.currentTarget)) pressed.current = false;
+        if (event.pointerType === "touch") event.preventDefault();
       }}
       onFocus={(event) => {
         onFocus?.(event);
@@ -377,7 +553,7 @@ TooltipTrigger.displayName = "TooltipTrigger";
 
 function TooltipContent({
   className,
-  collisionPadding = 8,
+  collisionPadding = overlayCollisionPadding,
   sideOffset = 0,
   children,
   ref,
@@ -412,11 +588,17 @@ const interactiveRoles = new Set([
   "tab"
 ]);
 
+/** True inside a TooltipScope, such as Table rows, where a trigger stays pass-through and needs no tab stop of its own. */
+function useInTooltipScope() {
+  return React.useContext(TooltipScopeContext) !== null;
+}
+
 function TooltipText({
   content,
   side,
   align,
   asChild = false,
+  openOnTap,
   className,
   ref,
   ...props
@@ -427,6 +609,7 @@ function TooltipText({
   align?: TooltipAlign;
   /** Make the child element (StatusText, MiddleTruncate) the focusable text instead of a span. In an activatable table row non-interactive text is no tab stop of its own: clicks and Enter reach the row, and the row's description carries the tooltip text. */
   asChild?: boolean;
+  openOnTap?: boolean;
   ref?: React.Ref<HTMLSpanElement>;
 }) {
   const Comp = asChild ? Slot.Root : "span";
@@ -434,15 +617,11 @@ function TooltipText({
   const descriptionId = React.useId();
   const trigger = React.useRef<HTMLSpanElement | null>(null);
   const child = asChild && React.isValidElement(props.children) ? props.children : undefined;
-  const own = { ...props, ...(child?.props as object | undefined) } as {
-    role?: unknown;
-    onClick?: unknown;
-    onKeyDown?: unknown;
-    disabled?: unknown;
-  };
+  const childProps = (child?.props ?? {}) as { onClick?: unknown; onKeyDown?: unknown };
+  const own = { ...props, ...childProps } as { role?: unknown; disabled?: unknown };
   const independent =
     (typeof own.role === "string" && interactiveRoles.has(own.role)) ||
-    Boolean(own.onClick || own.onKeyDown);
+    [props.onClick, props.onKeyDown, childProps.onClick, childProps.onKeyDown].some(callerHandler);
   const disabled = Boolean(own.disabled);
   const passThrough = Boolean(describeRow) && !independent;
   React.useLayoutEffect(() => {
@@ -451,11 +630,16 @@ function TooltipText({
     const nodeDisabled = disabled || Boolean(node?.matches(":disabled"));
     if (independent && !nodeDisabled) return undefined;
     if (!nodeDisabled && node?.matches(interactiveControl)) return undefined;
-    return describeRow(descriptionId);
+    const undescribe = describeRow(descriptionId);
+    node?.setAttribute(rowDescribedAttribute, "");
+    return () => {
+      node?.removeAttribute(rowDescribedAttribute);
+      undescribe();
+    };
   }, [describeRow, descriptionId, independent, disabled, child?.type]);
   return (
     <>
-      <Tooltip content={content} side={side} align={align}>
+      <Tooltip content={content} side={side} align={align} openOnTap={openOnTap}>
         <Comp
           ref={(node: HTMLSpanElement | null) => {
             trigger.current = node;
@@ -479,4 +663,87 @@ function TooltipText({
 }
 TooltipText.displayName = "TooltipText";
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipScope, TooltipText, TooltipTrigger };
+const stretchedHost =
+  'tr[data-stretched-link], [data-slot="card"][data-stretched-link], [data-slot="stat-card"][data-stretched-link]';
+
+const ownControl =
+  "a[href], button, input, select, textarea, summary, [role=button], [role=checkbox], [role=combobox], [role=link], [role=menuitem], [role=switch], [role=tab]";
+
+/** A reason trigger sits above a row's stretched link so hovering it shows the reason, so it hands clicks on to that link, modifier keys and middle button included. A trigger that is a control of its own keeps its clicks. */
+function forwardToStretchedLink(event: React.MouseEvent<HTMLElement>) {
+  if (event.defaultPrevented) return;
+  const trigger = event.currentTarget;
+  const control = event.target instanceof Element ? event.target.closest(ownControl) : null;
+  if (control && trigger.contains(control)) return;
+  const link = trigger
+    .closest(stretchedHost)
+    ?.querySelector<HTMLElement>('[data-row-link], a[data-slot="card-link"]');
+  if (!link || trigger.contains(link) || link.contains(trigger)) return;
+  const selection = window.getSelection();
+  if (selection && !selection.isCollapsed && trigger.contains(selection.anchorNode)) return;
+  link.dispatchEvent(new MouseEvent("click", event.nativeEvent));
+}
+
+function forwardMiddleClick(event: React.MouseEvent<HTMLElement>) {
+  if (event.button === 1) forwardToStretchedLink(event);
+}
+internalHandlers.add(forwardToStretchedLink);
+internalHandlers.add(forwardMiddleClick);
+
+/**
+ * Says why: Button's disabledReason and the reason on Badge and StatusText. wrap shows the reason in a
+ * tooltip that also opens on a tap on touch devices, adding a provider where none is above it, and with
+ * focusable the element becomes a TooltipText tab stop. Put
+ * description inside the element and pass its aria-describedby through describedBy, so the reason is
+ * its accessible description even while the tooltip is closed.
+ */
+function useReason(reason: React.ReactNode) {
+  const id = React.useId();
+  const active = Boolean(reason);
+  return {
+    active,
+    describedBy: (own?: string) => (active ? [own, id].filter(Boolean).join(" ") : own),
+    description: active ? (
+      <span id={id} hidden>
+        {reason}
+      </span>
+    ) : null,
+    wrap: (
+      element: React.ReactElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>,
+      focusable = false
+    ) =>
+      active ? (
+        <EnsureTooltipProvider>
+          {focusable ? (
+            <TooltipText
+              asChild
+              openOnTap
+              content={reason}
+              data-reason-trigger=""
+              onClick={forwardToStretchedLink}
+              onAuxClick={forwardMiddleClick}
+            >
+              {React.cloneElement(element, { onClick: skipTapClick(element.props.onClick) })}
+            </TooltipText>
+          ) : (
+            <Tooltip content={reason} openOnTap>
+              {element}
+            </Tooltip>
+          )}
+        </EnsureTooltipProvider>
+      ) : (
+        element
+      )
+  };
+}
+
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipScope,
+  TooltipText,
+  TooltipTrigger,
+  useInTooltipScope,
+  useReason
+};

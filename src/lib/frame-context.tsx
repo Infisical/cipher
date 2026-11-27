@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { isDev } from "./dev";
+import { ActionLabelCollapseContext } from "./header-actions";
 
 const FrameContext = React.createContext(false);
 
@@ -16,7 +17,13 @@ const FrameFootContext = React.createContext<FrameFoot | null>(null);
 export function FrameScope({ framed, children }: { framed: boolean; children: React.ReactNode }) {
   return (
     <FrameContext value={framed}>
-      {framed ? children : <FrameFootContext value={null}>{children}</FrameFootContext>}
+      {framed ? (
+        children
+      ) : (
+        <FrameFootContext value={null}>
+          <ActionLabelCollapseContext value={undefined}>{children}</ActionLabelCollapseContext>
+        </FrameFootContext>
+      )}
     </FrameContext>
   );
 }

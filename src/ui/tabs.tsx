@@ -169,9 +169,10 @@ function TabsList({
           : offset + extent > start + size - padding
             ? offset + extent - size + padding
             : start;
+      const fitsAtStart = offset + extent <= size;
       const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
       node.scrollTo?.({
-        [vertical ? "top" : "left"]: Math.max(0, target),
+        [vertical ? "top" : "left"]: target !== start && fitsAtStart ? 0 : Math.max(0, target),
         behavior: instant || reduced ? "instant" : "smooth"
       });
     },

@@ -3,8 +3,18 @@ import { Avatar as AvatarPrimitive } from "radix-ui";
 
 import { cn } from "../lib/utils";
 import { Icon } from "./icon";
+import { Tooltip, useInTooltipScope } from "./tooltip";
 
+import controls from "./controls.module.css";
 import helperStyles from "./helpers.module.css";
+
+type AvatarKind = "person" | "machine" | "agent" | "group" | "fallback";
+const kindIcons = {
+  machine: "machine",
+  agent: "agent",
+  group: "users",
+  fallback: "user"
+} as const;
 
 function Avatar({
   className,
@@ -25,9 +35,9 @@ function Avatar({
   label?: string;
   status?: "ok" | "warn" | "off";
   ring?: boolean;
-  kind?: "person" | "machine" | "agent" | "fallback";
+  kind?: AvatarKind;
 } & { ref?: React.Ref<React.ComponentRef<typeof AvatarPrimitive.Root>> }) {
-  if (!["person", "machine", "agent", "fallback"].includes(kind)) return null;
+  if (!Object.prototype.hasOwnProperty.call(kindIcons, kind) && kind !== "person") return null;
   const dimension =
     typeof size === "number" && Number.isFinite(size) && size > 0
       ? size
@@ -39,11 +49,12 @@ function Avatar({
   return (
     <AvatarPrimitive.Root
       ref={ref}
-      data-slot="avatar"
       data-kind={kind}
       data-size={typeof size === "number" ? undefined : size}
       role={name || label ? "img" : undefined}
       aria-label={label ?? name}
+      {...props}
+      data-slot="avatar"
       style={{
         width: dimension,
         height: dimension,
@@ -56,12 +67,11 @@ function Avatar({
         ring && helperStyles.avatarRing,
         className
       )}
-      {...props}
     >
       {children ?? (
         <AvatarFallback>
-          {kind === "machine" || kind === "agent" || kind === "fallback" ? (
-            <Icon name={kind === "machine" ? "machine" : kind === "agent" ? "agent" : "user"} />
+          {kind !== "person" ? (
+            <Icon name={kindIcons[kind]} />
           ) : (
             (initials ??
             name
@@ -150,6 +160,7 @@ function AvatarGroup({
 }) {
   const all = React.Children.toArray(children);
   const limit = max === undefined ? all.length : Math.max(0, Math.floor(max));
+  const scoped = useInTooltipScope();
   return (
     <div
       ref={ref}
@@ -159,15 +170,24 @@ function AvatarGroup({
       className={cn(helperStyles.avatarGroup, className)}
       {...props}
     >
-      {all
-        .slice(0, limit)
-        .map((child) =>
-          React.isValidElement<{ size?: number | "sm" | "lg" | "default"; ring?: boolean }>(
-            child
-          ) && child.type === Avatar
-            ? React.cloneElement(child, { size: child.props.size ?? size, ring: true })
-            : child
-        )}
+      {all.slice(0, limit).map((child) => {
+        if (!React.isValidElement<React.ComponentProps<typeof Avatar>>(child)) return child;
+        if (child.type !== Avatar) return child;
+        const { label: avatarLabel, tabIndex } = child.props;
+        const avatar = React.cloneElement(child, {
+          size: child.props.size ?? size,
+          ring: true,
+          tabIndex: avatarLabel && !scoped ? (tabIndex ?? 0) : tabIndex,
+          className: cn(avatarLabel && !scoped && controls.focusOutline, child.props.className)
+        });
+        return avatarLabel ? (
+          <Tooltip key={child.key} content={avatarLabel}>
+            {avatar}
+          </Tooltip>
+        ) : (
+          avatar
+        );
+      })}
       {all.length > limit && (
         <Avatar
           size={size}
@@ -213,7 +233,7 @@ export const Identity = ({
   mono?: boolean;
   media?: React.ReactNode;
   title?: React.ReactNode;
-  kind?: "person" | "machine" | "agent" | "fallback";
+  kind?: AvatarKind;
   className?: string;
 }) => (
   <div data-slot="identity" className={cn(helperStyles.identity, className)}>

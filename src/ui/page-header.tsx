@@ -23,12 +23,20 @@ export type PageHeaderMoreAction = {
   disabledReason?: string;
 };
 
+/** The org, sub-org or other scope the page belongs to, shown on one line above the title. */
+export type PageHeaderScope = {
+  label: string;
+  icon?: IconSource;
+};
+
 export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "title"> & {
   title: React.ReactNode;
   size?: "lg" | "md";
   mono?: boolean;
   breadcrumb?: readonly BreadcrumbCrumb[];
   maxItems?: number;
+  /** Truncates before the title does, with the full label on hover. */
+  scope?: PageHeaderScope;
   /** Right after the title: status badges, and the page's DocumentationLink so it stays paired with the title. */
   badges?: React.ReactNode;
   description?: React.ReactNode;
@@ -52,6 +60,7 @@ export function PageHeader({
   mono = false,
   breadcrumb,
   maxItems,
+  scope,
   badges,
   description,
   actions,
@@ -136,6 +145,17 @@ export function PageHeader({
       )}
       <div className={styles.main}>
         {media && <span className={styles.media}>{media}</span>}
+        {scope && (
+          <div data-slot="page-header-scope" className={styles.scope}>
+            {scope.icon && <Icon icon={scope.icon} size={14} />}
+            <span
+              className={styles.scopeLabel}
+              onPointerEnter={(event) => titleIfClamped(event.currentTarget)}
+            >
+              {scope.label}
+            </span>
+          </div>
+        )}
         <div
           className={styles.titleLine}
           data-flow={truncateTitle || (titleClamped && !titleExpanded) ? undefined : "inline"}

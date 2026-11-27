@@ -157,9 +157,8 @@ function Footer({
       </p>
       {!locked && (
         <div className={styles.buttons}>
-          {tone === "danger" ? (
-            actions
-          ) : (
+          {actions}
+          {tone !== "danger" && (
             <>
               {dirty && onDiscard && !saving && (
                 <Button type="button" variant="ghost" size="sm" onClick={onDiscard}>
@@ -200,7 +199,7 @@ function hasFooterContent({
   saving: boolean;
 }) {
   if (tone === "danger") return Boolean(hint || locked || actions);
-  return Boolean(hint || locked || dirty || saving || onSave || (dirty && onDiscard));
+  return Boolean(hint || locked || actions || dirty || saving || onSave || (dirty && onDiscard));
 }
 
 export function SettingsCard({
@@ -238,7 +237,16 @@ export function SettingsCard({
       setSaving(false);
     }
   };
-  const hasFooter = hasFooterContent({ hint, locked, dirty, saving, tone, actions, onSave, onDiscard });
+  const hasFooter = hasFooterContent({
+    hint,
+    locked,
+    dirty,
+    saving,
+    tone,
+    actions,
+    onSave,
+    onDiscard
+  });
   const header = (
     <div className={styles.header} data-save-status={saveStatus ? "" : undefined}>
       <div className={styles.titleRow}>

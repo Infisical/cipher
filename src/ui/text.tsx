@@ -4,6 +4,7 @@ import { cn, truncateTitle } from "../lib/utils";
 import { TitleCount } from "./badge";
 import { Icon, type IconSource } from "./icon";
 import { Spinner } from "./spinner";
+import { useReason } from "./tooltip";
 
 import styles from "./text.module.css";
 
@@ -124,6 +125,27 @@ export function Meta({
 }
 Meta.displayName = "Meta";
 
+export const EMPTY_VALUE = "\u2014";
+
+/** The placeholder for a value that isn't set, such as an empty table cell or a token with no expiry. Screen readers hear the label instead of the dash. */
+export function EmptyValue({
+  label = "None",
+  className,
+  ref,
+  ...props
+}: Omit<React.ComponentPropsWithoutRef<"span">, "children"> & {
+  label?: string;
+  ref?: React.Ref<HTMLSpanElement>;
+}) {
+  return (
+    <span ref={ref} data-slot="empty-value" className={cn(styles.emptyValue, className)} {...props}>
+      <span aria-hidden>{EMPTY_VALUE}</span>
+      <span className={styles.sr}>{label}</span>
+    </span>
+  );
+}
+EmptyValue.displayName = "EmptyValue";
+
 /** A compact uppercase group label, such as WHEN or CONDITIONS above a block of rules. */
 export function Eyebrow({
   className,
@@ -139,6 +161,7 @@ export function StatusText({
   size,
   icon,
   loading = false,
+  reason,
   className,
   children,
   ref,
@@ -149,9 +172,12 @@ export function StatusText({
   size?: "sm" | "md";
   icon?: IconSource;
   loading?: boolean;
+  /** Says why, such as the error behind a failed status: the text becomes a tab stop, shows the reason in a tooltip and exposes it as the accessible description. */
+  reason?: React.ReactNode;
   ref?: React.Ref<HTMLSpanElement>;
 }) {
-  return (
+  const reasonTooltip = useReason(reason);
+  return reasonTooltip.wrap(
     <span
       ref={ref}
       data-slot="status-text"
@@ -160,10 +186,13 @@ export function StatusText({
       data-loading={loading || undefined}
       className={cn(styles.status, "[&>svg]:cipher-lead-line", className)}
       {...props}
+      aria-describedby={reasonTooltip.describedBy(props["aria-describedby"])}
     >
       {loading ? <Spinner /> : icon && <Icon icon={icon} />}
       <span>{children}</span>
-    </span>
+      {reasonTooltip.description}
+    </span>,
+    true
   );
 }
 StatusText.displayName = "StatusText";
