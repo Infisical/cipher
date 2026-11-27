@@ -324,6 +324,10 @@
       {
         "title": "Corner badge",
         "module": "button/corner-badge"
+      },
+      {
+        "title": "Inside an app with its own border utility",
+        "module": "button/consumer-utilities"
       }
     ]
   },
@@ -900,6 +904,10 @@
       {
         "title": "Overflowing content",
         "module": "dropdown-menu/overflow"
+      },
+      {
+        "title": "Interpolated labels",
+        "module": "dropdown-menu/interpolated"
       }
     ]
   },
@@ -1690,6 +1698,10 @@
         "module": "multi-step/row-switch"
       },
       {
+        "title": "Aside layout: short content, with the rules running the full body height",
+        "module": "multi-step/aside-short"
+      },
+      {
         "title": "Aside layout: three short steps",
         "module": "multi-step/aside-sparse"
       },
@@ -1732,6 +1744,10 @@
       {
         "title": "Scope above the title",
         "module": "page-header/scope"
+      },
+      {
+        "title": "Media on a narrow header",
+        "module": "page-header/media"
       }
     ]
   },
@@ -1868,6 +1884,10 @@
       {
         "title": "Cell links in a pricing matrix",
         "module": "row-link/cell-links"
+      },
+      {
+        "title": "Wrapping and truncating columns",
+        "module": "row-link/wrapping"
       },
       {
         "title": "Outside a row, in a Sheet",
@@ -2414,6 +2434,10 @@
         "module": "table/narrow-screen"
       },
       {
+        "title": "Row tooltip with its trigger scrolled out of view",
+        "module": "table/scrolled-row-tooltip"
+      },
+      {
         "title": "Import review: content-sized names, a column that drops first, and an invalid row",
         "module": "table/import-review"
       },
@@ -2576,6 +2600,10 @@
       {
         "title": "Multiple choices",
         "module": "toggle-group/permissions"
+      },
+      {
+        "title": "Wrapping onto more rows",
+        "module": "toggle-group/wrap"
       }
     ]
   },
