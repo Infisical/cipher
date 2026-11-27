@@ -1433,6 +1433,9 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   flex-direction: column;
   align-items: stretch;
 }
+.toggleGroup[data-orientation="horizontal"]:not([data-indicator]) {
+  flex-wrap: wrap;
+}
 .toggleGroup[data-width="full"] {
   display: flex;
   width: 100%;
