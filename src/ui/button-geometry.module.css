@@ -19,6 +19,7 @@
     var(--cipher-action-inset) + var(--cipher-size-control-border) - var(--cipher-action-border)
   );
   border-width: var(--cipher-action-border);
+  border-style: solid;
   border-radius: 0;
   font-family: var(--cipher-type-label-font-family);
   font-size: var(--cipher-action-font-size);
