@@ -49,6 +49,7 @@ export type PageHeaderProps = Omit<React.ComponentPropsWithoutRef<"header">, "ti
   moreActions?: readonly PageHeaderMoreAction[];
   moreLabel?: string;
   tabs?: React.ReactNode;
+  /** Leading logo or icon. On a narrow header it drops when the title would otherwise be cut. */
   media?: React.ReactNode;
   /** Keeps a long title on one line, ending in an ellipsis with the full title on hover, instead of wrapping. */
   truncateTitle?: boolean;
@@ -74,19 +75,31 @@ export function PageHeader({
   ...props
 }: PageHeaderProps & { ref?: React.Ref<HTMLElement> }) {
   const titleRef = React.useRef<HTMLHeadingElement>(null);
+  const mediaRef = React.useRef<HTMLSpanElement>(null);
+  const hasMedia = Boolean(media);
   const [titleClamped, setTitleClamped] = React.useState(false);
   const [titleExpanded, setTitleExpanded] = React.useState(false);
   React.useEffect(() => {
     const element = titleRef.current;
-    if (!element || truncateTitle) return;
-    const measure = () => {
+    if (!element || (truncateTitle && !hasMedia)) return;
+    const titleCuts = () => {
       const style = getComputedStyle(element);
+      if (style.getPropertyValue("--cipher-page-header-title-clamp").trim() !== "2") return false;
+      if (truncateTitle) return element.scrollWidth > element.clientWidth;
       const lines =
         style.display === "inline"
           ? element.getClientRects().length
           : element.scrollHeight / parseFloat(style.lineHeight);
-      const clamps =
-        style.getPropertyValue("--cipher-page-header-title-clamp").trim() === "2" && lines > 2.5;
+      return lines > 2.5;
+    };
+    const measure = () => {
+      const mediaElement = mediaRef.current;
+      if (mediaElement) {
+        delete mediaElement.dataset.dropped;
+        if (titleCuts()) mediaElement.dataset.dropped = "";
+      }
+      if (truncateTitle) return;
+      const clamps = titleCuts();
       setTitleClamped(clamps);
       if (clamps) element.title = element.textContent ?? "";
       else {
@@ -105,7 +118,7 @@ export function PageHeader({
       mutations.disconnect();
       document.fonts.removeEventListener("loadingdone", measure);
     };
-  }, [truncateTitle]);
+  }, [truncateTitle, hasMedia]);
   const titleToggle = !truncateTitle && titleClamped;
   const more = moreActions && moreActions.length > 0 ? moreActions : null;
   const moreTriggerRef = React.useRef<HTMLButtonElement>(null);
@@ -144,7 +157,11 @@ export function PageHeader({
         />
       )}
       <div className={styles.main}>
-        {media && <span className={styles.media}>{media}</span>}
+        {media && (
+          <span ref={mediaRef} data-slot="page-header-media" className={styles.media}>
+            {media}
+          </span>
+        )}
         {scope && (
           <div data-slot="page-header-scope" className={styles.scope}>
             {scope.icon && <Icon icon={scope.icon} size={14} />}

@@ -224,16 +224,29 @@ button.stepButton:focus-visible {
   border: 0;
 }
 .asideFrame {
+  --cipher-multi-step-pad: var(--cipher-space-overlay-inset);
   container-type: inline-size;
 }
 .asideDialog.asideDialog {
+  --cipher-multi-step-pad: var(--cipher-dialog-pad);
   max-width: var(--cipher-size-sheet-xl);
 }
+.asideBody {
+  display: flex;
+  flex-direction: column;
+}
+/* The columns reach into the body's block padding so the rail and aside rules meet the header and
+   footer rules; each column puts the padding back. */
 .asideGrid {
   display: grid;
+  flex: 1 0 auto;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--cipher-space-overlay-inset);
   min-width: 0;
+  margin-block: calc(-1 * var(--cipher-multi-step-pad));
+}
+.asideGrid > * {
+  padding-block: var(--cipher-multi-step-pad);
 }
 .asideGrid[data-rail] {
   grid-template-columns: var(--cipher-size-tile-min) minmax(0, 1fr);

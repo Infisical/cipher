@@ -19,8 +19,11 @@
     var(--cipher-shadow-pop);
   outline: none;
 }
-.dialog {
+.dialog > *,
+.sheet > * {
   --cipher-size-measure-field: 100%;
+}
+.dialog {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -116,7 +119,6 @@
   );
 }
 .sheet {
-  --cipher-size-measure-field: 100%;
   --cipher-sheet-from: 100% 0;
   --cipher-sheet-size: var(--cipher-size-sheet-sm);
 }
