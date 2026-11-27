@@ -904,6 +904,10 @@
       {
         "title": "Overflowing content",
         "module": "dropdown-menu/overflow"
+      },
+      {
+        "title": "Interpolated labels",
+        "module": "dropdown-menu/interpolated"
       }
     ]
   },
@@ -1694,6 +1698,10 @@
         "module": "multi-step/row-switch"
       },
       {
+        "title": "Aside layout: short content, with the rules running the full body height",
+        "module": "multi-step/aside-short"
+      },
+      {
         "title": "Aside layout: three short steps",
         "module": "multi-step/aside-sparse"
       },
@@ -1876,6 +1884,10 @@
       {
         "title": "Cell links in a pricing matrix",
         "module": "row-link/cell-links"
+      },
+      {
+        "title": "Wrapping and truncating columns",
+        "module": "row-link/wrapping"
       },
       {
         "title": "Outside a row, in a Sheet",

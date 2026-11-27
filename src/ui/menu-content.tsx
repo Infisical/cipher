@@ -19,9 +19,14 @@ const withDescription = (label: React.ReactNode, description: React.ReactNode) =
 
 export const menuRowContent = (children: React.ReactNode, description?: React.ReactNode) => {
   if (description === undefined && React.isValidElement(children)) return children;
-  const items = React.Children.toArray(children);
   const textual = (child: React.ReactNode) =>
     typeof child === "string" || typeof child === "number";
+  const items = React.Children.toArray(children).reduce<React.ReactNode[]>((runs, child) => {
+    const last = runs.length - 1;
+    if (textual(child) && last >= 0 && textual(runs[last])) runs[last] = `${runs[last]}${child}`;
+    else runs.push(child);
+    return runs;
+  }, []);
   const labelIndex = description === undefined || items.some(textual) ? -1 : items.length - 1;
   return items.map((child, index) => {
     if (index !== labelIndex && !textual(child)) return child;
