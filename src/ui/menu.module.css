@@ -513,6 +513,13 @@ a.row[href],
 .actionFooter {
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
+.actionFooter:has(+ .actionFooter) {
+  padding-block-end: 0;
+}
+.actionFooter + .actionFooter {
+  border-top: 0;
+  padding-block-start: 0;
+}
 .footerText {
   margin: 0;
   padding: var(--cipher-space-4) var(--cipher-space-8);

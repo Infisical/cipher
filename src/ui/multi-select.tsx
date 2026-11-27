@@ -642,6 +642,7 @@ export function MultiSelect({
               aria-disabled={createBlocked || disabled ? true : undefined}
               data-active={createActive || undefined}
               data-slot="multi-select-create"
+              data-highlight-default=""
               className={cn(menu.row, styles.option)}
               onPointerMove={() => {
                 if (!createBlocked) setActive(createId);
@@ -653,11 +654,13 @@ export function MultiSelect({
               <span className={styles.optionLabel}>{createAction.label}</span>
               {createBlocked && <span className={styles.optionMeta}>{createBlocked}</span>}
             </div>
+            <ListHighlight />
           </div>
         )}
         {footer && (
           <div className={cn(menu.inset, menu.actionFooter)} data-slot="multi-select-footer">
             {typeof footer === "string" ? <p className={menu.footerText}>{footer}</p> : footer}
+            <ListHighlight />
           </div>
         )}
         {createError && (
@@ -670,3 +673,27 @@ export function MultiSelect({
   );
 }
 MultiSelect.displayName = "MultiSelect";
+
+/** An action row for the footer slot, such as Add environment. It takes an option row's inset, height and highlight, and is reached with Tab. */
+export function MultiSelectFooterAction({
+  icon,
+  children,
+  className,
+  disabled,
+  ...props
+}: React.ComponentProps<"button"> & { icon?: IconSource }) {
+  return (
+    <button
+      type="button"
+      data-slot="picker-footer-action"
+      data-list-item=""
+      data-disabled={disabled || undefined}
+      disabled={disabled}
+      className={cn(menu.row, styles.option, styles.footerAction, className)}
+      {...props}
+    >
+      {icon && <Icon icon={icon} />}
+      <span className={styles.optionLabel}>{children}</span>
+    </button>
+  );
+}

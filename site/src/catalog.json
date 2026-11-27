@@ -598,7 +598,7 @@
         "module": "combobox/multiple-create"
       },
       {
-        "title": "Multiple with empty text and a footer",
+        "title": "Footer captions and footer actions",
         "module": "combobox/multiple-footer"
       },
       {
@@ -1650,7 +1650,7 @@
         "module": "multi-select/load-failure"
       },
       {
-        "title": "Empty text and a footer",
+        "title": "Empty text, footer captions and footer actions",
         "module": "multi-select/footer"
       }
     ]

@@ -4,10 +4,10 @@ import { motion, useReducedMotion } from "motion/react";
 import { fade, snap, spring } from "./motion";
 
 export const LIST_HIGHLIGHT_ITEM =
-  '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [cmdk-item], [data-sidebar-target]';
+  '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [cmdk-item], [data-sidebar-target], [data-list-item]';
 const ACTIVE =
   '[data-highlighted], [cmdk-item][data-selected="true"], [role="option"][data-active]';
-const SHOWN_ACTIVE = `[data-highlight-default]:is(${ACTIVE})`;
+const SHOWN_ACTIVE = `[data-highlight-default]:is(${ACTIVE}), [data-list-item]:focus-visible`;
 const CURRENT =
   '[data-current], [aria-current="page"], [role="option"][data-state="checked"], [role="menuitemradio"][aria-checked="true"]';
 const HOLDS = "[data-holds-current]";
@@ -74,7 +74,8 @@ const offsetIn = (element: HTMLElement, list: HTMLElement) => {
  * rests on the current row and shows only while the hover thumb is hidden. Arrow keys in a field
  * outside the list that names it with aria-controls move the hover thumb too. A row marked
  * data-highlight-default shows the hover thumb while it is the active row, before any key or
- * pointer moves it, so a lone Create row reads as what Enter does. Render it as the list's
+ * pointer moves it, so a lone Create row reads as what Enter does. A plain button marked
+ * data-list-item is a row too, highlighted while it has keyboard focus. Render it as the list's
  * last child; it measures its parent.
  */
 export function ListHighlight() {
@@ -94,6 +95,7 @@ export function ListHighlight() {
     let hovered: HTMLElement | null = null;
     let keyboard = false;
     let inside = false;
+    let yielded = false;
     let frame = 0;
     const own = (element: Element | null) =>
       element instanceof HTMLElement && element.closest("[data-list-highlight]") === list
@@ -140,7 +142,7 @@ export function ListHighlight() {
       if (!hoverTarget && keyboard) hoverTarget = first(ACTIVE) ?? current;
       else if (!hoverTarget && inside && hovered?.isConnected && !shut(hovered))
         hoverTarget = hovered;
-      hoverTarget ??= first(SHOWN_ACTIVE);
+      if (!yielded) hoverTarget ??= first(SHOWN_ACTIVE);
       measureOne(hoverTarget, setHover);
       measureOne(hoverTarget ? null : current, setSelection);
     };
@@ -156,6 +158,7 @@ export function ListHighlight() {
       if (item && !blocked(item)) {
         hovered = item;
         keyboard = false;
+        yielded = false;
       } else if (candidate && !item) hovered = null;
       schedule();
     };
@@ -170,7 +173,7 @@ export function ListHighlight() {
       target instanceof Element &&
       target.getAttribute("aria-controls") === list.id;
     const key = (event: KeyboardEvent) => {
-      if (!KEYS.includes(event.key)) return;
+      if (yielded || !KEYS.includes(event.key)) return;
       if (
         !list.contains(document.activeElement) &&
         !list.contains(event.target as Node) &&
@@ -181,6 +184,14 @@ export function ListHighlight() {
       keyboard = true;
       schedule();
     };
+    const focusIn = (event: FocusEvent) => {
+      const candidate =
+        event.target instanceof Element ? event.target.closest(LIST_HIGHLIGHT_ITEM) : null;
+      yielded = Boolean(candidate && !own(candidate));
+      if (yielded) keyboard = false;
+      if (yielded || candidate?.matches("[data-list-item]:focus-visible")) hovered = null;
+      schedule();
+    };
     const focusOut = (event: FocusEvent) => {
       if (event.relatedTarget instanceof Node && list.contains(event.relatedTarget)) return;
       keyboard = false;
@@ -188,6 +199,7 @@ export function ListHighlight() {
     };
     zone.addEventListener("pointerover", over);
     zone.addEventListener("pointerleave", leave);
+    zone.addEventListener("focusin", focusIn);
     list.addEventListener("focusout", focusOut);
     list.addEventListener("animationend", schedule);
     list.addEventListener("transitionend", schedule);
@@ -227,6 +239,7 @@ export function ListHighlight() {
       cancelAnimationFrame(frame);
       zone.removeEventListener("pointerover", over);
       zone.removeEventListener("pointerleave", leave);
+      zone.removeEventListener("focusin", focusIn);
       list.removeEventListener("focusout", focusOut);
       list.removeEventListener("animationend", schedule);
       list.removeEventListener("transitionend", schedule);
