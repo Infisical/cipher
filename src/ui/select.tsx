@@ -536,12 +536,26 @@ function useScrollButtonOverflow(
     };
     update();
     viewport.addEventListener("scroll", update);
-    return () => viewport.removeEventListener("scroll", update);
+    const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
+    resize?.observe(viewport);
+    const content = new MutationObserver(update);
+    content.observe(viewport, { childList: true, subtree: true, characterData: true });
+    return () => {
+      viewport.removeEventListener("scroll", update);
+      resize?.disconnect();
+      content.disconnect();
+    };
   }, [node, edge]);
   const attach = React.useCallback(
-    (element: HTMLDivElement | null) => {
+    (element: HTMLDivElement) => {
       setNode(element);
-      assignRef(ref, element);
+      const cleanup = typeof ref === "function" ? ref(element) : undefined;
+      if (ref && typeof ref !== "function") ref.current = element;
+      return () => {
+        setNode(null);
+        if (cleanup) cleanup();
+        else assignRef(ref, null);
+      };
     },
     [ref]
   );
