@@ -245,7 +245,7 @@ function CommandFooter({
       className={cn(menu.inset, menu.actionFooter, className)}
       onKeyDown={(event) => {
         onKeyDown?.(event);
-        event.stopPropagation();
+        if (event.key !== "Tab" && event.key !== "Escape") event.stopPropagation();
       }}
       {...props}
     >
