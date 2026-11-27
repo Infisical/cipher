@@ -1886,6 +1886,10 @@
         "module": "row-link/cell-links"
       },
       {
+        "title": "Wrapping and truncating columns",
+        "module": "row-link/wrapping"
+      },
+      {
         "title": "Outside a row, in a Sheet",
         "module": "row-link/no-host"
       }
