@@ -2600,6 +2600,10 @@
       {
         "title": "Multiple choices",
         "module": "toggle-group/permissions"
+      },
+      {
+        "title": "Wrapping onto more rows",
+        "module": "toggle-group/wrap"
       }
     ]
   },
