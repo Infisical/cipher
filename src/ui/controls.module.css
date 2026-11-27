@@ -1468,20 +1468,8 @@ input:is(.field, .bare)[type="number"]::-webkit-outer-spin-button {
   > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]),
 .toggleGroup[data-spacing="0"]:not([data-indicator])
   > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]):hover {
-  background-color: var(--cipher-pop);
-  border-color: var(--cipher-line-soft);
-  box-shadow: var(--cipher-shadow-raised);
-  color: var(--cipher-ink);
-}
-:global(.cipher[data-scheme="dark"])
-  .toggleGroup[data-spacing="0"]:not([data-indicator])
-  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]),
-:global(.cipher[data-scheme="dark"])
-  .toggleGroup[data-spacing="0"]:not([data-indicator])
-  > [data-slot="toggle-group-item"].toggle:is([aria-pressed="true"], [data-state="on"]):hover {
-  background-color: var(--cipher-surface);
-  border-color: var(--cipher-line);
-  box-shadow: none;
+  background-color: var(--cipher-selected-surface);
+  border-color: var(--cipher-selected-border);
 }
 .toggleGroup[data-indicator] {
   position: relative;
