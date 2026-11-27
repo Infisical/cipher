@@ -548,7 +548,7 @@
   --cipher-avatar-blend: lighten;
   --cipher-tab-label: var(--cipher-muted);
   --cipher-selected-surface: color-mix(in oklab, var(--cipher-neutral-600) var(--cipher-selected-mix), transparent);
-  --cipher-selected-border: var(--cipher-neutral-700);
+  --cipher-selected-border: var(--cipher-neutral-600);
   --cipher-selected-ink: var(--cipher-ink);
   --cipher-halftone-peak: 20%;
   --cipher-halftone-peak-hover: 90%;
