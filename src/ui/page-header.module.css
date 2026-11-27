@@ -68,8 +68,15 @@
 .media {
   grid-area: media;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: var(--cipher-size-control-lg);
   height: var(--cipher-size-control-lg);
+}
+.media > * {
+  flex: none;
+  max-width: 100%;
+  max-height: 100%;
 }
 .media[data-dropped] {
   display: none;
