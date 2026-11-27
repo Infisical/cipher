@@ -233,7 +233,7 @@
 }
 .inset {
   --cipher-menu-icon-slot: 0px;
-  padding: var(--cipher-menu-pad);
+  padding: var(--cipher-menu-pad-block, var(--cipher-menu-pad)) var(--cipher-menu-pad);
 }
 .inset[data-icon-slot] {
   --cipher-menu-icon-slot: calc(var(--cipher-size-icon) + var(--cipher-space-8));
@@ -242,7 +242,9 @@
 /* Nine whole rows plus one inset pad: at rest the top pad and nine rows show, and scrolled to the
    end the nine last rows and the bottom pad do, so neither edge ever cuts a row. */
 .list {
-  max-height: calc(9 * var(--cipher-size-control-sm) + var(--cipher-menu-pad));
+  max-height: calc(
+    9 * var(--cipher-size-control-sm) + var(--cipher-menu-pad-block, var(--cipher-menu-pad))
+  );
   overflow-x: hidden;
   overflow-y: auto;
   outline: none;
@@ -252,7 +254,9 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  max-height: calc(9 * var(--cipher-size-control-sm) + var(--cipher-menu-pad));
+  max-height: calc(
+    9 * var(--cipher-size-control-sm) + var(--cipher-menu-pad-block, var(--cipher-menu-pad))
+  );
 }
 .viewport {
   flex: 0 1 auto;
@@ -510,16 +514,17 @@ a.row[href],
   font-weight: var(--cipher-type-small-font-weight);
   letter-spacing: var(--cipher-type-small-letter-spacing);
 }
-/* A footer sits as close to its rule as option rows sit to each other: the list above drops its
-   bottom pad, and a footer that opens with an action row drops its top pad. */
-.inset[data-before-footer] {
-  padding-block-end: 0;
+/* Above a footer the list pads both ends by the same tighter step, so its nine-row max height still
+   lands on whole rows at either end, and a footer action sits that same step below the rule. */
+.inset[data-before-footer],
+.scroll:has(.inset[data-before-footer]) {
+  --cipher-menu-pad-block: var(--cipher-space-2);
 }
 .actionFooter {
   border-top: var(--cipher-size-control-border) solid var(--cipher-line-soft);
 }
 .actionFooter:has(> .row:first-child) {
-  padding-block-start: 0;
+  padding-block-start: var(--cipher-space-2);
 }
 .actionFooter:has(+ .actionFooter) {
   padding-block-end: 0;
