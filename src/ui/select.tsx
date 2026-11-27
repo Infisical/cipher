@@ -3,6 +3,7 @@ import { Select as SelectPrimitive } from "radix-ui";
 
 import { overlayCollisionPadding, useCollisionBoundary, usePortalContainer } from "../scope";
 
+import { assignRef } from "../lib/descendant-flags";
 import { isDev } from "../lib/dev";
 import { useFieldControlAttributes } from "../lib/field-context";
 import { ListHighlight } from "../lib/list-highlight";
@@ -509,14 +510,53 @@ function SelectSeparator({
 }
 SelectSeparator.displayName = "SelectSeparator";
 
+/**
+ * Radix shows a scroll button for any overflow at all, so a list whose height lands on a fractional
+ * pixel at some zoom levels gets a chevron with nothing to scroll. Radix keeps that decision
+ * private, so its button stays mounted and is hidden until more than a pixel is left to scroll.
+ */
+function useScrollButtonOverflow(
+  edge: "start" | "end",
+  ref: React.Ref<HTMLDivElement> | undefined,
+  style: React.CSSProperties | undefined
+) {
+  const [node, setNode] = React.useState<HTMLDivElement | null>(null);
+  const [overflows, setOverflows] = React.useState(false);
+  React.useLayoutEffect(() => {
+    const viewport = node?.parentElement?.querySelector<HTMLElement>(
+      "[data-radix-select-viewport]"
+    );
+    if (!viewport) return undefined;
+    const update = () => {
+      const remaining =
+        edge === "start"
+          ? viewport.scrollTop
+          : viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop;
+      setOverflows(remaining > 1);
+    };
+    update();
+    viewport.addEventListener("scroll", update);
+    return () => viewport.removeEventListener("scroll", update);
+  }, [node, edge]);
+  const attach = React.useCallback(
+    (element: HTMLDivElement | null) => {
+      setNode(element);
+      assignRef(ref, element);
+    },
+    [ref]
+  );
+  return { ref: attach, style: overflows ? style : { ...style, display: "none" } };
+}
+
 function SelectScrollUpButton({
   className,
+  style,
   ref,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>) {
   return (
     <SelectPrimitive.ScrollUpButton
-      ref={ref}
+      {...useScrollButtonOverflow("start", ref, style)}
       data-slot="select-scroll-up-button"
       className={cn(
         "z-10 flex cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4",
@@ -532,12 +572,13 @@ SelectScrollUpButton.displayName = "SelectScrollUpButton";
 
 function SelectScrollDownButton({
   className,
+  style,
   ref,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>) {
   return (
     <SelectPrimitive.ScrollDownButton
-      ref={ref}
+      {...useScrollButtonOverflow("end", ref, style)}
       data-slot="select-scroll-down-button"
       className={cn(
         "z-10 flex cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4",
