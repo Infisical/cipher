@@ -9,6 +9,5 @@
 ## Checklist
 
 - [ ] `npm run typecheck`, `npm run check` and `npm run build` pass
-- [ ] `r/` is regenerated with `npm run registry` and committed
 - [ ] The showcase has an example for the change
 - [ ] Updated baselines are committed if the change is visual

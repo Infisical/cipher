@@ -1,6 +1,6 @@
 # Releasing Cipher
 
-Releases are cut by maintainers. Each release is a `vX.Y.Z` tag on a commit that adds the built `dist/` to its source commit, so one tag pins both the package install and the registry URL.
+Releases are cut by maintainers. Each release is a `vX.Y.Z` tag on a commit that adds the built `dist/` and the shadcn registry `r/` to its source commit, so one tag pins both the package install and the registry URL.
 
 ## Check what changed
 
