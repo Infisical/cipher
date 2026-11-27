@@ -7,9 +7,18 @@ import { useSortable } from "../lib/sortable";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "./dropdown-menu";
 import { type EmptyGhost, EmptyScope } from "./empty";
 import { Icon, type IconSource } from "./icon";
 import { NameLine } from "./name-line";
+import { Skeleton } from "./skeleton";
 import { SortableAnnouncer, SortableHandle } from "./sortable-list";
 import {
   rowActionSlots,
@@ -74,6 +83,12 @@ export interface DataTableColumn<Row> {
   hideHeader?: boolean;
   /** Edits the cell in place for this row, or undefined when the row can't be edited. Click the cell, or press Enter or F2 on it, to open the editor. */
   edit?: (row: Row) => InlineEdit | undefined;
+  /**
+   * How the column renders while the table is stacked (stackBelow). row: a label and value line
+   * under the row's title. meta: the value trails the title line, for a short predictable value such as a
+   * time or a count. hidden: left out. The primary column is always the title. Defaults to row.
+   */
+  stack?: "row" | "meta" | "hidden";
 }
 /** Attributes and handlers for a data row's tr, such as drag and drop handlers that make it a drop target. */
 export type DataTableRowProps = Omit<
@@ -207,6 +222,12 @@ interface DataTableBaseProps<Row> {
     /** A disabled row keeps its grip inert; other rows can still move past it. */
     isRowDisabled?: (row: Row) => boolean;
   };
+  /**
+   * Stacks each row while the table's container is narrower than this many CSS pixels: the primary
+   * cell becomes a title line with the More menu at its end, and the other columns become label and
+   * value lines under it (see column stack). Select all and sort move to a band above the rows.
+   */
+  stackBelow?: number;
 }
 export type DataTableProps<Row> = DataTableBaseProps<Row> &
   (
@@ -260,7 +281,8 @@ export function DataTable<Row>({
   rowTone,
   getRowRestricted,
   rowProps,
-  reorder
+  reorder,
+  stackBelow
 }: DataTableProps<Row>) {
   const embedded = useInFrame("DataTable");
   const frameFoot = useFrameFoot();
@@ -278,21 +300,33 @@ export function DataTable<Row>({
     },
     [containerRef]
   );
+  const [frameWidth, setFrameWidth] = React.useState<number | null>(null);
+  const stacked = stackBelow !== undefined && frameWidth !== null && frameWidth < stackBelow;
+  React.useLayoutEffect(() => {
+    const container = scroll.current;
+    if (stackBelow === undefined || !container) return;
+    const measure = () => setFrameWidth(container.clientWidth);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [stackBelow]);
   const [narrow, setNarrow] = React.useState<number | null>(null);
   const bare =
     !loading && !(groups ? groups.some((group) => group.rows.length > 0) : flatRows?.length);
   const droppable = allColumns.some((column) => column.dropFirst);
-  const squeezed = bare && narrow !== null;
+  const squeezed = bare && narrow !== null && !stacked;
   const primaryColumn = allColumns.find((column) => column.primary);
   const primaryCap = primaryColumn?.width ?? primaryColumn?.maxWidth ?? Infinity;
-  const columns =
-    narrow !== null ? allColumns.filter((column) => !column.dropFirst) : allColumns;
+  let columns = allColumns;
+  if (stacked) columns = allColumns.filter((column) => column.stack !== "hidden");
+  else if (narrow !== null) columns = allColumns.filter((column) => !column.dropFirst);
   const columnShape = allColumns
     .map((column) =>
       [column.id, column.width, column.minWidth, column.grow, column.dropFirst].join(":")
     )
     .join("|");
-  React.useLayoutEffect(() => setNarrow(null), [columnShape, bare]);
+  React.useLayoutEffect(() => setNarrow(null), [columnShape, bare, stacked]);
   const [primaryWidth, setPrimaryWidth] = React.useState<number>();
   const [headWidths, setHeadWidths] = React.useState<Record<string, number>>({});
   const [landing, setLanding] = React.useState<number | null>(null);
@@ -349,6 +383,25 @@ export function DataTable<Row>({
   };
   const toggle = (id: string) =>
     update(selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id]);
+  const selectAll = (bandLabel?: string) => (
+    <Checkbox
+      aria-label={bandLabel ? undefined : `Select all available rows in ${label}`}
+      label={bandLabel}
+      disabled={loading || !eligible.length}
+      checked={
+        checked > 0 && checked < eligible.length
+          ? "indeterminate"
+          : eligible.length > 0 && checked === eligible.length
+      }
+      onCheckedChange={() =>
+        update(
+          checked === eligible.length
+            ? selected.filter((id) => !eligible.includes(id))
+            : [...new Set([...selected, ...eligible])]
+        )
+      }
+    />
+  );
   const windowed = Boolean(virtual && !groups);
   const flowing = windowed && !height;
   const pinnedFoot = Boolean((persistentStatus || loadMore || showFewer) && !pagination);
@@ -362,19 +415,46 @@ export function DataTable<Row>({
       ? Math.ceil((height ?? viewport) / effectiveRowHeight) + 8
       : rows.length;
   const wholeRows =
-    windowed && height && effectiveRowHeight && chrome
+    windowed && !stacked && height && effectiveRowHeight && chrome
       ? Math.floor((height - chrome.head - chrome.rest) / effectiveRowHeight)
       : 0;
   const frameHeight =
     wholeRows > 0 && effectiveRowHeight && chrome
       ? chrome.head + chrome.rest + wholeRows * effectiveRowHeight
       : height;
-  const start =
-    windowed && effectiveRowHeight
+  const [stackHeights, setStackHeights] = React.useState<Record<string, number>>({});
+  let stackOffsets: number[] | undefined;
+  if (stacked && windowed) {
+    const measured = Object.values(stackHeights);
+    const lines = columns.filter(
+      (column) => !column.primary && !column.actions && column.stack !== "meta"
+    ).length;
+    const estimate =
+      rowHeight ??
+      (measured.length
+        ? measured.reduce((sum, value) => sum + value, 0) / measured.length
+        : (tokenRowHeight ?? 40) * (1 + lines * 0.75));
+    stackOffsets = [0];
+    for (const row of rows)
+      stackOffsets.push(
+        stackOffsets[stackOffsets.length - 1] + (stackHeights[getRowId(row)] ?? estimate)
+      );
+  }
+  let start = 0;
+  let stop = rows.length;
+  if (stackOffsets) {
+    start = Math.max(0, rowAt(stackOffsets, top) - 4);
+    stop = Math.min(rows.length, rowAt(stackOffsets, top + (height ?? viewport)) + 5);
+  } else if (windowed) {
+    start = effectiveRowHeight
       ? Math.max(0, Math.min(Math.floor(top / effectiveRowHeight) - 4, rows.length - windowSize))
       : 0;
-  let stop = rows.length;
-  if (windowed) stop = effectiveRowHeight ? Math.min(rows.length, start + windowSize) : 0;
+    stop = effectiveRowHeight ? Math.min(rows.length, start + windowSize) : 0;
+  }
+  const spacerAbove = stackOffsets ? stackOffsets[start] : start * (effectiveRowHeight ?? 0);
+  const spacerBelow = stackOffsets
+    ? stackOffsets[rows.length] - stackOffsets[stop]
+    : (rows.length - stop) * (effectiveRowHeight ?? 0);
   React.useLayoutEffect(() => {
     const container = scroll.current;
     const head = container?.querySelector("thead");
@@ -439,7 +519,30 @@ export function DataTable<Row>({
   }, [rowHeight]);
   React.useLayoutEffect(() => {
     const container = scroll.current;
-    if (!container || !windowed || !requestedRowHeight || !effectiveRowHeight) return;
+    if (!container || !stacked || !windowed) return;
+    const visibleRows = Array.from(
+      container.querySelectorAll<HTMLElement>("tbody tr[data-row-index]")
+    );
+    const measure = () => {
+      const next: Record<string, number> = {};
+      for (const element of visibleRows) {
+        const row = rows[Number(element.dataset.rowIndex)];
+        if (row !== undefined) next[getRowId(row)] = element.getBoundingClientRect().height;
+      }
+      setStackHeights((current) =>
+        Object.entries(next).every(([id, value]) => Math.abs((current[id] ?? -1) - value) < 0.5)
+          ? current
+          : { ...current, ...next }
+      );
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    visibleRows.forEach((row) => observer.observe(row));
+    return () => observer.disconnect();
+  }, [stacked, windowed, start, stop, rows, columns, getRowId]);
+  React.useLayoutEffect(() => {
+    const container = scroll.current;
+    if (!container || stacked || !windowed || !requestedRowHeight || !effectiveRowHeight) return;
     const visibleRows = Array.from(
       container.querySelectorAll<HTMLElement>("tbody tr[aria-rowindex]")
     );
@@ -457,7 +560,11 @@ export function DataTable<Row>({
     const observer = new ResizeObserver(measure);
     visibleRows.forEach((row) => observer.observe(row));
     return () => observer.disconnect();
-  }, [requestedRowHeight, effectiveRowHeight, windowed, start, stop, rows, columns]);
+  }, [requestedRowHeight, effectiveRowHeight, stacked, windowed, start, stop, rows, columns]);
+  const landingTop =
+    landing === null
+      ? 0
+      : (stackOffsets?.[landing - 1] ?? (landing - 1) * (effectiveRowHeight ?? 0));
   React.useLayoutEffect(() => {
     const container = scroll.current;
     if (
@@ -469,13 +576,13 @@ export function DataTable<Row>({
     )
       return;
     if (!flowing) {
-      container.scrollTop = Math.max(0, (landing - 1) * effectiveRowHeight);
+      container.scrollTop = Math.max(0, landingTop);
       setTop(container.scrollTop);
     }
     focusPending.current = true;
     setFocusRow(landing);
     setLanding(null);
-  }, [landing, loadMore?.loading, rows.length, effectiveRowHeight, flowing]);
+  }, [landing, landingTop, loadMore?.loading, rows.length, effectiveRowHeight, flowing]);
   React.useLayoutEffect(() => {
     if (!focusPending.current || focusRow === null) return;
     const row = scroll.current?.querySelector<HTMLElement>(
@@ -555,7 +662,45 @@ export function DataTable<Row>({
       : undefined;
   const topByDefault = columns.some((column) => column.wrap);
   const topAligned = (column: DataTableColumn<Row>) =>
-    (column.valign ?? (topByDefault ? "top" : "center")) === "top";
+    !stacked && (column.valign ?? (topByDefault ? "top" : "center")) === "top";
+  const stackTitle = stacked
+    ? (columns.find((column) => column.primary) ?? columns.find((column) => !column.actions))?.id
+    : undefined;
+  const stackTrail = stacked
+    ? columns.filter(
+        (column) => column.id !== stackTitle && (column.actions || column.stack === "meta")
+      )
+    : [];
+  const stackLines = stacked
+    ? columns.filter((column) => column.id !== stackTitle && !stackTrail.includes(column))
+    : [];
+  const bodyStart = selectable ? 2 : 1;
+  const stackPlace = (column: DataTableColumn<Row>): React.CSSProperties => {
+    if (column.id === stackTitle) return { gridColumn: bodyStart, gridRow: 1 };
+    const trail = stackTrail.indexOf(column);
+    if (trail >= 0) return { gridColumn: bodyStart + 1 + trail, gridRow: 1 };
+    return { gridColumn: `${bodyStart} / -1`, gridRow: 2 + stackLines.indexOf(column) };
+  };
+  const colIndex = (column: DataTableColumn<Row>) =>
+    stacked ? columns.indexOf(column) + bodyStart : undefined;
+  const role = <Role extends string>(name: Role) => (stacked ? name : undefined);
+  const stackColumns = [
+    ...(selectable ? ["auto"] : []),
+    "minmax(0, 1fr)",
+    ...stackTrail.map(() => "auto"),
+    ...(actionsColumn ? ["auto"] : [])
+  ].join(" ");
+  const stackLabelLength = Math.max(0, ...stackLines.map((column) => column.header.length));
+  const stackLine = (header: string | undefined, content: React.ReactNode) => (
+    <div className={styles.tableStackLine}>
+      {header !== undefined && (
+        <span className={styles.tableStackLabel} aria-hidden>
+          {header}
+        </span>
+      )}
+      <div className={styles.tableStackValue}>{content}</div>
+    </div>
+  );
   const columnStyle = (
     column: DataTableColumn<Row>
   ): React.CSSProperties & {
@@ -574,6 +719,8 @@ export function DataTable<Row>({
     textAlign: column.align,
     "--cipher-pin-offset": pinOffsets.get(column.id)
   });
+  const cellStyle = (column: DataTableColumn<Row>) =>
+    stacked ? stackPlace(column) : columnStyle(column);
   const headShape =
     fixedLayout && !flowing
       ? JSON.stringify(
@@ -640,7 +787,12 @@ export function DataTable<Row>({
     .join("\n");
   React.useLayoutEffect(() => {
     const container = scroll.current;
-    if ((!droppable && !bare) || !container || (contentSized && primaryWidth === undefined))
+    if (
+      stacked ||
+      (!droppable && !bare) ||
+      !container ||
+      (contentSized && primaryWidth === undefined)
+    )
       return;
     const measure = () => {
       const width = container.clientWidth;
@@ -686,7 +838,7 @@ export function DataTable<Row>({
     const table = container.querySelector("table");
     if (table) observer.observe(table);
     return () => observer.disconnect();
-  }, [droppable, bare, narrow, contentSized, primaryWidth, primaryCap]);
+  }, [stacked, droppable, bare, narrow, contentSized, primaryWidth, primaryCap]);
   React.useLayoutEffect(() => {
     const table = scroll.current?.querySelector("table");
     if (!contentSized || !table) {
@@ -878,6 +1030,9 @@ export function DataTable<Row>({
   ) => {
     const extra = rowProps?.(row, position);
     const restricted = getRowRestricted?.(row);
+    const restrictedColumns = stacked
+      ? columns.filter((column) => column.id === stackTitle)
+      : columns;
     if (restricted)
       return (
         <TableRow
@@ -893,27 +1048,39 @@ export function DataTable<Row>({
           data-muted=""
           data-restricted=""
           data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
-          style={{ height: effectiveRowHeight }}
+          data-stack-row={stacked || undefined}
+          data-depth={stacked && depth > 0 ? depth : undefined}
+          role={role("row")}
+          style={stacked ? undefined : { height: effectiveRowHeight }}
         >
-          {selectable && <TableCell selection pin={leading ? "start" : undefined} />}
-          {columns.map((column) => (
+          {selectable && (
+            <TableCell
+              selection
+              pin={leading && !stacked ? "start" : undefined}
+              role={role("cell")}
+              aria-colindex={stacked ? 1 : undefined}
+            />
+          )}
+          {restrictedColumns.map((column) => (
             <TableCell
               key={column.id}
-              className={column.actions ? styles.tableActions : undefined}
-              style={columnStyle(column)}
+              className={column.actions && !stacked ? styles.tableActions : undefined}
+              style={cellStyle(column)}
               data-actions={column.actions || undefined}
-              data-pin={column.pin ?? column.actions}
+              data-pin={stacked ? undefined : (column.pin ?? column.actions)}
+              role={role("cell")}
+              aria-colindex={colIndex(column)}
             >
-              {column.id === indentColumn && (
+              {column.id === (stackTitle ?? indentColumn) && (
                 <CellContent
                   shrink={column.id === shrinkColumn}
                   secondary={undefined}
-                  depth={depth > 0 ? depth : undefined}
+                  depth={depth > 0 && !stacked ? depth : undefined}
                   maxWidth={column.maxWidth}
                 >
                   <div
                     className={styles.tablePrimary}
-                    data-depth={depth > 0 ? depth : undefined}
+                    data-depth={depth > 0 && !stacked ? depth : undefined}
                     style={{ maxWidth: column.maxWidth }}
                   >
                     <NameLine media={<Icon name="lock" />} title={restricted}>
@@ -924,7 +1091,14 @@ export function DataTable<Row>({
               )}
             </TableCell>
           ))}
-          {rowActions && <TableActionsCell slots={slots} data-pin="true" />}
+          {rowActions && (
+            <TableActionsCell
+              slots={stacked ? 1 : slots}
+              data-pin={stacked ? undefined : "true"}
+              role={role("cell")}
+              aria-colindex={stacked ? columns.length + bodyStart : undefined}
+            />
+          )}
         </TableRow>
       );
     const activate = onRowActivate && (isRowActivatable?.(row) ?? true) ? onRowActivate : undefined;
@@ -950,6 +1124,9 @@ export function DataTable<Row>({
         tone={rowTone?.(row)}
         data-drop-target={dropEdge(position) ?? extra?.["data-drop-target"]}
         data-sortable-lifted={sortRows.lift?.key === getRowId(row) || undefined}
+        data-stack-row={stacked || undefined}
+        data-depth={stacked && depth > 0 ? depth : undefined}
+        role={role("row")}
         onClick={
           activate || extra?.onClick
             ? (event) => {
@@ -969,15 +1146,17 @@ export function DataTable<Row>({
             toggle(getRowId(row));
           }
         }}
-        style={{ height: effectiveRowHeight }}
+        style={stacked ? undefined : { height: effectiveRowHeight }}
       >
         {selectable && (
           <TableCell
             selection
-            pin={leading ? "start" : undefined}
-            data-valign={topByDefault ? "top" : undefined}
+            pin={leading && !stacked ? "start" : undefined}
+            data-valign={topByDefault && !stacked ? "top" : undefined}
+            role={role("cell")}
+            aria-colindex={stacked ? 1 : undefined}
           >
-            <TopBand top={topByDefault}>
+            <TopBand top={topByDefault && !stacked}>
               <SelectionBox
                 label={`Select ${rowLabel(row)}`}
                 checked={selected.includes(getRowId(row))}
@@ -997,7 +1176,7 @@ export function DataTable<Row>({
               rowId={getRowId(row)}
             />
           ) : column.actions ? (
-            <TableRowActions style={{ maxWidth: column.maxWidth }}>
+            <TableRowActions style={stacked ? undefined : { maxWidth: column.maxWidth }}>
               {column.render?.(row, position)}
             </TableRowActions>
           ) : (
@@ -1005,14 +1184,14 @@ export function DataTable<Row>({
               shrink={column.id === shrinkColumn}
               secondary={column.secondary?.(row, position)}
               wrap={column.wrap}
-              depth={depth > 0 && column.id === indentColumn ? depth : undefined}
+              depth={depth > 0 && !stacked && column.id === indentColumn ? depth : undefined}
               maxWidth={column.maxWidth}
             >
               <div
                 className={column.primary ? styles.tablePrimary : styles.tableValue}
                 data-mono={column.mono || undefined}
                 data-wrap={column.wrap || undefined}
-                data-depth={depth > 0 && column.id === indentColumn ? depth : undefined}
+                data-depth={depth > 0 && !stacked && column.id === indentColumn ? depth : undefined}
                 style={{ maxWidth: column.maxWidth }}
                 title={column.wrap ? undefined : column.text?.(row)}
               >
@@ -1032,21 +1211,34 @@ export function DataTable<Row>({
             <EditableCell
               key={column.id}
               edit={edit}
-              className={column.actions ? styles.tableActions : undefined}
-              style={columnStyle(column)}
+              className={column.actions && !stacked ? styles.tableActions : undefined}
+              style={cellStyle(column)}
               data-actions={column.actions || undefined}
-              data-pin={column.pin ?? column.actions}
+              data-pin={stacked ? undefined : (column.pin ?? column.actions)}
               data-wrap={column.wrap || undefined}
               data-secondary={column.secondary ? true : undefined}
               data-valign={topAligned(column) ? "top" : undefined}
               data-row-interactive={column.actions || column.toggle || edit ? true : undefined}
+              data-stack={
+                stacked
+                  ? column.id === stackTitle
+                    ? "title"
+                    : stackTrail.includes(column)
+                      ? "meta"
+                      : "line"
+                  : undefined
+              }
+              role={role("cell")}
+              aria-colindex={colIndex(column)}
             >
               <TopBand top={topAligned(column)}>
-                {reorder && columnIndex === 0 ? (
+                {reorder && (stacked ? column.id === stackTitle : columnIndex === 0) ? (
                   <div className={styles.tableSortCell}>
                     {rowHandle(row)}
                     {content}
                   </div>
+                ) : stackLines.includes(column) ? (
+                  stackLine(column.hideHeader ? undefined : column.header, content)
                 ) : (
                   content
                 )}
@@ -1056,13 +1248,16 @@ export function DataTable<Row>({
         })}
         {rowActions && (
           <TableActionsCell
-            slots={slots}
-            data-pin="true"
-            data-valign={topByDefault ? "top" : undefined}
+            slots={stacked ? 1 : slots}
+            data-pin={stacked ? undefined : "true"}
+            data-valign={topByDefault && !stacked ? "top" : undefined}
+            role={role("cell")}
+            aria-colindex={stacked ? columns.length + bodyStart : undefined}
           >
-            <TopBand top={topByDefault}>
+            <TopBand top={topByDefault && !stacked}>
               <RowActions
                 lazy
+                folded={stacked}
                 label={rowLabel(row)}
                 inline={rowInline(row)}
                 menu={rowActions.renderMenu?.(row)}
@@ -1087,6 +1282,125 @@ export function DataTable<Row>({
       </RowContextMenu>
     );
   };
+  const sortable = onSortChange ? columns.filter((column) => column.sortable) : [];
+  const sortColumn = sortable.find((column) => column.id === sort?.columnId);
+  const sortDirection = sort?.direction === "desc" ? "descending" : "ascending";
+  const toggles = columns.filter((column) => column.toggle);
+  const stackBand = stacked && (selectable || sortable.length > 0 || toggles.length > 0) && (
+    <div
+      className={styles.tableStackBand}
+      role="group"
+      aria-label={`${label} options`}
+      data-slot="data-table-stack-band"
+    >
+      {selectable && selectAll("Select all")}
+      {toggles.map(
+        (column) =>
+          column.toggle && (
+            <span key={column.id} className={styles.tableStackToggle}>
+              <ToggleHead
+                toggle={column.toggle}
+                counts={toggleCounts(column.toggle)}
+                label={column.toggle.label ?? `${column.header} for every row in ${label}`}
+                disabled={loading}
+                getRowId={getRowId}
+              />
+              <span aria-hidden>{column.header}</span>
+            </span>
+          )
+      )}
+      {onSortChange && sortable.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={styles.tableStackSort}
+              icon={sort?.direction === "desc" ? "arrow-down" : "arrow-up"}
+              aria-label={
+                sortColumn
+                  ? `Sort by ${sortColumn.header}, ${sortDirection}`
+                  : "Sort"
+              }
+            >
+              {sortColumn?.header ?? "Sort"}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuRadioGroup
+              value={sortColumn?.id ?? ""}
+              onValueChange={(columnId) =>
+                onSortChange({ columnId, direction: sort?.direction ?? "asc" })
+              }
+            >
+              {sortable.map((column) => (
+                <DropdownMenuRadioItem key={column.id} value={column.id}>
+                  {column.header}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={sortColumn ? (sort?.direction ?? "asc") : ""}
+              onValueChange={(direction) =>
+                sortColumn &&
+                onSortChange({
+                  columnId: sortColumn.id,
+                  direction: direction === "desc" ? "desc" : "asc"
+                })
+              }
+            >
+              <DropdownMenuRadioItem value="asc" disabled={!sortColumn}>
+                Ascending
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="desc" disabled={!sortColumn}>
+                Descending
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </div>
+  );
+  const stackSkeleton = Array.from({ length: skeletonRows }, (_, index) => (
+    <TableRow key={`loading-${index}`} aria-hidden data-loading data-stack-row="" role="row">
+      {selectable && (
+        <TableCell selection>
+          <div className={styles.tableSelection}>
+            <Skeleton width="var(--cipher-size-icon)" height="var(--cipher-size-icon)" />
+          </div>
+        </TableCell>
+      )}
+      {columns
+        .filter((column) => column.id === stackTitle || stackLines.slice(0, 3).includes(column))
+        .map((column) => (
+          <TableCell
+            key={column.id}
+            style={stackPlace(column)}
+            data-stack={column.id === stackTitle ? "title" : "line"}
+          >
+            {column.id === stackTitle ? (
+              <Skeleton className={styles.tableSkeleton} data-primary="" />
+            ) : (
+              <div className={styles.tableStackLine}>
+                <Skeleton
+                  className={styles.tableStackLabelSkeleton}
+                  height="var(--cipher-space-12)"
+                />
+                <Skeleton className={styles.tableSkeleton} height="var(--cipher-space-12)" />
+              </div>
+            )}
+          </TableCell>
+        ))}
+      {rowActions && (
+        <TableActionsCell slots={1}>
+          <TableRowActions>
+            <Skeleton width="var(--cipher-size-glyph)" height="var(--cipher-size-glyph)" />
+          </TableRowActions>
+        </TableActionsCell>
+      )}
+    </TableRow>
+  ));
   const scrollFrame = (
     <div
       ref={attachScroll}
@@ -1097,17 +1411,28 @@ export function DataTable<Row>({
       className={cn(!embedded && frame.frame, styles.tableScroll, containerClassName)}
       data-virtual={windowed || undefined}
       data-flow={flowing || undefined}
+      data-stacked={stacked || undefined}
       style={tableStyle}
       onScroll={flowing ? undefined : (event) => setTop(event.currentTarget.scrollTop)}
     >
+      {stackBand}
       <Table
         aria-label={label}
         aria-rowcount={rowCount + (showFooter ? 1 : 0)}
+        aria-colcount={
+          stacked ? columns.length + bodyStart - 1 + (actionsColumn ? 1 : 0) : undefined
+        }
         aria-busy={loading || refreshing || undefined}
+        role={role("table")}
         data-variant={variant}
-        data-layout={fixedLayout ? "fixed" : undefined}
+        data-layout={fixedLayout && !stacked ? "fixed" : undefined}
         style={
-          fixedLayout && !squeezed
+          stacked
+            ? ({
+                "--cipher-stack-columns": stackColumns,
+                "--cipher-stack-label": `${stackLabelLength + 2}ch`
+              } as React.CSSProperties)
+            : fixedLayout && !squeezed
             ? {
                 minWidth: `calc(${[
                   `${fixedWidth}px`,
@@ -1121,28 +1446,16 @@ export function DataTable<Row>({
             : undefined
         }
       >
-        <TableHeader data-hidden={headerHidden || squeezed || undefined}>
-          <TableRow>
+        <TableHeader data-hidden={headerHidden || squeezed || undefined} role={role("rowgroup")}>
+          <TableRow role={role("row")}>
             {selectable && (
-              <TableHead selection pin={leading ? "start" : undefined}>
-                {!squeezed && (
-                  <Checkbox
-                    aria-label={`Select all available rows in ${label}`}
-                    disabled={loading || !eligible.length}
-                    checked={
-                      checked > 0 && checked < eligible.length
-                        ? "indeterminate"
-                        : eligible.length > 0 && checked === eligible.length
-                    }
-                    onCheckedChange={() =>
-                      update(
-                        checked === eligible.length
-                          ? selected.filter((id) => !eligible.includes(id))
-                          : [...new Set([...selected, ...eligible])]
-                      )
-                    }
-                  />
-                )}
+              <TableHead
+                selection
+                pin={leading && !stacked ? "start" : undefined}
+                role={role("columnheader")}
+                aria-colindex={stacked ? 1 : undefined}
+              >
+                {stacked ? <span className={styles.sr}>Select</span> : !squeezed && selectAll()}
               </TableHead>
             )}
             {columns.map((column) => (
@@ -1150,10 +1463,12 @@ export function DataTable<Row>({
                 key={column.id}
                 scope="col"
                 data-column={column.id}
-                className={column.actions ? styles.tableActions : undefined}
-                style={columnStyle(column)}
+                className={column.actions && !stacked ? styles.tableActions : undefined}
+                style={stacked ? undefined : columnStyle(column)}
                 data-actions={column.actions || undefined}
-                data-pin={column.pin ?? column.actions}
+                data-pin={stacked ? undefined : (column.pin ?? column.actions)}
+                role={role("columnheader")}
+                aria-colindex={colIndex(column)}
                 aria-sort={
                   sort?.columnId === column.id
                     ? sort.direction === "asc"
@@ -1162,7 +1477,7 @@ export function DataTable<Row>({
                     : undefined
                 }
               >
-                {column.toggle && !squeezed && (
+                {column.toggle && !squeezed && !stacked && (
                   <ToggleHead
                     toggle={column.toggle}
                     counts={toggleCounts(column.toggle)}
@@ -1171,7 +1486,7 @@ export function DataTable<Row>({
                     getRowId={getRowId}
                   />
                 )}
-                {column.sortable && onSortChange && !squeezed ? (
+                {column.sortable && onSortChange && !squeezed && !stacked ? (
                   <TableHeadButton
                     data-active={sort?.columnId === column.id || undefined}
                     onClick={() =>
@@ -1196,7 +1511,7 @@ export function DataTable<Row>({
                     className={
                       squeezed || column.hideHeader || column.actions
                         ? styles.sr
-                        : column.toggle
+                        : column.toggle && !stacked
                           ? undefined
                           : styles.tableHeadLabel
                     }
@@ -1207,15 +1522,21 @@ export function DataTable<Row>({
               </TableHead>
             ))}
             {rowActions && actionsColumn && (
-              <TableActionsHead slots={slots} data-pin="true">
+              <TableActionsHead
+                slots={stacked ? 1 : slots}
+                data-pin={stacked ? undefined : "true"}
+                role={role("columnheader")}
+                aria-colindex={stacked ? columns.length + bodyStart : undefined}
+              >
                 {rowActions.header ?? "Actions"}
               </TableActionsHead>
             )}
           </TableRow>
         </TableHeader>
         {(loading || !groups || !rows.length) && (
-          <TableBody>
-            {loading && (
+          <TableBody role={role("rowgroup")}>
+            {loading && stacked && stackSkeleton}
+            {loading && !stacked && (
               <TableLoadingRows
                 rows={skeletonRows}
                 selectable={selectable}
@@ -1233,7 +1554,7 @@ export function DataTable<Row>({
               <TableRow aria-hidden data-spacer>
                 <TableCell
                   colSpan={span}
-                  style={{ height: start * (effectiveRowHeight ?? 0), padding: 0 }}
+                  style={{ height: spacerAbove, padding: 0 }}
                 />
               </TableRow>
             )}
@@ -1246,13 +1567,13 @@ export function DataTable<Row>({
               <TableRow aria-hidden data-spacer>
                 <TableCell
                   colSpan={span}
-                  style={{ height: (rows.length - stop) * (effectiveRowHeight ?? 0), padding: 0 }}
+                  style={{ height: spacerBelow, padding: 0 }}
                 />
               </TableRow>
             )}
             {!loading && !rows.length && (
-              <TableRow data-row-kind="empty">
-                <TableCell colSpan={span} pin="viewport">
+              <TableRow data-row-kind="empty" role={role("row")}>
+                <TableCell colSpan={span} pin="viewport" role={role("cell")}>
                   <EmptyScope
                     ghost={ghost ?? (embedded || filtered ? false : "rows")}
                     size="sm"
@@ -1275,14 +1596,15 @@ export function DataTable<Row>({
               .slice(0, index)
               .reduce((sum, section) => sum + section.entries.length, 0);
             return (
-              <TableBody key={group?.id} data-group="">
+              <TableBody key={group?.id} data-group="" role={role("rowgroup")}>
                 <TableGroupRow
                   aria-rowindex={offset + 2}
+                  role={role("row")}
                   label={group?.label}
                   meta={group?.meta}
                   actions={group?.actions}
                   colSpan={columns.length}
-                  actionSlots={rowActions ? slots : undefined}
+                  actionSlots={rowActions ? (stacked ? 1 : slots) : undefined}
                   selectable={selectable}
                   checkbox={selectable && group ? groupCheckbox(group, groupEntries) : undefined}
                 />
@@ -1290,7 +1612,39 @@ export function DataTable<Row>({
               </TableBody>
             );
           })}
-        {showFooter && (
+        {showFooter && stacked && (
+          <TableFooter
+            className={styles.tableFoot}
+            data-slot="data-table-footer"
+            role="rowgroup"
+          >
+            <TableRow aria-rowindex={rowCount + 1} role="row" data-stack-row="">
+              {columns
+                .filter((column) => column.footer !== undefined)
+                .map((column, index) => (
+                  <TableCell
+                    key={column.id}
+                    style={{ gridColumn: `${bodyStart} / -1`, gridRow: index + 1 }}
+                    data-stack="line"
+                    role="cell"
+                    aria-colindex={colIndex(column)}
+                  >
+                    {stackLine(
+                      column.header,
+                      <div
+                        className={styles.tableValue}
+                        data-mono={column.mono || undefined}
+                        data-wrap={column.wrap || undefined}
+                      >
+                        {column.footer}
+                      </div>
+                    )}
+                  </TableCell>
+                ))}
+            </TableRow>
+          </TableFooter>
+        )}
+        {showFooter && !stacked && (
           <TableFooter className={styles.tableFoot} data-slot="data-table-footer">
             <TableRow aria-rowindex={rowCount + 1}>
               {selectable && <TableCell selection pin={leading ? "start" : undefined} />}
@@ -1368,6 +1722,16 @@ export function DataTable<Row>({
       {actionBar}
     </div>
   );
+}
+function rowAt(offsets: readonly number[], y: number) {
+  let low = 0;
+  let high = offsets.length - 1;
+  while (low < high) {
+    const mid = Math.ceil((low + high) / 2);
+    if (offsets[mid] <= y) low = mid;
+    else high = mid - 1;
+  }
+  return low;
 }
 function TopBand({ top, children }: { top: boolean; children: React.ReactNode }) {
   return top ? <div className={styles.tableBand}>{children}</div> : children;

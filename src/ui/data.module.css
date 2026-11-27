@@ -2097,3 +2097,191 @@ td.tableSelectionCell {
 .nativeTableRow[data-sortable-lifted] {
   --cipher-table-row-state: var(--cipher-selected-surface);
 }
+
+/* Stacked rows: each data row is a grid of a title line (selection, primary cell, meta cells, actions) and one label and value line per remaining column. The cells keep their table roles and column headers; the visible labels are aria-hidden copies of them. */
+.tableScroll[data-stacked] {
+  overflow-x: clip;
+}
+.tableScroll[data-stacked] table,
+.tableScroll[data-stacked] :is(tbody, tfoot) {
+  display: block;
+  min-width: 0;
+}
+.tableScroll[data-stacked] thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.tableScroll[data-stacked] tr[data-stack-row] {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--cipher-stack-columns);
+  align-items: start;
+  padding-block-end: var(--cipher-space-8);
+}
+.tableScroll[data-stacked] tbody > tr:last-child {
+  border-bottom-width: 0;
+}
+.tableScroll[data-stacked] tr[data-stack-row] > :is(td, th) {
+  display: block;
+  position: static;
+  height: auto;
+  min-width: 0;
+  width: auto;
+  border: 0;
+  box-shadow: none;
+  background: none;
+}
+.tableScroll[data-stacked]
+  tr[data-stack-row]
+  > :is(
+    .tableSelectionCell,
+    [data-stack="title"],
+    [data-stack="meta"],
+    [data-slot="table-actions-cell"]
+  ) {
+  display: flex;
+  align-items: center;
+  grid-row: 1;
+  min-height: calc(var(--cipher-size-row) - var(--cipher-size-control-border));
+}
+.tableScroll[data-stacked] tr[data-stack-row] > .tableSelectionCell {
+  grid-column: 1;
+  justify-content: center;
+  width: var(--cipher-size-row);
+}
+.tableScroll[data-stacked] tr[data-stack-row] > [data-slot="table-actions-cell"] {
+  grid-column: -2 / -1;
+}
+.tableScroll[data-stacked] [data-stack="title"] > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.tableScroll[data-stacked] [data-stack="meta"] {
+  color: var(--cipher-muted);
+  white-space: nowrap;
+}
+.tableScroll[data-stacked] [data-stack="line"] {
+  padding-block: var(--cipher-space-2);
+}
+.tableScroll[data-stacked] :is(.tableValue, .tablePrimary, .tableRowActions, .tableSelection) {
+  min-height: 0;
+}
+.tableScroll[data-stacked] [data-stack="line"] :is(.tableValue, .tablePrimary) {
+  min-width: 0;
+}
+.tableStackLine {
+  display: grid;
+  grid-template-columns: min(40%, var(--cipher-stack-label)) minmax(0, 1fr);
+  column-gap: var(--cipher-space-12);
+  align-items: baseline;
+  min-width: 0;
+}
+.tableStackValue {
+  min-width: 0;
+}
+.tableStackValue:only-child {
+  grid-column: 1 / -1;
+}
+.tableStackLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--cipher-muted);
+  font-family: var(--cipher-type-small-font-family);
+  font-size: var(--cipher-type-small-font-size);
+  line-height: var(--cipher-type-small-line-height);
+  font-weight: var(--cipher-type-small-font-weight);
+  letter-spacing: var(--cipher-type-small-letter-spacing);
+}
+.tableStackLabelSkeleton {
+  width: 70%;
+}
+.tableScroll[data-stacked] tr[data-stack-row][data-depth]::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--cipher-space-8);
+  inset-inline-start: calc(var(--cipher-space-row-indent) / 2 + var(--cipher-focus-clearance));
+  border-inline-start: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.tableScroll[data-stacked] :is(tbody, tfoot) > tr:not([data-stack-row]) {
+  display: flex;
+  align-items: center;
+}
+.tableScroll[data-stacked] :is(tbody, tfoot) > tr:not([data-stack-row]) > :is(td, th) {
+  flex: none;
+  height: auto;
+  position: static;
+  box-shadow: none;
+}
+.tableScroll[data-stacked] :is(tbody, tfoot) > tr:not([data-stack-row]) > [colspan] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.tableScroll[data-stacked] tr[data-spacer],
+.tableScroll[data-stacked] tr[data-spacer] > td {
+  display: block;
+}
+.tableScroll[data-stacked] .tableFoot > tr[data-stack-row] {
+  padding-block: var(--cipher-space-8);
+}
+.tableStackBand {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cipher-space-4) var(--cipher-space-16);
+  min-height: var(--cipher-size-row);
+  padding-inline: calc((var(--cipher-size-row) - var(--cipher-size-icon)) / 2)
+    var(--cipher-space-row-actions-inset);
+  background: var(--cipher-tint);
+}
+.tableShell[data-embedded] .tableStackBand {
+  background: var(--cipher-surface);
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.tableStackToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cipher-space-8);
+}
+.tableStackSort {
+  margin-inline-start: auto;
+}
+
+.tableScroll[data-stacked] tbody[data-group] > tr[data-stack-row] > td {
+  border: 0;
+}
+.tableScroll[data-stacked] tbody[data-group]:not(:last-of-type) > tr:last-child {
+  border-bottom-width: var(--cipher-size-control-border);
+}
+.tableScroll[data-stacked] tr[data-slot="table-group-row"] {
+  border-bottom: var(--cipher-size-control-border) solid var(--cipher-line-soft);
+}
+.tableScroll[data-stacked] tr[data-slot="table-group-row"] > :is(td, th) {
+  display: flex;
+  align-items: center;
+  min-height: var(--cipher-table-row-height, var(--cipher-size-row));
+  border: 0;
+}
+.tableScroll[data-stacked] tr[data-slot="table-group-row"] > .tableSelectionCell {
+  justify-content: center;
+  width: var(--cipher-size-row);
+}
+.tableScroll[data-stacked] tr[data-slot="table-group-row"] > [data-slot="table-actions-cell"] {
+  width: auto;
+}
+.tableScroll[data-stacked] .tableGroupLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tableScroll[data-stacked] .tableGroupMeta {
+  margin-inline-start: var(--cipher-space-8);
+}

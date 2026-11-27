@@ -687,6 +687,7 @@ function TableGroupRow({
   /** Width of the table's actions column. Omit when the table has none. */
   actionSlots?: number;
 }) {
+  const cellRole = props.role === undefined ? undefined : "cell";
   return (
     <tr
       ref={ref}
@@ -694,15 +695,24 @@ function TableGroupRow({
       className={cn(styles.tableGroupRow, className)}
       {...props}
     >
-      {selectable && <TableCell selection>{checkbox}</TableCell>}
-      <th scope="rowgroup" colSpan={colSpan} className={styles.tableGroupHead}>
+      {selectable && (
+        <TableCell selection role={cellRole}>
+          {checkbox}
+        </TableCell>
+      )}
+      <th
+        scope="rowgroup"
+        colSpan={colSpan}
+        className={styles.tableGroupHead}
+        role={props.role === undefined ? undefined : "rowheader"}
+      >
         <div className={styles.tableGroupLabel}>
           {label}
           {meta !== undefined && <span className={styles.tableGroupMeta}>{meta}</span>}
         </div>
       </th>
       {actionSlots !== undefined && (
-        <TableActionsCell slots={actionSlots} data-pin="true">
+        <TableActionsCell slots={actionSlots} data-pin="true" role={cellRole}>
           {actions}
         </TableActionsCell>
       )}
@@ -858,11 +868,12 @@ function IdleRowButton({
 
 function RowActions({
   label,
-  inline = [],
-  menu,
+  inline: inlineActions = [],
+  menu: moreMenu,
   menuLabel = "More actions",
-  menuDisabledReason,
+  menuDisabledReason: moreDisabledReason,
   lazy = false,
+  folded = false,
   open,
   defaultOpen,
   onOpenChange,
@@ -878,6 +889,8 @@ function RowActions({
   menuDisabledReason?: string;
   /** Renders plain buttons with the same DOM, classes and names, and no tooltips or menu, until the row is hovered or something in it takes focus, then swaps in the real parts in place. A press while idle still runs the action or opens the menu. For long tables. */
   lazy?: boolean;
+  /** One More button: the inline actions open at the top of its menu, above the menu items. For narrow rows, so actions go to overflow before the row's name truncates. */
+  folded?: boolean;
   /** The More menu's open state, for opening it from outside the row actions. */
   open?: boolean;
   defaultOpen?: boolean;
@@ -885,6 +898,29 @@ function RowActions({
   /** The More menu's close focus handler: preventDefault keeps focus where a menu item moved it. */
   onMenuCloseAutoFocus?: (event: Event) => void;
 }) {
+  const foldable = folded && inlineActions.length > 0;
+  const showMore = moreMenu !== undefined && !moreDisabledReason;
+  const inline = foldable ? [] : inlineActions;
+  const menu = foldable ? (
+    <>
+      {inlineActions.map((action) => (
+        <DropdownMenuItem
+          key={action.label}
+          disabled={Boolean(action.disabledReason) || action.loading}
+          description={action.disabledReason}
+          onSelect={action.onSelect}
+        >
+          <Icon icon={action.icon} />
+          {action.label}
+        </DropdownMenuItem>
+      ))}
+      {showMore && <DropdownMenuSeparator />}
+      {showMore && moreMenu}
+    </>
+  ) : (
+    moreMenu
+  );
+  const menuDisabledReason = foldable ? undefined : moreDisabledReason;
   const [live, setLive] = React.useState(!lazy || Boolean(open || defaultOpen));
   const [openOnMount, setOpenOnMount] = React.useState(false);
   const group = React.useRef<HTMLDivElement | null>(null);
