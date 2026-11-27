@@ -80,18 +80,19 @@ const coveredByOverlay = (trigger: Element) =>
  * under a cell pinned over the scrolled columns. A sideways-scrolled table can leave a row's trigger out of view.
  */
 const visibleInRow = (row: HTMLTableRowElement) => {
-  let left = 0;
-  let right = document.documentElement.clientWidth;
-  for (let node = row.parentElement; node; node = node.parentElement) {
-    if (!/auto|scroll|hidden|clip/.test(getComputedStyle(node).overflowX)) continue;
-    const box = node.getBoundingClientRect();
-    left = Math.max(left, box.left);
-    right = Math.min(right, box.right);
-  }
   const pinned = [...row.cells].filter((cell) => cell.hasAttribute("data-pin"));
   return (item: Element) => {
     const box = item.getBoundingClientRect();
-    if (box.width === 0 || box.left < left - 1 || box.right > right + 1) return false;
+    if (box.width === 0) return false;
+    let left = 0;
+    let right = document.documentElement.clientWidth;
+    for (let node = item.parentElement; node; node = node.parentElement) {
+      if (!/auto|scroll|hidden|clip/.test(getComputedStyle(node).overflowX)) continue;
+      const clip = node.getBoundingClientRect();
+      left = Math.max(left, clip.left);
+      right = Math.min(right, clip.right);
+    }
+    if (box.left < left - 1 || box.right > right + 1) return false;
     const cell = item.closest("td, th");
     if (cell?.hasAttribute("data-pin")) return true;
     return pinned.every((pin) => {
