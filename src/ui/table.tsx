@@ -86,12 +86,21 @@ function Table({
 }
 Table.displayName = "Table";
 
-function TableHeader({ className, ref, ...props }: React.ComponentProps<"thead">) {
+function TableHeader({
+  className,
+  ground,
+  ref,
+  ...props
+}: React.ComponentProps<"thead"> & {
+  /** paper sets the header row on its own ground, for a table with a toolbar or notice band stacked above it, so each band reads as a separate layer. */
+  ground?: "paper";
+}) {
   return (
     <BodyFocusContext value={null}>
       <thead
         ref={ref}
         data-slot="table-header"
+        data-ground={ground}
         className={cn("[&_tr]:border-b [&_tr]:border-[color:var(--cipher-line-soft)]", className)}
         {...props}
       />

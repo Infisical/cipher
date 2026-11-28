@@ -1365,6 +1365,15 @@ tbody > .nativeTableRow[data-loading] {
 .tableShell[data-embedded] .tablePagination {
   background: var(--cipher-surface);
 }
+thead[data-ground="paper"] > .nativeTableRow {
+  --cipher-table-row-ground: var(--cipher-paper);
+}
+.tableScroll thead[data-ground="paper"],
+.tableShell[data-embedded] thead[data-ground="paper"],
+thead[data-ground="paper"] th:is([data-pin], .tableActions, .tableSelectionCell),
+.tableScroll thead[data-ground="paper"] th:is([data-pin], .tableActions, .tableSelectionCell) {
+  background-color: var(--cipher-paper);
+}
 .tableShell[data-embedded] td:is([data-pin="true"], [data-pin="start"]:first-child) {
   --cipher-pin-frame: 0 0 transparent;
 }
