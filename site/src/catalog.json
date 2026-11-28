@@ -2676,6 +2676,10 @@
       {
         "title": "Blocked actions",
         "module": "tooltip/disabled"
+      },
+      {
+        "title": "Open on the page ground",
+        "module": "tooltip/open"
       }
     ]
   },

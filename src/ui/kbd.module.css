@@ -57,7 +57,7 @@
   line-height: var(--cipher-type-mono-sm-line-height);
   font-weight: var(--cipher-type-mono-sm-font-weight);
   letter-spacing: var(--cipher-type-mono-sm-letter-spacing);
-  color: var(--cipher-on-ink);
+  color: var(--cipher-tooltip-text);
   background: transparent;
   border-color: currentColor;
   --cipher-kbd-size: var(--cipher-size-kbd-xs);
