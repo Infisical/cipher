@@ -1380,6 +1380,10 @@
       {
         "title": "Inside a framed card",
         "module": "inset/default"
+      },
+      {
+        "title": "Hanging in a sheet section",
+        "module": "inset/hanging"
       }
     ]
   },

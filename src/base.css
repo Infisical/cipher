@@ -462,6 +462,9 @@
 }
 /* A full-width side sheet always shows its close button, so it clears it as data-has-close does. */
 @media (width <= 512px) {
+  .cipher :is([data-slot="sheet-content"], [data-slot="dialog-content"]) {
+    --cipher-space-overlay-section: var(--cipher-space-20);
+  }
   .cipher
     [data-slot="sheet-content"]:is([data-side="left"], [data-side="right"])
     [data-slot="panes"] {
