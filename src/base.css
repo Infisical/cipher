@@ -199,9 +199,9 @@
 
 .cipher[data-scheme="dark"] {
   color-scheme: dark;
-  --color-border: color-mix(in oklab, var(--cipher-mix-ink) 11%, var(--cipher-surface));
-  --color-sidebar-accent: var(--cipher-sidebar-current);
-  --color-sidebar-border: var(--cipher-line-soft);
+  --color-border: #262729;
+  --color-sidebar-accent: #1c1c1c;
+  --color-sidebar-border: #1b1c1d;
   color: var(--color-foreground);
   background: var(--color-background);
   font-family: var(--cipher-font-sans);
