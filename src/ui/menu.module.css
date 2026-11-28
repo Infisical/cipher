@@ -120,9 +120,11 @@
   user-select: none;
   white-space: normal;
   border-radius: 0;
-  background-color: var(--cipher-ink);
-  color: var(--cipher-on-ink);
-  box-shadow: var(--cipher-shadow-pop);
+  background-color: var(--cipher-tooltip-bg);
+  color: var(--cipher-tooltip-text);
+  box-shadow:
+    inset 0 0 0 var(--cipher-size-control-border) var(--cipher-tooltip-line),
+    var(--cipher-shadow-pop);
   overflow-wrap: break-word;
   font-family: var(--cipher-type-small-font-family);
   font-size: var(--cipher-type-small-font-size);
@@ -145,7 +147,7 @@
   padding-inline-end: var(--cipher-space-6);
 }
 .tooltipArrow {
-  fill: var(--cipher-ink);
+  fill: var(--cipher-tooltip-bg);
 }
 
 .motion {

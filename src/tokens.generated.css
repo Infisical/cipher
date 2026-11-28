@@ -267,6 +267,9 @@
   --cipher-toast-muted: var(--cipher-muted);
   --cipher-toast-ok: var(--cipher-ok);
   --cipher-toast-bad: var(--cipher-bad);
+  --cipher-tooltip-bg: var(--cipher-ink);
+  --cipher-tooltip-line: var(--cipher-ink);
+  --cipher-tooltip-text: var(--cipher-on-ink);
   --cipher-scrim: rgba(1, 1, 1, 0.38);
   --cipher-button-face-start: color-mix(in srgb, var(--cipher-accent) 82%, white);
   --cipher-button-face-end: var(--cipher-accent);
@@ -520,6 +523,9 @@
   --cipher-toast-muted: var(--cipher-muted);
   --cipher-toast-ok: var(--cipher-ok);
   --cipher-toast-bad: #ff7a70;
+  --cipher-tooltip-bg: var(--cipher-toast-bg);
+  --cipher-tooltip-line: var(--cipher-toast-line);
+  --cipher-tooltip-text: var(--cipher-ink);
   --cipher-scrim: rgba(0, 0, 0, 0.62);
   --cipher-button-face-start: color-mix(in srgb, var(--cipher-accent) 82%, white);
   --cipher-button-face-end: var(--cipher-accent);
