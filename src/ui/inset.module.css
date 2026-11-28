@@ -3,6 +3,9 @@
   padding: var(--cipher-space-surface-inset-sm);
   border: 0;
   border-radius: 0;
-  background: var(--cipher-tint);
+  background: var(--cipher-well);
   color: var(--cipher-ink);
+}
+.inset[data-hang] {
+  margin-inline: calc(-1 * var(--cipher-space-surface-inset-sm));
 }

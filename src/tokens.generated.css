@@ -43,6 +43,7 @@
   --cipher-space-frame-inline: var(--cipher-space-6);
   --cipher-space-frame-title-inline: calc(var(--cipher-space-12) - var(--cipher-space-frame-inline));
   --cipher-space-overlay-inset: var(--cipher-space-20);
+  --cipher-space-overlay-section: var(--cipher-space-24);
   --cipher-space-menu-inset: var(--cipher-space-3);
   --cipher-space-control-slot-inset: var(--cipher-space-3);
   --cipher-space-control-slot-gap: var(--cipher-space-4);
@@ -174,6 +175,7 @@
   --cipher-sidebar-hover: var(--cipher-sidebar-current);
   --cipher-paper: #f4f3ee;
   --cipher-tint: #faf8f4;
+  --cipher-well: var(--cipher-paper);
   --cipher-row-done: var(--cipher-paper);
   --cipher-row-done-card: color-mix(in oklab, var(--cipher-tint) 50%, transparent);
   --cipher-row-done-divided: color-mix(in oklab, var(--cipher-ink) 4%, transparent);
@@ -430,6 +432,7 @@
   --cipher-sidebar-hover: color-mix(in srgb, var(--cipher-mix-ink) var(--cipher-current-mix), var(--cipher-frame));
   --cipher-paper: #161616;
   --cipher-tint: #1c1c1c;
+  --cipher-well: var(--cipher-tint);
   --cipher-row-done: var(--cipher-surface);
   --cipher-row-done-card: color-mix(in oklab, var(--cipher-tint) 50%, transparent);
   --cipher-row-done-divided: color-mix(in oklab, var(--cipher-ink) 6%, transparent);
