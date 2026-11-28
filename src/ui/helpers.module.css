@@ -858,12 +858,12 @@
 }
 .alert[data-band] {
   border-width: 0 0 var(--cipher-size-control-border);
-  padding: var(--cipher-space-8) var(--cipher-space-surface-inset-sm);
+  padding: var(--cipher-space-4) var(--cipher-space-surface-inset-sm);
 }
 .alert > svg {
   --cipher-lead-line: var(--cipher-type-row-title-line-height);
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   color: currentColor;
 }
 .alert[data-has-icon]:not([data-has-title]) > svg {
@@ -938,8 +938,11 @@
 .alertAction {
   position: static;
   grid-column: -2 / -1;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   align-self: start;
+}
+.alert[data-has-title]:has(> .alertDescription) > :is(svg, .alertAction) {
+  grid-row: 1 / span 2;
 }
 
 .fieldTitle {

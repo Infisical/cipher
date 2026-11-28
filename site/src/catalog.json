@@ -110,7 +110,7 @@
         "module": "alert/banner"
       },
       {
-        "title": "Band between a table's toolbar and its header",
+        "title": "Bands between a table's toolbar and its header",
         "module": "alert/band"
       }
     ]
