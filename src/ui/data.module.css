@@ -1154,9 +1154,6 @@ button.rowTitle::after {
   border-spacing: 0;
   min-width: 100%;
 }
-.tableShell > .tableScroll {
-  padding-top: 0;
-}
 /* Sticky at the inline start so a horizontally scrolled table keeps the control centered in view. */
 .tableMore {
   position: sticky;

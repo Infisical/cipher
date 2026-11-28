@@ -1410,6 +1410,7 @@ export function DataTable<Row>({
       data-scroll-fade="x"
       data-has-start-pin={leading || undefined}
       data-has-end-pin={trailing || undefined}
+      data-frame-head={(stacked ? Boolean(stackBand) : !(headerHidden || squeezed)) || undefined}
       data-frame-foot={Boolean((foot && !footTarget) || pagination) || undefined}
       className={cn(!embedded && frame.frame, styles.tableScroll, containerClassName)}
       data-virtual={windowed || undefined}
