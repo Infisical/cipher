@@ -123,11 +123,11 @@
   box-shadow: none;
   border: 0;
   border-radius: 0;
-  border-bottom: 2px solid var(--cipher-ink);
+  border-bottom: 2px solid var(--cipher-accent-fg);
 }
 .tabsList[data-orientation="vertical"][data-variant="underline"] .tabIndicator.tabIndicator {
   border-bottom: 0;
-  border-right: 2px solid var(--cipher-ink);
+  border-right: 2px solid var(--cipher-accent-fg);
 }
 .tabCount[data-slot="count"] {
   margin-inline-start: var(--cipher-space-6);
