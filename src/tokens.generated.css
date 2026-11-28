@@ -225,6 +225,10 @@
   --cipher-info-wash: #eef3f8;
   --cipher-info-line: #c3d1df;
   --cipher-folder: #80661f;
+  --cipher-kind-import: #1d6670;
+  --cipher-kind-dynamic-secret: #a24d17;
+  --cipher-kind-folder: var(--cipher-folder);
+  --cipher-kind-rotation: var(--cipher-info);
   --cipher-chart-1: var(--cipher-ink);
   --cipher-chart-2: var(--cipher-muted);
   --cipher-chart-3: var(--cipher-accent);
@@ -474,6 +478,10 @@
   --cipher-info-wash: #0e1620;
   --cipher-info-line: #243a52;
   --cipher-folder: #a4873e;
+  --cipher-kind-import: #8ccfd6;
+  --cipher-kind-dynamic-secret: #eb9a68;
+  --cipher-kind-folder: var(--cipher-folder);
+  --cipher-kind-rotation: var(--cipher-info);
   --cipher-chart-1: var(--cipher-ink);
   --cipher-chart-2: var(--cipher-muted);
   --cipher-chart-3: var(--cipher-accent);
