@@ -42,6 +42,7 @@ const Frame = ({ folder, children }: { folder: string; children: React.ReactNode
 
 export default function Example() {
   const [visible, setVisible] = useState(true);
+  const [syncVisible, setSyncVisible] = useState(true);
   return (
     <div className="flex w-full min-w-0 flex-col gap-6">
       <Frame folder="services">
@@ -63,10 +64,18 @@ export default function Example() {
         </Alert>
       </Frame>
       <Frame folder="payments">
-        <Alert band tone="bad" title="Sync failed" onDismiss={() => undefined}>
-          The AWS Parameter Store integration could not authenticate. Reconnect it to resume
-          syncing.
-        </Alert>
+        {syncVisible ? (
+          <Alert band tone="bad" title="Sync failed" onDismiss={() => setSyncVisible(false)}>
+            The AWS Parameter Store integration could not authenticate. Reconnect it to resume
+            syncing.
+          </Alert>
+        ) : (
+          <div className="border-b border-[var(--cipher-line-soft)] p-3">
+            <Button variant="outline" onClick={() => setSyncVisible(true)}>
+              Show notice
+            </Button>
+          </div>
+        )}
       </Frame>
     </div>
   );
